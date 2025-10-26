@@ -1,0 +1,1 @@
+https://europe-west1-aiplatform.googleapis.com/v1/projects/refined-graph-471712-n9/locations/europe-west1/publishers/google/models/gemini-2.5-pro:generateContent

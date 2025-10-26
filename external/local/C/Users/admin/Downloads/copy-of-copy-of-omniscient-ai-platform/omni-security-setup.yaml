@@ -1,0 +1,278 @@
+# Omni Platform Security Configuration
+# Comprehensive security setup for Google Cloud deployment
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omni-security-config
+  namespace: default
+data:
+  # Security policies and configurations
+  security-policy.yaml: |
+    # Workload Identity Federation Configuration
+    workload-identity-setup:
+      # GitHub Actions OIDC Provider
+      github-oidc-provider: |
+        displayName: "GitHub Actions OIDC"
+        description: "OIDC provider for GitHub Actions to access GCP resources"
+        issuerUri: "https://token.actions.githubusercontent.com"
+
+      # Service Account for GitHub Actions
+      github-actions-sa: |
+        displayName: "GitHub Actions Service Account"
+        description: "Service account for GitHub Actions CI/CD pipeline"
+
+      # IAM Policy Binding for GitHub Actions
+      github-iam-policy: |
+        bindings:
+        - members:
+          - "principal://iam.googleapis.com/projects/PROJECT_ID/locations/global/workloadIdentityPools/github-pool/subject/PULL_REQUEST_AUTHOR"
+          - "principal://iam.googleapis.com/projects/PROJECT_ID/locations/global/workloadIdentityPools/github-pool/subject/REPO_OWNER"
+          role: "roles/cloudtranslate.user"
+        - members:
+          - "principal://iam.googleapis.com/projects/PROJECT_ID/locations/global/workloadIdentityPools/github-pool/subject/COLLABORATOR"
+          role: "roles/container.developer"
+        - members:
+          - "principal://iam.googleapis.com/projects/PROJECT_ID/locations/global/workloadIdentityPools/github-pool/subject/MAINTAINER"
+          role: "roles/secretmanager.secretAccessor"
+
+    # VPC Service Controls Configuration
+    vpc-sc-perimeter: |
+      title: "omni-platform-perimeter"
+      description: "VPC Service Controls perimeter for Omni Platform"
+      perimeterType: "PERIMETER_TYPE_REGULAR"
+      status:
+        restrictedServices:
+        - "storage.googleapis.com"
+        - "bigquery.googleapis.com"
+        - "pubsub.googleapis.com"
+        - "cloudkms.googleapis.com"
+        accessLevels:
+        - "accessPolicies/ACCESS_POLICY_ID/accessLevels/omni_internal_access"
+
+    # Binary Authorization Policy
+    binary-auth-policy: |
+      defaultAdmissionRule:
+        evaluationMode: "REQUIRE_ATTESTATION"
+        enforcementMode: "ENFORCED_BLOCK_AND_AUDIT_LOG"
+        requireAttestationsBy:
+        - defaultBundle: "projects/PROJECT_ID/attestors/omni-attestor"
+
+    # Cloud Armor Security Policy
+    cloud-armor-policy: |
+      name: "omni-platform-security-policy"
+      description: "Security policy for Omni Platform services"
+      rules:
+      - action: "allow"
+        priority: 1000
+        match:
+          versionedExpr: "SRC_IPS_V1"
+          config:
+          - srcIpRanges: ["35.191.0.0/16", "130.211.0.0/22"]  # GCP IP ranges
+      - action: "deny"
+        priority: 2147483647
+        match:
+          versionedExpr: "SRC_IPS_V1"
+          config:
+          - srcIpRanges: ["*"]
+
+    # Secret Manager Configuration
+    secret-rotation-policy: |
+      rotation:
+        nextRotationTime: "2024-01-01T01:00:00Z"
+        rotationPeriod: "7776000s"  # 90 days
+      topics:
+      - name: "projects/PROJECT_ID/topics/omni-secret-rotation"
+
+    # Cloud KMS Configuration
+    kms-key-ring: |
+      name: "omni-key-ring"
+      location: "europe-west1"
+
+    # IAM Policy Analyzer Queries
+    iam-analyzer-queries: |
+      - name: "omni-overprivileged-accounts"
+        description: "Find accounts with excessive permissions"
+        query:
+          filter: "resource_type:project AND permission:iam.serviceAccounts.setIamPolicy"
+          output: "csv"
+
+      - name: "omni-unused-service-accounts"
+        description: "Find service accounts not used in last 90 days"
+        query:
+          filter: "resource_type:service_account AND last_authentication_time < -90d"
+          output: "csv"
+
+    # Security Health Check Schedule
+    security-health-check: |
+      schedule: "0 9 * * 1"  # Every Monday at 9 AM
+      checks:
+      - "VPC Service Controls perimeter integrity"
+      - "Binary Authorization policy compliance"
+      - "Cloud Armor policy effectiveness"
+      - "Secret Manager rotation status"
+      - "IAM policy review"
+
+    # Compliance Monitoring
+    compliance-monitoring: |
+      frameworks:
+      - "GDPR"
+      - "ISO 27001"
+      - "SOC 2"
+      monitoring:
+        alerts:
+        - name: "gdpr-data-access"
+          condition: "resource.labels.service = 'storage.googleapis.com' AND protoPayload.methodName = 'storage.objects.get'"
+          notificationChannels: ["email-admin"]
+        - name: "unauthorized-api-access"
+          condition: "resource.type = 'cloud_function' AND severity >= ERROR"
+          notificationChannels: ["slack-security"]
+
+    # Network Security Configuration
+    network-security: |
+      firewall-rules:
+      - name: "allow-internal"
+        direction: "INGRESS"
+        allowed:
+        - IPProtocol: "tcp"
+          ports: ["8080", "8081", "8082"]
+        sourceRanges: ["10.0.0.0/8"]  # Internal VPC
+        targetTags: ["omni-platform"]
+
+      - name: "deny-external"
+        direction: "INGRESS"
+        denied:
+        - IPProtocol: "all"
+        sourceRanges: ["0.0.0.0/0"]
+        targetTags: ["omni-platform"]
+        priority: 65535
+
+    # Container Security Configuration
+    container-security: |
+      runtime-policies:
+      - name: "omni-container-policy"
+        description: "Security policy for Omni containers"
+        spec:
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+          seccompProfile:
+            type: "RuntimeDefault"
+
+    # Logging and Monitoring Security
+    security-logging: |
+      log-sinks:
+      - name: "omni-security-logs"
+        destination: "bigquery.googleapis.com/projects/PROJECT_ID/datasets/omni_security_logs"
+        filter: |
+          resource.type = "gce_instance" AND
+          (logName = "projects/PROJECT_ID/logs/cloudaudit.googleapis.com%2Factivity" OR
+           logName = "projects/PROJECT_ID/logs/cloudaudit.googleapis.com%2Fsystem_event" OR
+           logName = "projects/PROJECT_ID/logs/cloudaudit.googleapis.com%2Fdata_access")
+
+      - name: "omni-access-logs"
+        destination: "storage.googleapis.com/omni-security-bucket"
+        filter: |
+          resource.type = "k8s_container" AND
+          logName = "projects/PROJECT_ID/logs/container-runtime"
+
+    # Backup and Recovery Security
+    backup-security: |
+      encryption:
+        kmsKeyName: "projects/PROJECT_ID/locations/europe-west1/keyRings/omni-key-ring/cryptoKeys/omni-backup-key"
+
+      access-control:
+      - role: "roles/storage.objectViewer"
+        members: ["serviceAccount:omni-backup@PROJECT_ID.iam.gserviceaccount.com"]
+
+      retention-policy:
+        retentionPeriod: "2555s"  # 30 days
+        lockBeforeDestroy: true
+
+---
+# Deployment script for security configurations
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omni-security-deployment
+  namespace: default
+data:
+  deploy-security.sh: |
+    #!/bin/bash
+    # Deploy security configurations for Omni Platform
+
+    set -e
+
+    PROJECT_ID="${PROJECT_ID:-refined-graph-471712-n9}"
+    REGION="europe-west1"
+
+    echo "🔒 Deploying Omni Platform security configurations..."
+
+    # 1. Enable required security APIs
+    echo "Enabling security APIs..."
+    gcloud services enable \
+      cloudkms.googleapis.com \
+      binaryauthorization.googleapis.com \
+      containeranalysis.googleapis.com \
+      iap.googleapis.com \
+      accesscontextmanager.googleapis.com \
+      --project=$PROJECT_ID
+
+    # 2. Create KMS Key Ring and Keys
+    echo "Creating KMS key ring..."
+    gcloud kms keyrings create omni-key-ring \
+      --location=$REGION \
+      --project=$PROJECT_ID
+
+    gcloud kms keys create omni-backup-key \
+      --location=$REGION \
+      --keyring=omni-key-ring \
+      --purpose=encryption \
+      --project=$PROJECT_ID
+
+    # 3. Create service accounts with minimal permissions
+    echo "Creating security-focused service accounts..."
+    gcloud iam service-accounts create omni-security-scanner \
+      --display-name="Omni Security Scanner" \
+      --project=$PROJECT_ID
+
+    # 4. Set up VPC Service Controls (if VPC exists)
+    echo "Setting up VPC Service Controls..."
+    # This would require an existing VPC setup
+
+    # 5. Configure Binary Authorization
+    echo "Configuring Binary Authorization..."
+    gcloud container binauthz policy import /dev/stdin <<EOF
+    {
+      "defaultAdmissionRule": {
+        "evaluationMode": "REQUIRE_ATTESTATION",
+        "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG",
+        "requireAttestationsBy": []
+      }
+    }
+    EOF
+
+    # 6. Set up Cloud Armor security policy
+    echo "Setting up Cloud Armor..."
+    gcloud compute security-policies create omni-platform-security \
+      --description="Security policy for Omni Platform" \
+      --project=$PROJECT_ID
+
+    # 7. Configure secret rotation
+    echo "Setting up secret rotation..."
+    gcloud secrets update openai-api-key \
+      --rotation-period=7776000s \
+      --next-rotation-time=$(date -d '+90 days' -Iseconds) \
+      --project=$PROJECT_ID
+
+    echo "✅ Security configuration deployment completed!"
+    echo ""
+    echo "Next steps:"
+    echo "1. Review IAM permissions in Cloud Console"
+    echo "2. Set up monitoring alerts for security events"
+    echo "3. Configure backup encryption with KMS keys"
+    echo "4. Test security policies with dry-run deployments"

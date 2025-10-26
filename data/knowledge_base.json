@@ -1,0 +1,14 @@
+{
+  "pages": {
+    "System Metrics": {
+      "title": "System Metrics",
+      "content": "How to collect CPU, RAM, Disk metrics via CLI",
+      "tags": [
+        "metrics",
+        "cli",
+        "devops"
+      ],
+      "updated": true
+    }
+  }
+}

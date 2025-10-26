@@ -1,0 +1,6 @@
+[
+  { "id": 1, "title": "Digitalni paket – Start", "price": 19.99, "category": "digital" },
+  { "id": 2, "title": "Predloga – Blog", "price": 9.99, "category": "templates" },
+  { "id": 3, "title": "Storitve – SEO pregled", "price": 49.00, "category": "services" },
+  { "id": 4, "title": "Predloga – Landing Page", "price": 14.99, "category": "templates" }
+]

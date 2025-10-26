@@ -1,0 +1,8 @@
+[
+  {
+    "labels": { "alertname": "TestCriticalAlert", "severity": "critical", "service": "omni-unified" },
+    "annotations": { "summary": "Critical test alert (Slack)", "description": "Simulacija kritične napake" },
+    "startsAt": "2025-10-21T23:00:00Z",
+    "endsAt": "2025-10-21T23:10:00Z"
+  }
+]

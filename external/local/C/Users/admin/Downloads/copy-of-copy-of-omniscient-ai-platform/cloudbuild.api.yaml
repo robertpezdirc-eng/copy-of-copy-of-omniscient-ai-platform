@@ -1,0 +1,41 @@
+# Cloud Build: Build and deploy OMNI Exec API (Flask) to Cloud Run
+
+substitutions:
+  _REGION: europe-west1
+  _SERVICE: omni-exec-api
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+
+steps:
+  # Build image from Dockerfile.flaskapi
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-f", "Dockerfile.flaskapi", "-t", "${_REGION}-docker.pkg.dev/$PROJECT_ID/omni-registry/${_SERVICE}:$SHORT_SHA", "."]
+
+  # Push image
+  - name: gcr.io/cloud-builders/docker
+    args: ["push", "${_REGION}-docker.pkg.dev/$PROJECT_ID/omni-registry/${_SERVICE}:$SHORT_SHA"]
+
+  # Deploy to Cloud Run
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/omni-registry/${_SERVICE}:$SHORT_SHA
+      - --region=${_REGION}
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --memory=512Mi
+      - --cpu=1
+      - --max-instances=10
+      - --concurrency=80
+      - --timeout=600
+      - --set-env-vars=SERVICE_NAME=${_SERVICE},ENVIRONMENT=prod,REGION=${_REGION},OMNI_FRONTEND_ORIGIN=*
+      - --set-secrets=OPENAI_API_KEY=openai-api-key:latest,GEMINI_API_KEY=gemini-api-key:latest,GOOGLE_API_KEY=google-api-key:latest
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/omni-registry/${_SERVICE}:$SHORT_SHA

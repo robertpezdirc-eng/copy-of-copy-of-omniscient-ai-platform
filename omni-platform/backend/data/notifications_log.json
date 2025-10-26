@@ -1,0 +1,34 @@
+{
+  "1761425224859": {
+    "type": "payment-success",
+    "tenant": "acme",
+    "gateway": "stripe",
+    "email_ok": false,
+    "slack_ok": false,
+    "ts": 1761425224857
+  },
+  "1761425229571": {
+    "type": "payment-success",
+    "tenant": "acme",
+    "gateway": "stripe",
+    "email_ok": false,
+    "slack_ok": false,
+    "ts": 1761425229571
+  },
+  "1761425232147": {
+    "type": "payment-failed",
+    "tenant": "acme",
+    "gateway": "stripe",
+    "email_ok": false,
+    "slack_ok": false,
+    "ts": 1761425232147
+  },
+  "1761426275218": {
+    "type": "payment-success",
+    "tenant": "acme2",
+    "gateway": "stripe",
+    "email_ok": false,
+    "slack_ok": false,
+    "ts": 1761426275209
+  }
+}

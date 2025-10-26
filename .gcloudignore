@@ -1,0 +1,46 @@
+# Exclude files and directories from gcloud source packaging to speed up builds and avoid path errors
+# Always ignore VCS
+.git/
+
+# Common artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+logs/
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Large/irrelevant directories for Cloud Run dashboard service
+OMNIBOT13/
+Omni-AllInOne/
+OmniSingularity/
+OmniStarter/
+# frontend/
+# backend/
+server/
+servers/
+monitoring/
+grafana/
+k8s/
+cloudrun_deploy/build/
+omni_platform/logs/
+cache/
+
+# Additional large local artefacts
+.venv/
+UltimateOmniPackage/
+UltimateOmniPackage.zip
+vr_projects/published/
+
+# Test and docs
+tests/
+docs/
+README*
+
+# Deployment files not needed by Cloud Build when submitting source
+cloudbuild.yaml
+.env
+.env.local

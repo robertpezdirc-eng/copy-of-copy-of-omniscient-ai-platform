@@ -1,0 +1,42 @@
+{
+  "1a19165cc039424684596f7c24276a10": {
+    "id": "1a19165cc039424684596f7c24276a10",
+    "name": "Starter API Plan",
+    "version": "v1",
+    "price_per_call": 19.99,
+    "currency": "USD",
+    "path": "/api/v1/unknown",
+    "tenant_id": null,
+    "description": "",
+    "created_at": 1761462520286,
+    "meta": {}
+  },
+  "ec1585a813374cd08a1efac7d9b707bf": {
+    "id": "ec1585a813374cd08a1efac7d9b707bf",
+    "name": "AI-Translate",
+    "version": "v1",
+    "price_per_call": 0.03,
+    "currency": "USD",
+    "path": "/api/v1/unknown",
+    "tenant_id": null,
+    "description": "Auto service from market trend: AI-Translate",
+    "created_at": 1761463309626,
+    "meta": {
+      "source": "rl-core-market"
+    }
+  },
+  "755e2d27bb7349ddacfe4bb4472a9c8a": {
+    "id": "755e2d27bb7349ddacfe4bb4472a9c8a",
+    "name": "Image-Upscale",
+    "version": "v1",
+    "price_per_call": 0.05,
+    "currency": "USD",
+    "path": "/api/v1/unknown",
+    "tenant_id": null,
+    "description": "Auto service from market trend: Image-Upscale",
+    "created_at": 1761463309626,
+    "meta": {
+      "source": "rl-core-market"
+    }
+  }
+}

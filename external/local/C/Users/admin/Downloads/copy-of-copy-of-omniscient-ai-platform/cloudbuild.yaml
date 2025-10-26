@@ -1,0 +1,55 @@
+# Cloud Build configuration for OMNI Platform
+# Automates build and deployment of OMNI platform to Cloud Run
+
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'build'
+  - '-f'
+  - 'Dockerfile.dashboard'
+  - '-t'
+  - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/omni-registry/omni-platform:${BUILD_ID}'
+  - '.'
+
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'push'
+  - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/omni-registry/omni-platform:${BUILD_ID}'
+
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args:
+  - 'run'
+  - 'deploy'
+  - 'omni-platform'
+  - '--image'
+  - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/omni-registry/omni-platform:${BUILD_ID}'
+  - '--region'
+  - '${_REGION}'
+  - '--platform'
+  - 'managed'
+  - '--allow-unauthenticated'
+  - '--port'
+  - '8080'
+  - '--memory'
+  - '1Gi'
+  - '--cpu'
+  - '1'
+  - '--max-instances'
+  - '3'
+  - '--timeout'
+  - '300'
+  - '--set-env-vars'
+  - 'OMNI_SYSTEM_CHECKS=false'
+  - '--set-env-vars'
+  - 'OMNI_QUIET_CLOUDRUN=true'
+
+substitutions:
+  _REGION: 'europe-west1'
+
+options:
+  logging: 'CLOUD_LOGGING_ONLY'
+  machineType: 'E2_HIGHCPU_8'
+
+images:
+- '${_REGION}-docker.pkg.dev/${PROJECT_ID}/omni-registry/omni-platform:${BUILD_ID}'

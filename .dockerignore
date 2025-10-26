@@ -1,0 +1,182 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+omni_platform/logs/
+
+# Node.js (for Python container)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Documentation
+*.md
+!README*.md
+docs/
+
+# Tests
+tests/
+test_*.py
+*_test.py
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Deployment files (not needed in container)
+deploy-to-google-cloud.sh
+cloudbuild.yaml
+monitoring-policy-*.json
+GOOGLE_CLOUD_DEPLOYMENT_README.md
+*.sh
+
+# Cloud specific
+service_account*.json
+vertex_*.json
+*.key
+
+# Local development
+.env.local
+.env.development
+.env.test
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+
+# Ignore everything else by default, then re-include required files
+**
+!requirements.txt
+!Dockerfile.quantum-platform
+!omni_*.py
+
+# Pyre type checker
+.pyre/
+
+# PowerShell scripts
+*.ps1
+
+# Sensitive local files
+openai key.txt
+cloudrun-url.json
+deployment_summary.json
+files_list_temp.json
+files_read_written.json
+files_write_token.json
+root_files.txt
+
+# Exclude large or restricted local directories from build context
+OMNIBOT13/
+OMNIBOT13/**
+OMNIBOT13*
+OMNIBOT12/
+OMNIBOT12/**
+OMNIBOT12*
+Omni-AllInOne/
+OmniSingularity/
+OmniStarter/
+server/
+servers/
+monitoring/
+grafana/
+k8s/
+cloudrun_deploy/
+omni_platform/logs/
+cache/

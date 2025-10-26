@@ -1,0 +1,17 @@
+[
+  {
+    "labels": {
+      "alertname": "ProdSlackTest02",
+      "severity": "critical",
+      "service": "omni-notifications",
+      "instance": "local"
+    },
+    "annotations": {
+      "summary": "Production Slack webhook test #2 (critical)",
+      "description": "Second controlled test after force-recreate to confirm real Slack delivery."
+    },
+    "startsAt": "2025-10-22T00:00:00Z",
+    "endsAt": "2099-01-01T00:00:00Z",
+    "generatorURL": "http://localhost:9093"
+  }
+]

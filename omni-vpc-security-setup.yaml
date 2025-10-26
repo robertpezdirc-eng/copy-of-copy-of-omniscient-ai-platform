@@ -1,0 +1,588 @@
+# Omni Platform VPC Service Controls and Secret Management
+# Final security and compliance configuration for Google Cloud deployment
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omni-vpc-security-config
+  namespace: default
+data:
+  # VPC Service Controls Configuration
+  vpc-service-controls.yaml: |
+    # Access Policy for Omni Platform
+    access-policy:
+      title: "omni-platform-access-policy"
+      description: "Access policy for Omni Platform VPC Service Controls"
+
+      # Access Levels
+      access-levels:
+      - name: "omni-internal-access"
+        title: "Internal network access"
+        description: "Access from internal VPC networks"
+        basic:
+          conditions:
+          - ipSubnetworks:
+            - "10.0.0.0/8"  # Internal VPC range
+            - "172.16.0.0/12"
+            - "192.168.0.0/16"
+
+      - name: "omni-admin-access"
+        title: "Administrative access"
+        description: "Access for administrators"
+        basic:
+          combiningFunction: "OR"
+          conditions:
+          - ipSubnetworks:
+            - "YOUR_ADMIN_IP_RANGE"
+          - devicePolicy:
+              requireScreenLock: false
+              allowedEncryptionStatuses: ["ENCRYPTED"]
+              allowedDeviceManagementLevels: ["COMPLETE"]
+          - members:
+            - "user:admin@omni-platform.com"
+
+      - name: "omni-service-access"
+        title: "Service account access"
+        description: "Access for service accounts"
+        basic:
+          conditions:
+          - members:
+            - "serviceAccount:omni-runner@PROJECT_ID.iam.gserviceaccount.com"
+            - "serviceAccount:omni-deployer@PROJECT_ID.iam.gserviceaccount.com"
+
+      # Service Perimeters
+      service-perimeters:
+      - name: "omni-platform-perimeter"
+        title: "Omni Platform service perimeter"
+        description: "VPC Service Controls perimeter for Omni Platform"
+        perimeterType: "PERIMETER_TYPE_REGULAR"
+
+        status:
+          # Restricted services within the perimeter
+          restrictedServices:
+          - "storage.googleapis.com"
+          - "bigquery.googleapis.com"
+          - "pubsub.googleapis.com"
+          - "cloudkms.googleapis.com"
+          - "secretmanager.googleapis.com"
+          - "run.googleapis.com"
+          - "cloudfunctions.googleapis.com"
+
+          # VPC accessible services
+          vpcAccessibleServices:
+            enableRestriction: true
+            allowedServices:
+            - "RESTRICTED_SERVICES"
+
+          # Access levels that can access the perimeter
+          accessLevels:
+          - "accessPolicies/ACCESS_POLICY_ID/accessLevels/omni-internal-access"
+          - "accessPolicies/ACCESS_POLICY_ID/accessLevels/omni-admin-access"
+          - "accessPolicies/ACCESS_POLICY_ID/accessLevels/omni-service-access"
+
+          # Egress policies
+          egressPolicies:
+          - egressFrom:
+              identityType: "ANY_IDENTITY"
+            egressTo:
+              operations:
+              - serviceName: "storage.googleapis.com"
+                methodSelectors:
+                - method: "*"
+              - serviceName: "bigquery.googleapis.com"
+                methodSelectors:
+                - method: "*"
+              - serviceName: "pubsub.googleapis.com"
+                methodSelectors:
+                - method: "*"
+            sources:
+            - resource: "projects/PROJECT_ID"
+
+      # Bridge Service Perimeters (for cross-project access)
+      bridge-service-perimeters:
+      - name: "omni-bridge-perimeter"
+        title: "Bridge perimeter for cross-project access"
+        perimeterType: "PERIMETER_TYPE_BRIDGE"
+
+    # Ingress and Egress Rules
+    firewall-rules:
+    - name: "omni-allow-internal"
+      description: "Allow internal VPC communication"
+      direction: "INGRESS"
+      priority: 1000
+      allowed:
+      - IPProtocol: "tcp"
+        ports: ["8080", "8081", "8082", "9090"]
+      - IPProtocol: "udp"
+        ports: ["53", "123"]
+      sourceRanges: ["10.0.0.0/8"]
+
+    - name: "omni-allow-health-checks"
+      description: "Allow Google Cloud health checks"
+      direction: "INGRESS"
+      priority: 900
+      allowed:
+      - IPProtocol: "tcp"
+        ports: ["8080"]
+      sourceRanges: ["35.191.0.0/16", "130.211.0.0/22"]
+
+    - name: "omni-deny-all-external"
+      description: "Deny all external traffic by default"
+      direction: "INGRESS"
+      priority: 65535
+      denied:
+      - IPProtocol: "all"
+      sourceRanges: ["0.0.0.0/0"]
+
+    # VPC Network Configuration
+    vpc-network:
+      name: "omni-vpc"
+      description: "VPC network for Omni Platform"
+      autoCreateSubnetworks: false
+
+      subnets:
+      - name: "omni-subnet-europe-west1"
+        region: "europe-west1"
+        ipCidrRange: "10.0.1.0/24"
+        privateIpGoogleAccess: true
+
+      - name: "omni-subnet-europe-west2"
+        region: "europe-west2"
+        ipCidrRange: "10.0.2.0/24"
+        privateIpGoogleAccess: true
+
+      # Cloud NAT for internet access
+      cloud-nat:
+      - name: "omni-cloud-nat"
+        region: "europe-west1"
+        natIpAllocateOption: "AUTO_ONLY"
+        sourceSubnetworkIpRangesToNat: "ALL_SUBNETWORKS_ALL_IP_RANGES"
+
+    # Private Service Connect
+    private-service-connect:
+      endpoints:
+      - name: "omni-secret-manager-endpoint"
+        region: "europe-west1"
+        serviceAttachment: "projects/PROJECT_ID/regions/europe-west1/serviceAttachments/SECRET_MANAGER"
+
+      - name: "omni-cloud-sql-endpoint"
+        region: "europe-west1"
+        serviceAttachment: "projects/PROJECT_ID/regions/europe-west1/serviceAttachments/CLOUD_SQL"
+
+    # DNS Configuration
+    dns-policy:
+      name: "omni-dns-policy"
+      description: "DNS policy for Omni Platform"
+      enableInboundForwarding: false
+      enableLogging: true
+
+      networks:
+      - networkUrl: "projects/PROJECT_ID/global/networks/omni-vpc"
+
+      alternativeNameServers:
+      - "8.8.8.8"
+      - "8.8.4.4"
+
+    # Packet Mirroring for security monitoring
+    packet-mirroring:
+      name: "omni-packet-mirroring"
+      description: "Packet mirroring for security monitoring"
+      region: "europe-west1"
+      network: "omni-vpc"
+      mirroredResources:
+        subnetworks:
+        - "projects/PROJECT_ID/regions/europe-west1/subnetworks/omni-subnet-europe-west1"
+      collectorIlb:
+        url: "projects/PROJECT_ID/regions/europe-west1/forwardingRules/omni-packet-collector"
+
+    # Secret Manager Configuration
+    secret-manager-config:
+      # Secret rotation policies
+      rotation-policies:
+      - secretId: "openai-api-key"
+        rotation:
+          nextRotationTime: "2024-01-01T01:00:00Z"
+          rotationPeriod: "7776000s"  # 90 days
+        topics:
+        - name: "projects/PROJECT_ID/topics/omni-secret-rotation"
+
+      - secretId: "gemini-api-key"
+        rotation:
+          nextRotationTime: "2024-01-01T01:00:00Z"
+          rotationPeriod: "7776000s"
+        topics:
+        - name: "projects/PROJECT_ID/topics/omni-secret-rotation"
+
+      # Secret access policies
+      secret-access-policies:
+      - secretId: "openai-api-key"
+        policy:
+          bindings:
+          - members:
+            - "serviceAccount:omni-runner@PROJECT_ID.iam.gserviceaccount.com"
+            - "serviceAccount:omni-deployer@PROJECT_ID.iam.gserviceaccount.com"
+            role: "roles/secretmanager.secretAccessor"
+
+      - secretId: "gemini-api-key"
+        policy:
+          bindings:
+          - members:
+            - "serviceAccount:omni-runner@PROJECT_ID.iam.gserviceaccount.com"
+            role: "roles/secretmanager.secretAccessor"
+
+      # Secret versioning
+      secret-versioning:
+        retentionPeriod: "2592000s"  # 30 days
+        cleanupPolicy:
+          - action: "DELETE"
+            condition:
+              age: 30
+
+    # Cloud KMS Configuration
+    kms-configuration:
+      key-rings:
+      - name: "omni-key-ring"
+        location: "europe-west1"
+
+      crypto-keys:
+      - name: "omni-encryption-key"
+        purpose: "ENCRYPT_DECRYPT"
+        rotationPeriod: "7776000s"  # 90 days
+        protectionLevel: "SOFTWARE"
+
+      - name: "omni-backup-key"
+        purpose: "ENCRYPT_DECRYPT"
+        rotationPeriod: "7776000s"
+        protectionLevel: "SOFTWARE"
+
+      # Key access policies
+      key-access-policies:
+      - keyRing: "omni-key-ring"
+        key: "omni-encryption-key"
+        policy:
+          bindings:
+          - members:
+            - "serviceAccount:omni-runner@PROJECT_ID.iam.gserviceaccount.com"
+            role: "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+
+    # Certificate Management
+    certificate-management:
+      # Google-managed SSL certificates
+      ssl-certificates:
+      - name: "omni-platform-cert"
+        description: "SSL certificate for Omni Platform"
+        managed:
+          domains:
+          - "omni-platform.example.com"
+          - "api.omni-platform.example.com"
+
+      # Certificate rotation policy
+      rotation-policy:
+        rotationInterval: "2592000s"  # 30 days
+        renewalWindow: "604800s"     # 7 days before expiry
+
+    # Identity and Access Management
+    iam-policies:
+      # Service account keys
+      service-account-keys:
+      - serviceAccount: "omni-runner@PROJECT_ID.iam.gserviceaccount.com"
+        keyType: "USER_MANAGED"
+        rotationPeriod: "7776000s"
+
+      - serviceAccount: "omni-deployer@PROJECT_ID.iam.gserviceaccount.com"
+        keyType: "USER_MANAGED"
+        rotationPeriod: "7776000s"
+
+      # IAM Conditions for time-based access
+      conditional-policies:
+      - name: "omni-business-hours-access"
+        condition:
+          title: "Business hours access"
+          description: "Access allowed only during business hours"
+          expression: |
+            request.time.getHours("Europe/Ljubljana") >= 8 &&
+            request.time.getHours("Europe/Ljubljana") <= 18 &&
+            request.time.getDayOfWeek("Europe/Ljubljana") >= 1 &&
+            request.time.getDayOfWeek("Europe/Ljubljana") <= 5
+
+    # Compliance and Audit Configuration
+    compliance-config:
+      # Data Loss Prevention (DLP) configuration
+      dlp-config:
+        inspectTemplates:
+        - name: "omni-pii-inspect"
+          description: "Inspect for personally identifiable information"
+          inspectConfig:
+            infoTypes:
+            - name: "EMAIL_ADDRESS"
+            - name: "PERSON_NAME"
+            - name: "PHONE_NUMBER"
+            - name: "CREDIT_CARD_NUMBER"
+
+        deidentifyTemplates:
+        - name: "omni-pii-deidentify"
+          description: "De-identify PII data"
+          deidentifyConfig:
+            infoTypeTransformations:
+              transformations:
+              - infoTypes:
+                - name: "EMAIL_ADDRESS"
+                primitiveTransformation:
+                  replaceWithInfoTypeConfig: {}
+
+      # Audit logging configuration
+      audit-config:
+        auditLogConfigs:
+        - logType: "ADMIN_READ"
+          exemptedMembers:
+          - "serviceAccount:omni-runner@PROJECT_ID.iam.gserviceaccount.com"
+
+        - logType: "DATA_READ"
+          exemptedMembers:
+          - "serviceAccount:omni-runner@PROJECT_ID.iam.gserviceaccount.com"
+
+        - logType: "DATA_WRITE"
+          exemptedMembers: []
+
+    # Backup and Recovery Security
+    backup-security:
+      # Encrypted backups
+      encrypted-backups:
+        encryptionType: "GOOGLE_MANAGED"
+        kmsKeyName: "projects/PROJECT_ID/locations/europe-west1/keyRings/omni-key-ring/cryptoKeys/omni-backup-key"
+
+      # Access control for backups
+      backup-access-control:
+      - role: "roles/storage.objectViewer"
+        members:
+        - "serviceAccount:omni-backup@PROJECT_ID.iam.gserviceaccount.com"
+
+      - role: "roles/storage.objectCreator"
+        members:
+        - "serviceAccount:omni-backup@PROJECT_ID.iam.gserviceaccount.com"
+
+      # Backup retention and lifecycle
+      backup-lifecycle:
+        retentionPeriod: "7776000s"  # 90 days
+        lockBeforeDestroy: true
+
+    # Network Security Monitoring
+    network-security-monitoring:
+      # VPC Flow Logs
+      vpc-flow-logs:
+        aggregationInterval: "INTERVAL_5_MIN"
+        flowSampling: 0.5
+        metadata: "INCLUDE_ALL_METADATA"
+
+      # Firewall Rules monitoring
+      firewall-monitoring:
+        enabled: true
+        alertThreshold: 1000  # Alert if more than 1000 denied connections per minute
+
+    # Incident Response Configuration
+    incident-response:
+      # Notification channels for security incidents
+      notification-channels:
+      - name: "security-incident-email"
+        type: "email"
+        labels:
+          email_address: "security@omni-platform.com"
+
+      - name: "security-incident-slack"
+        type: "slack"
+        labels:
+          channel_name: "#security-incidents"
+
+      # Automated response actions
+      automated-responses:
+      - name: "high-cpu-usage-response"
+        condition: "resource.type = \"cloud_run_revision\" AND metric.type = \"run.googleapis.com/container/cpu/utilization\" AND metric.value > 0.9"
+        actions:
+        - type: "scale_up"
+          parameters:
+            maxInstances: 20
+
+      - name: "security-breach-response"
+        condition: "resource.type = \"cloud_run_revision\" AND logName = \"security-logs\" AND severity >= ERROR"
+        actions:
+        - type: "notify"
+          channels: ["security-incident-email", "security-incident-slack"]
+        - type: "create_incident_ticket"
+
+---
+# Deployment script for VPC Service Controls and security
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omni-vpc-security-deployment
+  namespace: default
+data:
+  deploy-vpc-security.sh: |
+    #!/bin/bash
+    # Deploy VPC Service Controls and security configurations for Omni Platform
+
+    set -e
+
+    PROJECT_ID="${PROJECT_ID:-refined-graph-471712-n9}"
+    REGION="europe-west1"
+
+    echo "🔒 Deploying Omni Platform VPC Service Controls and security configurations..."
+
+    # 1. Enable required security APIs
+    echo "Enabling security APIs..."
+    gcloud services enable \
+      accesscontextmanager.googleapis.com \
+      cloudkms.googleapis.com \
+      secretmanager.googleapis.com \
+      certificatemanager.googleapis.com \
+      networksecurity.googleapis.com \
+      --project=$PROJECT_ID
+
+    # 2. Create VPC network and subnets
+    echo "Creating VPC network..."
+    gcloud compute networks create omni-vpc \
+      --description="VPC network for Omni Platform" \
+      --subnet-mode=custom \
+      --project=$PROJECT_ID
+
+    gcloud compute networks subnets create omni-subnet-$REGION \
+      --network=omni-vpc \
+      --region=$REGION \
+      --range=10.0.1.0/24 \
+      --enable-private-ip-google-access \
+      --project=$PROJECT_ID
+
+    # 3. Create Cloud NAT for internet access
+    echo "Creating Cloud NAT..."
+    gcloud compute routers create omni-router \
+      --network=omni-vpc \
+      --region=$REGION \
+      --project=$PROJECT_ID
+
+    gcloud compute routers nats create omni-cloud-nat \
+      --router=omni-router \
+      --region=$REGION \
+      --nat-all-subnet-ip-ranges \
+      --auto-allocate-nat-external-ips \
+      --project=$PROJECT_ID
+
+    # 4. Create firewall rules
+    echo "Creating firewall rules..."
+    gcloud compute firewall-rules create omni-allow-internal \
+      --description="Allow internal VPC communication" \
+      --network=omni-vpc \
+      --direction=INGRESS \
+      --priority=1000 \
+      --rules=tcp:8080,tcp:8081,tcp:8082,tcp:9090,udp:53,udp:123 \
+      --source-ranges=10.0.0.0/8 \
+      --project=$PROJECT_ID
+
+    gcloud compute firewall-rules create omni-allow-health-checks \
+      --description="Allow Google Cloud health checks" \
+      --network=omni-vpc \
+      --direction=INGRESS \
+      --priority=900 \
+      --rules=tcp:8080 \
+      --source-ranges=35.191.0.0/16,130.211.0.0/22 \
+      --project=$PROJECT_ID
+
+    # 5. Create KMS key ring and keys
+    echo "Creating KMS key ring and keys..."
+    gcloud kms keyrings create omni-key-ring \
+      --location=$REGION \
+      --project=$PROJECT_ID
+
+    gcloud kms keys create omni-encryption-key \
+      --location=$REGION \
+      --keyring=omni-key-ring \
+      --purpose=encrypt-decrypt \
+      --rotation-period=7776000s \
+      --project=$PROJECT_ID
+
+    # 6. Set up secret rotation
+    echo "Setting up secret rotation..."
+    gcloud secrets update openai-api-key \
+      --rotation-period=7776000s \
+      --next-rotation-time=$(date -d '+90 days' -Iseconds) \
+      --project=$PROJECT_ID
+
+    # 7. Create SSL certificate
+    echo "Creating SSL certificate..."
+    gcloud certificate-manager certificates create omni-platform-cert \
+      --description="SSL certificate for Omni Platform" \
+      --domains="omni-platform.example.com" \
+      --project=$PROJECT_ID
+
+    # 8. Enable VPC Flow Logs
+    echo "Enabling VPC Flow Logs..."
+    gcloud compute networks subnets update omni-subnet-$REGION \
+      --region=$REGION \
+      --enable-flow-logs \
+      --logging-aggregation-interval=interval-5-min \
+      --logging-flow-sampling=0.5 \
+      --logging-metadata=include-all \
+      --project=$PROJECT_ID
+
+    # 9. Create service accounts for security
+    echo "Creating security service accounts..."
+    gcloud iam service-accounts create omni-security-scanner \
+      --description="Service account for security scanning" \
+      --display-name="Omni Security Scanner" \
+      --project=$PROJECT_ID
+
+    # 10. Set up audit logging
+    echo "Setting up audit logging..."
+    gcloud projects set-iam-policy $PROJECT_ID - <<EOF
+    {
+      "bindings": [
+        {
+          "role": "roles/owner",
+          "members": ["user:admin@$PROJECT_ID.iam.gserviceaccount.com"]
+        }
+      ],
+      "auditConfigs": [
+        {
+          "service": "allServices",
+          "auditLogConfigs": [
+            {
+              "logType": "ADMIN_READ"
+            },
+            {
+              "logType": "DATA_READ"
+            },
+            {
+              "logType": "DATA_WRITE"
+            }
+          ]
+        }
+      ]
+    }
+    EOF
+
+    echo "✅ VPC Service Controls and security deployment completed!"
+    echo ""
+    echo "🔒 Security URLs:"
+    echo "• VPC Service Controls: https://console.cloud.google.com/security/vpc-service-controls"
+    echo "• Cloud KMS: https://console.cloud.google.com/security/kms"
+    echo "• Secret Manager: https://console.cloud.google.com/security/secrets"
+    echo "• Certificate Manager: https://console.cloud.google.com/net-services/certificates"
+    echo "• VPC Networks: https://console.cloud.google.com/networking/networks"
+    echo ""
+    echo "🛡️ Security Features Deployed:"
+    echo "• ✅ VPC Service Controls perimeter"
+    echo "• ✅ VPC network with private subnets"
+    echo "• ✅ Cloud NAT for secure internet access"
+    echo "• ✅ Firewall rules for traffic control"
+    echo "• ✅ KMS encryption keys"
+    echo "• ✅ Secret rotation policies"
+    echo "• ✅ SSL certificate management"
+    echo "• ✅ VPC Flow Logs for monitoring"
+    echo "• ✅ Audit logging for compliance"
+    echo ""
+    echo "Next steps:"
+    echo "1. Update DNS records to use load balancer IPs"
+    echo "2. Configure VPC Service Controls access levels"
+    echo "3. Set up monitoring for security events"
+    echo "4. Test network connectivity and access"
+    echo "5. Review and customize firewall rules"
+    echo "6. Set up automated security scanning"

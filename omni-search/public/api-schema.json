@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OMNI Platform API",
+  "version": "1.0.0",
+  "endpoints": [
+    {
+      "path": "/api/platform/status",
+      "method": "GET",
+      "description": "Platform Status API – vrne trenutno stanje platforme",
+      "response": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "enum": ["healthy", "degraded", "error"] },
+          "system_health": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "agents": { "type": "integer", "minimum": 0 },
+          "modules": { "type": "integer", "minimum": 0 },
+          "active_connections": { "type": "integer", "minimum": 0 },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "required": ["status", "system_health", "agents", "modules", "timestamp"]
+      },
+      "example": {
+        "status": "healthy",
+        "system_health": 97,
+        "agents": 8,
+        "modules": 15,
+        "active_connections": 3,
+        "timestamp": "2025-10-22T10:11:00.000Z"
+      }
+    },
+    {
+      "path": "/api/gcp/gemini/stream",
+      "method": "GET",
+      "description": "Gemini SSE Stream – strežnik pošilja besedilne 'chunk' dogodke in zaključi z 'done' dogodkom",
+      "query": {
+        "type": "object",
+        "properties": {
+          "prompt": { "type": "string" },
+          "model": { "type": "string", "default": "gemini-2.0-pro" }
+        },
+        "required": ["prompt"]
+      },
+      "sse_events": [
+        { "event": null, "data": { "chunk": "string" } },
+        { "event": "done", "data": { "ok": "boolean", "model": "string", "bytes": "integer" } },
+        { "event": "error", "data": { "ok": "boolean", "error": "string" } }
+      ],
+      "example_client": "EventSource('/api/gcp/gemini/stream?prompt=Hello&model=gemini-2.0-pro')"
+    },
+    {
+      "path": "/api/modules/invoke",
+      "method": "POST",
+      "description": "Klic modulov – generični invoke endpoint",
+      "request": {
+        "type": "object",
+        "properties": {
+          "module": { "type": "string" },
+          "action": { "type": "string" },
+          "params": { "type": "object", "additionalProperties": true }
+        },
+        "required": ["module", "action"]
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "ok": { "type": "boolean" },
+          "module": { "type": "string" },
+          "action": { "type": "string" },
+          "params": { "type": "object" },
+          "result": { "type": "string" },
+          "error": { "type": "string" }
+        },
+        "required": ["ok"]
+      },
+      "example": {
+        "module": "ai_generator",
+        "action": "generate_text",
+        "params": { "prompt": "Pozdrav!" }
+      }
+    }
+  ]
+}

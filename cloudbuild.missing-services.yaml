@@ -1,0 +1,311 @@
+# Cloud Build configuration for missing OMNI services
+# Avtomatski build in deployment manjkajočih storitev
+
+steps:
+  # Build omni-api
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-omni-api'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.backend'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/omni-api:${SHORT_SHA}'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/omni-api:latest'
+      - '.'
+
+  # Build omni-singularity
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-omni-singularity'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.omni-singularity'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/omni-singularity:${SHORT_SHA}'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/omni-singularity:latest'
+      - '.'
+
+  # Build omni-quantum-backend
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-quantum-backend'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.quantum-platform'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/omni-quantum-backend:${SHORT_SHA}'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/omni-quantum-backend:latest'
+      - '.'
+
+  # Build omni-api-gateway
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-api-gateway'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.api-gateway'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/omni-api-gateway:${SHORT_SHA}'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/omni-api-gateway:latest'
+      - '.'
+
+  # Build quantum-worker
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-quantum-worker'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.quantum-worker'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/quantum-worker:${SHORT_SHA}'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/quantum-worker:latest'
+      - '.'
+
+  # Build quantum-entanglement-node
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-entanglement-node'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.quantum-entanglement'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/quantum-entanglement-node:${SHORT_SHA}'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/quantum-entanglement-node:latest'
+      - '.'
+
+  # Push all images
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-images'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'gcr.io/${PROJECT_ID}/omni-api'
+    waitFor: ['build-omni-api']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'gcr.io/${PROJECT_ID}/omni-singularity'
+    waitFor: ['build-omni-singularity']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'gcr.io/${PROJECT_ID}/omni-quantum-backend'
+    waitFor: ['build-quantum-backend']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'gcr.io/${PROJECT_ID}/omni-api-gateway'
+    waitFor: ['build-api-gateway']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'gcr.io/${PROJECT_ID}/quantum-worker'
+    waitFor: ['build-quantum-worker']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'gcr.io/${PROJECT_ID}/quantum-entanglement-node'
+    waitFor: ['build-entanglement-node']
+
+  # Deploy omni-api to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'deploy-omni-api'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'omni-api'
+      - '--image'
+      - 'gcr.io/${PROJECT_ID}/omni-api:${SHORT_SHA}'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '1Gi'
+      - '--cpu'
+      - '1'
+      - '--max-instances'
+      - '5'
+      - '--timeout'
+      - '300'
+      - '--set-env-vars'
+      - 'OMNI_ENV=production,GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+    waitFor: ['push-images']
+
+  # Deploy omni-singularity to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'deploy-omni-singularity'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'omni-singularity'
+      - '--image'
+      - 'gcr.io/${PROJECT_ID}/omni-singularity:${SHORT_SHA}'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8093'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '2'
+      - '--max-instances'
+      - '3'
+      - '--timeout'
+      - '300'
+      - '--set-env-vars'
+      - 'OMNI_VERSION=10.0,OMNI_MODE=full,QUANTUM_ACCELERATION=true,GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+    waitFor: ['push-images']
+
+  # Deploy omni-quantum-backend to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'deploy-quantum-backend'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'omni-quantum-backend'
+      - '--image'
+      - 'gcr.io/${PROJECT_ID}/omni-quantum-backend:${SHORT_SHA}'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '2'
+      - '--max-instances'
+      - '3'
+      - '--timeout'
+      - '300'
+      - '--set-env-vars'
+      - 'QUANTUM_PLATFORM_MODE=production,QUANTUM_CORES_MAX=10,GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+    waitFor: ['push-images']
+
+  # Deploy omni-api-gateway to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'deploy-api-gateway'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'omni-api-gateway'
+      - '--image'
+      - 'gcr.io/${PROJECT_ID}/omni-api-gateway:${SHORT_SHA}'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8082'
+      - '--memory'
+      - '1Gi'
+      - '--cpu'
+      - '1'
+      - '--max-instances'
+      - '5'
+      - '--timeout'
+      - '300'
+      - '--set-env-vars'
+      - 'API_PORT=8082,ENABLE_CORS=true,GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+    waitFor: ['push-images']
+
+  # Deploy quantum-worker to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'deploy-quantum-worker'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'quantum-worker'
+      - '--image'
+      - 'gcr.io/${PROJECT_ID}/quantum-worker:${SHORT_SHA}'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '1Gi'
+      - '--cpu'
+      - '1'
+      - '--max-instances'
+      - '10'
+      - '--timeout'
+      - '300'
+      - '--set-env-vars'
+      - 'WORKER_MODE=production,GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+    waitFor: ['push-images']
+
+  # Deploy quantum-entanglement-node to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'deploy-entanglement-node'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'quantum-entanglement-node'
+      - '--image'
+      - 'gcr.io/${PROJECT_ID}/quantum-entanglement-node:${SHORT_SHA}'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '1Gi'
+      - '--cpu'
+      - '1'
+      - '--max-instances'
+      - '5'
+      - '--timeout'
+      - '300'
+      - '--set-env-vars'
+      - 'NODE_MODE=production,GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+    waitFor: ['push-images']
+
+# Build options
+options:
+  machineType: 'E2_HIGHCPU_8'
+  substitution_option: 'ALLOW_LOOSE'
+
+# Substitutions
+substitutions:
+  _REGION: 'europe-west1'
+
+# Timeout
+timeout: '3600s'

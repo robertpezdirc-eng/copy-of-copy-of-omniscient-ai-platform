@@ -1,0 +1,197 @@
+{
+  "displayName": "Omni Dashboard | omni-dashboard (Cloud Run)",
+  "gridLayout": {
+    "columns": 12,
+    "widgets": [
+      {
+        "title": "P95 Latency (ms) — omni-dashboard",
+        "xyChart": {
+          "chartOptions": { "mode": "COLOR" },
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"run.googleapis.com/request_latencies\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"omni-dashboard\"",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_PERCENTILE_95",
+                    "crossSeriesReducer": "REDUCE_MAX",
+                    "groupByFields": ["resource.label.\"service_name\""]
+                  }
+                }
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s",
+              "legendTemplate": "P95 latency"
+            }
+          ],
+          "thresholds": [ { "label": "Target (1500ms)", "value": 1500, "color": "YELLOW" } ],
+          "yAxis": { "scale": "LINEAR", "label": "ms" }
+        }
+      },
+      {
+        "title": "Error Rate (5xx req/s) — omni-dashboard",
+        "xyChart": {
+          "chartOptions": { "mode": "COLOR" },
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"run.googleapis.com/request_count\" AND metric.label.\"response_code_class\"=\"5xx\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"omni-dashboard\"",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_RATE",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": ["resource.label.\"service_name\""]
+                  }
+                }
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s",
+              "legendTemplate": "5xx rate"
+            }
+          ],
+          "yAxis": { "scale": "LINEAR", "label": "req/s" }
+        }
+      },
+      {
+        "title": "Request Rate (req/s) — omni-dashboard",
+        "xyChart": {
+          "chartOptions": { "mode": "COLOR" },
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"run.googleapis.com/request_count\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"omni-dashboard\"",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_RATE",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": ["resource.label.\"service_name\""]
+                  }
+                }
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s",
+              "legendTemplate": "request rate"
+            }
+          ],
+          "yAxis": { "scale": "LINEAR", "label": "req/s" }
+        }
+      },
+      {
+        "title": "P95 Latency — zadnja vrednost (ms)",
+        "scorecard": {
+          "timeSeriesQuery": {
+            "timeSeriesFilter": {
+              "filter": "metric.type=\"run.googleapis.com/request_latencies\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"omni-dashboard\"",
+              "aggregation": {
+                "alignmentPeriod": "60s",
+                "perSeriesAligner": "ALIGN_PERCENTILE_95",
+                "crossSeriesReducer": "REDUCE_MAX",
+                "groupByFields": ["resource.label.\"service_name\""]
+              }
+            }
+          },
+          "gaugeView": { "lowerBound": 0, "upperBound": 1500 },
+          "thresholds": [ { "label": "Cilj (1500ms)", "value": 1500, "color": "YELLOW" } ]
+        }
+      },
+      {
+        "title": "Throughput — avg req/s (last 5m)",
+        "scorecard": {
+          "timeSeriesQuery": {
+            "timeSeriesFilter": {
+              "filter": "metric.type=\"run.googleapis.com/request_count\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"omni-dashboard\"",
+              "aggregation": {
+                "alignmentPeriod": "300s",
+                "perSeriesAligner": "ALIGN_RATE",
+                "crossSeriesReducer": "REDUCE_SUM",
+                "groupByFields": ["resource.label.\"service_name\""]
+              }
+            },
+            "unitOverride": "1/s"
+          },
+          "sparkChart": { "minAlignmentPeriod": "60s" }
+        }
+      },
+      {
+        "title": "Request Rate (stacked 2xx/4xx/5xx) — omni-dashboard",
+        "xyChart": {
+          "chartOptions": { "mode": "COLOR" },
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"run.googleapis.com/request_count\" AND metric.label.\"response_code_class\"=\"2xx\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"omni-dashboard\"",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_RATE",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": ["resource.label.\"service_name\""]
+                  }
+                }
+              },
+              "plotType": "STACKED_AREA",
+              "minAlignmentPeriod": "60s",
+              "legendTemplate": "2xx"
+            },
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"run.googleapis.com/request_count\" AND metric.label.\"response_code_class\"=\"4xx\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"omni-dashboard\"",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_RATE",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": ["resource.label.\"service_name\""]
+                  }
+                }
+              },
+              "plotType": "STACKED_AREA",
+              "minAlignmentPeriod": "60s",
+              "legendTemplate": "4xx"
+            },
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"run.googleapis.com/request_count\" AND metric.label.\"response_code_class\"=\"5xx\" AND resource.type=\"cloud_run_revision\" AND resource.label.\"service_name\"=\"omni-dashboard\"",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_RATE",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": ["resource.label.\"service_name\""]
+                  }
+                }
+              },
+              "plotType": "STACKED_AREA",
+              "minAlignmentPeriod": "60s",
+              "legendTemplate": "5xx"
+            }
+          ],
+          "yAxis": { "scale": "LINEAR", "label": "req/s" }
+        }
+      },
+      {
+        "title": "Uptime (check_passed) — omni-dashboard",
+        "xyChart": {
+          "chartOptions": { "mode": "COLOR" },
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND resource.type=\"uptime_url\" AND resource.label.\"host\"=\"omni-dashboard-abcdef-ew.a.run.app\"",
+                  "aggregation": { "alignmentPeriod": "60s", "perSeriesAligner": "ALIGN_NEXT_OLDER" }
+                }
+              },
+              "plotType": "LINE",
+              "minAlignmentPeriod": "60s",
+              "legendTemplate": "Uptime checks"
+            }
+          ],
+          "yAxis": { "scale": "LINEAR", "label": "pass(1)/fail(0)" }
+        }
+      }
+    ]
+  }
+}

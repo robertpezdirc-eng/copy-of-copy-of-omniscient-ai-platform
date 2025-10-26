@@ -1,0 +1,10 @@
+{
+  "colors": {
+    "primary": "#007bff",
+    "secondary": "#6c757d",
+    "accent": "#ffc107",
+    "background": "#f8f9fa",
+    "text": "#343a40"
+  },
+  "logo": "https://example.com/logo.png"
+}

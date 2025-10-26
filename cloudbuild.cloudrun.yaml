@@ -1,0 +1,50 @@
+# Cloud Build pipeline to build and deploy OMNI Markec Dashboard to Cloud Run
+# Usage: Create a Cloud Build trigger on your repository that uses this file.
+# Ensure the Cloud Build service account has roles/run.admin and roles/iam.serviceAccountUser.
+
+substitutions:
+  _REGION: "europe-west1"
+  _REPO_NAME: "omni-dashboard"
+  _SERVICE_NAME: "markec-dashboard"
+  _PROJECT_ID: "YOUR_PROJECT_ID"
+  _ALLOW_UNAUTH: "true"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+  # Build and push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        IMAGE="${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:$SHORT_SHA"
+        echo "Building $IMAGE"
+        docker build -t "$IMAGE" .
+        docker push "$IMAGE"
+  
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        IMAGE="${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:$SHORT_SHA"
+        echo "Deploying $IMAGE to Cloud Run service ${_SERVICE_NAME} in ${_REGION}"
+        gcloud run deploy "${_SERVICE_NAME}" \
+          --image "$IMAGE" \
+          --platform managed \
+          --region "${_REGION}" \
+          --allow-unauthenticated="${_ALLOW_UNAUTH}" \
+          --port 8080 \
+          --max-instances=3 \
+          --memory=512Mi \
+          --cpu=1 \
+          --set-env-vars SECRET_KEY=auto,OMNI_DEBUG_AUTH=true \
+          --set-env-vars PORT=8080
+
+images:
+- '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:$SHORT_SHA'

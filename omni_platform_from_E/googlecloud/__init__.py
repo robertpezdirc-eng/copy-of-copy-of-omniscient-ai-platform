@@ -1,0 +1,1 @@
+# Google Cloud integration package for OMNI Platform

@@ -1,0 +1,58 @@
+name: Deploy Missing Services to Cloud Run on Merge
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: cloud-run-deploy-merge-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-missing-services:
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud via OIDC
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/661612368188/locations/global/workloadIdentityPools/github/providers/github
+          service_account: ci-deployer@refined-graph-471712-n9.iam.gserviceaccount.com
+          create_credentials: true
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker gcr.io
+
+      - name: Set project ID (fallback if secret missing)
+        shell: bash
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          PROJECT_ID=${PROJECT_ID:-refined-graph-471712-n9}
+          gcloud config set project "$PROJECT_ID"
+          echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
+
+      - name: Submit Cloud Build for missing services
+        shell: bash
+        run: |
+          if [ ! -f cloudbuild.missing-services.yaml ]; then
+            echo "cloudbuild.missing-services.yaml not found"; exit 1;
+          fi
+          gcloud builds submit --config cloudbuild.missing-services.yaml --project "$PROJECT_ID"
+
+      - name: Show deployed Cloud Run services
+        shell: bash
+        run: |
+          gcloud run services list --format='table(metadata.name,metadata.labels.cloud\.googleapis\.com/location,status.url)'

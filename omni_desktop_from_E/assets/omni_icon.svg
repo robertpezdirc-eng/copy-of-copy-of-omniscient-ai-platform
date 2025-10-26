@@ -1,0 +1,59 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00ffff;stop-opacity:1" />
+      <stop offset="25%" style="stop-color:#ff00ff;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ff7700;stop-opacity:1" />
+      <stop offset="75%" style="stop-color:#00ffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff00ff;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="128" cy="128" r="120" fill="url(#neonGradient)" filter="url(#glow)" opacity="0.2"/>
+
+  <!-- Main OMNI logo -->
+  <g transform="translate(128, 128)">
+    <!-- O -->
+    <text x="-80" y="0" font-family="Arial Black, sans-serif" font-size="60" font-weight="bold" fill="url(#neonGradient)" text-anchor="middle" filter="url(#glow)">O</text>
+
+    <!-- M -->
+    <text x="-20" y="0" font-family="Arial Black, sans-serif" font-size="60" font-weight="bold" fill="url(#neonGradient)" text-anchor="middle" filter="url(#glow)">M</text>
+
+    <!-- N -->
+    <text x="20" y="0" font-family="Arial Black, sans-serif" font-size="60" font-weight="bold" fill="url(#neonGradient)" text-anchor="middle" filter="url(#glow)">N</text>
+
+    <!-- I -->
+    <text x="60" y="0" font-family="Arial Black, sans-serif" font-size="60" font-weight="bold" fill="url(#neonGradient)" text-anchor="middle" filter="url(#glow)">I</text>
+  </g>
+
+  <!-- Circuit pattern overlay -->
+  <g opacity="0.3">
+    <circle cx="64" cy="64" r="2" fill="#00ffff" filter="url(#glow)"/>
+    <circle cx="192" cy="64" r="2" fill="#ff00ff" filter="url(#glow)"/>
+    <circle cx="64" cy="192" r="2" fill="#ff7700" filter="url(#glow)"/>
+    <circle cx="192" cy="192" r="2" fill="#00ffff" filter="url(#glow)"/>
+
+    <!-- Connection lines -->
+    <line x1="64" y1="64" x2="192" y2="64" stroke="#00ffff" stroke-width="1" opacity="0.5"/>
+    <line x1="64" y1="192" x2="192" y2="192" stroke="#ff00ff" stroke-width="1" opacity="0.5"/>
+    <line x1="64" y1="64" x2="64" y2="192" stroke="#ff7700" stroke-width="1" opacity="0.5"/>
+    <line x1="192" y1="64" x2="192" y2="192" stroke="#00ffff" stroke-width="1" opacity="0.5"/>
+  </g>
+
+  <!-- AI brain icon in center -->
+  <g transform="translate(128, 128)">
+    <circle cx="0" cy="-40" r="15" fill="none" stroke="url(#neonGradient)" stroke-width="2" filter="url(#glow)"/>
+    <!-- Brain waves -->
+    <path d="M -10,-45 Q 0,-55 10,-45" fill="none" stroke="#ff00ff" stroke-width="1" opacity="0.7"/>
+    <path d="M -8,-42 Q 0,-50 8,-42" fill="none" stroke="#00ffff" stroke-width="1" opacity="0.5"/>
+    <path d="M -6,-40 Q 0,-46 6,-40" fill="none" stroke="#ff7700" stroke-width="1" opacity="0.3"/>
+  </g>
+</svg>

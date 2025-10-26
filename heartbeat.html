@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSE Heartbeat Test (/api/platform/sse-ping)</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 20px; background: #0f172a; color: #e5e7eb; }
+    h1 { margin: 0 0 10px; }
+    .card { background: #111827; border: 1px solid #1f2937; border-radius: 10px; padding: 16px; max-width: 800px; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+    label { font-size: 12px; color: #9ca3af; display: block; margin-bottom: 4px; }
+    input, select { background: #0b1220; color: #e5e7eb; border: 1px solid #1f2937; border-radius: 6px; padding: 8px; min-width: 260px; }
+    button { background: #2563eb; color: white; border: none; border-radius: 6px; padding: 8px 12px; cursor: pointer; }
+    button.stop { background: #ef4444; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .log { margin-top: 12px; background: #0b1220; border: 1px solid #1f2937; border-radius: 8px; min-height: 180px; padding: 10px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; white-space: pre-wrap; }
+    .footer { margin-top: 16px; font-size: 12px; color: #9ca3af; }
+    .ok { color: #22c55e; }
+    .warn { color: #f59e0b; }
+    .err { color: #ef4444; }
+  </style>
+</head>
+<body>
+  <h1>SSE Heartbeat Test</h1>
+  <p>Hitri preizkus SSE tokov proti <code>/api/platform/sse-ping</code> za primerjavo in diagnostiko.</p>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <label for="url">SSE URL</label>
+        <input id="url" type="text" value="http://localhost:8082/api/platform/sse-ping" />
+      </div>
+      <div>
+        <label for="autoStart">Auto start</label>
+        <select id="autoStart">
+          <option value="yes">yes</option>
+          <option value="no" selected>no</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <button id="start">Start</button>
+      <button id="stop" class="stop" disabled>Stop</button>
+      <button id="clear">Clear Log</button>
+    </div>
+    <div id="log" class="log"></div>
+    <div class="footer">Nasvet: v konzoli (F12) lahko spremljaš morebitne CORS napake. Strežnik mora vračati <code>Access-Control-Allow-Origin</code> za domeno te strani.</div>
+  </div>
+
+  <script>
+    const logEl = document.getElementById('log');
+    const urlEl = document.getElementById('url');
+    const autoStartEl = document.getElementById('autoStart');
+    const startBtn = document.getElementById('start');
+    const stopBtn = document.getElementById('stop');
+    const clearBtn = document.getElementById('clear');
+
+    let es = null;
+
+    function log(msg, cls) {
+      const line = document.createElement('div');
+      if (cls) line.className = cls;
+      line.textContent = msg;
+      logEl.appendChild(line);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function start() {
+      const url = urlEl.value.trim();
+      if (!url) return alert('Prosim vnesi veljaven URL!');
+      if (es) es.close();
+      log(`\n--- Connecting to ${url} ---`);
+      try {
+        es = new EventSource(url, { withCredentials: true });
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+
+        es.addEventListener('start', (e) => {
+          log(`[event:start] ${e.data}`, 'ok');
+        });
+        es.addEventListener('message', (e) => {
+          // Some servers use default 'message' event; our endpoint sends generic data without event name for ticks
+          log(`[message] ${e.data}`);
+        });
+        es.addEventListener('done', (e) => {
+          log(`[event:done] ${e.data}`, 'ok');
+          stop();
+        });
+        es.onopen = () => log('SSE open', 'ok');
+        es.onerror = (err) => {
+          log(`SSE error (glej brskalniško konzolo za podrobnosti)`, 'err');
+        };
+      } catch (e) {
+        log(`Init error: ${e.message}`, 'err');
+      }
+    }
+
+    function stop() {
+      if (es) {
+        es.close();
+        es = null;
+      }
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+      log('SSE closed');
+    }
+
+    startBtn.onclick = start;
+    stopBtn.onclick = stop;
+    clearBtn.onclick = () => { logEl.innerHTML = ''; };
+
+    if (autoStartEl.value === 'yes') start();
+  </script>
+</body>
+</html>

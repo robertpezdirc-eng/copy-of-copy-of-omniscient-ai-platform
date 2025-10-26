@@ -1,0 +1,27 @@
+{
+  "deployment_mode": "immortal",
+  "active_instance": "v1",
+  "instances": {
+    "v1": {
+      "service": "omni-autolearn-v1",
+      "path": "/opt/omni/releases/v1",
+      "port": 9090,
+      "status": "active",
+      "role": "primary"
+    },
+    "v2": {
+      "service": "omni-autolearn-v2",
+      "path": "/opt/omni/releases/v2",
+      "port": 9091,
+      "status": "standby",
+      "role": "upgrade"
+    }
+  },
+  "checkpoint_dir": "/opt/omni/checkpoints",
+  "release_dir": "/opt/omni/releases",
+  "health_check_interval": 30,
+  "auto_failover": true,
+  "auto_upgrade": true,
+  "max_failures": 3,
+  "backup_count": 10
+}

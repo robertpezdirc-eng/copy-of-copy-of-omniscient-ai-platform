@@ -1,0 +1,52 @@
+name: Deploy Frontend via OIDC
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      FIREBASE_PROJECT_ID: omni-platform-244c6
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: omni-search/package-lock.json
+
+      - name: Authenticate to Google Cloud via OIDC
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/661612368188/locations/global/workloadIdentityPools/github/providers/github
+          service_account: ci-deployer@refined-graph-471712-n9.iam.gserviceaccount.com
+          create_credentials: true
+
+      - name: Export GOOGLE_APPLICATION_CREDENTIALS for ADC
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ steps.auth.outputs.credentials_file_path }}" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: omni-search
+
+      - name: Build production
+        run: npm run build
+        working-directory: omni-search
+
+      - name: Install Firebase CLI
+        run: npm i -g firebase-tools
+
+      - name: Deploy to Firebase Hosting (ADC)
+        run: firebase deploy --only hosting --project ${FIREBASE_PROJECT_ID} --non-interactive
+        working-directory: omni-search

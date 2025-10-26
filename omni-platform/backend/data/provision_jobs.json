@@ -1,0 +1,26 @@
+{
+  "9ff11e16e31147c0bf9f4f26266bc39a": {
+    "id": "9ff11e16e31147c0bf9f4f26266bc39a",
+    "tenant_id": "t-demo",
+    "strategy": "docker",
+    "region": "eu",
+    "status": "queued",
+    "created_at": 1761435097090,
+    "manifest": {
+      "type": "docker-compose",
+      "services": {
+        "app-t-demo": {
+          "image": "omniscient/platform:latest",
+          "ports": [
+            8000
+          ],
+          "environment": {},
+          "deploy": {
+            "replicas": 1,
+            "restart_policy": "always"
+          }
+        }
+      }
+    }
+  }
+}

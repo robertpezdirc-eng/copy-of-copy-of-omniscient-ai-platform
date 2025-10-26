@@ -1,0 +1,8 @@
+﻿Client:
+ Version:           28.5.1
+ API version:       1.51
+ Go version:        go1.24.8
+ Git commit:        e180ab8
+ Built:             Wed Oct  8 12:19:16 2025
+ OS/Arch:           windows/amd64
+ Context:           desktop-linux

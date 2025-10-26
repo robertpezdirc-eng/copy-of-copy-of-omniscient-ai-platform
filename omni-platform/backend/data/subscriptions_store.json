@@ -1,0 +1,37 @@
+{
+  "6ed2de74f8364a9c8fd6803c3686c54c": {
+    "id": "6ed2de74f8364a9c8fd6803c3686c54c",
+    "tenant_id": "acme",
+    "plan": "starter",
+    "status": "active",
+    "created_at": 1761425217553,
+    "meta": {},
+    "last_payment": {
+      "gateway": "stripe",
+      "intent_id": "pi_254fdb726e6a4468900f61a4",
+      "amount": 1200.0,
+      "currency": "USD",
+      "status": "succeeded",
+      "ts": 1761425220048
+    },
+    "updated_at": 1761425224878
+  },
+  "2bc1a4e50b904b5a87fc6c3de8a38e5c": {
+    "id": "2bc1a4e50b904b5a87fc6c3de8a38e5c",
+    "tenant_id": "acme2",
+    "plan": "pro",
+    "status": "active",
+    "created_at": 1761426262706,
+    "meta": {},
+    "last_payment": {
+      "gateway": "stripe",
+      "intent_id": "pi_734c504fa3b44f9096dbdb19",
+      "amount": 999.0,
+      "currency": "USD",
+      "status": "succeeded",
+      "ts": 1761426265288,
+      "last_event_id": "evt_1"
+    },
+    "updated_at": 1761426275204
+  }
+}

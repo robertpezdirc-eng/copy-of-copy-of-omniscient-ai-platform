@@ -1,0 +1,514 @@
+# Omni Platform Scaling and Performance Configuration
+# Advanced scaling setup for Google Cloud deployment
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omni-scaling-config
+  namespace: default
+data:
+  # Cloud Load Balancer Configuration
+  load-balancer-config.yaml: |
+    # Global Load Balancer for Omni Platform
+    global-load-balancer:
+      name: "omni-platform-global-lb"
+      description: "Global HTTP(S) load balancer for Omni Platform"
+      loadBalancingScheme: "EXTERNAL_MANAGED"
+
+      # Frontend configuration
+      frontend:
+      - name: "omni-frontend-https"
+        port: 443
+        protocol: "HTTPS"
+        certificateManagerCertificate:
+          certificate: "omni-platform-cert"
+
+      - name: "omni-frontend-http"
+        port: 80
+        protocol: "HTTP"
+        redirectToHttps: true
+
+      # Backend services
+      backend-services:
+      - name: "omni-api-backend"
+        description: "Backend for omni-exec-api"
+        protocol: "HTTP"
+        port: 8080
+        timeoutSec: 30
+        connectionDraining:
+          drainingTimeoutSec: 300
+
+        healthChecks:
+        - name: "omni-api-health-check"
+          description: "Health check for API service"
+          httpHealthCheck:
+            port: 8080
+            requestPath: "/readyz"
+            portSpecification: "USE_FIXED_PORT"
+          checkIntervalSec: 30
+          timeoutSec: 10
+          healthyThreshold: 2
+          unhealthyThreshold: 3
+
+        backends:
+        - group: "projects/PROJECT_ID/zones/ZONE/instanceGroups/omni-api-mig"
+
+        cdnPolicy:
+          cacheMode: "USE_ORIGIN_HEADERS"
+          clientTtl: 3600
+          defaultTtl: 3600
+          maxTtl: 86400
+          negativeCaching: true
+          negativeCachingPolicy:
+          - code: 404
+            ttl: 300
+
+        securityPolicy: "omni-platform-security-policy"
+
+      - name: "omni-frontend-backend"
+        description: "Backend for omni-frontend"
+        protocol: "HTTP"
+        port: 8080
+        timeoutSec: 30
+
+        healthChecks:
+        - name: "omni-frontend-health-check"
+          httpHealthCheck:
+            port: 8080
+            requestPath: "/"
+            portSpecification: "USE_FIXED_PORT"
+
+        backends:
+        - group: "projects/PROJECT_ID/zones/ZONE/instanceGroups/omni-frontend-mig"
+
+        cdnPolicy:
+          cacheMode: "CACHE_ALL_STATIC"
+          cacheKeyPolicy:
+            includeHost: true
+            includeProtocol: true
+            includeQueryString: false
+          clientTtl: 7200
+          defaultTtl: 7200
+          maxTtl: 86400
+
+      # URL Maps
+      url-maps:
+      - name: "omni-platform-url-map"
+        description: "URL map for routing requests"
+        defaultService: "projects/PROJECT_ID/global/backendServices/omni-frontend-backend"
+
+        pathMatchers:
+        - name: "api-paths"
+          defaultService: "projects/PROJECT_ID/global/backendServices/omni-api-backend"
+          pathRules:
+          - paths: ["/api/*", "/v1/*", "/health*"]
+            service: "projects/PROJECT_ID/global/backendServices/omni-api-backend"
+
+        - name: "dashboard-paths"
+          defaultService: "projects/PROJECT_ID/global/backendServices/omni-frontend-backend"
+          pathRules:
+          - paths: ["/dashboard/*", "/admin/*"]
+            service: "projects/PROJECT_ID/global/backendServices/omni-dashboard-backend"
+
+    # Regional Load Balancer for internal services
+    regional-load-balancer:
+      name: "omni-platform-regional-lb"
+      description: "Regional internal load balancer"
+      loadBalancingScheme: "INTERNAL_MANAGED"
+      region: "europe-west1"
+
+      frontend:
+      - name: "omni-internal-frontend"
+        port: 8080
+        protocol: "TCP"
+
+      backend-services:
+      - name: "omni-internal-backend"
+        protocol: "TCP"
+        port: 8080
+        healthChecks:
+        - name: "omni-internal-health-check"
+          tcpHealthCheck:
+            port: 8080
+
+    # Traffic Splitting Configuration
+    traffic-splitting:
+      name: "omni-traffic-split"
+      description: "Traffic splitting for canary deployments"
+
+      splits:
+      - name: "stable-version"
+        weight: 90
+        service: "omni-exec-api-stable"
+
+      - name: "canary-version"
+        weight: 10
+        service: "omni-exec-api-canary"
+
+      splitAlgorithm: "RING_HASH"
+
+    # Managed Instance Groups for auto-scaling
+    managed-instance-groups:
+    - name: "omni-api-mig"
+      description: "Managed instance group for API service"
+      zone: "europe-west1-b"
+      instanceTemplate: "omni-api-template"
+      targetSize: 3
+
+      autoscaling:
+        name: "omni-api-autoscaler"
+        targetCpuUtilization: 0.6
+        targetMemoryUtilization: 0.7
+        minNumReplicas: 1
+        maxNumReplicas: 20
+        cooldownPeriod: 300
+
+    - name: "omni-frontend-mig"
+      description: "Managed instance group for frontend service"
+      zone: "europe-west1-b"
+      instanceTemplate: "omni-frontend-template"
+      targetSize: 2
+
+      autoscaling:
+        name: "omni-frontend-autoscaler"
+        targetCpuUtilization: 0.5
+        minNumReplicas: 1
+        maxNumReplicas: 15
+
+    # Cloud CDN Configuration
+    cdn-config:
+      name: "omni-platform-cdn"
+      description: "CDN configuration for static assets"
+
+      originConfigs:
+      - name: "omni-frontend-origin"
+        originAddress: "omni-frontend-backend"
+        retryConditions: ["5xx", "CONNECT_FAILURE"]
+
+      cachePolicies:
+      - name: "omni-static-cache"
+        cacheMode: "CACHE_ALL_STATIC"
+        cacheKeyPolicy:
+          includeHost: true
+          includeProtocol: true
+          includeQueryString: false
+        clientTtl: 7200
+        defaultTtl: 7200
+        maxTtl: 86400
+
+      - name: "omni-api-cache"
+        cacheMode: "USE_ORIGIN_HEADERS"
+        clientTtl: 300
+        defaultTtl: 300
+        maxTtl: 3600
+
+    # Cloud Armor Security Policy for Load Balancer
+    cloud-armor-advanced:
+      name: "omni-platform-advanced-security"
+      description: "Advanced security policy with WAF rules"
+
+      rules:
+      - action: "allow"
+        priority: 1000
+        match:
+          versionedExpr: "SRC_IPS_V1"
+          config:
+          - srcIpRanges: ["35.191.0.0/16", "130.211.0.0/22"]
+
+      - action: "throttle"
+        priority: 2000
+        match:
+          versionedExpr: "SRC_IPS_V1"
+          config:
+          - srcIpRanges: ["*"]
+        rateLimitOptions:
+          rateLimitThreshold:
+            count: 100
+            intervalSec: 60
+          conformAction: "allow"
+          exceedAction: "deny"
+
+      - action: "deny"
+        priority: 3000
+        match:
+          expr:
+            expression: |
+              evaluatePreconfiguredWaf('xss-stable') ||
+              evaluatePreconfiguredWaf('sqli-stable') ||
+              evaluatePreconfiguredWaf('lfi-stable') ||
+              evaluatePreconfiguredWaf('rfi-stable')
+
+      - action: "deny"
+        priority: 2147483647
+        match:
+          versionedExpr: "SRC_IPS_V1"
+          config:
+          - srcIpRanges: ["*"]
+
+    # Service Mesh Configuration (if using GKE)
+    service-mesh-config:
+      controlPlaneSecurity:
+        certificateAuthority: {}
+
+      defaultConfig:
+        proxyMetadata:
+          TRUST_DOMAIN: "cluster.local"
+          PILOT_CERT_PROVIDER: "istiod"
+          CANONICAL_SERVICE: "omni-platform"
+
+        tracing:
+          sampling: 10.0
+          customTags:
+          - literal:
+              value: "omni-platform"
+            name: "platform"
+
+        accessLogFile: "/dev/stdout"
+
+    # Horizontal Pod Autoscaling (for GKE deployment)
+    hpa-config:
+    - name: "omni-api-hpa"
+      scaleTargetRef:
+        apiVersion: "apps/v1"
+        kind: "Deployment"
+        name: "omni-exec-api"
+      minReplicas: 1
+      maxReplicas: 20
+      targetCPUUtilizationPercentage: 60
+      targetMemoryUtilizationPercentage: 70
+
+    - name: "omni-frontend-hpa"
+      scaleTargetRef:
+        apiVersion: "apps/v1"
+        kind: "Deployment"
+        name: "omni-frontend"
+      minReplicas: 1
+      maxReplicas: 15
+      targetCPUUtilizationPercentage: 50
+
+    # Vertical Pod Autoscaling (for GKE deployment)
+    vpa-config:
+    - name: "omni-api-vpa"
+      targetRef:
+        apiVersion: "apps/v1"
+        kind: "Deployment"
+        name: "omni-exec-api"
+      updatePolicy:
+        updateMode: "Auto"
+
+    # Multi-region deployment configuration
+    multi-region-config:
+      regions:
+      - name: "europe-west1"
+        priority: 1
+      - name: "europe-west2"
+        priority: 2
+      - name: "europe-west3"
+        priority: 3
+
+      failoverPolicy:
+        disableConnectionDrainOnFailover: false
+        dropTrafficIfUnhealthy: true
+        failoverRatio: 0.5
+
+    # Rate Limiting Configuration
+    rate-limiting:
+      name: "omni-api-rate-limiting"
+      description: "Rate limiting for API endpoints"
+
+      rules:
+      - priority: 1000
+        match:
+          versionedExpr: "SRC_IPS_V1"
+        rateLimitOptions:
+          rateLimitThreshold:
+            count: 1000
+            intervalSec: 60
+          conformAction: "allow"
+          exceedAction: "deny"
+
+      - priority: 2000
+        match:
+          expr:
+            expression: "request.path.matches('/api/gemini/*')"
+        rateLimitOptions:
+          rateLimitThreshold:
+            count: 100
+            intervalSec: 60
+          conformAction: "allow"
+          exceedAction: "deny"
+
+    # Geo-routing configuration
+    geo-routing:
+      name: "omni-geo-routing"
+      description: "Route traffic based on geographic location"
+
+      rules:
+      - priority: 1000
+        match:
+          versionedExpr: "SRC_IPS_V1"
+          config:
+          - srcIpRanges: ["91.185.0.0/16", "212.235.0.0/16"]  # Slovenia IP ranges
+        service: "omni-frontend-eu"
+
+      - priority: 2000
+        match:
+          versionedExpr: "SRC_IPS_V1"
+          config:
+          - srcIpRanges: ["*"]
+        service: "omni-frontend-global"
+
+---
+# Deployment script for scaling configurations
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omni-scaling-deployment
+  namespace: default
+data:
+  deploy-scaling.sh: |
+    #!/bin/bash
+    # Deploy scaling configurations for Omni Platform
+
+    set -e
+
+    PROJECT_ID="${PROJECT_ID:-refined-graph-471712-n9}"
+    REGION="europe-west1"
+
+    echo "🚀 Deploying Omni Platform scaling configurations..."
+
+    # 1. Enable required scaling APIs
+    echo "Enabling scaling APIs..."
+    gcloud services enable \
+      compute.googleapis.com \
+      container.googleapis.com \
+      --project=$PROJECT_ID
+
+    # 2. Create health checks
+    echo "Creating health checks..."
+    gcloud compute health-checks create http omni-api-health-check \
+      --description="Health check for API service" \
+      --check-interval=30 \
+      --timeout=10 \
+      --healthy-threshold=2 \
+      --unhealthy-threshold=3 \
+      --request-path="/readyz" \
+      --port=8080 \
+      --project=$PROJECT_ID
+
+    gcloud compute health-checks create http omni-frontend-health-check \
+      --description="Health check for frontend service" \
+      --check-interval=30 \
+      --timeout=10 \
+      --healthy-threshold=2 \
+      --unhealthy-threshold=3 \
+      --request-path="/" \
+      --port=8080 \
+      --project=$PROJECT_ID
+
+    # 3. Create backend services
+    echo "Creating backend services..."
+    gcloud compute backend-services create omni-api-backend \
+      --description="Backend for omni-exec-api" \
+      --protocol=HTTP \
+      --port=8080 \
+      --timeout=30 \
+      --health-checks=omni-api-health-check \
+      --global \
+      --project=$PROJECT_ID
+
+    gcloud compute backend-services create omni-frontend-backend \
+      --description="Backend for omni-frontend" \
+      --protocol=HTTP \
+      --port=8080 \
+      --timeout=30 \
+      --health-checks=omni-frontend-health-check \
+      --global \
+      --project=$PROJECT_ID
+
+    # 4. Create URL map
+    echo "Creating URL map..."
+    gcloud compute url-maps create omni-platform-url-map \
+      --description="URL map for routing requests" \
+      --default-service=omni-frontend-backend \
+      --global \
+      --project=$PROJECT_ID
+
+    # 5. Create target HTTP proxy
+    echo "Creating HTTP proxy..."
+    gcloud compute target-http-proxies create omni-platform-http-proxy \
+      --description="HTTP proxy for Omni Platform" \
+      --url-map=omni-platform-url-map \
+      --global \
+      --project=$PROJECT_ID
+
+    # 6. Create SSL certificate (using managed certificate)
+    echo "Creating SSL certificate..."
+    gcloud compute ssl-certificates create omni-platform-cert \
+      --description="SSL certificate for Omni Platform" \
+      --domains="omni-platform.example.com" \
+      --global \
+      --project=$PROJECT_ID
+
+    # 7. Create target HTTPS proxy
+    echo "Creating HTTPS proxy..."
+    gcloud compute target-https-proxies create omni-platform-https-proxy \
+      --description="HTTPS proxy for Omni Platform" \
+      --url-map=omni-platform-url-map \
+      --ssl-certificates=omni-platform-cert \
+      --global \
+      --project=$PROJECT_ID
+
+    # 8. Create forwarding rules
+    echo "Creating forwarding rules..."
+    gcloud compute forwarding-rules create omni-platform-http-forwarding-rule \
+      --description="HTTP forwarding rule" \
+      --load-balancing-scheme=EXTERNAL_MANAGED \
+      --network-tier=PREMIUM \
+      --address="" \
+      --target-http-proxy=omni-platform-http-proxy \
+      --global \
+      --ports=80 \
+      --project=$PROJECT_ID
+
+    gcloud compute forwarding-rules create omni-platform-https-forwarding-rule \
+      --description="HTTPS forwarding rule" \
+      --load-balancing-scheme=EXTERNAL_MANAGED \
+      --network-tier=PREMIUM \
+      --address="" \
+      --target-https-proxy=omni-platform-https-proxy \
+      --global \
+      --ports=443 \
+      --project=$PROJECT_ID
+
+    # 9. Create Cloud Armor security policy
+    echo "Creating Cloud Armor security policy..."
+    gcloud compute security-policies create omni-platform-security \
+      --description="Security policy for Omni Platform" \
+      --project=$PROJECT_ID
+
+    # 10. Configure CDN
+    echo "Configuring CDN..."
+    gcloud compute backend-services update omni-frontend-backend \
+      --enable-cdn \
+      --cache-mode=CACHE_ALL_STATIC \
+      --global \
+      --project=$PROJECT_ID
+
+    echo "✅ Scaling configuration deployment completed!"
+    echo ""
+    echo "🌐 Load Balancer URLs:"
+    echo "• HTTP: http://$(gcloud compute forwarding-rules describe omni-platform-http-forwarding-rule --global --format='value(IPAddress)')"
+    echo "• HTTPS: https://$(gcloud compute forwarding-rules describe omni-platform-https-forwarding-rule --global --format='value(IPAddress)')"
+    echo ""
+    echo "📊 Monitoring URLs:"
+    echo "• Load Balancer: https://console.cloud.google.com/net-services/loadbalancing"
+    echo "• Cloud CDN: https://console.cloud.google.com/net-services/cdn"
+    echo "• Cloud Armor: https://console.cloud.google.com/net-services/securitypolicies"
+    echo ""
+    echo "Next steps:"
+    echo "1. Update DNS records to point to load balancer IP"
+    echo "2. Configure SSL certificate for your domain"
+    echo "3. Set up Cloud Armor custom rules for your needs"
+    echo "4. Monitor CDN hit rates and adjust cache policies"
+    echo "5. Configure traffic splitting for canary deployments"

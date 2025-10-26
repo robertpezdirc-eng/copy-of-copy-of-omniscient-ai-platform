@@ -1,0 +1,16 @@
+[
+  {
+    "labels": {
+      "alertname": "ProdSlackCriticalTest01",
+      "severity": "critical",
+      "service": "omni-core",
+      "instance": "omni-core:8080",
+      "env": "prod"
+    },
+    "annotations": {
+      "summary": "Critical test alert (low-noise)",
+      "description": "Controlled critical test to validate Slack delivery via Alertmanager (no paging)."
+    },
+    "startsAt": "2025-10-22T00:00:00Z"
+  }
+]

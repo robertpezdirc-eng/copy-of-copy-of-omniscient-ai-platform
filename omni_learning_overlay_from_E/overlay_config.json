@@ -1,0 +1,29 @@
+{
+  "learning_interval": 3600,
+  "agents_to_learn": [
+    "learning",
+    "commercial",
+    "optimization"
+  ],
+  "learning_topics": [
+    "samoizboljševanje znanja",
+    "napredne AI tehnike",
+    "sistemska optimizacija",
+    "uporabniška izkušnja",
+    "varnostni protokoli",
+    "podatkovna analitika",
+    "digitalni marketing",
+    "procesna avtomatizacija"
+  ],
+  "ai_providers": [
+    "openai",
+    "gemini",
+    "omni"
+  ],
+  "memory_retention_days": 30,
+  "enable_background_learning": true,
+  "enable_analytics_api": true,
+  "omni_core_api_url": "http://localhost:3001/api",
+  "log_level": "INFO",
+  "max_memory_per_agent": 1000
+}

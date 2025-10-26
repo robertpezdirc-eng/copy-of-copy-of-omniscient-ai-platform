@@ -1,0 +1,38 @@
+{
+  "name": "omni_brain",
+  "type": "core",
+  "mode": "server",
+  "description": "Centralni procesor Omni Platforme, povezan z OpenAI GPT-5.",
+  "active": true,
+  "permissions": {
+    "access_level": "full",
+    "can_manage_agents": true,
+    "can_call_api": true
+  },
+  "integrations": {
+    "openai": {
+      "api_key": "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",
+      "model": "gpt-5",
+      "temperature": 0.8,
+      "endpoint": "https://api.openai.com/v1/chat/completions"
+    }
+  },
+  "system_prompts": {
+    "init_message": "Omni Brain initialized and ready. Connected to OpenAI GPT-5.",
+    "error_message": "OpenAI connection error. Check API key or endpoint."
+  },
+  "routes": {
+    "/api/openai": {
+      "method": "POST",
+      "function": "handleOpenAIRequest"
+    },
+    "/api/chat/openai": {
+      "method": "POST",
+      "function": "handleChatRequest"
+    }
+  },
+  "functions": {
+    "handleOpenAIRequest": "async function handleOpenAIRequest(req, res) { const { prompt } = req.body; const response = await fetch('https://api.openai.com/v1/chat/completions', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.OPENAI_API_KEY || 'sk-VAŠ_KLJUČ_TUKAJ'}` }, body: JSON.stringify({ model: 'gpt-5', messages: [{ role: 'user', content: prompt }] }) }); const data = await response.json(); res.json({ reply: data.choices[0].message.content }); }",
+    "handleChatRequest": "async function handleChatRequest(req, res) { const { message } = req.body; const response = await fetch('https://api.openai.com/v1/chat/completions', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.OPENAI_API_KEY || 'sk-VAŠ_KLJUČ_TUKAJ'}` }, body: JSON.stringify({ model: 'gpt-5', messages: [{ role: 'user', content: message }] }) }); const data = await response.json(); res.json({ reply: data.choices[0].message.content }); }"
+  }
+}

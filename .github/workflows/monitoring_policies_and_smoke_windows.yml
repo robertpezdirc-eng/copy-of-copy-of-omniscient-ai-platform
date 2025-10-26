@@ -1,0 +1,32 @@
+name: Monitoring Policy Switch + Smoke Test (Windows)
+on:
+  workflow_dispatch:
+
+jobs:
+  policies-and-smoke-win:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Enable MQL policy (exact) and disable legacy (PowerShell)
+        shell: pwsh
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          POLICY_FILTER: "^OMNI Dashboard - Uptime Check"
+          MQL_POLICY_DISPLAY_NAME: "OMNI Dashboard - Uptime Check (MQL Multi-Region)"
+        run: |
+          ./infra/monitoring/scripts/Enable-Policy.ps1 -ProjectId $env:PROJECT_ID -Filter "$env:MQL_POLICY_DISPLAY_NAME" -Exact -Yes
+          ./infra/monitoring/scripts/Disable-Policy.ps1 -ProjectId $env:PROJECT_ID -Filter "$env:POLICY_FILTER" -ExcludePatterns "$env:MQL_POLICY_DISPLAY_NAME" -Yes
+
+      # Uptime Smoke Test disabled per request: no testing
+      # (Step removed)

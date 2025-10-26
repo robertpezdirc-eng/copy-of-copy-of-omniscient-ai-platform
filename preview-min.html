@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="sl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Preview-min SSE</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 24px; background: #0b0f19; color: #e6edf3; }
+    h1 { font-size: 18px; margin: 0 0 12px; }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+    input, button, select { font-size: 14px; padding: 8px 10px; border-radius: 6px; border: 1px solid #2a3345; background: #121826; color: #e6edf3; }
+    button { cursor: pointer; }
+    button.primary { background: #2f6feb; border-color: #2f6feb; }
+    button.stop { background: #b42318; border-color: #b42318; }
+    .log { background: #0f172a; border: 1px solid #1f2937; border-radius: 8px; padding: 10px; height: 240px; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 13px; }
+    .kv { display: grid; grid-template-columns: 140px 1fr; gap: 6px 10px; align-items: center; margin-bottom: 12px; }
+    .kv .label { opacity: .75; }
+    .badge { display: inline-block; padding: 2px 6px; border-radius: 999px; font-size: 12px; border: 1px solid #334155; color: #93c5fd; }
+    .footer { opacity: .7; font-size: 12px; margin-top: 10px; }
+    .ok { color: #10b981; }
+    .err { color: #f97316; }
+  </style>
+</head>
+<body>
+  <h1>Preview-min SSE (8083 ➜ 8082)</h1>
+  <div class="kv">
+    <div class="label">Endpoint</div>
+    <input id="endpoint" value="http://localhost:8082/api/gcp/gemini/stream?prompt=Pozdrav%20svet&source=sim" style="width: 100%" />
+    <div class="label">Mode</div>
+    <select id="mode">
+      <option value="default" selected>Default</option>
+      <option value="vertex">Force Vertex</option>
+      <option value="sim">Simulated</option>
+    </select>
+    <div class="label">Chunk size</div>
+    <input id="chunk" type="number" min="1" max="256" value="24" />
+    <div class="label">Delay (ms)</div>
+    <input id="delay" type="number" min="0" max="500" value="10" />
+  </div>
+
+  <div class="row">
+    <button class="primary" id="startBtn">Start</button>
+    <button class="stop" id="stopBtn">Stop</button>
+    <span class="badge" id="status">idle</span>
+  </div>
+
+  <div class="log" id="log"></div>
+  <div class="footer">SSE zahteva CORS dovoljenja med 8083 (static) in 8082 (API). Dovoljeni izvori: localhost/127.0.0.1, ngrok, localtunnel, trycloudflare, localhost.run.</div>
+
+  <script>
+    let es = null;
+    const logEl = document.getElementById('log');
+    const statusEl = document.getElementById('status');
+    const endpointEl = document.getElementById('endpoint');
+    const modeEl = document.getElementById('mode');
+    const chunkEl = document.getElementById('chunk');
+    const delayEl = document.getElementById('delay');
+
+    function log(line) {
+      const div = document.createElement('div');
+      div.textContent = line;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function buildUrl() {
+      try {
+        const base = new URL(endpointEl.value);
+        const params = base.searchParams;
+        params.set('chunk_size', String(parseInt(chunkEl.value || '24', 10)));
+        params.set('delay_ms', String(parseInt(delayEl.value || '10', 10)));
+        const mode = modeEl.value;
+        if (mode === 'sim') params.set('source', 'sim');
+        if (mode === 'vertex') params.delete('source');
+        base.search = params.toString();
+        return base.toString();
+      } catch (e) {
+        return endpointEl.value;
+      }
+    }
+
+    function start() {
+      stop();
+      const url = buildUrl();
+      log('Opening EventSource: ' + url);
+      statusEl.textContent = 'connecting';
+      statusEl.className = 'badge';
+      try {
+        es = new EventSource(url, { withCredentials: false });
+      } catch (e) {
+        log('EventSource error: ' + e);
+        statusEl.textContent = 'error';
+        statusEl.className = 'badge err';
+        return;
+      }
+      es.onopen = () => { log('[open]'); statusEl.textContent = 'open'; statusEl.className = 'badge ok'; };
+      es.onerror = (e) => { log('[error] ' + (e && e.type ? e.type : 'unknown')); statusEl.textContent = 'error'; statusEl.className = 'badge err'; };
+      es.onmessage = (ev) => { log('[msg] ' + ev.data); };
+      es.addEventListener('start', (ev) => log('[start] ' + ev.data));
+      es.addEventListener('done', (ev) => log('[done] ' + ev.data));
+      es.addEventListener('fallback', (ev) => log('[fallback] ' + ev.data));
+    }
+
+    function stop() {
+      if (es) { try { es.close(); } catch (_) {} es = null; }
+      statusEl.textContent = 'idle';
+      statusEl.className = 'badge';
+    }
+
+    document.getElementById('startBtn').addEventListener('click', start);
+    document.getElementById('stopBtn').addEventListener('click', stop);
+
+    // Auto-start on load for quick embed testing
+    start();
+  </script>
+</body>
+</html>

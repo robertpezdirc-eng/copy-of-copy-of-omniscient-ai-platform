@@ -1,0 +1,7 @@
+{
+  "message": "Napiši kratek pozdrav v slovenščini.",
+  "options": {
+    "model": "gpt-4o-mini",
+    "temperature": 0.7
+  }
+}

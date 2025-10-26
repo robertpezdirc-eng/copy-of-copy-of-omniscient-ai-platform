@@ -1,0 +1,41 @@
+{
+  "f3685d72abe84291873bab4673145426": {
+    "id": "f3685d72abe84291873bab4673145426",
+    "tenant_id": "t-geo",
+    "regions": [
+      "eu-central-1",
+      "us-east-1"
+    ],
+    "clouds": [
+      "aws",
+      "gcp"
+    ],
+    "strategy": "kubernetes",
+    "services": [
+      "api",
+      "worker",
+      "db"
+    ],
+    "status": "provisioned",
+    "created_at": 1761435372053
+  },
+  "2ff2dc4434844b8fa6152b554e0d019b": {
+    "id": "2ff2dc4434844b8fa6152b554e0d019b",
+    "tenant_id": "geo-demo",
+    "regions": [
+      "us-east",
+      "eu-central"
+    ],
+    "clouds": [
+      "aws",
+      "gcp"
+    ],
+    "strategy": "active-active",
+    "services": [
+      "inference",
+      "vector-db"
+    ],
+    "status": "queued",
+    "created_at": 1761460122161
+  }
+}

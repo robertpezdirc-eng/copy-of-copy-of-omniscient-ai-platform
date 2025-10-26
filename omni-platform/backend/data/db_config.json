@@ -1,0 +1,12 @@
+{
+  "db-demo": {
+    "tenant_id": "db-demo",
+    "engine": "cockroachdb",
+    "regions": [
+      "eu-central",
+      "us-east"
+    ],
+    "replication_factor": 3,
+    "updated_at": 1761435401880
+  }
+}

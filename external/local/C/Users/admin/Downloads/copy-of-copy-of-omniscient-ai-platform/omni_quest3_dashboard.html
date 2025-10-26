@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Quest 3 - OMNI Platform Integration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .quest3-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .quest3-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+        .ar-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .tracking-indicator {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="quest3-card rounded-xl p-8 mb-8 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold flex items-center">
+                        🥽 Meta Quest 3 - OMNI Integration
+                    </h1>
+                    <p class="text-blue-100 mt-2 text-lg">Advanced VR/AR with Mixed Reality & Real-time Data Overlay</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-blue-200 text-sm">Status</div>
+                    <div id="quest3Status" class="text-xl font-bold">Initializing...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quest 3 Specifications Overview -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Hardware Specs -->
+            <div class="bg-gray-800 rounded-xl p-6">
+                <h2 class="text-2xl font-bold mb-4 text-blue-400">Hardware Specifications</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Processor:</span>
+                            <span class="font-semibold">Snapdragon XR2 Gen 2</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">RAM:</span>
+                            <span class="font-semibold">8GB</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Storage:</span>
+                            <span class="font-semibold">128GB/512GB</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Display:</span>
+                            <span class="font-semibold">2064x2208 per eye</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Refresh Rate:</span>
+                            <span class="font-semibold">90-120Hz</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Cameras:</span>
+                            <span class="font-semibold">4x Passthrough</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Connectivity:</span>
+                            <span class="font-semibold">WiFi 6E + BT 5.2</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Battery:</span>
+                            <span class="font-semibold">2-3 hours</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capabilities -->
+            <div class="bg-gray-800 rounded-xl p-6">
+                <h2 class="text-2xl font-bold mb-4 text-green-400">VR/AR Capabilities</h2>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                        <span>Mixed Reality (Passthrough)</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                        <span>Hand Tracking (27 points per hand)</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                        <span>Eye Tracking</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                        <span>Face & Body Tracking</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                        <span>Spatial Audio</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                        <span>Room Setup & Boundaries</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connection Modes -->
+        <div class="bg-gray-800 rounded-xl p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-purple-400">Connection Modes</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="border border-gray-600 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2">📱</div>
+                    <h3 class="font-bold">Standalone Mode</h3>
+                    <p class="text-sm text-gray-400 mt-2">Independent VR/AR operation</p>
+                    <button id="standaloneBtn" onclick="connectQuest3('standalone')"
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mt-3 w-full">
+                        Connect Standalone
+                    </button>
+                </div>
+                <div class="border border-gray-600 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2">💻</div>
+                    <h3 class="font-bold">Oculus Link</h3>
+                    <p class="text-sm text-gray-400 mt-2">USB-C PC connection</p>
+                    <button id="oculusLinkBtn" onclick="connectQuest3('oculus_link')"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mt-3 w-full">
+                        Connect via USB
+                    </button>
+                </div>
+                <div class="border border-gray-600 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2">📶</div>
+                    <h3 class="font-bold">Air Link</h3>
+                    <p class="text-sm text-gray-400 mt-2">WiFi PC streaming</p>
+                    <button id="airLinkBtn" onclick="connectQuest3('air_link')"
+                            class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded mt-3 w-full">
+                        Connect via WiFi
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-time Tracking Data -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Hand Tracking -->
+            <div class="bg-gray-800 rounded-xl p-6">
+                <h2 class="text-2xl font-bold mb-4 text-yellow-400">Hand Tracking</h2>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span>Left Hand</span>
+                            <span id="leftHandStatus" class="tracking-indicator text-yellow-400">Tracking...</span>
+                        </div>
+                        <div class="bg-gray-700 rounded p-3">
+                            <div class="text-sm">Position: <span id="leftHandPos">N/A</span></div>
+                            <div class="text-sm">Gesture: <span id="leftHandGesture">N/A</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span>Right Hand</span>
+                            <span id="rightHandStatus" class="tracking-indicator text-yellow-400">Tracking...</span>
+                        </div>
+                        <div class="bg-gray-700 rounded p-3">
+                            <div class="text-sm">Position: <span id="rightHandPos">N/A</span></div>
+                            <div class="text-sm">Gesture: <span id="rightHandGesture">N/A</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eye Tracking -->
+            <div class="bg-gray-800 rounded-xl p-6">
+                <h2 class="text-2xl font-bold mb-4 text-pink-400">Eye Tracking</h2>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span>Left Eye Gaze</span>
+                            <span id="leftEyeStatus" class="tracking-indicator text-pink-400">Tracking...</span>
+                        </div>
+                        <div class="bg-gray-700 rounded p-3">
+                            <div class="text-sm">Direction: <span id="leftEyeGaze">N/A</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span>Right Eye Gaze</span>
+                            <span id="rightEyeStatus" class="tracking-indicator text-pink-400">Tracking...</span>
+                        </div>
+                        <div class="bg-gray-700 rounded p-3">
+                            <div class="text-sm">Direction: <span id="rightEyeGaze">N/A</span></div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-700 rounded p-3">
+                        <div class="text-sm">Eye Convergence: <span id="eyeConvergence">N/A</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AR Overlays Manager -->
+        <div class="bg-gray-800 rounded-xl p-6 mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-cyan-400">AR Data Overlays</h2>
+                <button onclick="createNewOverlay()" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded">
+                    + New Overlay
+                </button>
+            </div>
+
+            <!-- Overlay Controls -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <select id="overlayDataSource" class="bg-gray-700 text-white px-3 py-2 rounded">
+                    <option value="device_count">Device Count</option>
+                    <option value="system_status">System Status</option>
+                    <option value="device_list">Device List</option>
+                    <option value="network_status">Network Status</option>
+                    <option value="custom">Custom Text</option>
+                </select>
+                <input type="text" id="overlayTitle" placeholder="Overlay Title" class="bg-gray-700 text-white px-3 py-2 rounded">
+                <input type="text" id="overlayPosition" placeholder="Position (x,y,z)" value="0,0,-2" class="bg-gray-700 text-white px-3 py-2 rounded">
+                <button onclick="addOverlay()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                    Add Overlay
+                </button>
+            </div>
+
+            <!-- Active Overlays -->
+            <div id="activeOverlays" class="space-y-3">
+                <!-- Overlays will be populated here -->
+            </div>
+        </div>
+
+        <!-- Quest 3 Devices List -->
+        <div class="bg-gray-800 rounded-xl p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-indigo-400">Connected Quest 3 Devices</h2>
+                <button onclick="refreshQuest3Devices()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+                    Refresh
+                </button>
+            </div>
+
+            <div id="quest3Devices" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Devices will be populated here -->
+            </div>
+
+            <div id="noQuest3Devices" class="text-center py-8 text-gray-400" style="display: none;">
+                <div class="text-6xl mb-4">🥽</div>
+                <p>No Meta Quest 3 devices connected</p>
+                <p class="text-sm">Register and connect a Quest 3 device to see it here</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let quest3Devices = [];
+        let activeOverlays = [];
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshQuest3Devices();
+            // Auto-refresh every 5 seconds
+            setInterval(refreshQuest3Devices, 5000);
+        });
+
+        async function refreshQuest3Devices() {
+            try {
+                const response = await fetch('/api/quest3-devices');
+                const result = await response.json();
+
+                if (result.success) {
+                    quest3Devices = result.devices;
+                    updateQuest3DevicesGrid(quest3Devices);
+                    updateQuest3Status(result.status);
+                }
+
+            } catch (error) {
+                console.error('Error refreshing Quest 3 devices:', error);
+            }
+        }
+
+        function updateQuest3DevicesGrid(devices) {
+            const grid = document.getElementById('quest3Devices');
+            const noDevices = document.getElementById('noQuest3Devices');
+
+            if (!devices || devices.length === 0) {
+                grid.innerHTML = '';
+                noDevices.style.display = 'block';
+                return;
+            }
+
+            noDevices.style.display = 'none';
+            grid.innerHTML = '';
+
+            devices.forEach(device => {
+                const deviceCard = createQuest3DeviceCard(device);
+                grid.appendChild(deviceCard);
+            });
+        }
+
+        function createQuest3DeviceCard(device) {
+            const card = document.createElement('div');
+            card.className = 'bg-gray-700 rounded-lg p-4 border border-gray-600';
+
+            const statusColor = device.connection_status === 'connected' ? 'text-green-400' : 'text-yellow-400';
+            const statusText = device.connection_status.toUpperCase();
+
+            card.innerHTML = `
+                <div class="flex items-start justify-between mb-3">
+                    <div>
+                        <h3 class="font-bold text-lg">${device.device_name}</h3>
+                        <p class="text-sm text-gray-400">${device.device_type} • ${device.connection_mode}</p>
+                    </div>
+                    <span class="${statusColor} font-semibold">${statusText}</span>
+                </div>
+
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">Serial:</span>
+                        <span>${device.serial_number || 'N/A'}</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">Firmware:</span>
+                        <span>${device.firmware_version || 'N/A'}</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">IP Address:</span>
+                        <span>${device.ip_address || 'N/A'}</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">Last Seen:</span>
+                        <span>${new Date(device.last_seen).toLocaleTimeString()}</span>
+                    </div>
+                </div>
+
+                <div class="flex space-x-2">
+                    ${device.connection_status !== 'connected' ? `
+                    <button onclick="connectQuest3Device('${device.device_id}')"
+                            class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm flex-1">
+                        Connect
+                    </button>
+                    ` : `
+                    <button onclick="disconnectQuest3Device('${device.device_id}')"
+                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm flex-1">
+                        Disconnect
+                    </button>
+                    `}
+
+                    <button onclick="showQuest3Details('${device.device_id}')"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                        Details
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function updateQuest3Status(status) {
+            const statusElement = document.getElementById('quest3Status');
+            if (status.connected_devices > 0) {
+                statusElement.textContent = `${status.connected_devices} Device(s) Connected`;
+                statusElement.className = 'text-green-400';
+            } else {
+                statusElement.textContent = 'No Devices Connected';
+                statusElement.className = 'text-yellow-400';
+            }
+        }
+
+        async function connectQuest3(mode) {
+            try {
+                const response = await fetch('/api/connect-quest3', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ connection_mode: mode })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    refreshQuest3Devices();
+                } else {
+                    alert('Failed to connect Quest 3: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error connecting Quest 3:', error);
+                alert('Error connecting Quest 3: ' + error.message);
+            }
+        }
+
+        async function connectQuest3Device(deviceId) {
+            try {
+                const response = await fetch(`/api/connect-quest3/${deviceId}`, { method: 'POST' });
+                const result = await response.json();
+
+                if (result.success) {
+                    refreshQuest3Devices();
+                } else {
+                    alert('Failed to connect device: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error connecting device:', error);
+            }
+        }
+
+        async function disconnectQuest3Device(deviceId) {
+            try {
+                const response = await fetch(`/api/disconnect-quest3/${deviceId}`, { method: 'POST' });
+                const result = await response.json();
+
+                if (result.success) {
+                    refreshQuest3Devices();
+                } else {
+                    alert('Failed to disconnect device: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error disconnecting device:', error);
+            }
+        }
+
+        function showQuest3Details(deviceId) {
+            const device = quest3Devices.find(d => d.device_id === deviceId);
+            if (device) {
+                const details = `
+Device: ${device.device_name}
+Type: ${device.device_type}
+Serial: ${device.serial_number || 'N/A'}
+Firmware: ${device.firmware_version || 'N/A'}
+Connection Mode: ${device.connection_mode}
+Status: ${device.connection_status}
+IP Address: ${device.ip_address || 'N/A'}
+Last Seen: ${new Date(device.last_seen).toLocaleString()}
+Mixed Reality: ${device.mixed_reality_enabled ? 'Enabled' : 'Disabled'}
+Passthrough: ${device.passthrough_enabled ? 'Enabled' : 'Disabled'}
+                `;
+                alert(details);
+            }
+        }
+
+        async function addOverlay() {
+            const dataSource = document.getElementById('overlayDataSource').value;
+            const title = document.getElementById('overlayTitle').value || 'OMNI Data';
+            const position = document.getElementById('overlayPosition').value;
+
+            if (!position) {
+                alert('Please enter overlay position');
+                return;
+            }
+
+            const posArray = position.split(',').map(Number);
+
+            const overlayInfo = {
+                overlay_type: 'device_data',
+                data_source: dataSource,
+                title: title,
+                position: posArray,
+                background_color: '#000000',
+                text_color: '#FFFFFF',
+                opacity: 0.8
+            };
+
+            try {
+                const response = await fetch('/api/create-ar-overlay', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(overlayInfo)
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    // Clear form
+                    document.getElementById('overlayTitle').value = '';
+                    document.getElementById('overlayPosition').value = '0,0,-2';
+                    alert('AR overlay created successfully!');
+                } else {
+                    alert('Failed to create overlay: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error creating overlay:', error);
+                alert('Error creating overlay: ' + error.message);
+            }
+        }
+
+        function createNewOverlay() {
+            // Focus on the overlay creation form
+            document.getElementById('overlayTitle').focus();
+        }
+    </script>
+</body>
+</html>

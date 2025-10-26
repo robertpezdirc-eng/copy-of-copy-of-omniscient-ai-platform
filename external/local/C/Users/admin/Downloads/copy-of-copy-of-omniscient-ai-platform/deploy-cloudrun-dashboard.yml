@@ -1,0 +1,74 @@
+name: Deploy Dashboard to Cloud Run
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+concurrency:
+  group: cloud-run-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker gcr.io
+
+      - name: Build Docker image (Dashboard)
+        run: |
+          docker build -f Dockerfile.dashboard \
+            -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/omni-platform:${{ github.sha }} .
+
+      - name: Push image
+        run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/omni-platform:${{ github.sha }}
+
+      - name: Deploy to Cloud Run
+        shell: bash
+        run: |
+          SERVICE="${{ secrets.CLOUD_RUN_SERVICE }}"; SERVICE=${SERVICE:-omni-dashboard}
+          RUNTIME_SA="${{ secrets.CLOUD_RUN_RUNTIME_SA }}"
+          if [ -z "$RUNTIME_SA" ]; then RUNTIME_SA="omni-dashboard-runtime@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com"; fi
+          gcloud run deploy "$SERVICE" \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/omni-platform:${{ github.sha }} \
+            --region "${{ secrets.GCP_REGION }}" \
+            --allow-unauthenticated \
+            --port 8080 \
+            --timeout 300 \
+            --service-account "$RUNTIME_SA" \
+            --set-env-vars OMNI_SYSTEM_CHECKS=false,OMNI_QUIET_CLOUDRUN=true \
+            --set-secrets GOOGLE_API_KEY=omni-dashboard-GOOGLE_API_KEY:latest,OPENAI_API_KEY=omni-dashboard-OPENAI_API_KEY:latest,OMNI_API_KEY=omni-dashboard-OMNI_API_KEY:latest,SECRET_KEY=omni-dashboard-SECRET_KEY:latest,SLACK_WEBHOOK_URL=omni-dashboard-SLACK_WEBHOOK_URL:latest,SMTP_USERNAME=omni-dashboard-SMTP_USERNAME:latest,SMTP_PASSWORD=omni-dashboard-SMTP_PASSWORD:latest
+
+      - name: Output service URL
+        shell: bash
+        run: |
+          SERVICE="${{ secrets.CLOUD_RUN_SERVICE }}"; SERVICE=${SERVICE:-omni-dashboard}
+          URL=$(gcloud run services describe "$SERVICE" --region "${{ secrets.GCP_REGION }}" --format='value(status.url)')
+          echo "Service URL: $URL"
+      - name: Smoke test /healthz
+        shell: bash
+        run: |
+          SERVICE="${{ secrets.CLOUD_RUN_SERVICE }}"; SERVICE=${SERVICE:-omni-dashboard}
+          URL=$(gcloud run services describe "$SERVICE" --region "${{ secrets.GCP_REGION }}" --format='value(status.url)')
+          echo "Testing $URL/healthz"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL/healthz")
+          if [ "$STATUS" -ne 200 ]; then
+            echo "Health check failed: $STATUS";
+            exit 1;
+          else
+            echo "Health check OK: $STATUS";
+          fi

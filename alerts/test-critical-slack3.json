@@ -1,0 +1,17 @@
+[
+  {
+    "labels": {
+      "alertname": "TestSlackFromAlertmanager",
+      "severity": "critical",
+      "service": "omni-notifications",
+      "instance": "local"
+    },
+    "annotations": {
+      "summary": "Second synthetic critical alert for Slack E2E",
+      "description": "This alert should be routed to the omni-notifications Slack receiver (mock)."
+    },
+    "startsAt": "2025-10-21T23:20:00Z",
+    "endsAt": "2099-01-01T00:00:00Z",
+    "generatorURL": "http://localhost:9093"
+  }
+]

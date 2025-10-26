@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omni Dashboard - AI Chat Generator</title>
++    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .provider-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .provider-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .provider-btn:hover, .provider-btn.active {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
+        }
+        
+        .chat-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: auto;
+        }
+        
+        .ai-message {
+            background: white;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .message-input:focus {
+            border-color: #667eea;
+        }
+        
+        .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s ease;
+        }
+        
+        .send-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .send-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .status {
+            padding: 10px 20px;
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            margin: 10px 0;
+            border-radius: 0 10px 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Omni Dashboard</h1>
+            <p>AI Chat Generator - Več providerjev, en vmesnik</p>
+            <div class="provider-selector">
+                <button class="provider-btn active" data-provider="auto">Auto</button>
+                <button class="provider-btn" data-provider="openai">OpenAI</button>
+                <button class="provider-btn" data-provider="gemini">Gemini</button>
+                <button class="provider-btn" data-provider="vertex">Vertex AI</button>
+            </div>
+        </div>
+        
+        <div class="chat-area" id="chatArea">
+            <div class="status">
+                <strong>Sistem pripravljen!</strong> Izberite provider in začnite klepetati.
+            </div>
+        </div>
+        
+        <div class="loading" id="loading">
+            <p>🤖 AI razmišlja...</p>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" class="message-input" id="messageInput" placeholder="Vnesite vaše sporočilo..." />
+            <button class="send-btn" id="sendBtn">Pošlji</button>
+        </div>
+    </div>
+
++    <script src="/env.js"></script>
+    <script type="text/babel" data-presets="env">
+        let currentProvider = 'auto';
+        const backendUrl = (window.OMNI_API_BASE || window.localStorage.getItem('omniApiBase') || 'https://omni-platform-guzjyv6gfa-uw.a.run.app');
+        
+        // Provider selection
+        document.querySelectorAll('.provider-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.provider-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentProvider = btn.dataset.provider;
+                
+                addMessage('system', `Provider spremenjen na: ${currentProvider.toUpperCase()}`);
+            });
+        });
+        
+        // Send message
+        document.getElementById('sendBtn').addEventListener('click', sendMessage);
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage('user', message);
+            input.value = '';
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('sendBtn').disabled = true;
+            
+            try {
+-                const payload = {
+-                    message: message
+-                };
+-                
+-                if (currentProvider !== 'auto') {
+-                    payload.provider = currentProvider;
+-                }
+-                
+-                const response = await fetch(`${backendUrl}/omni-chat`, {
+-                    method: 'POST',
+-                    headers: {
+-                        'Content-Type': 'application/json',
+-                    },
+-                    body: JSON.stringify(payload)
+-                });
+-                
+-                const data = await response.json();
+-                
+-                if (response.ok) {
+-                    addMessage('ai', data.response, data.provider, data.model);
+-                } else {
+-                    addMessage('error', `Napaka: ${data.detail || 'Neznana napaka'}`);
+-                }
++                const payload = { prompt: message };
++                if (currentProvider === 'gemini') {
++                    payload.model = 'gemini-2.5-pro';
++                }
++                const response = await fetch(`${backendUrl}/api/vertex/generate`, {
++                const payload = {
++                    message: message,
++                    provider: currentProvider // Pošljemo izbranega ponudnika backendu
++                };
++
++                // Uporabimo generičen AI chat endpoint, kot predlaga diagram
++                const response = await fetch(`${backendUrl}/api/ai-chat`, {
++                    method: 'POST',
++                    headers: {
++                        'Content-Type': 'application/json',
++                    },
++                    body: JSON.stringify(payload)
++                });
++
++                const data = await response.json();
++                if (response.ok && (data.ok === true)) {
++                    addMessage('ai', data.text || '—', 'Vertex', data.model);
++
++                if (response.ok) {
++                    // Backend naj vrne 'response', 'provider', 'model'
++                    addMessage('ai', data.response || data.text || '—', data.provider || 'AI', data.model);
++                } else {
++                    addMessage('error', `Napaka: ${data.error || data.detail || 'Neznana napaka'}`);
++                    addMessage('error', `Napaka: ${data.detail || data.error || 'Neznana napaka'}`);
++                }
+                
+            } catch (error) {
+                addMessage('error', `Napaka pri povezavi: ${error.message}`);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('sendBtn').disabled = false;
+            }
+        }
+        
+        function addMessage(type, content, provider = null, model = null) {
+            const chatArea = document.getElementById('chatArea');
+            const messageDiv = document.createElement('div');
+            
+            if (type === 'user') {
+                messageDiv.className = 'message user-message';
+                messageDiv.textContent = content;
+            } else if (type === 'ai') {
+                messageDiv.className = 'message ai-message';
+                messageDiv.innerHTML = `
+                    <div style="margin-bottom: 10px;">
+                        <strong>🤖 ${provider?.toUpperCase() || 'AI'}</strong>
+                        ${model ? `<span style="color: #666; font-size: 0.9em;">(${model})</span>` : ''}
+                    </div>
+                    <div>${content}</div>
+                `;
+            } else if (type === 'system') {
+                messageDiv.className = 'status';
+                messageDiv.innerHTML = `<strong>ℹ️ ${content}</strong>`;
+            } else if (type === 'error') {
+                messageDiv.className = 'status';
+                messageDiv.style.background = '#ffebee';
+                messageDiv.style.borderColor = '#f44336';
+                messageDiv.innerHTML = `<strong>❌ ${content}</strong>`;
+            }
+            
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+        
+        // Health check on load
+        window.addEventListener('load', async () => {
+            try {
+-                const response = await fetch(`${backendUrl}/omni-health`);
++                const response = await fetch(`${backendUrl}/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+-                    addMessage('system', `Backend povezan! Status: ${data.status}`);
++                    addMessage('system', `Backend povezan! Status: ${data.status || 'healthy'}`);
+                } else {
+                    addMessage('error', 'Backend ni dosegljiv');
+                }
+            } catch (error) {
+                addMessage('error', `Backend ni dosegljiv: ${error.message}`);
+            }
+        });
+    </script>
+</body>
+</html>

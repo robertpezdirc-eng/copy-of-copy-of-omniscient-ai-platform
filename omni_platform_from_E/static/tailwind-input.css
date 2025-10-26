@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* OMNI custom component classes extracted from inline styles */
+@layer components {
+  .metric-card { @apply bg-white rounded-lg shadow-md p-6 border-l-4; }
+  .status-indicator { @apply w-3 h-3 rounded-full inline-block ml-2; }
+  .status-healthy { @apply bg-green-500; }
+  .status-warning { @apply bg-yellow-500; }
+  .status-critical { @apply bg-red-500; }
+  .status-offline { @apply bg-gray-500; }
+}

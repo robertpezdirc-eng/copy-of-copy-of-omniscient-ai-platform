@@ -1,0 +1,8 @@
+{
+	"auths": {},
+	"credsStore": "desktop",
+	"credHelpers": {
+		"europe-west1-docker.pkg.dev": "gcloud"
+	},
+	"currentContext": "desktop-linux"
+}

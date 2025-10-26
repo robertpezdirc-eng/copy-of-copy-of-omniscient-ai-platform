@@ -1,0 +1,122 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>OMNI Unified Platform Dashboard</title>
+            <style>
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+                .container { max-width: 1200px; margin: 0 auto; }
+                .header { text-align: center; margin-bottom: 30px; }
+                .header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+                .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+                .stat-card { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; backdrop-filter: blur(10px); }
+                .stat-card h3 { margin: 0 0 10px 0; color: #ffd700; }
+                .components { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+                .component-card { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; backdrop-filter: blur(10px); }
+                .component-card h4 { margin: 0 0 10px 0; color: #00ff88; }
+                .status-active { color: #00ff88; }
+                .status-inactive { color: #ff6b6b; }
+                .endpoints { margin-top: 10px; }
+                .endpoint { background: rgba(0,0,0,0.2); padding: 5px 10px; margin: 2px 0; border-radius: 5px; font-family: monospace; }
+                .footer { text-align: center; margin-top: 30px; opacity: 0.8; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🚀 OMNI Unified Platform</h1>
+                    <p>Complete AI Platform with Vertex AI Integration</p>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3>Platform Status</h3>
+                        <p><strong>Version:</strong> 4.0.0</p>
+                        <p><strong>Status:</strong> <span class="status-active">Operational</span></p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Components</h3>
+                        <p><strong>Active:</strong> 8</p>
+                        <p><strong>Total:</strong> 8</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Vertex AI</h3>
+                        <p><strong>Status:</strong> <span class="status-active">Enabled</span></p>
+                        <p><strong>Model:</strong> gemini-2.5-pro GENAI_FALLBACK_MODEL=gemini-2.5-flash GOOGLE_CLOUD_PROJECT=refined-graph-471712-n9 GOOGLE_CLOUD_REGION=europe-west1</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>System</h3>
+                        <p><strong>CPU:</strong> 0.0%</p>
+                        <p><strong>Memory:</strong> 6.6%</p>
+                    </div>
+                </div>
+                
+                <div class="components">
+        
+                    <div class="component-card">
+                        <h4>OMNIBOT</h4>
+                        <p><strong>Status:</strong> <span class="status-active">active</span></p>
+                        <p>AI Bot system with advanced capabilities</p>
+                        <div class='endpoints'><div class='endpoint'>/api/omnibot/chat</div><div class='endpoint'>/api/omnibot/status</div></div>
+                    </div>
+            
+                    <div class="component-card">
+                        <h4>SINGULARITY</h4>
+                        <p><strong>Status:</strong> <span class="status-active">active</span></p>
+                        <p>Quantum computing and advanced AI processing</p>
+                        <div class='endpoints'><div class='endpoint'>/api/singularity/quantum</div><div class='endpoint'>/api/singularity/process</div></div>
+                    </div>
+            
+                    <div class="component-card">
+                        <h4>ULTIMATE_PACKAGE</h4>
+                        <p><strong>Status:</strong> <span class="status-active">active</span></p>
+                        <p>Complete toolkit with all OMNI features</p>
+                        <div class='endpoints'><div class='endpoint'>/api/ultimate/tools</div><div class='endpoint'>/api/ultimate/automation</div></div>
+                    </div>
+            
+                    <div class="component-card">
+                        <h4>SEARCH</h4>
+                        <p><strong>Status:</strong> <span class="status-active">active</span></p>
+                        <p>Advanced search and indexing system</p>
+                        <div class='endpoints'><div class='endpoint'>/api/search/query</div><div class='endpoint'>/api/search/index</div></div>
+                    </div>
+            
+                    <div class="component-card">
+                        <h4>VERTEX_AI</h4>
+                        <p><strong>Status:</strong> <span class="status-active">active</span></p>
+                        <p>Google Cloud Vertex AI integration</p>
+                        <div class='endpoints'><div class='endpoint'>/api/vertex/generate</div><div class='endpoint'>/api/vertex/config</div></div>
+                    </div>
+            
+                    <div class="component-card">
+                        <h4>VR</h4>
+                        <p><strong>Status:</strong> <span class="status-active">active</span></p>
+                        <p>VR Gateway & Projects</p>
+                        <div class='endpoints'><div class='endpoint'>/api/vr/status</div><div class='endpoint'>/api/vr/assets</div><div class='endpoint'>/api/vr/templates</div><div class='endpoint'>/api/vr/projects</div><div class='endpoint'>/api/vr/gateway</div><div class='endpoint'>/api/vr/publish</div></div>
+                    </div>
+            
+                    <div class="component-card">
+                        <h4>TOURISM</h4>
+                        <p><strong>Status:</strong> <span class="status-active">active</span></p>
+                        <p>Tourism info and recommendations</p>
+                        <div class='endpoints'><div class='endpoint'>/api/tourism/places</div><div class='endpoint'>/api/tourism/recommend</div></div>
+                    </div>
+            
+                    <div class="component-card">
+                        <h4>BUSINESS</h4>
+                        <p><strong>Status:</strong> <span class="status-active">active</span></p>
+                        <p>Companies listing and analysis</p>
+                        <div class='endpoints'><div class='endpoint'>/api/companies/list</div><div class='endpoint'>/api/companies/analyze</div></div>
+                    </div>
+            
+                </div>
+                
+                <div class="footer">
+                    <p>OMNI Unified Platform - Powered by Vertex AI | 2025-10-25 11:52:44</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        

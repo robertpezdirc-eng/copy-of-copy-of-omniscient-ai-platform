@@ -1,0 +1,130 @@
+services:
+  omni-dashboard:
+    build: .
+    container_name: omni-dashboard
+    ports:
+      - "8080:8080"
+    environment:
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-credentials.json
+      - OMNI_ENV=production
+    volumes:
+      - ./gcp-credentials.json:/app/gcp-credentials.json:ro
+      - ./omni_platform/logs:/app/omni_platform/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - omni-network
+
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: omni-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - omni-dashboard
+    restart: unless-stopped
+    networks:
+      - omni-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: omni-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alerts:/etc/prometheus/alerts:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    networks:
+      - omni-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: omni-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=omni_admin_2024
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - omni-network
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--cluster.listen-address=0.0.0.0:9094"
+      - "--web.listen-address=0.0.0.0:9093"
+    volumes:
+      - ./alerts/alertmanager.generated.yml:/etc/alertmanager/alertmanager.yml:ro
+    env_file:
+      - .env
+    environment:
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+    ports:
+      - "9093:9093"
+    networks:
+      - omni-network
+
+  mock-slack:
+    image: python:3.11-alpine
+    container_name: mock-slack
+    command: ["python", "-u", "/app/mock_slack.py"]
+    volumes:
+      - ./mock_slack.py:/app/mock_slack.py:ro
+      - ./logs:/data
+    ports:
+      - "9001:9001"
+    networks:
+      - omni-network
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    ports:
+      - "8025:8025"  # Web UI
+      - "1025:1025"  # SMTP
+    networks:
+      - omni-network
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: omni-node-exporter
+    ports:
+      - "9100:9100"
+    command:
+      - '--path.rootfs=/'
+    restart: unless-stopped
+    networks:
+      - omni-network
+
+networks:
+  omni-network:
+    driver: bridge
+
+volumes:
+  grafana_data:

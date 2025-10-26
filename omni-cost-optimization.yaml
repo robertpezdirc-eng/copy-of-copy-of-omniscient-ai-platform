@@ -1,0 +1,477 @@
+# Omni Platform Cost Optimization Configuration
+# Comprehensive cost optimization setup for Google Cloud deployment
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omni-cost-optimization-config
+  namespace: default
+data:
+  # Storage Cost Optimization
+  storage-optimization.yaml: |
+    # Cloud Storage Lifecycle Policies
+    lifecycle-policies:
+    - name: "omni-logs-coldline"
+      description: "Move old logs to coldline storage"
+      bucket: "omni-platform-logs"
+      rule:
+      - action:
+          type: "SetStorageClass"
+          storageClass: "COLDLINE"
+        condition:
+          age: 90
+          matchesStorageClass: ["STANDARD", "NEARLINE"]
+
+      - action:
+          type: "SetStorageClass"
+          storageClass: "ARCHIVE"
+        condition:
+          age: 365
+          matchesStorageClass: ["STANDARD", "NEARLINE", "COLDLINE"]
+
+    - name: "omni-backups-coldline"
+      description: "Move old backups to coldline storage"
+      bucket: "omni-platform-backups"
+      rule:
+      - action:
+          type: "SetStorageClass"
+          storageClass: "COLDLINE"
+        condition:
+          age: 30
+          matchesStorageClass: ["STANDARD"]
+
+      - action:
+          type: "Delete"
+        condition:
+          age: 2555  # 7 years
+          matchesStorageClass: ["COLDLINE", "ARCHIVE"]
+
+    - name: "omni-temp-files-cleanup"
+      description: "Delete temporary files after 7 days"
+      bucket: "omni-temp-files"
+      rule:
+      - action:
+          type: "Delete"
+        condition:
+          age: 7
+
+    # BigQuery Cost Optimization
+    bigquery-optimization:
+      datasets:
+      - name: "omni_platform_logs"
+        location: "EU"
+        description: "Omni Platform logs dataset"
+
+        tables:
+        - name: "cloud_run_requests"
+          partitioning:
+            type: "time"
+            field: "timestamp"
+            requirePartitionFilter: true
+          clustering:
+            fields: ["service_name", "status_code"]
+
+        - name: "cloud_run_stdout"
+          partitioning:
+            type: "time"
+            field: "timestamp"
+            requirePartitionFilter: true
+
+        - name: "cloud_run_stderr"
+          partitioning:
+            type: "time"
+            field: "timestamp"
+            requirePartitionFilter: true
+
+      # Partition expiration policies
+      partition-expiration:
+      - table: "omni_platform_logs.cloud_run_requests"
+        expirationMs: "7776000000"  # 90 days
+
+      - table: "omni_platform_logs.cloud_run_stdout"
+        expirationMs: "2592000000"  # 30 days
+
+      - table: "omni_platform_logs.cloud_run_stderr"
+        expirationMs: "2592000000"  # 30 days
+
+    # Cloud Run Cost Optimization
+    cloud-run-optimization:
+      services:
+      - name: "omni-exec-api"
+        cpuAllocation: "1"
+        memoryAllocation: "512Mi"
+        concurrency: 80
+        maxInstances: 10
+        minInstances: 0
+
+        # Cost-saving configurations
+        timeoutSeconds: 600
+        executionEnvironment: "gen2"
+
+        # Traffic-based scaling
+        scaling:
+          minInstanceCount: 0
+          maxInstanceCount: 10
+          cpuUtilizationTarget: 0.6
+
+      - name: "omni-frontend"
+        cpuAllocation: "1"
+        memoryAllocation: "512Mi"
+        concurrency: 80
+        maxInstances: 10
+        minInstances: 0
+
+        scaling:
+          minInstanceCount: 0
+          maxInstanceCount: 10
+          cpuUtilizationTarget: 0.5
+
+      - name: "omni-professional-dashboard"
+        cpuAllocation: "2"
+        memoryAllocation: "2Gi"
+        concurrency: 80
+        maxInstances: 10
+        minInstances: 1
+
+        scaling:
+          minInstanceCount: 1
+          maxInstanceCount: 10
+          cpuUtilizationTarget: 0.7
+
+    # Cloud Trace Sampling Configuration
+    trace-sampling:
+      # Reduce sampling rate for high-traffic services
+      samplingRate: 0.1  # Sample 10% of requests
+      minQps: 1
+
+      # Service-specific sampling rates
+      serviceSampling:
+      - service: "omni-exec-api"
+        samplingRate: 0.05  # 5% for high-traffic API
+
+      - service: "omni-frontend"
+        samplingRate: 0.01  # 1% for static frontend
+
+      - service: "omni-professional-dashboard"
+        samplingRate: 0.5   # 50% for dashboard (lower traffic)
+
+    # Cloud Logging Cost Optimization
+    logging-optimization:
+      # Reduce log verbosity for cost savings
+      log-filters:
+      - name: "exclude-health-checks"
+        filter: "NOT resource.labels.service_name:omni-exec-api AND httpRequest.status=200 AND httpRequest.requestUrl~\"/readyz\""
+        description: "Exclude successful health check logs"
+
+      - name: "exclude-static-assets"
+        filter: "NOT (httpRequest.requestUrl~\"\\.(css|js|png|jpg|jpeg|gif|ico|svg)$\" AND httpRequest.status=200)"
+        description: "Exclude successful static asset requests"
+
+      # Log retention policies
+      retention-policies:
+      - logName: "projects/PROJECT_ID/logs/run.googleapis.com%2Frequests"
+        retentionDays: 30
+
+      - logName: "projects/PROJECT_ID/logs/run.googleapis.com%2Fstdout"
+        retentionDays: 30
+
+      - logName: "projects/PROJECT_ID/logs/run.googleapis.com%2Fstderr"
+        retentionDays: 90
+
+    # Compute Engine Cost Optimization (if using VMs)
+    compute-optimization:
+      instance-schedules:
+      - name: "omni-dev-instances"
+        description: "Stop dev instances outside business hours"
+        schedule: "0 18 * * 1-5"  # Stop at 6 PM, Monday-Friday
+        action: "stop"
+
+      - name: "omni-dev-instances-start"
+        description: "Start dev instances during business hours"
+        schedule: "0 8 * * 1-5"   # Start at 8 AM, Monday-Friday
+        action: "start"
+
+      # Sustained use discounts (automatic)
+      sustained-use-discounts:
+        enabled: true
+
+      # Committed use discounts (manual configuration)
+      committed-use-discounts:
+      - name: "omni-api-cud"
+        region: "europe-west1"
+        commitment: "1_YEAR"
+        resources:
+        - type: "VCPU"
+          amount: 4
+        - type: "MEMORY"
+          amount: 16  # GB
+
+    # Network Cost Optimization
+    network-optimization:
+      # Use premium network tier only when needed
+      network-tiers:
+      - service: "omni-exec-api"
+        tier: "PREMIUM"  # For low-latency API calls
+
+      - service: "omni-frontend"
+        tier: "STANDARD"  # For static content
+
+      # Cloud CDN for static assets
+      cdn-optimization:
+        cacheHitRatioTarget: 0.9
+        cachePolicies:
+        - path: "/*"
+          ttl: 3600
+        - path: "/static/*"
+          ttl: 86400
+        - path: "/api/*"
+          ttl: 300
+
+    # Monitoring Cost Optimization
+    monitoring-optimization:
+      # Reduce monitoring frequency for non-critical metrics
+      metric-frequencies:
+      - metric: "run.googleapis.com/container/memory/utilization"
+        frequency: "300s"  # Every 5 minutes instead of 60s
+
+      - metric: "run.googleapis.com/container/cpu/utilization"
+        frequency: "300s"
+
+      # Sample-based monitoring for high-cardinality metrics
+      sampling-rates:
+      - metric: "run.googleapis.com/request_count"
+        samplingRate: 0.1
+
+      # Reduce retention for monitoring data
+      retention-policies:
+      - metricKind: "GAUGE"
+        retentionDays: 42
+
+      - metricKind: "CUMULATIVE"
+        retentionDays: 90
+
+    # Cost Anomaly Detection
+    cost-anomaly-detection:
+      budgets:
+      - name: "omni-monthly-budget"
+        amount: 500.0
+        currency: "EUR"
+        timePeriod: "MONTHLY"
+
+        notifications:
+        - threshold: 0.5
+          notificationChannels: ["email-admin"]
+        - threshold: 0.8
+          notificationChannels: ["email-admin", "slack-alerts"]
+        - threshold: 1.0
+          notificationChannels: ["email-admin", "sms-admin"]
+
+      - name: "omni-daily-budget"
+        amount: 20.0
+        currency: "EUR"
+        timePeriod: "DAILY"
+
+        notifications:
+        - threshold: 0.8
+          notificationChannels: ["email-admin"]
+
+    # Resource Scheduling
+    resource-scheduling:
+      # Scale down during off-peak hours
+      off-peak-schedule:
+        cron: "0 22 * * 1-5"  # 10 PM, Monday-Friday
+        actions:
+        - service: "omni-frontend"
+          minInstances: 0
+        - service: "omni-exec-api"
+          minInstances: 0
+
+      # Scale up during peak hours
+      peak-schedule:
+        cron: "0 8 * * 1-5"   # 8 AM, Monday-Friday
+        actions:
+        - service: "omni-frontend"
+          minInstances: 1
+        - service: "omni-exec-api"
+          minInstances: 1
+
+    # Data Transfer Optimization
+    data-transfer-optimization:
+      # Use Cloud Storage transfer service for large transfers
+      transfer-jobs:
+      - name: "omni-backup-transfer"
+        description: "Transfer backups to coldline"
+        sourceBucket: "omni-platform-backups"
+        sinkBucket: "omni-platform-coldline-backups"
+        schedule: "0 2 * * 0"  # Weekly on Sunday at 2 AM
+
+      # Network endpoint groups for optimal routing
+      network-endpoint-groups:
+      - name: "omni-neg"
+        network: "omni-vpc"
+        subnetwork: "omni-subnet"
+        defaultPort: 8080
+
+    # Rightsizing Recommendations
+    rightsizing:
+      # Automated rightsizing based on usage patterns
+      automated-rightsizing:
+        enabled: true
+        schedule: "0 9 * * 1"  # Weekly on Monday at 9 AM
+
+        services:
+        - name: "omni-exec-api"
+          lookbackPeriod: "30d"
+          targetUtilization: 0.7
+
+        - name: "omni-frontend"
+          lookbackPeriod: "30d"
+          targetUtilization: 0.6
+
+    # Cost Reporting and Analytics
+    cost-reporting:
+      # BigQuery dataset for cost analysis
+      cost-dataset: "omni_cost_analysis"
+
+      # Scheduled queries for cost insights
+      scheduled-queries:
+      - name: "daily-cost-summary"
+        query: |
+          SELECT
+            service.description as service_name,
+            SUM(cost) as total_cost,
+            SUM(usage.amount) as total_usage
+          FROM `PROJECT_ID.omni_cost_analysis.cost_export`
+          WHERE DATE(usage.start_time) = CURRENT_DATE()
+          GROUP BY service.description
+          ORDER BY total_cost DESC
+        schedule: "0 10 * * *"  # Daily at 10 AM
+
+      - name: "monthly-cost-trend"
+        query: |
+          SELECT
+            DATE_TRUNC(usage.start_time, MONTH) as month,
+            SUM(cost) as monthly_cost
+          FROM `PROJECT_ID.omni_cost_analysis.cost_export`
+          WHERE DATE(usage.start_time) >= DATE_SUB(CURRENT_DATE(), INTERVAL 12 MONTH)
+          GROUP BY month
+          ORDER BY month
+        schedule: "0 11 1 * *"  # First day of month at 11 AM
+
+---
+# Deployment script for cost optimization
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omni-cost-optimization-deployment
+  namespace: default
+data:
+  deploy-cost-optimization.sh: |
+    #!/bin/bash
+    # Deploy cost optimization configurations for Omni Platform
+
+    set -e
+
+    PROJECT_ID="${PROJECT_ID:-refined-graph-471712-n9}"
+    REGION="europe-west1"
+
+    echo "💰 Deploying Omni Platform cost optimization configurations..."
+
+    # 1. Enable required cost optimization APIs
+    echo "Enabling cost optimization APIs..."
+    gcloud services enable \
+      bigquery.googleapis.com \
+      bigquerydatatransfer.googleapis.com \
+      --project=$PROJECT_ID
+
+    # 2. Create BigQuery dataset for cost analysis
+    echo "Creating BigQuery dataset for cost analysis..."
+    bq --project_id=$PROJECT_ID mk \
+      --dataset \
+      --description="Omni Platform cost analysis dataset" \
+      $PROJECT_ID:omni_cost_analysis
+
+    # 3. Enable billing export to BigQuery
+    echo "Enabling billing export..."
+    # This needs to be done in the billing console or via API
+
+    # 4. Create log-based metrics for cost monitoring
+    echo "Creating log-based metrics for cost monitoring..."
+    gcloud logging metrics create omni-high-cost-operations \
+      --description="Track high-cost operations" \
+      --log-filter='severity >= WARNING AND (textPayload:"expensive" OR textPayload:"cost")' \
+      --metric-kind=DELTA \
+      --value-type=INT64 \
+      --unit=1 \
+      --project=$PROJECT_ID
+
+    # 5. Set up log retention policies
+    echo "Setting up log retention policies..."
+    gcloud logging sinks update _Default \
+      --log-filter='severity >= INFO' \
+      --project=$PROJECT_ID
+
+    # 6. Create budget alerts
+    echo "Creating budget alerts..."
+    gcloud alpha billing budgets create omni-monthly-budget \
+      --billing-account=$(gcloud alpha billing accounts list --format='value(ACCOUNT_ID)' | head -1) \
+      --budget-amount=500EUR \
+      --threshold-percent=0.5,0.8,1.0 \
+      --project=$PROJECT_ID
+
+    # 7. Configure Cloud Storage lifecycle policies
+    echo "Configuring storage lifecycle policies..."
+    # Create lifecycle configuration for logs bucket
+    gsutil lifecycle set - <<EOF
+    {
+      "rule": [
+        {
+          "action": {"type": "SetStorageClass", "storageClass": "COLDLINE"},
+          "condition": {"age": 90, "matchesStorageClass": ["STANDARD", "NEARLINE"]}
+        },
+        {
+          "action": {"type": "SetStorageClass", "storageClass": "ARCHIVE"},
+          "condition": {"age": 365, "matchesStorageClass": ["STANDARD", "NEARLINE", "COLDLINE"]}
+        }
+      ]
+    }
+    EOF
+
+    # 8. Set up trace sampling
+    echo "Configuring trace sampling..."
+    gcloud projects update $PROJECT_ID \
+      --update-labels="trace-sampling-rate=0.1"
+
+    # 9. Create cost monitoring dashboard
+    echo "Creating cost monitoring dashboard..."
+    # This would typically be done through the Cloud Console
+
+    # 10. Set up automated rightsizing recommendations
+    echo "Setting up rightsizing recommendations..."
+    gcloud recommender recommendations list \
+      --recommender=google.compute.instance.MachineTypeRecommender \
+      --project=$PROJECT_ID \
+      --format="table(name,primaryImpact.costProjection.yearlyCostChange)"
+
+    echo "✅ Cost optimization deployment completed!"
+    echo ""
+    echo "📊 Cost Monitoring URLs:"
+    echo "• Cloud Billing: https://console.cloud.google.com/billing"
+    echo "• Cost Explorer: https://console.cloud.google.com/cost-explorer"
+    echo "• Budgets & Alerts: https://console.cloud.google.com/billing/budgets"
+    echo "• Recommendations: https://console.cloud.google.com/recommendations"
+    echo ""
+    echo "💡 Cost Optimization Tips:"
+    echo "• Monitor daily costs and set up alerts"
+    echo "• Use coldline storage for old logs and backups"
+    echo "• Implement trace sampling to reduce costs"
+    echo "• Right-size instances based on usage patterns"
+    echo "• Use committed use discounts for predictable workloads"
+    echo "• Schedule resources to scale down during off-peak hours"
+    echo ""
+    echo "Next steps:"
+    echo "1. Review and implement rightsizing recommendations"
+    echo "2. Set up automated cost anomaly detection"
+    echo "3. Configure resource scheduling for off-peak hours"
+    echo "4. Monitor storage costs and optimize lifecycle policies"
+    echo "5. Set up monthly cost review meetings"

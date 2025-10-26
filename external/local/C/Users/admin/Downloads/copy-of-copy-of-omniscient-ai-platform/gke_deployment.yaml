@@ -1,0 +1,586 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: omni-platform
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: omni-secrets
+  namespace: omni-platform
+type: Opaque
+data:
+  # Placeholder for MongoDB credentials. Replace with your base64 encoded credentials.
+  # echo -n 'your-mongodb-user' | base64
+  # echo -n 'your-mongodb-password' | base64
+  MONGO_USER: "b21uaV9yb290"
+  MONGO_PASS: "b21uaV9yb290X3Bhc3NfMjAyNA=="
+  # Placeholder for Redis password.
+  # echo -n 'your-redis-password' | base64
+  REDIS_PASS: "b21uaV9yZWRpc19zZWN1cmVfcGFzcw=="
+  # Placeholder for JWT secrets.
+  # echo -n 'your-jwt-secret' | base64
+  JWT_SECRET: "NzdmZGMzNmM4ZTIxYjhmYTUwZjJhZDdjOWJlMDE3M2U4OWNhMjc0YmZiYzg1NDNmNmQzMjYwYTFmYTNjNTZlMg=="
+  JWT_REFRESH_SECRET: "MzBiMWUyZjNjNGQ1YTZiN2M4ZDllMGYxYTIzYjQ1YzY3ZDg5MDFlMmYzYzRhNWI2ZDdlOGY5YTBiMWMyZDNlNA=="
+  # Placeholder for OpenAI API key.
+  # echo -n 'your-openai-key' | base64
+  OPENAI_API_KEY: "c2stcHJvai12Z010Q2RTQTJvc1RxcVdQVVZJZ3g3dk9ja2ZJTk8zbXBQVk0zY2g4RkJnSUdpVzBCN05iYTVMVm9HQXdBMDB2WDlJZWdfMkR0SVQzQmxia0ZKTTdzN2VXVG1sMGNndi1md2c1OXJLdGMtSjU3bzM1azNKcWVzVnhncGhWQTJqYVhCNWVEbWFnYVRaMUxJS2Q3M3VnVS1BY3lkMEE="
+  # Placeholder for other API keys
+  IBM_API_KEY: "bm90X3NldA=="
+  GEMINI_KEY: "QUl6YVN5QXlLQ0lVRTFiOFNRRjlnLU9rMldEQl96dnRrQ2tZQzhN"
+  GOOGLE_API_KEY: "QUl6YVN5QXlLQ0lVRTFiOFNRRjlnLU9rMldEQl96dnRrQ2tZQzhN"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+  namespace: omni-platform
+  labels:
+    app: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:6
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongo-persistent-storage
+          mountPath: /data/db
+      volumes:
+      - name: mongo-persistent-storage
+        persistentVolumeClaim:
+          claimName: mongo-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  namespace: omni-platform
+spec:
+  selector:
+    app: mongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc
+  namespace: omni-platform
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: omni-platform
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: redis-persistent-storage
+          mountPath: /data
+      volumes:
+      - name: redis-persistent-storage
+        persistentVolumeClaim:
+          claimName: redis-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: omni-platform
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: omni-platform
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omni-api
+  namespace: omni-platform
+  labels:
+    app: omni-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: omni-api
+  template:
+    metadata:
+      labels:
+        app: omni-api
+    spec:
+      containers:
+      - name: omni-api
+        image: gcr.io/refined-graph-471712-n9/omni-api:latest # Replace with your image registry path e.g. gcr.io/your-project/omni-api:latest
+        ports:
+        - containerPort: 3001
+        env:
+        - name: PORT
+          value: "3001"
+        - name: NODE_ENV
+          value: "production"
+        - name: MONGODB_URI
+          value: "mongodb://mongo:27017/omni-brain"
+        - name: OMNI_MAX_CONCURRENCY
+          value: "6"
+        - name: BIC_ENABLED
+          value: "true"
+        - name: EVENT_BUS
+          value: "local"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: omni-secrets
+              key: JWT_SECRET
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: omni-secrets
+              key: OPENAI_API_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omni-api
+  namespace: omni-platform
+spec:
+  selector:
+    app: omni-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omni-dashboard
+  namespace: omni-platform
+  labels:
+    app: omni-dashboard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: omni-dashboard
+  template:
+    metadata:
+      labels:
+        app: omni-dashboard
+    spec:
+      containers:
+      - name: omni-dashboard
+        image: gcr.io/refined-graph-471712-n9/omni-dashboard:latest # Replace with your image registry path e.g. gcr.io/your-project/omni-dashboard:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DASHBOARD_PORT
+          value: "8080"
+        - name: GOOGLE_CLOUD_PROJECT
+          value: "your-gcp-project-id" # Replace with your GCP project ID
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omni-dashboard
+  namespace: omni-platform
+spec:
+  selector:
+    app: omni-dashboard
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: omni-ingress
+  namespace: omni-platform
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: "omni-static-ip" # You need to create a static IP in GCP
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: omni-api
+            port:
+              number: 80
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: omni-dashboard
+            port:
+              number: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  namespace: omni-platform
+  labels:
+    app: ollama
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      containers:
+      - name: ollama
+        image: ollama/ollama:latest
+        ports:
+        - containerPort: 11434
+        volumeMounts:
+        - name: ollama-persistent-storage
+          mountPath: /root/.ollama
+      volumes:
+      - name: ollama-persistent-storage
+        persistentVolumeClaim:
+          claimName: ollama-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama
+  namespace: omni-platform
+spec:
+  selector:
+    app: ollama
+  ports:
+    - protocol: TCP
+      port: 11434
+      targetPort: 11434
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ollama-pvc
+  namespace: omni-platform
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omni-singularity
+  namespace: omni-platform
+  labels:
+    app: omni-singularity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: omni-singularity
+  template:
+    metadata:
+      labels:
+        app: omni-singularity
+    spec:
+      containers:
+      - name: omni-singularity
+        image: gcr.io/refined-graph-471712-n9/omni-singularity:latest # Replace with your image registry path
+        ports:
+        - containerPort: 8093
+        env:
+        - name: OMNI_VERSION
+          value: "10.0"
+        - name: OMNI_MODE
+          value: "full"
+        # Add other environment variables from docker-compose
+        volumeMounts:
+        - name: omni-singularity-persistent-storage
+          mountPath: /app/OmniSingularity
+      volumes:
+      - name: omni-singularity-persistent-storage
+        persistentVolumeClaim:
+          claimName: omni-singularity-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omni-singularity
+  namespace: omni-platform
+spec:
+  selector:
+    app: omni-singularity
+  ports:
+    - protocol: TCP
+      port: 8093
+      targetPort: 8093
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: omni-singularity-pvc
+  namespace: omni-platform
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omni-storage
+  namespace: omni-platform
+  labels:
+    app: omni-storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: omni-storage
+  template:
+    metadata:
+      labels:
+        app: omni-storage
+    spec:
+      containers:
+      - name: omni-storage
+        image: nouchka/sqlite3:latest
+        env:
+        - name: SQLITE_DATABASE
+          value: "omni_singularity.db"
+        - name: SQLITE_PATH
+          value: "/data"
+        volumeMounts:
+        - name: omni-storage-persistent-storage
+          mountPath: /data
+      volumes:
+      - name: omni-storage-persistent-storage
+        persistentVolumeClaim:
+          claimName: omni-storage-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omni-storage
+  namespace: omni-platform
+spec:
+  selector:
+    app: omni-storage
+  ports:
+    - protocol: TCP
+      port: 80 # sqlite does not have a port, this is just for the service
+      targetPort: 80
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: omni-storage-pvc
+  namespace: omni-platform
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omni-quantum-backend
+  namespace: omni-platform
+  labels:
+    app: omni-quantum-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: omni-quantum-backend
+  template:
+    metadata:
+      labels:
+        app: omni-quantum-backend
+    spec:
+      containers:
+      - name: omni-quantum-backend
+        image: gcr.io/refined-graph-471712-n9/omni-quantum-backend:latest # Replace with your image registry path
+        ports:
+        - containerPort: 8080
+        # Add environment variables
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omni-quantum-backend
+  namespace: omni-platform
+spec:
+  selector:
+    app: omni-quantum-backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omni-api-gateway
+  namespace: omni-platform
+  labels:
+    app: omni-api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: omni-api-gateway
+  template:
+    metadata:
+      labels:
+        app: omni-api-gateway
+    spec:
+      containers:
+      - name: omni-api-gateway
+        image: gcr.io/refined-graph-471712-n9/omni-api-gateway:latest # Replace with your image registry path
+        ports:
+        - containerPort: 8082
+        env:
+        - name: API_PORT
+          value: "8082"
+        - name: OMNI_PLATFORM_URL
+          value: "http://omni-singularity:8093"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omni-api-gateway
+  namespace: omni-platform
+spec:
+  selector:
+    app: omni-api-gateway
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8082
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quantum-worker
+  namespace: omni-platform
+  labels:
+    app: quantum-worker
+spec:
+  replicas: 2 # As per docker-compose
+  selector:
+    matchLabels:
+      app: quantum-worker
+  template:
+    metadata:
+      labels:
+        app: quantum-worker
+    spec:
+      containers:
+      - name: quantum-worker
+        image: gcr.io/refined-graph-471712-n9/quantum-worker:latest # Replace with your image registry path
+        env:
+        - name: QUANTUM_PLATFORM_URL
+          value: "http://quantum-platform:8080"
+        # Add other environment variables
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quantum-entanglement-node
+  namespace: omni-platform
+  labels:
+    app: quantum-entanglement-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quantum-entanglement-node
+  template:
+    metadata:
+      labels:
+        app: quantum-entanglement-node
+    spec:
+      containers:
+      - name: quantum-entanglement-node
+        image: gcr.io/refined-graph-471712-n9/quantum-entanglement-node:latest # Replace with your image registry path
+        ports:
+        - containerPort: 8083
+        env:
+        - name: ENTANGLEMENT_PORT
+          value: "8083"
+        - name: QUANTUM_PLATFORM_URL
+          value: "http://quantum-platform:8080"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quantum-entanglement-node
+  namespace: omni-platform
+spec:
+  selector:
+    app: quantum-entanglement-node
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8083

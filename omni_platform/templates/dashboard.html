@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI Platform Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .metric-card {
+            @apply bg-white rounded-lg shadow-md p-6 border-l-4;
+        }
+        .metric-value {
+            @apply text-3xl font-bold text-gray-800;
+        }
+        .metric-label {
+            @apply text-sm text-gray-600 uppercase tracking-wide;
+        }
+        .status-indicator {
+            @apply w-3 h-3 rounded-full inline-block ml-2;
+        }
+        .status-operational {
+            @apply bg-green-500;
+        }
+        .status-warning {
+            @apply bg-yellow-500;
+        }
+        .status-error {
+            @apply bg-red-500;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">OMNI Platform Dashboard</h1>
+                    <p class="text-gray-600 mt-2">Professional AI Assistance System</p>
+                </div>
+                <div class="text-right">
+                    <div class="flex items-center justify-end gap-2 mb-2">
+                        <input id="loginUser" class="border rounded px-2 py-1 text-sm" placeholder="user" value="admin" />
+                        <input id="loginPass" type="password" class="border rounded px-2 py-1 text-sm" placeholder="password" value="admin" />
+                        <button id="loginBtn" class="px-2 py-1 bg-emerald-600 text-white rounded text-sm">Login</button>
+                        <button id="logoutBtn" class="px-2 py-1 bg-slate-600 text-white rounded text-sm hidden">Logout</button>
+                        <span id="loginInfo" class="text-xs text-gray-500 hidden"></span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="status-indicator status-operational"></span>
+                        <span class="ml-2 text-sm text-gray-600">Operational</span>
+                    </div>
+                    <div class="text-sm text-gray-500 mt-1">v3.0.0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="metric-card border-l-blue-500">
+                <div class="metric-value" id="cpu-usage">0.0</div>
+                <div class="metric-label">CPU Usage (%)</div>
+            </div>
+            <div class="metric-card border-l-green-500">
+                <div class="metric-value" id="memory-usage">0.0</div>
+                <div class="metric-label">Memory Usage (%)</div>
+            </div>
+            <div class="metric-card border-l-purple-500">
+                <div class="metric-value" id="active-tools">0</div>
+                <div class="metric-label">Active Tools</div>
+            </div>
+            <div class="metric-card border-l-orange-500">
+                <div class="metric-value" id="uptime">0.0</div>
+                <div class="metric-label">Uptime (hours)</div>
+            </div>
+        </div>
+
+        <!-- Tool Categories -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Tool Categories</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="tool-categories">
+                <!-- Tool categories will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Performance Chart -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Performance Metrics</h2>
+            <canvas id="performance-chart" width="400" height="200"></canvas>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Recent Activity</h2>
+            <div class="space-y-3" id="recent-activity">
+                <div class="text-sm text-gray-600">No recent activity yet.</div>
+            </div>
+        </div>
+
+        <!-- AI Build Agent -->
+        <div class="bg-white rounded-lg shadow-md p-6 my-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">AI Build Agent</h2>
+            <div class="flex items-center gap-3 mb-3">
+                <button id="agentStart" class="px-3 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-500">Start</button>
+                <button id="agentStop" class="px-3 py-2 rounded bg-slate-700 text-white hover:bg-slate-600">Stop</button>
+                <span class="text-sm text-gray-600">Status: <span id="agentStatus">Idle</span></span>
+            </div>
+            <pre id="agentLog" class="text-xs bg-gray-50 rounded p-3 h-64 overflow-auto"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Update metrics every 5 seconds
+        async function updateMetrics() {
+            try {
+                const response = await fetch('/api/metrics');
+                const metrics = await response.json();
+
+                const cpu = metrics.performance.cpu_usage || 0;
+                const mem = metrics.performance.memory_usage || 0;
+                const uptimeHours = ((metrics.system?.uptime_seconds || 0) / 3600).toFixed(1);
+
+                const cpuEl = document.getElementById('cpu-usage');
+                const memEl = document.getElementById('memory-usage');
+                if (cpuEl) cpuEl.textContent = cpu.toFixed(1);
+                if (memEl) memEl.textContent = mem.toFixed(1);
+                document.getElementById('uptime').textContent = uptimeHours;
+
+                // Update live chart with CPU and Memory
+                if (window.perfData && window.perfChart) {
+                    const ts = new Date().toLocaleTimeString();
+                    window.perfData.labels.push(ts);
+                    window.perfData.datasets[0].data.push(Number(cpu.toFixed(1)));
+                    window.perfData.datasets[1].data.push(Number(mem.toFixed(1)));
+                    const maxPoints = 30;
+                    if (window.perfData.labels.length > maxPoints) {
+                        window.perfData.labels.shift();
+                        window.perfData.datasets.forEach(d => d.data.shift());
+                    }
+                    window.perfChart.update('none');
+                }
+
+            } catch (error) {
+                console.error('Error updating metrics:', error);
+            }
+        }
+
+        // Update tool categories
+        async function updateToolCategories() {
+            try {
+                const response = await fetch('/api/tools');
+                const toolsData = await response.json();
+
+                const container = document.getElementById('tool-categories');
+                container.innerHTML = '';
+
+                toolsData.categories.forEach(category => {
+                    const categoryElement = document.createElement('div');
+                    categoryElement.className = 'bg-gray-50 rounded-lg p-4 text-center';
+                    categoryElement.innerHTML = `
+                        <div class="text-lg font-semibold text-gray-800">${category.name}</div>
+                        <div class="text-sm text-gray-600">${category.tools} tools</div>
+                        <div class="mt-2">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${category.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}">
+                                ${category.status}
+                            </span>
+                        </div>
+                    `;
+                    container.appendChild(categoryElement);
+                });
+
+                // Update the Active Tools counter
+                const activeEl = document.getElementById('active-tools');
+                if (activeEl && typeof toolsData.total_tools === 'number') {
+                    activeEl.textContent = toolsData.total_tools;
+                }
+
+            } catch (error) {
+                console.error('Error updating tool categories:', error);
+            }
+        }
+
+        // Initialize dashboard
+        async function initializeDashboard() {
+            await updateMetrics();
+            await updateToolCategories();
+
+            // Setup Chart.js chart with live CPU and Memory
+            const ctx = document.getElementById('performance-chart').getContext('2d');
+            window.perfData = {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'CPU %',
+                        data: [],
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Memory %',
+                        data: [],
+                        borderColor: 'rgb(16, 185, 129)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.3
+                    }
+                ]
+            };
+            window.perfChart = new Chart(ctx, {
+                type: 'line',
+                data: window.perfData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    },
+                    animation: false
+                }
+            });
+        }
+
+        // Update every 5 seconds
+        setInterval(updateMetrics, 5000);
+        setInterval(updateToolCategories, 10000);
+
+        // AI Build Agent client
+        const agentLogEl = document.getElementById('agentLog');
+        const agentStatusEl = document.getElementById('agentStatus');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginUser = document.getElementById('loginUser');
+        const loginPass = document.getElementById('loginPass');
+        const loginInfo = document.getElementById('loginInfo');
+        let agentEvtSource;
+        let authToken = null;
+        let statusPollingInterval = null;
+
+        function appendAgentLog(line) {
+            if (!agentLogEl) return;
+            const logContainer = agentLogEl;
+
+            // Create a new div for each log entry
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry text-xs font-mono mb-1';
+            logEntry.textContent = line;
+
+            logContainer.appendChild(logEntry);
+
+            // Auto-scroll to bottom
+            logContainer.scrollTop = logContainer.scrollHeight;
+
+            // Keep only last 1000 lines to prevent memory issues
+            while (logContainer.children.length > 1000) {
+                logContainer.removeChild(logContainer.firstChild);
+            }
+        }
+
+        function clearAgentLog() {
+            if (agentLogEl) {
+                agentLogEl.innerHTML = '';
+            }
+        }
+
+        function updateAgentStatus(running, progress, message) {
+            if (agentStatusEl) {
+                const status = running ? `Running ${progress || 0}%` : 'Idle';
+                agentStatusEl.textContent = status;
+                if (message) {
+                    appendAgentLog(`Status: ${message}`);
+                }
+            }
+        }
+
+        function connectAgentStream() {
+            if (!authToken) {
+                appendAgentLog('No auth token available for SSE connection');
+                return;
+            }
+
+            try {
+                // Close existing connection
+                if (agentEvtSource) {
+                    agentEvtSource.close();
+                }
+
+                appendAgentLog('Connecting to SSE stream...');
+                agentEvtSource = new EventSource(`/api/agent/stream?token=${encodeURIComponent(authToken)}`);
+
+                agentEvtSource.onopen = function(event) {
+                    appendAgentLog('SSE connection established');
+                };
+
+                agentEvtSource.onmessage = function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+
+                        // Handle connection status
+                        if (data && data.status === 'connected') {
+                            updateAgentStatus(data.running, data.progress, 'Connected to stream');
+                            return;
+                        }
+
+                        // Handle log messages
+                        if (data && typeof data === 'string') {
+                            appendAgentLog(data);
+                        } else if (data && data.message) {
+                            appendAgentLog(data.message);
+                        }
+
+                    } catch (e) {
+                        // If it's not JSON, treat as raw log message
+                        appendAgentLog(event.data);
+                    }
+                };
+
+                agentEvtSource.onerror = function(error) {
+                    appendAgentLog(`SSE connection error: ${error}`);
+                    // Attempt to reconnect after 3 seconds
+                    setTimeout(() => {
+                        appendAgentLog('Attempting to reconnect SSE...');
+                        connectAgentStream();
+                    }, 3000);
+                };
+
+            } catch (error) {
+                appendAgentLog(`Failed to create SSE connection: ${error.message}`);
+            }
+        }
+
+        async function pollAgentStatus() {
+            if (!authToken) return;
+
+            try {
+                const response = await fetch('/api/agent/status', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const status = await response.json();
+                    updateAgentStatus(status.running, status.progress, status.last_message);
+                } else {
+                    appendAgentLog(`Status poll failed: ${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                appendAgentLog(`Status poll error: ${error.message}`);
+            }
+        }
+
+        function startStatusPolling() {
+            stopStatusPolling(); // Clear any existing interval
+            statusPollingInterval = setInterval(pollAgentStatus, 2000);
+        }
+
+        function stopStatusPolling() {
+            if (statusPollingInterval) {
+                clearInterval(statusPollingInterval);
+                statusPollingInterval = null;
+            }
+        }
+
+        async function startAgentBuild() {
+            if (!authToken) {
+                appendAgentLog('Please login first.');
+                return;
+            }
+
+            try {
+                appendAgentLog('Starting AI build agent...');
+                const response = await fetch('/api/agent/start', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ pipeline: 'auto_ps1' })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    appendAgentLog(`Agent started: ${result.status} (Run ID: ${result.run_id})`);
+                    startStatusPolling(); // Start polling for status updates
+                } else {
+                    const errorText = await response.text();
+                    appendAgentLog(`Start failed: ${response.status} ${response.statusText} - ${errorText}`);
+                }
+            } catch (error) {
+                appendAgentLog(`Start failed: ${error.message}`);
+            }
+        }
+
+        async function stopAgentBuild() {
+            if (!authToken) {
+                appendAgentLog('Please login first.');
+                return;
+            }
+
+            try {
+                appendAgentLog('Stopping AI build agent...');
+                const response = await fetch('/api/agent/stop', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    appendAgentLog(`Agent stopped: ${result.status}`);
+                } else {
+                    const errorText = await response.text();
+                    appendAgentLog(`Stop failed: ${response.status} ${response.statusText} - ${errorText}`);
+                }
+            } catch (error) {
+                appendAgentLog(`Stop failed: ${error.message}`);
+            }
+        }
+
+        // Login/Logout functions
+        async function doLogin() {
+            try {
+                const formData = new URLSearchParams();
+                formData.append('username', loginUser.value || 'admin');
+                formData.append('password', loginPass.value || 'admin');
+
+                appendAgentLog('Attempting login...');
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    authToken = data.access_token;
+
+                    // Update UI
+                    loginBtn.classList.add('hidden');
+                    loginUser.classList.add('hidden');
+                    loginPass.classList.add('hidden');
+                    logoutBtn.classList.remove('hidden');
+                    loginInfo.classList.remove('hidden');
+                    loginInfo.textContent = 'Logged in successfully';
+
+                    appendAgentLog('Login successful');
+                    clearAgentLog(); // Clear previous logs
+
+                    // Connect to SSE and start polling
+                    connectAgentStream();
+                    startStatusPolling();
+
+                } else {
+                    const errorText = await response.text();
+                    appendAgentLog(`Login failed: ${response.status} ${response.statusText} - ${errorText}`);
+                }
+            } catch (error) {
+                appendAgentLog(`Login error: ${error.message}`);
+            }
+        }
+
+        function doLogout() {
+            // Close SSE connection
+            try {
+                if (agentEvtSource) {
+                    agentEvtSource.close();
+                    agentEvtSource = null;
+                }
+            } catch (error) {
+                appendAgentLog(`Error closing SSE: ${error.message}`);
+            }
+
+            // Stop status polling
+            stopStatusPolling();
+
+            // Clear token and reset UI
+            authToken = null;
+            logoutBtn.classList.add('hidden');
+            loginInfo.classList.add('hidden');
+            loginBtn.classList.remove('hidden');
+            loginUser.classList.remove('hidden');
+            loginPass.classList.remove('hidden');
+
+            updateAgentStatus(false, 0, 'Logged out');
+            appendAgentLog('Logged out');
+        }
+
+        // Event listeners
+        if (loginBtn) loginBtn.addEventListener('click', doLogin);
+        if (logoutBtn) logoutBtn.addEventListener('click', doLogout);
+
+        const startBtn = document.getElementById('agentStart');
+        const stopBtn = document.getElementById('agentStop');
+        if (startBtn) startBtn.addEventListener('click', startAgentBuild);
+        if (stopBtn) stopBtn.addEventListener('click', stopAgentBuild);
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            // Note: SSE connection and status polling start only after login
+        });
+    </script>
+</body>
+</html>

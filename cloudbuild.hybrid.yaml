@@ -1,0 +1,32 @@
+substitutions:
+  _REGION: "europe-west1"
+  _ENV: "prod"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+- name: "gcr.io/cloud-builders/docker"
+  id: "build-image"
+  args: ["build", "-f", "Dockerfile.hybrid", "-t", "europe-west1-docker.pkg.dev/$PROJECT_ID/omni/omni-hybrid-ai:${SHORT_SHA}", "."]
+
+- name: "gcr.io/cloud-builders/docker"
+  id: "push-image"
+  args: ["push", "europe-west1-docker.pkg.dev/$PROJECT_ID/omni/omni-hybrid-ai:${SHORT_SHA}"]
+
+- name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+  id: "deploy-cloud-run"
+  entrypoint: "bash"
+  args:
+    - "-c"
+    - |
+      gcloud run deploy omni-hybrid-ai \
+        --image europe-west1-docker.pkg.dev/$PROJECT_ID/omni/omni-hybrid-ai:${SHORT_SHA} \
+        --region ${_REGION} \
+        --platform managed \
+        --allow-unauthenticated \
+        --set-env-vars GOOGLE_CLOUD_PROJECT=$PROJECT_ID,GOOGLE_CLOUD_REGION=global,VERTEX_AI_MODEL=gemini-2.5-flash-preview-09-2025,OPENAI_MODEL=gpt-4o-mini \
+        --update-secrets OPENAI_API_KEY=openai-api-key:latest,GEMINI_API_KEY=gemini-api-key:latest,GOOGLE_API_KEY=google-api-key:latest
+
+images:
+- "europe-west1-docker.pkg.dev/$PROJECT_ID/omni/omni-hybrid-ai:${SHORT_SHA}"

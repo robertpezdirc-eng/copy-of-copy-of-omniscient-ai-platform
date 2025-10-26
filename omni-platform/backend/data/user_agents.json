@@ -1,0 +1,14 @@
+{
+  "demo-tenant": {
+    "tenant_id": "demo-tenant",
+    "api_key": "088a04ce03734a39b07ef5c0191c5ba5",
+    "roles": [
+      "user"
+    ],
+    "real_name": "",
+    "billing_address": "",
+    "contact_email": "",
+    "compliance_status": "unknown",
+    "created_at": 139807572439446739
+  }
+}

@@ -1,0 +1,80 @@
+# OMNI Quantum Platform - GPU-Enabled Container
+# CUDA-optimized container for quantum computing acceleration
+
+FROM nvidia/cuda:12.1-devel-ubuntu22.04
+
+# Set environment variables for CUDA and quantum computing
+ENV CUDA_VISIBLE_DEVICES=0
+ENV TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6 9.0"
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-pip \
+    python3.11-dev \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    git \
+    curl \
+    wget \
+    libopenmpi-dev \
+    liblapack-dev \
+    libblas-dev \
+    gfortran \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create quantum user for security
+RUN useradd --create-home --shell /bin/bash quantum
+
+# Set working directory
+WORKDIR /app
+
+# Copy and install Python requirements
+COPY requirements-gpu.txt requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Install GPU-accelerated libraries
+RUN pip3 install --no-cache-dir \
+    torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 \
+    cupy-cuda12x \
+    numba \
+    scipy \
+    scikit-learn \
+    qiskit-aer-gpu \
+    pennylane-gpu
+
+# Copy quantum platform source code
+COPY . /app/
+
+# Create necessary directories
+RUN mkdir -p /app/quantum_storage /app/logs /app/data /app/backups /app/gpu_cache
+RUN chown -R quantum:quantum /app
+
+# Switch to quantum user
+USER quantum
+
+# Expose ports for quantum services
+EXPOSE 8080 8081 8082 8083
+
+# Health check for GPU functionality
+HEALTHCHECK --interval=60s --timeout=30s --start-period=120s --retries=3 \
+    CMD python3 -c "import torch; import sys; print(f'CUDA: {torch.cuda.is_available()}'); sys.exit(0 if torch.cuda.is_available() else 1)" || exit 1
+
+# GPU startup script
+RUN echo '#!/bin/bash\n\
+echo "🚀 Starting OMNI Quantum Platform (GPU Mode)"\n\
+echo "🔬 Initializing CUDA-accelerated quantum computing..."\n\
+python3 -c "import torch; print(f\"CUDA: {torch.cuda.is_available()}, GPUs: {torch.cuda.device_count()}\")"\n\
+python3 -c "import omni_quantum_cores; print(\"✅ GPU quantum cores loaded\")"\n\
+python3 -c "import omni_quantum_storage; print(\"✅ GPU quantum storage loaded\")"\n\
+echo "🎯 GPU-accelerated quantum platform ready!"\n\
+exec "$@"' > /app/start_gpu.sh
+
+RUN chmod +x /app/start_gpu.sh
+
+# Default command
+CMD ["/app/start_gpu.sh", "python3", "omni_quantum_platform.py"]

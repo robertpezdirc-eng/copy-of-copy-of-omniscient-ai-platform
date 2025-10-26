@@ -1,0 +1,349 @@
+version: '3.8'
+
+# OMNI Singularity Quantum Dashboard v10.0 - Docker Compose
+# Complete deployment for advanced quantum AI system
+
+services:
+  # Main OMNI Singularity Service
+  omni-singularity:
+    build:
+      context: .
+      dockerfile: Dockerfile.omni-singularity
+      target: production
+    container_name: omni-singularity-v10
+    restart: unless-stopped
+
+    # Resource allocation for quantum computing
+    deploy:
+      resources:
+        limits:
+          cpus: '8.0'
+          memory: 20G
+        reservations:
+          cpus: '4.0'
+          memory: 8G
+
+    # Environment configuration
+    environment:
+      - OMNI_VERSION=10.0
+      - OMNI_MODE=full
+      - RUN_HIDDEN=true
+      - DEFAULT_LANGUAGE=sl
+      - BCI_INTEGRATION=true
+      - QUANTUM_ACCELERATION=true
+      - DEFAULT_PORT=8093
+      - USER_NAME=Robert Pezdirc
+      - USER_LANGUAGE=sl
+      - USER_TIMEZONE=Europe/Ljubljana
+      - GOOGLE_CLOUD_KEY=AIzaSyAyKCIUE1b8SQF9g-Ok2WDB_zvtkCkYC8M
+      - GOOGLE_API_KEY=AIzaSyAyKCIUE1b8SQF9g-Ok2WDB_zvtkCkYC8M
+      - OPENAI_KEY=${OPENAI_API_KEY:-your_openai_key}
+      - GEMINI_KEY=${GEMINI_API_KEY:-your_gemini_key}
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT:-your-gcp-project}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-credentials.json
+
+    # Volume mounts for persistent data
+    volumes:
+      - omni_singularity_data:/app/OmniSingularity
+      - omni_memory:/app/OmniSingularity/memory
+      - omni_logs:/app/OmniSingularity/logs
+      - ./config.txt:/app/config.txt:ro
+      - google_cloud_credentials:/app/gcp-credentials.json:ro
+
+    # Network configuration
+    networks:
+      - omni-network
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8093/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+    # Dependencies
+    depends_on:
+      omni-storage:
+        condition: service_healthy
+      omni-redis:
+        condition: service_healthy
+
+  # OMNI Storage Service (SQLite backend)
+  omni-storage:
+    image: nouchka/sqlite3:latest
+    container_name: omni-storage
+    restart: unless-stopped
+
+    # Storage configuration
+    environment:
+      - SQLITE_DATABASE=omni_singularity.db
+      - SQLITE_PATH=/data
+
+    volumes:
+      - omni_database:/data
+
+    networks:
+      - omni-network
+
+    healthcheck:
+      test: ["CMD", "sqlite3", "/data/omni_singularity.db", "SELECT 1;"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Redis Cache for OMNI Operations
+  omni-redis:
+    image: redis:7-alpine
+    container_name: omni-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-omni_redis_secure}
+
+    volumes:
+      - omni_redis_data:/data
+
+    networks:
+      - omni-network
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # OMNI Quantum Backend Services
+  omni-quantum-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.quantum-platform
+      target: production
+    container_name: omni-quantum-backend
+    restart: unless-stopped
+
+    environment:
+      - QUANTUM_PLATFORM_MODE=production
+      - QUANTUM_CORES_MAX=10
+      - ENABLE_GPU=${ENABLE_GPU:-false}
+
+    volumes:
+      - omni_quantum_storage:/app/quantum_storage
+
+    networks:
+      - omni-network
+
+    depends_on:
+      - omni-singularity
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # OMNI Monitoring Dashboard
+  omni-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: omni-dashboard
+    restart: unless-stopped
+
+    environment:
+      - DASHBOARD_PORT=8081
+      - MONITORING_UPDATE_INTERVAL=5
+
+    volumes:
+      - omni_logs:/app/logs:ro
+
+    networks:
+      - omni-network
+
+    depends_on:
+      - omni-singularity
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # OMNI API Gateway
+  omni-api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.api-gateway
+    container_name: omni-api-gateway
+    restart: unless-stopped
+
+    environment:
+      - API_PORT=8082
+      - OMNI_PLATFORM_URL=http://omni-singularity:8093
+      - ENABLE_CORS=true
+
+    networks:
+      - omni-network
+
+    depends_on:
+      - omni-singularity
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # OMNI Load Balancer
+  omni-load-balancer:
+    image: nginx:alpine
+    container_name: omni-load-balancer
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8093:8093"
+
+    volumes:
+      - ./nginx/omni-nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./ssl:/etc/nginx/ssl:ro
+
+    networks:
+      - omni-network
+
+    depends_on:
+      - omni-singularity
+      - omni-dashboard
+      - omni-api-gateway
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Prometheus for Metrics Collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: omni-prometheus
+    restart: unless-stopped
+
+    volumes:
+      - ./monitoring/omni-prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+
+    networks:
+      - omni-network
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Grafana for Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: omni-grafana
+    restart: unless-stopped
+
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-omni_grafana_admin}
+
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/omni-dashboards:/etc/grafana/dashboards:ro
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+
+    networks:
+      - omni-network
+
+    depends_on:
+      - prometheus
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# Named volumes for data persistence
+volumes:
+  omni_singularity_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/omni_singularity
+
+  omni_memory:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/omni_memory
+
+  omni_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/omni_logs
+
+  omni_database:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/omni_database
+
+  omni_redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/omni_redis
+
+  omni_quantum_storage:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/quantum_storage
+
+  prometheus_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/prometheus
+
+  grafana_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/grafana
+
+  google_cloud_credentials:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./gcp-credentials.json
+
+# Networks for service communication
+networks:
+  omni-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
+          gateway: 172.25.0.1

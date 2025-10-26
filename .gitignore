@@ -1,0 +1,7 @@
+.env
+openai key.txt
+*.log
+logs/
+node_modules/
+.DS_Store
+Thumbs.db

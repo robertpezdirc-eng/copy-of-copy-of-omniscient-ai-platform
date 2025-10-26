@@ -1,0 +1,43 @@
+name: Deploy Preview to Firebase Hosting
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy-preview:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: omni-search
+        run: |
+          npm ci
+
+      - name: Build production
+        working-directory: omni-search
+        run: |
+          npm run build
+
+      - name: Deploy to Firebase Hosting (Preview Channel)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          channelId: "pr-${{ github.event.number }}"
+          expires: 7d
+          entryPoint: "omni-search"
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks

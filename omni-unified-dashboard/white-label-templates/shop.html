@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultimate Omni Package – Trgovina</title>
+  <meta name="description" content="E‑commerce predloga: seznam izdelkov, filtriranje in CTA." />
+  <link rel="stylesheet" href="assets/css/brand.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <img src="assets/img/placeholder.svg" alt="Logotip" class="logo" />
+      <h1>Ultimate Omni Package</h1>
+    </div>
+    <nav class="nav">
+      <a href="index.html">Domov</a>
+      <a href="blog.html">Blog</a>
+      <a href="shop.html" class="active">E‑commerce</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section>
+      <h2>Izdelki</h2>
+      <div class="shop-controls">
+        <input type="text" id="search" placeholder="Išči izdelke" />
+        <select id="category">
+          <option value="">Vse kategorije</option>
+          <option value="digital">Digitalni</option>
+          <option value="templates">Predloge</option>
+          <option value="services">Storitve</option>
+        </select>
+      </div>
+      <div id="products" class="products"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>© 2025 Ultimate Omni Package</small>
+  </footer>
+
+  <script src="assets/js/shop.js"></script>
+</body>
+</html>

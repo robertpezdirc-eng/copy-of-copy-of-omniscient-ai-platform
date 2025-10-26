@@ -1,0 +1,62 @@
+name: Monitoring Policy Switch + Smoke Test (Bash)
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'infra/monitoring/**'
+      - '.github/workflows/monitoring_policies_and_smoke.yml'
+      - 'cloudbuild.monitoring.yaml'
+
+jobs:
+  policies-and-smoke:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # Auth via Workload Identity Federation (recommended)
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Enable MQL policy (exact) and disable legacy
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          POLICY_FILTER: "^OMNI Dashboard - Uptime Check"
+          MQL_POLICY_DISPLAY_NAME: "OMNI Dashboard - Uptime Check (MQL Multi-Region)"
+        run: |
+          chmod +x infra/monitoring/scripts/*.sh
+          ./infra/monitoring/scripts/enable_policy.sh -p "$PROJECT_ID" -f "$MQL_POLICY_DISPLAY_NAME" --exact -y
+          ./infra/monitoring/scripts/disable_policy.sh -p "$PROJECT_ID" -f "$POLICY_FILTER" -x "$MQL_POLICY_DISPLAY_NAME" -y
+
+      - name: Uptime Smoke Test (via script)
+        env:
+          # Prefer cloudrun-url.json committed to repo
+          # Alternatively, pass --service/--region below
+          SERVICE_NAME: ${{ vars.CLOUD_RUN_SERVICE }}
+          REGION: ${{ vars.CLOUD_RUN_REGION }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq curl
+          chmod +x infra/monitoring/scripts/smoke_test.sh
+          # Option A: Resolve URL from file
+          if [ -f cloudrun-url.json ]; then URL_ARG="--url-file cloudrun-url.json"; fi
+          # Option B: Fallback to service/region if no file
+          ./infra/monitoring/scripts/smoke_test.sh \
+            ${URL_ARG:- --service "$SERVICE_NAME" --region "$REGION"} \
+            --path /health \
+            --retries 20 \
+            --delay 5
+
+          # Example: Multiple endpoints + JSON validation (mode=all)
+          # ./infra/monitoring/scripts/smoke_test.sh \
+          #   ${URL_ARG:- --service "$SERVICE_NAME" --region "$REGION"} \
+          #   --paths /health,/readyz \
+          #   --mode all \
+          #   --expect-status 200 \
+          #   --expect-json '.status=="ok" and .version != null'

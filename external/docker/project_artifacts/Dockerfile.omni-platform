@@ -1,0 +1,36 @@
+# Omni Platform Dockerfile for Google Cloud with Vertex AI
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy omni platform files to container
+COPY . /app/
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install Google Cloud and Vertex AI libraries
+RUN pip install --no-cache-dir google-cloud-aiplatform google-auth
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/data /app/backups /app/config
+
+# Copy Vertex AI configuration
+COPY vertex_ai_config.json /app/config/vertex_ai_config.json
+
+# Expose port
+EXPOSE 8080
+
+# Set environment variables for Vertex AI
+ENV PYTHONPATH=/app
+ENV OMNI_HOME=/app
+ENV GOOGLE_CLOUD_PROJECT=refined-graph-471712-n9
+ENV GOOGLE_CLOUD_REGION=europe-west1
+ENV VERTEX_AI_API_KEY=AQ.Ab8RN6LjDXj9_BHBcp-XvbSm0WCE2ftjfwyobHz-Zc3oNMVfhQ
+ENV VERTEX_AI_MODEL=gemini-2.5-pro
+ENV VERTEX_AI_CONFIG_PATH=/app/config/vertex_ai_config.json
+ENV AI_PROVIDER=vertex_ai
+
+# Run the omni platform with Vertex AI
+CMD ["python", "omni_platform_final.py"]

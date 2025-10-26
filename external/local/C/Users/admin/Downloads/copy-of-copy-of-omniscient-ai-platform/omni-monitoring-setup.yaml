@@ -1,0 +1,414 @@
+# Omni Platform Monitoring and Observability Configuration
+# Comprehensive monitoring setup for Google Cloud deployment
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omni-monitoring-config
+  namespace: default
+data:
+  # Cloud Monitoring Configuration
+  monitoring-config.yaml: |
+    # Cloud Run Service Monitoring
+    cloud-run-monitoring:
+      services:
+      - name: "omni-exec-api"
+        metrics:
+        - name: "run.googleapis.com/request_count"
+          filter: 'resource.label.service_name = "omni-exec-api"'
+          aggregation:
+            alignmentPeriod: "60s"
+            perSeriesAligner: "ALIGN_RATE"
+        - name: "run.googleapis.com/request_latencies"
+          filter: 'resource.label.service_name = "omni-exec-api"'
+          aggregation:
+            alignmentPeriod: "60s"
+            perSeriesAligner: "ALIGN_PERCENTILE_99"
+
+      - name: "omni-frontend"
+        metrics:
+        - name: "run.googleapis.com/request_count"
+          filter: 'resource.label.service_name = "omni-frontend"'
+        - name: "run.googleapis.com/request_latencies"
+          filter: 'resource.label.service_name = "omni-frontend"'
+
+      - name: "omni-professional-dashboard"
+        metrics:
+        - name: "run.googleapis.com/request_count"
+          filter: 'resource.label.service_name = "omni-professional-dashboard"'
+        - name: "run.googleapis.com/request_latencies"
+          filter: 'resource.label.service_name = "omni-professional-dashboard"'
+        - name: "run.googleapis.com/container/memory/utilization"
+          filter: 'resource.label.service_name = "omni-professional-dashboard"'
+
+    # Custom Metrics for Omni Platform
+    custom-metrics:
+    - name: "omni/api_requests_total"
+      description: "Total number of API requests"
+      kind: "CUMULATIVE"
+      valueType: "INT64"
+      unit: "1"
+
+    - name: "omni/api_request_duration_seconds"
+      description: "API request duration in seconds"
+      kind: "GAUGE"
+      valueType: "DOUBLE"
+      unit: "s"
+
+    - name: "omni/gemini_tokens_used"
+      description: "Number of tokens used in Gemini API calls"
+      kind: "CUMULATIVE"
+      valueType: "INT64"
+      unit: "1"
+
+    # Alerting Policies
+    alerting-policies:
+    - name: "omni-high-error-rate"
+      description: "Alert when error rate exceeds 5%"
+      condition:
+        name: "Error rate condition"
+        displayName: "Error rate > 5%"
+        conditionThreshold:
+          filter: 'resource.type = "cloud_run_revision" AND metric.type = "run.googleapis.com/request_count"'
+          comparison: "COMPARISON_GT"
+          thresholdValue: 0.05
+          duration: "300s"
+          trigger:
+            count: 1
+      notificationChannels: ["email-channel", "slack-channel"]
+
+    - name: "omni-high-latency"
+      description: "Alert when P95 latency exceeds 10 seconds"
+      condition:
+        name: "High latency condition"
+        displayName: "P95 Latency > 10s"
+        conditionThreshold:
+          filter: 'resource.type = "cloud_run_revision" AND metric.type = "run.googleapis.com/request_latencies"'
+          comparison: "COMPARISON_GT"
+          thresholdValue: 10.0
+          duration: "600s"
+          aggregations:
+          - alignmentPeriod: "60s"
+            perSeriesAligner: "ALIGN_PERCENTILE_95"
+      notificationChannels: ["email-channel"]
+
+    - name: "omni-memory-usage-high"
+      description: "Alert when memory usage exceeds 80%"
+      condition:
+        name: "High memory usage"
+        displayName: "Memory Usage > 80%"
+        conditionThreshold:
+          filter: 'resource.type = "cloud_run_revision" AND metric.type = "run.googleapis.com/container/memory/utilization"'
+          comparison: "COMPARISON_GT"
+          thresholdValue: 0.8
+          duration: "300s"
+      notificationChannels: ["email-channel"]
+
+    - name: "omni-service-down"
+      description: "Alert when service health check fails"
+      condition:
+        name: "Service unavailable"
+        displayName: "Service Health Check Failed"
+        conditionAbsent:
+          filter: 'resource.type = "cloud_run_revision" AND metric.type = "run.googleapis.com/request_count"'
+          duration: "300s"
+      notificationChannels: ["email-channel", "sms-channel"]
+
+    # Uptime Checks
+    uptime-checks:
+    - name: "omni-api-health"
+      description: "Health check for omni-exec-api"
+      httpCheck:
+        path: "/readyz"
+        port: 8080
+        useSsl: true
+        validateSsl: true
+      period: "60s"
+      timeout: "10s"
+      regions: ["europe-west1"]
+
+    - name: "omni-frontend-health"
+      description: "Health check for omni-frontend"
+      httpCheck:
+        path: "/"
+        port: 8080
+        useSsl: true
+      period: "60s"
+      timeout: "10s"
+      regions: ["europe-west1"]
+
+    - name: "omni-dashboard-health"
+      description: "Health check for omni-professional-dashboard"
+      httpCheck:
+        path: "/readyz"
+        port: 8080
+        useSsl: true
+      period: "60s"
+      timeout: "10s"
+      regions: ["europe-west1"]
+
+    # Dashboards
+    dashboards:
+    - name: "omni-platform-overview"
+      description: "Main dashboard for Omni Platform"
+      widgets:
+      - title: "API Request Rate"
+        xyChart:
+          dataSets:
+          - timeSeriesQuery:
+              timeSeriesFilter:
+                filter: 'resource.type = "cloud_run_revision" AND metric.type = "run.googleapis.com/request_count"'
+                aggregation:
+                  alignmentPeriod: "60s"
+                  perSeriesAligner: "ALIGN_RATE"
+
+      - title: "API Latency"
+        xyChart:
+          dataSets:
+          - timeSeriesQuery:
+              timeSeriesFilter:
+                filter: 'resource.type = "cloud_run_revision" AND metric.type = "run.googleapis.com/request_latencies"'
+                aggregation:
+                  alignmentPeriod: "60s"
+                  perSeriesAligner: "ALIGN_PERCENTILE_95"
+
+      - title: "Error Rate"
+        xyChart:
+          dataSets:
+          - timeSeriesQuery:
+              timeSeriesFilter:
+                filter: 'resource.type = "cloud_run_revision" AND metric.type = "run.googleapis.com/request_count" AND metric.label.response_code_class = "4xx"'
+
+      - title: "Resource Utilization"
+        xyChart:
+          dataSets:
+          - timeSeriesQuery:
+              timeSeriesFilter:
+                filter: 'resource.type = "cloud_run_revision" AND metric.type = "run.googleapis.com/container/memory/utilization"'
+
+    # Log-based Metrics
+    log-based-metrics:
+    - name: "omni-error-logs"
+      description: "Count of error logs"
+      filter: 'severity >= ERROR'
+      metricDescriptor:
+        name: "omni-error-logs"
+        kind: "DELTA"
+        valueType: "INT64"
+        unit: "1"
+
+    - name: "omni-gemini-api-calls"
+      description: "Count of Gemini API calls"
+      filter: 'textPayload:"gemini" AND textPayload:"api"'
+      metricDescriptor:
+        name: "omni-gemini-api-calls"
+        kind: "DELTA"
+        valueType: "INT64"
+        unit: "1"
+
+    # Cloud Logging Configuration
+    logging-config:
+      sinks:
+      - name: "omni-logs-to-bigquery"
+        description: "Export logs to BigQuery for analysis"
+        destination: "bigquery.googleapis.com/projects/PROJECT_ID/datasets/omni_platform_logs"
+        filter: |
+          resource.type = "cloud_run_revision" AND
+          (logName = "projects/PROJECT_ID/logs/run.googleapis.com%2Frequests" OR
+           logName = "projects/PROJECT_ID/logs/run.googleapis.com%2Fstdout" OR
+           logName = "projects/PROJECT_ID/logs/run.googleapis.com%2Fstderr")
+        includeChildren: true
+
+      - name: "omni-error-logs-to-storage"
+        description: "Export error logs to Cloud Storage"
+        destination: "storage.googleapis.com/omni-platform-error-logs"
+        filter: 'severity >= ERROR'
+        includeChildren: true
+
+      - name: "omni-audit-logs-to-storage"
+        description: "Export audit logs for compliance"
+        destination: "storage.googleapis.com/omni-platform-audit-logs"
+        filter: |
+          logName = "projects/PROJECT_ID/logs/cloudaudit.googleapis.com%2Factivity" OR
+          logName = "projects/PROJECT_ID/logs/cloudaudit.googleapis.com%2Fsystem_event"
+        includeChildren: true
+
+    # Cloud Trace Configuration
+    trace-config:
+      sampling:
+        samplingRate: 0.1  # Sample 10% of requests for tracing
+        minQps: 1
+
+      attributeConfig:
+        attributeCountLimit: 32
+        droppedAttributesCount: 0
+
+    # Error Reporting Configuration
+    error-reporting:
+      serviceContexts:
+      - service: "omni-exec-api"
+        version: "latest"
+      - service: "omni-frontend"
+        version: "latest"
+      - service: "omni-professional-dashboard"
+        version: "latest"
+
+    # Service Level Objectives (SLOs)
+    slos:
+    - name: "omni-api-availability"
+      description: "99.5% availability for API services"
+      serviceLevelIndicator:
+        basicSli:
+          availability:
+            enabled: true
+      goal: 0.995
+      rollingPeriod: "30d"
+
+    - name: "omni-api-latency"
+      description: "95% of requests under 5 seconds"
+      serviceLevelIndicator:
+        basicSli:
+          latency:
+            threshold: "5s"
+      goal: 0.95
+      rollingPeriod: "30d"
+
+    # Notification Channels
+    notification-channels:
+    - name: "email-channel"
+      type: "email"
+      labels:
+        email_address: "admin@omni-platform.com"
+
+    - name: "slack-channel"
+      type: "slack"
+      labels:
+        channel_name: "#omni-alerts"
+        auth_token: "SLACK_BOT_TOKEN"
+
+    - name: "sms-channel"
+      type: "sms"
+      labels:
+        phone_number: "+38640123456"
+
+---
+# Deployment script for monitoring configurations
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omni-monitoring-deployment
+  namespace: default
+data:
+  deploy-monitoring.sh: |
+    #!/bin/bash
+    # Deploy monitoring configurations for Omni Platform
+
+    set -e
+
+    PROJECT_ID="${PROJECT_ID:-refined-graph-471712-n9}"
+    REGION="europe-west1"
+
+    echo "📊 Deploying Omni Platform monitoring configurations..."
+
+    # 1. Enable required monitoring APIs
+    echo "Enabling monitoring APIs..."
+    gcloud services enable \
+      monitoring.googleapis.com \
+      logging.googleapis.com \
+      trace.googleapis.com \
+      cloudtrace.googleapis.com \
+      --project=$PROJECT_ID
+
+    # 2. Create BigQuery dataset for logs
+    echo "Creating BigQuery dataset for logs..."
+    bq --project_id=$PROJECT_ID mk \
+      --dataset \
+      --description="Omni Platform logs dataset" \
+      $PROJECT_ID:omni_platform_logs
+
+    # 3. Create log sinks
+    echo "Creating log sinks..."
+    # Logs to BigQuery
+    gcloud logging sinks create omni-logs-to-bigquery \
+      bigquery.googleapis.com/projects/$PROJECT_ID/datasets/omni_platform_logs \
+      --log-filter='resource.type="cloud_run_revision"' \
+      --project=$PROJECT_ID
+
+    # Error logs to Storage
+    gcloud logging sinks create omni-error-logs-to-storage \
+      storage.googleapis.com/omni-platform-error-logs \
+      --log-filter='severity >= ERROR' \
+      --project=$PROJECT_ID
+
+    # 4. Create uptime checks
+    echo "Creating uptime checks..."
+    gcloud monitoring uptime-checks create omni-api-health \
+      --display-name="Omni API Health Check" \
+      --http-path="/readyz" \
+      --http-port=8080 \
+      --http-check-use-ssl \
+      --regions=europe-west1 \
+      --period=60 \
+      --timeout=10 \
+      --project=$PROJECT_ID
+
+    # 5. Create alerting policies
+    echo "Creating alerting policies..."
+    # High error rate alert
+    gcloud alpha monitoring policies create \
+      --policy-from-file=- <<EOF
+    {
+      "displayName": "omni-high-error-rate",
+      "conditions": [
+        {
+          "displayName": "Error rate > 5%",
+          "conditionThreshold": {
+            "filter": "resource.type = \"cloud_run_revision\" AND metric.type = \"run.googleapis.com/request_count\"",
+            "comparison": "COMPARISON_GT",
+            "thresholdValue": 0.05,
+            "duration": "300s"
+          }
+        }
+      ],
+      "notificationChannels": []
+    }
+    EOF
+
+    # 6. Create custom dashboards
+    echo "Creating monitoring dashboards..."
+    # This would typically be done through the Cloud Console or API
+
+    # 7. Configure Cloud Trace
+    echo "Configuring Cloud Trace..."
+    gcloud projects update $PROJECT_ID \
+      --update-labels="tracing-enabled=true"
+
+    # 8. Create log-based metrics
+    echo "Creating log-based metrics..."
+    gcloud logging metrics create omni-error-logs \
+      --description="Count of error logs" \
+      --log-filter='severity >= ERROR' \
+      --metric-kind=DELTA \
+      --value-type=INT64 \
+      --unit=1 \
+      --project=$PROJECT_ID
+
+    # 9. Set up Error Reporting
+    echo "Setting up Error Reporting..."
+    # Error Reporting is automatically enabled for Cloud Run services
+
+    echo "✅ Monitoring configuration deployment completed!"
+    echo ""
+    echo "📊 Monitoring URLs:"
+    echo "• Cloud Console Monitoring: https://console.cloud.google.com/monitoring"
+    echo "• Dashboards: https://console.cloud.google.com/monitoring/dashboards"
+    echo "• Alerts: https://console.cloud.google.com/monitoring/alerts"
+    echo "• Logs: https://console.cloud.google.com/logs"
+    echo "• Traces: https://console.cloud.google.com/traces"
+    echo ""
+    echo "Next steps:"
+    echo "1. Review and customize alerting thresholds"
+    echo "2. Set up notification channels (email, Slack, SMS)"
+    echo "3. Create custom dashboards for your specific needs"
+    echo "4. Configure log retention policies"
+    echo "5. Set up billing alerts for monitoring costs"

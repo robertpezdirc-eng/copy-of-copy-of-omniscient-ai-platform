@@ -1,0 +1,222 @@
+{
+  "title": "OMNI Unified - SSE Streams",
+  "uid": "omni-sse",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "editable": true,
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Started (rate 5m)",
+      "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4},
+      "targets": [{"expr": "sum(rate(omni_sse_streams_started[5m]))"}],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value"}
+    },
+    {
+      "type": "stat",
+      "title": "Errors (rate 5m)",
+      "gridPos": {"x": 6, "y": 0, "w": 6, "h": 4},
+      "targets": [{"expr": "sum(rate(omni_sse_streams_errors[5m]))"}],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value"}
+    },
+    {
+      "type": "stat",
+      "title": "Fallback (rate 5m)",
+      "gridPos": {"x": 12, "y": 0, "w": 6, "h": 4},
+      "targets": [{"expr": "sum(rate(omni_sse_streams_fallback[5m]))"}],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value"}
+    },
+    {
+      "type": "stat",
+      "title": "Done (rate 5m)",
+      "gridPos": {"x": 18, "y": 0, "w": 6, "h": 4},
+      "targets": [{"expr": "sum(rate(omni_sse_streams_done[5m]))"}],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value"}
+    },
+    {
+      "type": "timeseries",
+      "title": "SSE Rates (5m)",
+      "gridPos": {"x": 0, "y": 4, "w": 24, "h": 8},
+      "targets": [
+        {"expr": "sum(rate(omni_sse_streams_started[5m]))", "legendFormat": "started"},
+        {"expr": "sum(rate(omni_sse_streams_done[5m]))", "legendFormat": "done"},
+        {"expr": "sum(rate(omni_sse_streams_fallback[5m]))", "legendFormat": "fallback"},
+        {"expr": "sum(rate(omni_sse_streams_errors[5m]))", "legendFormat": "errors"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Errors Ratio (10m)",
+      "gridPos": {"x": 0, "y": 12, "w": 24, "h": 8},
+      "targets": [
+        {"expr": "(sum(rate(omni_sse_streams_errors[10m])) / sum(rate(omni_sse_streams_started[10m])))", "legendFormat": "errors/started"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    },
+    {
+      "type": "table",
+      "title": "Active Alerts",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 0, "y": 20, "w": 24, "h": 8},
+      "targets": [
+        {"expr": "ALERTS{alertstate=\"firing\",severity!=\"info\"}"}
+      ],
+      "transformations": [
+        {"id": "labelsToFields"}
+      ],
+      "options": {"showHeader": true}
+    },
+    {
+      "type": "timeseries",
+      "title": "CPU Usage %",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 0, "y": 28, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "100 * (1 - avg by(instance)(rate(node_cpu_seconds_total{mode=\"idle\",instance=~\"$instance\"}[5m])))", "legendFormat": "{{instance}}"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Memory Usage %",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 12, "y": 28, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "100 * (1 - (node_memory_MemAvailable_bytes{instance=~\"$instance\"} / node_memory_MemTotal_bytes{instance=~\"$instance\"}))", "legendFormat": "{{instance}}"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Disk Usage %",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 0, "y": 36, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "100 * (1 - (node_filesystem_avail_bytes{fstype!~\"tmpfs|overlay\",mountpoint!~\"/var/lib/docker.*|/var/run.*|/snap.*\",instance=~\"$instance\",mountpoint=~\"$mountpoint\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|overlay\",mountpoint!~\"/var/lib/docker.*|/var/run.*|/snap.*\",instance=~\"$instance\",mountpoint=~\"$mountpoint\"}))", "legendFormat": "{{instance}} {{mountpoint}}"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Network IO (bytes/s)",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 12, "y": 36, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "sum by(instance)(rate(node_network_receive_bytes_total{instance=~\"$instance\"}[5m]))", "legendFormat": "{{instance}} recv"},
+        {"expr": "sum by(instance)(rate(node_network_transmit_bytes_total{instance=~\"$instance\"}[5m]))", "legendFormat": "{{instance}} send"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    },
+    {
+      "type": "stat",
+      "title": "Errors Ratio (10m) current",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 0, "y": 44, "w": 6, "h": 4},
+      "targets": [
+        {"expr": "(sum(rate(omni_sse_streams_errors[10m])) / sum(rate(omni_sse_streams_started[10m])))"}
+      ],
+      "options": {
+        "reduceOptions": {"calcs": ["lastNotNull"], "values": false},
+        "colorMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": 0},
+              {"color": "yellow", "value": 0.02},
+              {"color": "red", "value": 0.05}
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "CPU per-core Usage %",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 0, "y": 48, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "100 * (1 - avg by(instance, cpu)(rate(node_cpu_seconds_total{mode=\"idle\",instance=~\"$instance\"}[5m])))", "legendFormat": "{{instance}} cpu{{cpu}}"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Load Average (1,5,15)",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 12, "y": 48, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "avg by(instance)(node_load1{instance=~\"$instance\"})", "legendFormat": "load1 {{instance}}"},
+        {"expr": "avg by(instance)(node_load5{instance=~\"$instance\"})", "legendFormat": "load5 {{instance}}"},
+        {"expr": "avg by(instance)(node_load15{instance=~\"$instance\"})", "legendFormat": "load15 {{instance}}"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "CPU IO Wait %",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 0, "y": 56, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "100 * avg by(instance)(rate(node_cpu_seconds_total{mode=\"iowait\",instance=~\"$instance\"}[5m]))", "legendFormat": "{{instance}}"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Inode Usage %",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 12, "y": 56, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "100 * (1 - (node_filesystem_files_free{fstype!~\"tmpfs|overlay\",mountpoint!~\"/var/lib/docker.*|/var/run.*|/snap.*\",instance=~\"$instance\",mountpoint=~\"$mountpoint\"} / node_filesystem_files{fstype!~\"tmpfs|overlay\",mountpoint!~\"/var/lib/docker.*|/var/run.*|/snap.*\",instance=~\"$instance\",mountpoint=~\"$mountpoint\"}))", "legendFormat": "{{instance}} {{mountpoint}}"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    },
+    {
+      "type": "table",
+      "title": "Top Filesystem Usage (Top 10)",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 0, "y": 64, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "topk(10, 100 * (1 - (node_filesystem_avail_bytes{fstype!~\\\"tmpfs|overlay\\\",mountpoint!~\\\"/var/lib/docker.*|/var/run.*|/snap.*\\\",instance=~\\\"$instance\\\",mountpoint=~\\\"$mountpoint\\\"} / node_filesystem_size_bytes{fstype!~\\\"tmpfs|overlay\\\",mountpoint!~\\\"/var/lib/docker.*|/var/run.*|/snap.*\\\",instance=~\\\"$instance\\\",mountpoint=~\\\"$mountpoint\\\"})))", "legendFormat": "{{instance}} {{mountpoint}}"}
+      ],
+      "transformations": [
+        {"id": "labelsToFields"}
+      ],
+      "options": {"showHeader": true}
+    },
+    {
+      "type": "timeseries",
+      "title": "Disk IO Throughput (bytes/s)",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 12, "y": 64, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "sum by(instance, device)(rate(node_disk_read_bytes_total{device!~\\\"loop.*|ram.*\\\",instance=~\\\"$instance\\\"}[5m]))", "legendFormat": "{{instance}} {{device}} read"},
+        {"expr": "sum by(instance, device)(rate(node_disk_written_bytes_total{device!~\\\"loop.*|ram.*\\\",instance=~\\\"$instance\\\"}[5m]))", "legendFormat": "{{instance}} {{device}} write"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Disk IO Utilization %",
+      "datasource": "Prometheus",
+      "gridPos": {"x": 0, "y": 72, "w": 24, "h": 8},
+      "targets": [
+        {"expr": "100 * avg by(instance, device)(rate(node_disk_io_time_seconds_total{device!~\\\"loop.*|ram.*\\\",instance=~\\\"$instance\\\"}[5m]))", "legendFormat": "{{instance}} {{device}} util%"}
+      ],
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}}
+    }
+  ],
+  "templating": {
+    "list": [
+      {"name": "job", "type": "query", "datasource": "Prometheus", "query": "label_values(job)", "refresh": 2},
+      {"name": "instance", "type": "query", "datasource": "Prometheus", "query": "label_values(node_cpu_seconds_total, instance)", "includeAll": true, "refresh": 2},
+      {"name": "mountpoint", "type": "query", "datasource": "Prometheus", "query": "label_values(node_filesystem_size_bytes{fstype!~\"tmpfs|overlay\",mountpoint!~\"/var/lib/docker.*|/var/run.*|/snap.*\"}, mountpoint)", "includeAll": true, "refresh": 2}
+    ]
+  }
+}

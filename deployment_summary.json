@@ -1,0 +1,10 @@
+{
+  "deployment_time": "2025-10-20T13:23:01.066610",
+  "project_id": "gen-lang-client-0885737339",
+  "platform": "google-cloud",
+  "status": "partial",
+  "endpoints": {
+    "function": "https://europe-west1-gen-lang-client-0885737339.cloudfunctions.net/omni-chat",
+    "web": "https://storage.googleapis.com/omni-platform-storage-gen-lang-client-0885737339/index.html"
+  }
+}

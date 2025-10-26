@@ -1,0 +1,9 @@
+﻿
+FullName                                                                                                        LastWriteTime         
+--------                                                                                                        -------------         
+C:\Users\admin\Downloads\copy-of-copy-of-omniscient-ai-platform\dashboard_today.txt                             10/24/2025 10:38:59 AM
+C:\Users\admin\Downloads\copy-of-copy-of-omniscient-ai-platform\.github\workflows\deploy-cloudrun-dashboard.yml 10/24/2025 9:48:24 AM 
+C:\Users\admin\Downloads\copy-of-copy-of-omniscient-ai-platform\logs\omni_dashboard.log                         10/24/2025 8:20:02 AM 
+
+
+

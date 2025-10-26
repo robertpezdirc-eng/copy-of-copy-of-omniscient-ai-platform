@@ -1,0 +1,62 @@
+groups:
+  - name: omni_sse_alerts
+    rules:
+      - alert: OmniSSEErrorsSpike
+        expr: rate(omni_sse_streams_errors[5m]) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+          service: omni-unified
+        annotations:
+          summary: "OMNI SSE errors rate is elevated"
+          description: |
+            The rate of SSE stream errors exceeded 0.5 per second over 5 minutes.
+            Investigate Vertex/GENAI connectivity, API keys, quotas, and server logs.
+
+      - alert: OmniSSEFallbackSustained
+        expr: rate(omni_sse_streams_fallback[15m]) > 0.1
+        for: 10m
+        labels:
+          severity: warning
+          service: omni-unified
+        annotations:
+          summary: "OMNI SSE fallback rate sustained above threshold"
+          description: |
+            The rate of fallback events is above 0.1 per second over 15 minutes.
+            Persistent fallback may indicate upstream instability or misconfiguration.
+
+      - alert: OmniSSEErrorsRatioHigh
+        expr: (sum(rate(omni_sse_streams_errors[10m])) / sum(rate(omni_sse_streams_started[10m]))) > 0.05
+        for: 10m
+        labels:
+          severity: warning
+          service: omni-unified
+        annotations:
+          summary: "High SSE errors ratio"
+          description: |
+            Errors exceed 5% of started streams over a 10-minute window.
+            Investigate upstream model health and networking issues.
+
+      - alert: OmniSSENoStreamsStarted
+        expr: increase(omni_sse_streams_started[15m]) == 0
+        for: 15m
+        labels:
+          severity: info
+          service: omni-unified
+        annotations:
+          summary: "No SSE streams started"
+          description: |
+            No streams have started in the last 15 minutes.
+            Check traffic sources and server health.
+
+      - alert: OmniSSEFallbackBurst
+        expr: increase(omni_sse_streams_fallback[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          service: omni-unified
+        annotations:
+          summary: "Fallback burst detected"
+          description: |
+            More than 10 fallback events within a 5-minute interval.
+            Review model availability and quotas.

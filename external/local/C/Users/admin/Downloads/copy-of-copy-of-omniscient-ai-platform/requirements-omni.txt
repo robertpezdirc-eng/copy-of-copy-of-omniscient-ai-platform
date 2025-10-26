@@ -1,0 +1,5993 @@
+
+# OMNI Singularity Quantum Dashboard v10.0 - Requirements
+# Complete requirements for the advanced quantum AI system
+
+# Core scientific computing
+numpy>=1.24.0
+scipy>=1.11.0
+pandas>=2.0.0
+
+# Machine learning and AI
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
+scikit-learn>=1.3.0
+transformers>=4.30.0
+diffusers>=0.20.0
+
+# Quantum computing
+qiskit>=0.45.0
+qiskit-aer>=0.13.0
+cirq-core>=1.2.0
+pennylane>=0.33.0
+
+# GPU acceleration
+cupy-cuda12x>=12.0.0
+numba>=0.58.0
+
+# Web frameworks and APIs
+fastapi>=0.100.0
+uvicorn>=0.23.0
+websockets>=12.0.0
+starlette>=0.27.0
+
+# Database and storage
+sqlalchemy>=2.0.0
+alembic>=1.11.0
+redis>=4.6.0
+pymongo>=4.4.0
+sqlite3
+
+# Monitoring and observability
+prometheus-client>=0.19.0
+psutil>=5.9.0
+GPUtil>=1.4.0
+
+# Security and cryptography
+cryptography>=41.0.0
+pycryptodome>=3.18.0
+pyjwt>=2.8.0
+bcrypt>=4.0.0
+
+# Data processing and integration
+requests>=2.31.0
+aiohttp>=3.9.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# Industrial protocols
+opcua>=0.8.0
+pymodbus>=3.3.0
+
+# Healthcare integration
+fhir-py>=1.3.0
+
+# Financial data
+yfinance>=0.2.0
+ccxt>=4.0.0
+
+# IoT and sensor data
+paho-mqtt>=1.6.0
+pyserial>=3.5.0
+
+# Brain-Computer Interface
+pylsl>=1.16.0
+mne>=1.5.0
+brainflow>=5.10.0
+muselsl>=2.0.0
+pyautogui>=0.9.0
+keyboard>=0.13.0
+mouse>=0.7.0
+
+# Audio processing (for voice commands)
+librosa>=0.10.0
+pyaudio>=0.2.0
+speech-recognition>=3.10.0
+pyttsx3>=2.90.0
+espeak>=0.40
+
+# Computer vision (for visual interface)
+opencv-python>=4.8.0
+Pillow>=10.0.0
+mediapipe>=0.10.0
+
+# Natural language processing
+nltk>=3.8.0
+spacy>=3.6.0
+textblob>=0.17.0
+sumy>=0.11.0
+
+# Graph processing
+networkx>=3.1.0
+graph-tool>=2.45.0
+
+# Mathematical optimization
+cvxpy>=1.3.0
+gurobipy>=10.0.0
+
+# Statistical analysis
+statsmodels>=0.14.0
+pingouin>=0.5.0
+
+# Visualization
+plotly>=5.15.0
+dash>=2.11.0
+streamlit>=1.25.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Development and testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+black>=23.7.0
+flake8>=6.0.0
+mypy>=1.5.0
+bandit>=1.7.0
+safety>=2.3.0
+
+# Logging and monitoring
+structlog>=23.2.0
+rich>=13.7.0
+colorama>=0.4.0
+
+# Configuration management
+python-dotenv>=1.0.0
+dynaconf>=3.2.0
+configparser
+
+# Async and concurrency
+asyncio
+aiofiles>=23.1.0
+httpx>=0.24.0
+
+# Data validation and serialization
+marshmallow>=3.20.0
+cattrs>=23.1.0
+orjson>=3.9.0
+ujson>=5.8.0
+msgpack>=1.0.0
+
+# Cloud integration
+boto3>=1.34.0
+azure-storage-blob>=12.19.0
+google-cloud-storage>=2.10.0
+
+# Performance optimization
+tenacity>=8.2.0
+backoff>=2.2.0
+joblib>=1.3.0
+functools32>=3.2.0
+
+# API documentation
+spectree>=1.0.0
+
+# Web scraping
+beautifulsoup4>=4.12.0
+selenium>=4.11.0
+
+# File and data format support
+openpyxl>=3.1.0
+xlrd>=2.0.0
+pyarrow>=12.0.0
+fastparquet>=2023.7.0
+
+# Compression and archiving
+lz4>=4.3.0
+zstandard>=0.21.0
+python-snappy>=0.6.0
+
+# Hardware integration
+pyvisa>=1.13.0
+
+# Real-time data processing
+streamz>=0.6.0
+intake>=2.0.0
+
+# Workflow orchestration
+prefect>=2.14.0
+luigi>=3.2.0
+
+# Background task processing
+celery>=5.3.0
+dramatiq>=1.14.0
+
+# Message queuing
+pika>=1.3.0
+kombu>=5.3.0
+
+# Search and indexing
+elasticsearch>=8.9.0
+whoosh>=2.7.0
+
+# Vector databases
+chromadb>=0.4.0
+pinecone-client>=2.2.0
+
+# Graph databases
+neo4j>=5.10.0
+
+# Time series databases
+influxdb-client>=1.36.0
+
+# Blockchain integration
+web3>=6.6.0
+
+# Social media integration
+tweepy>=4.14.0
+facebook-sdk>=3.1.0
+
+# Email and notifications
+smtplib3>=1.0.0
+pushover-complete>=1.1.0
+
+# SMS and telephony
+twilio>=8.5.0
+
+# Payment processing
+stripe>=5.5.0
+paypal-checkout-serversdk>=1.0.0
+
+# Identity and access management
+authlib>=1.2.0
+python-jose>=3.3.0
+
+# API management
+kong-admin-api>=1.0.0
+
+# Load testing
+locust>=2.16.0
+
+# Performance profiling
+py-spy>=0.3.0
+memory-profiler>=0.61.0
+line-profiler>=4.1.0
+
+# Internationalization
+babel>=2.12.0
+
+# Date and time utilities
+pytz>=2023.3.0
+arrow>=1.2.0
+pendulum>=2.1.0
+
+# 3D processing
+pyvista>=0.41.0
+trimesh>=3.23.0
+
+# Geographic data processing
+geopy>=2.3.0
+folium>=0.14.0
+geopandas>=0.13.0
+
+# Audio processing
+soundfile>=0.12.0
+pedalboard>=0.7.0
+
+# Video processing
+moviepy>=1.0.0
+imageio>=2.31.0
+imageio-ffmpeg>=0.4.0
+
+# Image processing
+albumentations>=1.3.0
+scikit-image>=0.21.0
+
+# OCR and text recognition
+pytesseract>=0.3.0
+easyocr>=1.7.0
+
+# PDF processing
+PyPDF2>=3.0.0
+pdfplumber>=0.10.0
+reportlab>=4.0.0
+
+# Document processing
+python-docx>=1.1.0
+openpyxl>=3.1.0
+xlrd>=2.0.0
+
+# Archive processing
+rarfile>=4.0.0
+py7zr>=0.20.0
+
+# Encryption and security
+paramiko>=3.3.0
+gnupg>=2.3.0
+
+# System monitoring
+glances>=3.4.0
+htop>=3.2.0
+
+# Network tools
+netifaces>=0.11.0
+speedtest-cli>=2.1.0
+
+# Command line tools
+click>=8.1.0
+typer>=0.9.0
+argparse
+
+# Progress bars and spinners
+tqdm>=4.66.0
+halo>=0.0.0
+
+# Color output
+colorama>=0.4.0
+
+# Table formatting
+tabulate>=0.9.0
+prettytable>=3.8.0
+
+# JSON processing
+json5>=0.9.0
+toml>=0.10.0
+
+# YAML processing
+ruamel.yaml>=0.17.0
+
+# INI processing
+configparser
+
+# CSV processing
+csvkit>=1.1.0
+
+# XML processing
+xmltodict>=0.13.0
+untangle>=1.2.0
+
+# HTML processing
+lxml>=4.9.0
+html5lib>=1.1.0
+
+# Markdown processing
+markdown>=3.4.0
+markdown2>=2.4.0
+
+# LaTeX processing
+pylatex>=1.4.0
+
+# Office document processing
+python-pptx>=0.6.0
+python-docx>=1.1.0
+
+# Email processing
+imap-tools>=1.0.0
+email-validator>=2.0.0
+
+# Calendar and scheduling
+icalendar>=5.0.0
+recurring-ical-events>=2.1.0
+
+# Task management
+todoist-api-python>=2.0.0
+clickup-api>=0.0.0
+
+# Note taking
+evernote-api>=1.0.0
+notion-api>=1.0.0
+
+# Password management
+keyring>=24.0.0
+secretstorage>=3.3.0
+
+# Clipboard management
+pyperclip>=1.8.0
+xerox>=0.4.0
+
+# Screen capture
+mss>=9.0.0
+pyautogui>=0.9.0
+
+# Keyboard and mouse control
+pynput>=1.7.0
+
+# System tray
+pystray>=0.19.0
+PIL
+
+# Desktop notifications
+plyer>=2.1.0
+win10toast>=0.9.0
+
+# GUI frameworks
+tkinter
+PyQt6>=6.5.0
+PySide6>=6.5.0
+kivy>=2.2.0
+pygame>=2.5.0
+
+# Web GUI
+streamlit>=1.25.0
+gradio>=3.40.0
+panel>=1.2.0
+
+# Mobile app development
+kivy>=2.2.0
+beeware>=0.3.0
+
+# Game development
+pygame>=2.5.0
+arcade>=2.6.0
+panda3d>=1.10.0
+
+# 3D graphics
+pyopengl>=3.1.0
+moderngl>=5.8.0
+pyglet>=2.0.0
+
+# Virtual reality
+pyovr>=1.0.0
+
+# Augmented reality
+aruco>=1.0.0
+
+# Computer vision
+dlib>=19.24.0
+face-recognition>=1.3.0
+mtcnn>=0.1.0
+
+# Object detection
+ultralytics>=8.0.0
+detectron2>=0.6.0
+
+# Image segmentation
+segment-anything>=1.0.0
+
+# Pose estimation
+openpose>=1.0.0
+
+# Optical character recognition
+paddleocr>=2.7.0
+kraken>=4.3.0
+
+# Speech recognition
+vosk>=0.3.0
+pocketsphinx>=5.0.0
+
+# Text to speech
+pyttsx3>=2.90.0
+gtts>=2.4.0
+
+# Voice cloning
+tortoise-tts>=3.0.0
+yourtts>=0.2.0
+
+# Music generation
+music21>=8.1.0
+magenta>=2.1.0
+
+# Audio synthesis
+pyo>=1.0.0
+pydub>=0.25.0
+
+# Video synthesis
+runwayml>=2.0.0
+synthesia>=1.0.0
+
+# Deepfake detection
+deepware>=1.0.0
+microsoft-video-authenticator>=1.0.0
+
+# AI art generation
+stable-diffusion>=1.0.0
+midjourney-api>=1.0.0
+dalle2>=1.0.0
+
+# Chatbot frameworks
+chatterbot>=1.0.0
+rasa>=3.6.0
+dialogflow>=2.0.0
+
+# Conversational AI
+coqui-tts>=0.2.0
+espnet>=0.10.0
+
+# Language models
+gpt4all>=1.0.0
+llama-cpp-python>=0.2.0
+rwkv>=0.8.0
+
+# Embedding models
+sentence-transformers>=2.2.0
+instructorembedding>=1.0.0
+
+# Vector search
+faiss-cpu>=1.7.0
+annoy>=1.17.0
+
+# Recommendation systems
+surprise>=0.1.0
+lightfm>=1.17.0
+
+# Anomaly detection
+pyod>=1.1.0
+adtk>=0.6.0
+
+# Time series analysis
+prophet>=1.1.0
+sktime>=0.20.0
+
+# Forecasting
+darts>=0.24.0
+neuralprophet>=0.6.0
+
+# Causal inference
+dowhy>=0.9.0
+causalml>=0.14.0
+
+# Experimentation
+mlflow>=2.7.0
+wandb>=0.15.0
+
+# Model serving
+mlflow>=2.7.0
+bentoml>=1.1.0
+ray-serve>=2.6.0
+
+# Model deployment
+torchserve>=0.8.0
+tensorflow-serving>=2.13.0
+
+# Edge deployment
+openvino>=2023.0.0
+tensorrt>=8.6.0
+
+# Mobile deployment
+tflite>=2.13.0
+coremltools>=7.0.0
+
+# Web deployment
+onnxruntime>=1.15.0
+tfjs>=4.10.0
+
+# Cloud deployment
+aws-lambda>=0.1.0
+azure-functions>=1.0.0
+google-cloud-functions>=1.0.0
+
+# Container orchestration
+docker>=7.0.0
+kubernetes>=28.0.0
+helm>=0.0.0
+
+# Infrastructure as code
+terraform>=1.5.0
+pulumi>=1.0.0
+cdk>=2.80.0
+
+# Configuration management
+ansible>=8.0.0
+chef>=18.0.0
+puppet>=8.0.0
+
+# Monitoring
+datadog>=0.47.0
+newrelic>=8.8.0
+sentry-sdk>=1.30.0
+
+# Logging
+loguru>=0.7.0
+structlog>=23.2.0
+
+# Tracing
+jaeger-client>=4.8.0
+opentelemetry>=1.19.0
+
+# Metrics
+statsd>=4.0.0
+telegraf>=1.27.0
+
+# Alerting
+pagerduty>=0.0.0
+opsgenie>=1.0.0
+
+# Incident management
+victorops>=0.0.0
+jira>=3.5.0
+
+# Documentation
+mkdocs>=1.5.0
+mkdocs-material>=9.2.0
+sphinx>=7.2.0
+readthedocs>=1.0.0
+
+# Code quality
+sonarcloud>=1.0.0
+codeclimate>=1.0.0
+codacy>=1.0.0
+
+# Security scanning
+snyk>=1.0.0
+owasp-zap>=1.0.0
+burp>=1.0.0
+
+# Performance testing
+jmeter>=5.6.0
+k6>=0.45.0
+artillery>=2.0.0
+
+# Load testing
+locust>=2.16.0
+vegeta>=12.8.0
+
+# Chaos engineering
+chaos-toolkit>=1.0.0
+litmus>=1.0.0
+
+# Database testing
+pytest-django>=4.5.0
+pytest-postgresql>=4.1.0
+
+# API testing
+pytest-apispec>=1.0.0
+schemastore>=1.0.0
+
+# Contract testing
+pact-python>=1.6.0
+
+# End-to-end testing
+playwright>=1.37.0
+cypress>=13.0.0
+
+# Visual testing
+applitools>=3.0.0
+percy>=2.0.0
+
+# Accessibility testing
+axe-core>=4.7.0
+pa11y>=7.0.0
+
+# Cross-browser testing
+browserstack>=1.0.0
+saucelabs>=1.0.0
+
+# Mobile testing
+appium>=2.2.0
+calabash>=0.0.0
+
+# Desktop testing
+pywinauto>=0.6.0
+pygetwindow>=0.0.0
+
+# Network testing
+scapy>=2.5.0
+wireshark>=1.0.0
+
+# Security testing
+owasp>=1.0.0
+sqlmap>=1.7.0
+nikto>=2.5.0
+
+# Penetration testing
+metasploit>=6.3.0
+burp>=1.0.0
+
+# Vulnerability scanning
+nessus>=1.0.0
+openvas>=1.0.0
+
+# Compliance testing
+gdpr>=1.0.0
+hipaa>=1.0.0
+sox>=1.0.0
+
+# Code coverage
+coverage>=7.3.0
+codecov>=2.1.0
+
+# Mutation testing
+mutmut>=2.0.0
+cosmic-ray>=9.1.0
+
+# Property-based testing
+hypothesis>=6.82.0
+
+# Fuzzing
+atheris>=2.2.0
+python-afl>=0.7.0
+
+# Static analysis
+pylint>=2.17.0
+pyflakes>=3.1.0
+pycodestyle>=2.11.0
+
+# Type checking
+mypy>=1.5.0
+pyright>=1.1.0
+
+# Code formatting
+black>=23.7.0
+isort>=5.12.0
+autopep8>=2.0.0
+
+# Import sorting
+isort>=5.12.0
+
+# Code complexity
+radon>=6.0.0
+lizard>=1.17.0
+
+# Code duplication
+pydup>=1.0.0
+
+# Code smells
+sonarqube>=1.0.0
+
+# Technical debt
+technical-debt>=1.0.0
+
+# Code review
+gerrit>=1.0.0
+reviewboard>=1.0.0
+
+# Git integration
+gitpython>=3.1.0
+dulwich>=0.21.0
+
+# GitHub integration
+pygithub>=1.59.0
+github3.py>=4.0.0
+
+# GitLab integration
+python-gitlab>=3.15.0
+
+# Bitbucket integration
+atlassian-python-api>=3.39.0
+
+# Azure DevOps integration
+azure-devops>=7.1.0
+
+# Jenkins integration
+jenkinsapi>=0.3.0
+pyjenkins>=1.0.0
+
+# Travis CI integration
+travispy>=0.3.0
+
+# CircleCI integration
+circleci>=1.0.0
+
+# GitHub Actions integration
+actions-toolkit>=0.0.0
+
+# Docker integration
+docker>=7.0.0
+docker-py>=1.0.0
+
+# Kubernetes integration
+kubernetes>=28.0.0
+k8s>=1.0.0
+
+# Helm integration
+pyhelm>=1.0.0
+
+# Terraform integration
+python-terraform>=1.1.0
+
+# Ansible integration
+ansible>=8.0.0
+
+# Chef integration
+pychef>=1.0.0
+
+# Puppet integration
+puppetdb-api>=1.0.0
+
+# SaltStack integration
+salt>=3006.0
+
+# Configuration management
+consul>=1.15.0
+etcd3>=0.12.0
+
+# Service discovery
+zeroconf>=0.39.0
+avahi>=0.8.0
+
+# Load balancing
+haproxy>=2.8.0
+nginx>=1.24.0
+
+# Reverse proxy
+traefik>=2.10.0
+envoy>=1.26.0
+
+# API gateway
+kong>=3.4.0
+tyk>=5.1.0
+
+# Service mesh
+istio>=1.18.0
+linkerd>=2.13.0
+
+# Message broker
+rabbitmq>=6.5.0
+kafka-python>=2.0.0
+
+# Event streaming
+confluent-kafka>=2.2.0
+
+# Database
+postgresql>=15.0.0
+mysql>=8.0.0
+mongodb>=4.4.0
+redis>=4.6.0
+
+# Cache
+memcached>=1.6.0
+aerospike>=1.0.0
+
+# Search engine
+elasticsearch>=8.9.0
+solr>=8.11.0
+
+# NoSQL
+cassandra>=4.1.0
+couchdb>=1.2.0
+
+# Graph database
+neo4j>=5.10.0
+janusgraph>=0.6.0
+
+# Time series database
+influxdb>=2.7.0
+timescaledb>=2.11.0
+
+# Vector database
+pinecone>=2.2.0
+weaviate>=4.6.0
+
+# Document database
+meilisearch>=0.28.0
+typesense>=0.24.0
+
+# Blockchain
+web3>=6.6.0
+ethereum>=1.0.0
+
+# Cryptocurrency
+ccxt>=4.0.0
+cryptocompare>=0.7.0
+
+# DeFi
+yearn>=0.4.0
+uniswap>=0.0.0
+
+# NFT
+opensea>=1.0.0
+rarible>=1.0.0
+
+# Metaverse
+decentraland>=1.0.0
+sandbox>=1.0.0
+
+# Web3
+moralis>=0.1.0
+alchemy>=1.0.0
+
+# Social media
+tweepy>=4.14.0
+facebook-sdk>=3.1.0
+instagram>=1.0.0
+linkedin>=1.0.0
+tiktok>=1.0.0
+youtube>=1.0.0
+twitch>=1.0.0
+discord>=2.3.0
+slack>=0.0.0
+teams>=1.0.0
+
+# Email
+imapclient>=2.3.0
+smtplib3>=1.0.0
+
+# SMS
+twilio>=8.5.0
+aws-sns>=1.0.0
+
+# Push notifications
+firebase>=1.0.0
+onesignal>=1.0.0
+
+# Voice
+twilio>=8.5.0
+aws-polly>=1.0.0
+
+# Video
+twilio>=8.5.0
+agora>=1.0.0
+
+# Chat
+twilio>=8.5.0
+sendbird>=1.0.0
+
+# E-commerce
+shopify>=1.0.0
+woocommerce>=3.1.0
+magento>=1.0.0
+
+# Payment
+stripe>=5.5.0
+paypal>=1.0.0
+square>=1.0.0
+
+# Shipping
+easypost>=1.0.0
+shippo>=1.0.0
+
+# CRM
+hubspot>=4.1.0
+salesforce>=1.0.0
+pipedrive>=1.0.0
+
+# Marketing
+mailchimp>=1.0.0
+sendgrid>=6.10.0
+mailgun>=1.0.0
+
+# Analytics
+google-analytics>=1.0.0
+mixpanel>=1.0.0
+segment>=1.0.0
+
+# Advertising
+google-ads>=22.1.0
+facebook-ads>=1.0.0
+tiktok-ads>=1.0.0
+
+# SEO
+seo>=1.0.0
+screamingfrog>=1.0.0
+
+# Social media management
+buffer>=1.0.0
+hootsuite>=1.0.0
+
+# Content management
+wordpress>=6.3.0
+drupal>=1.0.0
+joomla>=1.0.0
+
+# E-learning
+moodle>=4.2.0
+canvas>=1.0.0
+blackboard>=1.0.0
+
+# Video conferencing
+zoom>=1.0.0
+teams>=1.0.0
+jitsi>=1.0.0
+
+# Streaming
+twitch>=1.0.0
+youtube>=1.0.0
+vimeo>=1.0.0
+
+# Music
+spotify>=1.0.0
+soundcloud>=1.0.0
+deezer>=1.0.0
+
+# Podcast
+libsyn>=1.0.0
+buzzsprout>=1.0.0
+
+# News
+rss>=0.0.0
+feedparser>=6.0.0
+
+# Weather
+openweathermap>=1.0.0
+weather-api>=1.0.0
+
+# Maps
+googlemaps>=4.10.0
+mapbox>=1.0.0
+openstreetmap>=1.0.0
+
+# GPS
+gpsd>=1.0.0
+geopy>=2.3.0
+
+# IoT
+aws-iot>=1.0.0
+azure-iot>=1.0.0
+google-iot>=1.0.0
+
+# Home automation
+homeassistant>=2023.8.0
+openhab>=4.1.0
+domoticz>=2023.1.0
+
+# Smart home
+philips-hue>=1.0.0
+tplink>=1.0.0
+lifx>=1.0.0
+
+# Wearables
+fitbit>=1.0.0
+garmin>=1.0.0
+apple-watch>=1.0.0
+
+# Health
+fitbit>=1.0.0
+myfitnesspal>=1.0.0
+cronometer>=1.0.0
+
+# Finance
+yfinance>=0.2.0
+alpha-vantage>=2.3.0
+quandl>=3.7.0
+
+# Banking
+plaid>=11.0.0
+yodlee>=1.0.0
+finicity>=1.0.0
+
+# Investment
+alpaca>=5.0.0
+interactive-brokers>=1.0.0
+etoro>=1.0.0
+
+# Real estate
+zillow>=1.0.0
+realtor>=1.0.0
+trulia>=1.0.0
+
+# Travel
+expedia>=1.0.0
+booking>=1.0.0
+airbnb>=1.0.0
+
+# Food delivery
+doordash>=1.0.0
+uber-eats>=1.0.0
+grubhub>=1.0.0
+
+# Ride sharing
+uber>=1.0.0
+lyft>=1.0.0
+bolt>=1.0.0
+
+# Delivery
+ups>=1.0.0
+fedex>=1.0.0
+dhl>=1.0.0
+
+# Logistics
+aftership>=1.0.0
+shipbob>=1.0.0
+flexport>=1.0.0
+
+# Supply chain
+supplychain>=1.0.0
+procurement>=1.0.0
+inventory>=1.0.0
+
+# Manufacturing
+mes>=1.0.0
+scada>=1.0.0
+plc>=1.0.0
+
+# Quality control
+quality>=1.0.0
+six-sigma>=1.0.0
+lean>=1.0.0
+
+# Maintenance
+maintenance>=1.0.0
+predictive-maintenance>=1.0.0
+condition-monitoring>=1.0.0
+
+# Safety
+safety>=1.0.0
+osha>=1.0.0
+iso-45001>=1.0.0
+
+# Environment
+environment>=1.0.0
+epa>=1.0.0
+iso-14001>=1.0.0
+
+# Energy
+energy>=1.0.0
+smart-grid>=1.0.0
+renewable>=1.0.0
+
+# Utilities
+utilities>=1.0.0
+water>=1.0.0
+gas>=1.0.0
+
+# Telecommunications
+telecom>=1.0.0
+5g>=1.0.0
+fiber>=1.0.0
+
+# Media
+media>=1.0.0
+streaming>=1.0.0
+broadcasting>=1.0.0
+
+# Entertainment
+entertainment>=1.0.0
+gaming>=1.0.0
+gambling>=1.0.0
+
+# Sports
+sports>=1.0.0
+fantasy>=1.0.0
+betting>=1.0.0
+
+# Gaming
+steam>=1.0.0
+epic>=1.0.0
+blizzard>=1.0.0
+
+# Casino
+casino>=1.0.0
+poker>=1.0.0
+blackjack>=1.0.0
+
+# Lottery
+lottery>=1.0.0
+powerball>=1.0.0
+euromillions>=1.0.0
+
+# Education
+education>=1.0.0
+coursera>=1.0.0
+edx>=1.0.0
+
+# Research
+research>=1.0.0
+arxiv>=1.0.0
+pubmed>=1.0.0
+
+# Science
+science>=1.0.0
+nasa>=1.0.0
+esa>=1.0.0
+
+# Space
+space>=1.0.0
+spacex>=1.0.0
+blue-origin>=1.0.0
+
+# Astronomy
+astronomy>=1.0.0
+telescope>=1.0.0
+planetarium>=1.0.0
+
+# Biology
+biology>=1.0.0
+genetics>=1.0.0
+microbiology>=1.0.0
+
+# Chemistry
+chemistry>=1.0.0
+organic>=1.0.0
+inorganic>=1.0.0
+
+# Physics
+physics>=1.0.0
+quantum>=1.0.0
+relativity>=1.0.0
+
+# Mathematics
+mathematics>=1.0.0
+algebra>=1.0.0
+calculus>=1.0.0
+
+# Statistics
+statistics>=1.0.0
+probability>=1.0.0
+bayesian>=1.0.0
+
+# Engineering
+engineering>=1.0.0
+mechanical>=1.0.0
+electrical>=1.0.0
+
+# Computer science
+computer-science>=1.0.0
+algorithms>=1.0.0
+data-structures>=1.0.0
+
+# Software engineering
+software-engineering>=1.0.0
+devops>=1.0.0
+agile>=1.0.0
+
+# Project management
+project-management>=1.0.0
+jira>=3.5.0
+trello>=1.0.0
+
+# Time tracking
+time-tracking>=1.0.0
+toggl>=1.0.0
+harvest>=1.0.0
+
+# Collaboration
+collaboration>=1.0.0
+notion>=1.0.0
+confluence>=1.0.0
+
+# Knowledge management
+knowledge-management>=1.0.0
+wiki>=1.0.0
+knowledge-base>=1.0.0
+
+# Document management
+document-management>=1.0.0
+alfresco>=1.0.0
+sharepoint>=1.0.0
+
+# Records management
+records-management>=1.0.0
+retention>=1.0.0
+disposal>=1.0.0
+
+# Information governance
+information-governance>=1.0.0
+compliance>=1.0.0
+audit>=1.0.0
+
+# Risk management
+risk-management>=1.0.0
+assessment>=1.0.0
+mitigation>=1.0.0
+
+# Business continuity
+business-continuity>=1.0.0
+disaster-recovery>=1.0.0
+backup>=1.0.0
+
+# Crisis management
+crisis-management>=1.0.0
+emergency>=1.0.0
+incident>=1.0.0
+
+# Change management
+change-management>=1.0.0
+configuration>=1.0.0
+release>=1.0.0
+
+# Problem management
+problem-management>=1.0.0
+resolution>=1.0.0
+root-cause>=1.0.0
+
+# Service management
+service-management>=1.0.0
+itsm>=1.0.0
+servicedesk>=1.0.0
+
+# Asset management
+asset-management>=1.0.0
+itam>=1.0.0
+cmms>=1.0.0
+
+# Configuration management
+configuration-management>=1.0.0
+cmdb>=1.0.0
+baseline>=1.0.0
+
+# Release management
+release-management>=1.0.0
+deployment>=1.0.0
+rollback>=1.0.0
+
+# Test management
+test-management>=1.0.0
+testrail>=1.0.0
+qtest>=1.0.0
+
+# Defect management
+defect-management>=1.0.0
+bugzilla>=1.0.0
+mantis>=1.0.0
+
+# Requirements management
+requirements-management>=1.0.0
+jama>=1.0.0
+doors>=1.0.0
+
+# Portfolio management
+portfolio-management>=1.0.0
+ppm>=1.0.0
+roadmap>=1.0.0
+
+# Program management
+program-management>=1.0.0
+pgm>=1.0.0
+benefits>=1.0.0
+
+# Product management
+product-management>=1.0.0
+plm>=1.0.0
+lifecycle>=1.0.0
+
+# Innovation management
+innovation-management>=1.0.0
+ideation>=1.0.0
+incubation>=1.0.0
+
+# Strategy management
+strategy-management>=1.0.0
+bsc>=1.0.0
+okrs>=1.0.0
+
+# Performance management
+performance-management>=1.0.0
+kpi>=1.0.0
+metrics>=1.0.0
+
+# Talent management
+talent-management>=1.0.0
+hcm>=1.0.0
+recruitment>=1.0.0
+
+# Learning management
+learning-management>=1.0.0
+lms>=1.0.0
+elearning>=1.0.0
+
+# Compensation management
+compensation-management>=1.0.0
+payroll>=1.0.0
+benefits>=1.0.0
+
+# Succession planning
+succession-planning>=1.0.0
+career>=1.0.0
+development>=1.0.0
+
+# Employee engagement
+employee-engagement>=1.0.0
+pulse>=1.0.0
+feedback>=1.0.0
+
+# Diversity and inclusion
+diversity>=1.0.0
+inclusion>=1.0.0
+equity>=1.0.0
+
+# Corporate social responsibility
+csr>=1.0.0
+sustainability>=1.0.0
+ethics>=1.0.0
+
+# Corporate governance
+governance>=1.0.0
+board>=1.0.0
+shareholder>=1.0.0
+
+# Investor relations
+investor-relations>=1.0.0
+earnings>=1.0.0
+guidance>=1.0.0
+
+# Public relations
+public-relations>=1.0.0
+media>=1.0.0
+communications>=1.0.0
+
+# Government relations
+government-relations>=1.0.0
+lobbying>=1.0.0
+regulatory>=1.0.0
+
+# Legal
+legal>=1.0.0
+contracts>=1.0.0
+compliance>=1.0.0
+
+# Regulatory
+regulatory>=1.0.0
+gdpr>=1.0.0
+ccpa>=1.0.0
+
+# Tax
+tax>=1.0.0
+vat>=1.0.0
+income>=1.0.0
+
+# Accounting
+accounting>=1.0.0
+bookkeeping>=1.0.0
+audit>=1.0.0
+
+# Financial reporting
+financial-reporting>=1.0.0
+sec>=1.0.0
+ifrs>=1.0.0
+
+# Treasury
+treasury>=1.0.0
+cash>=1.0.0
+liquidity>=1.0.0
+
+# Credit
+credit>=1.0.0
+lending>=1.0.0
+collections>=1.0.0
+
+# Insurance
+insurance>=1.0.0
+underwriting>=1.0.0
+claims>=1.0.0
+
+# Real estate
+real-estate>=1.0.0
+property>=1.0.0
+facilities>=1.0.0
+
+# Construction
+construction>=1.0.0
+project>=1.0.0
+site>=1.0.0
+
+# Architecture
+architecture>=1.0.0
+design>=1.0.0
+planning>=1.0.0
+
+# Engineering
+engineering>=1.0.0
+civil>=1.0.0
+structural>=1.0.0
+
+# Surveying
+surveying>=1.0.0
+gis>=1.0.0
+mapping>=1.0.0
+
+# Urban planning
+urban-planning>=1.0.0
+zoning>=1.0.0
+development>=1.0.0
+
+# Transportation
+transportation>=1.0.0
+traffic>=1.0.0
+transit>=1.0.0
+
+# Aviation
+aviation>=1.0.0
+aircraft>=1.0.0
+airports>=1.0.0
+
+# Maritime
+maritime>=1.0.0
+shipping>=1.0.0
+ports>=1.0.0
+
+# Rail
+rail>=1.0.0
+trains>=1.0.0
+stations>=1.0.0
+
+# Automotive
+automotive>=1.0.0
+vehicles>=1.0.0
+autonomous>=1.0.0
+
+# Electric vehicles
+electric-vehicles>=1.0.0
+charging>=1.0.0
+batteries>=1.0.0
+
+# Autonomous vehicles
+autonomous-vehicles>=1.0.0
+self-driving>=1.0.0
+waymo>=1.0.0
+
+# Drones
+drones>=1.0.0
+uav>=1.0.0
+delivery>=1.0.0
+
+# Space
+space>=1.0.0
+satellites>=1.0.0
+rockets>=1.0.0
+
+# Defense
+defense>=1.0.0
+military>=1.0.0
+security>=1.0.0
+
+# Intelligence
+intelligence>=1.0.0
+surveillance>=1.0.0
+reconnaissance>=1.0.0
+
+# Cybersecurity
+cybersecurity>=1.0.0
+threat-intelligence>=1.0.0
+incident-response>=1.0.0
+
+# Information security
+information-security>=1.0.0
+iam>=1.0.0
+encryption>=1.0.0
+
+# Physical security
+physical-security>=1.0.0
+access-control>=1.0.0
+cctv>=1.0.0
+
+# Homeland security
+homeland-security>=1.0.0
+border>=1.0.0
+customs>=1.0.0
+
+# Emergency services
+emergency-services>=1.0.0
+police>=1.0.0
+fire>=1.0.0
+
+# Medical emergency
+medical-emergency>=1.0.0
+ambulance>=1.0.0
+trauma>=1.0.0
+
+# Healthcare
+healthcare>=1.0.0
+hospital>=1.0.0
+clinic>=1.0.0
+
+# Medical
+medical>=1.0.0
+diagnosis>=1.0.0
+treatment>=1.0.0
+
+# Dental
+dental>=1.0.0
+orthodontics>=1.0.0
+periodontics>=1.0.0
+
+# Veterinary
+veterinary>=1.0.0
+animal>=1.0.0
+pet>=1.0.0
+
+# Pharmacy
+pharmacy>=1.0.0
+medication>=1.0.0
+prescription>=1.0.0
+
+# Biotechnology
+biotechnology>=1.0.0
+genomics>=1.0.0
+proteomics>=1.0.0
+
+# Medical devices
+medical-devices>=1.0.0
+fda>=1.0.0
+iso-13485>=1.0.0
+
+# Pharmaceuticals
+pharmaceuticals>=1.0.0
+clinical-trials>=1.0.0
+regulatory>=1.0.0
+
+# Wellness
+wellness>=1.0.0
+fitness>=1.0.0
+nutrition>=1.0.0
+
+# Mental health
+mental-health>=1.0.0
+therapy>=1.0.0
+counseling>=1.0.0
+
+# Addiction
+addiction>=1.0.0
+recovery>=1.0.0
+rehabilitation>=1.0.0
+
+# Disability
+disability>=1.0.0
+accessibility>=1.0.0
+inclusion>=1.0.0
+
+# Elderly care
+elderly-care>=1.0.0
+geriatrics>=1.0.0
+palliative>=1.0.0
+
+# Child care
+child-care>=1.0.0
+pediatrics>=1.0.0
+development>=1.0.0
+
+# Education
+education>=1.0.0
+k-12>=1.0.0
+higher-ed>=1.0.0
+
+# Early childhood
+early-childhood>=1.0.0
+preschool>=1.0.0
+kindergarten>=1.0.0
+
+# Primary education
+primary-education>=1.0.0
+elementary>=1.0.0
+middle-school>=1.0.0
+
+# Secondary education
+secondary-education>=1.0.0
+high-school>=1.0.0
+college>=1.0.0
+
+# Higher education
+higher-education>=1.0.0
+university>=1.0.0
+graduate>=1.0.0
+
+# Vocational education
+vocational-education>=1.0.0
+trade>=1.0.0
+apprenticeship>=1.0.0
+
+# Online education
+online-education>=1.0.0
+mooc>=1.0.0
+distance>=1.0.0
+
+# Corporate training
+corporate-training>=1.0.0
+professional>=1.0.0
+certification>=1.0.0
+
+# Language learning
+language-learning>=1.0.0
+duolingo>=1.0.0
+babbel>=1.0.0
+
+# Music education
+music-education>=1.0.0
+instrument>=1.0.0
+theory>=1.0.0
+
+# Art education
+art-education>=1.0.0
+drawing>=1.0.0
+painting>=1.0.0
+
+# Sports education
+sports-education>=1.0.0
+coaching>=1.0.0
+training>=1.0.0
+
+# Science education
+science-education>=1.0.0
+stem>=1.0.0
+steam>=1.0.0
+
+# Technology education
+technology-education>=1.0.0
+coding>=1.0.0
+programming>=1.0.0
+
+# Engineering education
+engineering-education>=1.0.0
+mechanical>=1.0.0
+electrical>=1.0.0
+
+# Mathematics education
+mathematics-education>=1.0.0
+algebra>=1.0.0
+geometry>=1.0.0
+
+# History education
+history-education>=1.0.0
+world>=1.0.0
+ancient>=1.0.0
+
+# Geography education
+geography-education>=1.0.0
+physical>=1.0.0
+human>=1.0.0
+
+# Social studies education
+social-studies>=1.0.0
+civics>=1.0.0
+economics>=1.0.0
+
+# Language arts education
+language-arts>=1.0.0
+reading>=1.0.0
+writing>=1.0.0
+
+# Foreign language education
+foreign-language>=1.0.0
+spanish>=1.0.0
+french>=1.0.0
+
+# Special education
+special-education>=1.0.0
+inclusion>=1.0.0
+accommodation>=1.0.0
+
+# Gifted education
+gifted-education>=1.0.0
+enrichment>=1.0.0
+acceleration>=1.0.0
+
+# Adult education
+adult-education>=1.0.0
+continuing>=1.0.0
+lifelong>=1.0.0
+
+# Professional development
+professional-development>=1.0.0
+certification>=1.0.0
+licensure>=1.0.0
+
+# Teacher training
+teacher-training>=1.0.0
+pedagogy>=1.0.0
+classroom>=1.0.0
+
+# Educational technology
+educational-technology>=1.0.0
+edtech>=1.0.0
+lms>=1.0.0
+
+# Assessment
+assessment>=1.0.0
+testing>=1.0.0
+evaluation>=1.0.0
+
+# Curriculum
+curriculum>=1.0.0
+standards>=1.0.0
+frameworks>=1.0.0
+
+# Instruction
+instruction>=1.0.0
+teaching>=1.0.0
+learning>=1.0.0
+
+# Classroom management
+classroom-management>=1.0.0
+behavior>=1.0.0
+discipline>=1.0.0
+
+# School administration
+school-administration>=1.0.0
+principal>=1.0.0
+superintendent>=1.0.0
+
+# District administration
+district-administration>=1.0.0
+board>=1.0.0
+policy>=1.0.0
+
+# State administration
+state-administration>=1.0.0
+department>=1.0.0
+commission>=1.0.0
+
+# Federal administration
+federal-administration>=1.0.0
+department>=1.0.0
+agency>=1.0.0
+
+# International education
+international-education>=1.0.0
+study-abroad>=1.0.0
+exchange>=1.0.0
+
+# Non-profit education
+non-profit-education>=1.0.0
+charter>=1.0.0
+private>=1.0.0
+
+# For-profit education
+for-profit-education>=1.0.0
+corporate>=1.0.0
+proprietary>=1.0.0
+
+# Religious education
+religious-education>=1.0.0
+faith>=1.0.0
+doctrine>=1.0.0
+
+# Secular education
+secular-education>=1.0.0
+public>=1.0.0
+non-sectarian>=1.0.0
+
+# Homeschooling
+homeschooling>=1.0.0
+curriculum>=1.0.0
+support>=1.0.0
+
+# Unschooling
+unschooling>=1.0.0
+self-directed>=1.0.0
+natural>=1.0.0
+
+# Montessori
+montessori>=1.0.0
+child-centered>=1.0.0
+prepared>=1.0.0
+
+# Waldorf
+waldorf>=1.0.0
+holistic>=1.0.0
+arts>=1.0.0
+
+# Reggio Emilia
+reggio-emilia>=1.0.0
+project-based>=1.0.0
+emergent>=1.0.0
+
+# Traditional education
+traditional-education>=1.0.0
+lecture>=1.0.0
+textbook>=1.0.0
+
+# Progressive education
+progressive-education>=1.0.0
+student-centered>=1.0.0
+experiential>=1.0.0
+
+# Constructivist education
+constructivist-education>=1.0.0
+knowledge-construction>=1.0.0
+scaffolding>=1.0.0
+
+# Behaviorist education
+behaviorist-education>=1.0.0
+conditioning>=1.0.0
+reinforcement>=1.0.0
+
+# Cognitivist education
+cognitivist-education>=1.0.0
+information-processing>=1.0.0
+schema>=1.0.0
+
+# Humanist education
+humanist-education>=1.0.0
+self-actualization>=1.0.0
+growth>=1.0.0
+
+# Critical pedagogy
+critical-pedagogy>=1.0.0
+empowerment>=1.0.0
+social-justice>=1.0.0
+
+# Culturally responsive teaching
+culturally-responsive>=1.0.0
+diversity>=1.0.0
+inclusion>=1.0.0
+
+# Differentiated instruction
+differentiated>=1.0.0
+individualized>=1.0.0
+personalized>=1.0.0
+
+# Universal design for learning
+udl>=1.0.0
+multiple-means>=1.0.0
+accessibility>=1.0.0
+
+# Multi-tiered system of supports
+mtss>=1.0.0
+tiered>=1.0.0
+intervention>=1.0.0
+
+# Response to intervention
+rti>=1.0.0
+early-intervention>=1.0.0
+progress-monitoring>=1.0.0
+
+# Positive behavioral interventions and supports
+pbis>=1.0.0
+positive-behavior>=1.0.0
+supports>=1.0.0
+
+# Social emotional learning
+sel>=1.0.0
+emotional-intelligence>=1.0.0
+social-skills>=1.0.0
+
+# Mindfulness education
+mindfulness>=1.0.0
+meditation>=1.0.0
+awareness>=1.0.0
+
+# Yoga education
+yoga>=1.0.0
+asana>=1.0.0
+pranayama>=1.0.0
+
+# Physical education
+physical-education>=1.0.0
+fitness>=1.0.0
+sports>=1.0.0
+
+# Health education
+health-education>=1.0.0
+nutrition>=1.0.0
+sexuality>=1.0.0
+
+# Nutrition education
+nutrition>=1.0.0
+diet>=1.0.0
+wellness>=1.0.0
+
+# Sexual education
+sexual-education>=1.0.0
+reproductive>=1.0.0
+consent>=1.0.0
+
+# Drug education
+drug-education>=1.0.0
+prevention>=1.0.0
+awareness>=1.0.0
+
+# Violence prevention
+violence-prevention>=1.0.0
+bullying>=1.0.0
+conflict-resolution>=1.0.0
+
+# Character education
+character-education>=1.0.0
+values>=1.0.0
+ethics>=1.0.0
+
+# Citizenship education
+citizenship>=1.0.0
+democracy>=1.0.0
+civic-engagement>=1.0.0
+
+# Environmental education
+environmental-education>=1.0.0
+sustainability>=1.0.0
+conservation>=1.0.0
+
+# Outdoor education
+outdoor-education>=1.0.0
+nature>=1.0.0
+adventure>=1.0.0
+
+# Experiential education
+experiential>=1.0.0
+hands-on>=1.0.0
+real-world>=1.0.0
+
+# Service learning
+service-learning>=1.0.0
+community>=1.0.0
+volunteerism>=1.0.0
+
+# Project-based learning
+project-based>=1.0.0
+inquiry>=1.0.0
+authentic>=1.0.0
+
+# Problem-based learning
+problem-based>=1.0.0
+case-study>=1.0.0
+solution>=1.0.0
+
+# Inquiry-based learning
+inquiry-based>=1.0.0
+questioning>=1.0.0
+investigation>=1.0.0
+
+# Discovery learning
+discovery>=1.0.0
+exploration>=1.0.0
+experimentation>=1.0.0
+
+# Cooperative learning
+cooperative>=1.0.0
+collaboration>=1.0.0
+teamwork>=1.0.0
+
+# Collaborative learning
+collaborative>=1.0.0
+group-work>=1.0.0
+peer-learning>=1.0.0
+
+# Peer teaching
+peer-teaching>=1.0.0
+tutoring>=1.0.0
+mentoring>=1.0.0
+
+# Flipped classroom
+flipped>=1.0.0
+homework>=1.0.0
+video>=1.0.0
+
+# Blended learning
+blended>=1.0.0
+hybrid>=1.0.0
+flexible>=1.0.0
+
+# Distance learning
+distance>=1.0.0
+remote>=1.0.0
+virtual>=1.0.0
+
+# E-learning
+elearning>=1.0.0
+online>=1.0.0
+digital>=1.0.0
+
+# Mobile learning
+mobile>=1.0.0
+smartphone>=1.0.0
+tablet>=1.0.0
+
+# Game-based learning
+game-based>=1.0.0
+gamification>=1.0.0
+engagement>=1.0.0
+
+# Simulation-based learning
+simulation>=1.0.0
+virtual-reality>=1.0.0
+augmented-reality>=1.0.0
+
+# Virtual reality education
+vr-education>=1.0.0
+immersive>=1.0.0
+presence>=1.0.0
+
+# Augmented reality education
+ar-education>=1.0.0
+overlay>=1.0.0
+interaction>=1.0.0
+
+# Artificial intelligence education
+ai-education>=1.0.0
+machine-learning>=1.0.0
+data-science>=1.0.0
+
+# Robotics education
+robotics>=1.0.0
+programming>=1.0.0
+engineering>=1.0.0
+
+# Coding education
+coding>=1.0.0
+programming>=1.0.0
+computer-science>=1.0.0
+
+# Computational thinking
+computational-thinking>=1.0.0
+algorithmic>=1.0.0
+logical>=1.0.0
+
+# Digital literacy
+digital-literacy>=1.0.0
+technology>=1.0.0
+information>=1.0.0
+
+# Media literacy
+media-literacy>=1.0.0
+critical-thinking>=1.0.0
+analysis>=1.0.0
+
+# Information literacy
+information-literacy>=1.0.0
+research>=1.0.0
+evaluation>=1.0.0
+
+# Financial literacy
+financial-literacy>=1.0.0
+budgeting>=1.0.0
+investing>=1.0.0
+
+# Career education
+career>=1.0.0
+counseling>=1.0.0
+guidance>=1.0.0
+
+# College and career readiness
+college-career>=1.0.0
+readiness>=1.0.0
+transition>=1.0.0
+
+# Work-based learning
+work-based>=1.0.0
+internship>=1.0.0
+apprenticeship>=1.0.0
+
+# Internship
+internship>=1.0.0
+experience>=1.0.0
+professional>=1.0.0
+
+# Apprenticeship
+apprenticeship>=1.0.0
+training>=1.0.0
+certification>=1.0.0
+
+# Job shadowing
+job-shadowing>=1.0.0
+observation>=1.0.0
+exposure>=1.0.0
+
+# Mentorship
+mentorship>=1.0.0
+guidance>=1.0.0
+support>=1.0.0
+
+# Coaching
+coaching>=1.0.0
+development>=1.0.0
+performance>=1.0.0
+
+# Counseling
+counseling>=1.0.0
+therapy>=1.0.0
+support>=1.0.0
+
+# Psychology
+psychology>=1.0.0
+behavior>=1.0.0
+cognition>=1.0.0
+
+# Sociology
+sociology>=1.0.0
+society>=1.0.0
+culture>=1.0.0
+
+# Anthropology
+anthropology>=1.0.0
+culture>=1.0.0
+evolution>=1.0.0
+
+# Archaeology
+archaeology>=1.0.0
+excavation>=1.0.0
+artifacts>=1.0.0
+
+# History
+history>=1.0.0
+events>=1.0.0
+interpretation>=1.0.0
+
+# Geography
+geography>=1.0.0
+places>=1.0.0
+environments>=1.0.0
+
+# Geology
+geology>=1.0.0
+earth>=1.0.0
+rocks>=1.0.0
+
+# Meteorology
+meteorology>=1.0.0
+weather>=1.0.0
+climate>=1.0.0
+
+# Oceanography
+oceanography>=1.0.0
+ocean>=1.0.0
+marine>=1.0.0
+
+# Astronomy
+astronomy>=1.0.0
+stars>=1.0.0
+planets>=1.0.0
+
+# Astrophysics
+astrophysics>=1.0.0
+universe>=1.0.0
+cosmos>=1.0.0
+
+# Cosmology
+cosmology>=1.0.0
+universe>=1.0.0
+origin>=1.0.0
+
+# Quantum physics
+quantum-physics>=1.0.0
+mechanics>=1.0.0
+particles>=1.0.0
+
+# Relativity
+relativity>=1.0.0
+special>=1.0.0
+general>=1.0.0
+
+# String theory
+string-theory>=1.0.0
+dimensions>=1.0.0
+vibrations>=1.0.0
+
+# Particle physics
+particle-physics>=1.0.0
+standard-model>=1.0.0
+higgs>=1.0.0
+
+# Nuclear physics
+nuclear-physics>=1.0.0
+fission>=1.0.0
+fusion>=1.0.0
+
+# Atomic physics
+atomic-physics>=1.0.0
+electrons>=1.0.0
+orbitals>=1.0.0
+
+# Molecular physics
+molecular-physics>=1.0.0
+molecules>=1.0.0
+bonds>=1.0.0
+
+# Condensed matter physics
+condensed-matter>=1.0.0
+solids>=1.0.0
+liquids>=1.0.0
+
+# Statistical mechanics
+statistical-mechanics>=1.0.0
+thermodynamics>=1.0.0
+kinetics>=1.0.0
+
+# Thermodynamics
+thermodynamics>=1.0.0
+heat>=1.0.0
+energy>=1.0.0
+
+# Kinetics
+kinetics>=1.0.0
+reaction>=1.0.0
+rate>=1.0.0
+
+# Quantum chemistry
+quantum-chemistry>=1.0.0
+computational>=1.0.0
+modeling>=1.0.0
+
+# Organic chemistry
+organic-chemistry>=1.0.0
+carbon>=1.0.0
+compounds>=1.0.0
+
+# Inorganic chemistry
+inorganic-chemistry>=1.0.0
+metals>=1.0.0
+minerals>=1.0.0
+
+# Physical chemistry
+physical-chemistry>=1.0.0
+properties>=1.0.0
+behavior>=1.0.0
+
+# Analytical chemistry
+analytical-chemistry>=1.0.0
+techniques>=1.0.0
+instruments>=1.0.0
+
+# Biochemistry
+biochemistry>=1.0.0
+molecules>=1.0.0
+processes>=1.0.0
+
+# Molecular biology
+molecular-biology>=1.0.0
+dna>=1.0.0
+rna>=1.0.0
+
+# Cell biology
+cell-biology>=1.0.0
+cells>=1.0.0
+organelles>=1.0.0
+
+# Microbiology
+microbiology>=1.0.0
+bacteria>=1.0.0
+viruses>=1.0.0
+
+# Genetics
+genetics>=1.0.0
+heredity>=1.0.0
+variation>=1.0.0
+
+# Genomics
+genomics>=1.0.0
+genome>=1.0.0
+sequencing>=1.0.0
+
+# Proteomics
+proteomics>=1.0.0
+proteins>=1.0.0
+expression>=1.0.0
+
+# Metabolomics
+metabolomics>=1.0.0
+metabolites>=1.0.0
+pathways>=1.0.0
+
+# Systems biology
+systems-biology>=1.0.0
+networks>=1.0.0
+interactions>=1.0.0
+
+# Synthetic biology
+synthetic-biology>=1.0.0
+design>=1.0.0
+construction>=1.0.0
+
+# Biotechnology
+biotechnology>=1.0.0
+applications>=1.0.0
+products>=1.0.0
+
+# Bioinformatics
+bioinformatics>=1.0.0
+computational-biology>=1.0.0
+algorithms>=1.0.0
+
+# Computational biology
+computational-biology>=1.0.0
+modeling>=1.0.0
+simulation>=1.0.0
+
+# Structural biology
+structural-biology>=1.0.0
+macromolecules>=1.0.0
+crystallography>=1.0.0
+
+# Evolutionary biology
+evolutionary-biology>=1.0.0
+evolution>=1.0.0
+adaptation>=1.0.0
+
+# Ecology
+ecology>=1.0.0
+ecosystems>=1.0.0
+interactions>=1.0.0
+
+# Population biology
+population-biology>=1.0.0
+dynamics>=1.0.0
+genetics>=1.0.0
+
+# Community ecology
+community-ecology>=1.0.0
+species>=1.0.0
+interactions>=1.0.0
+
+# Ecosystem ecology
+ecosystem-ecology>=1.0.0
+energy-flow>=1.0.0
+nutrient-cycling>=1.0.0
+
+# Landscape ecology
+landscape-ecology>=1.0.0
+patterns>=1.0.0
+processes>=1.0.0
+
+# Conservation biology
+conservation-biology>=1.0.0
+protection>=1.0.0
+management>=1.0.0
+
+# Restoration ecology
+restoration-ecology>=1.0.0
+recovery>=1.0.0
+rehabilitation>=1.0.0
+
+# Environmental science
+environmental-science>=1.0.0
+impact>=1.0.0
+assessment>=1.0.0
+
+# Environmental chemistry
+environmental-chemistry>=1.0.0
+pollutants>=1.0.0
+remediation>=1.0.0
+
+# Environmental toxicology
+environmental-toxicology>=1.0.0
+poisons>=1.0.0
+effects>=1.0.0
+
+# Environmental policy
+environmental-policy>=1.0.0
+regulation>=1.0.0
+compliance>=1.0.0
+
+# Sustainability
+sustainability>=1.0.0
+development>=1.0.0
+stewardship>=1.0.0
+
+# Climate change
+climate-change>=1.0.0
+global-warming>=1.0.0
+adaptation>=1.0.0
+
+# Renewable energy
+renewable-energy>=1.0.0
+solar>=1.0.0
+wind>=1.0.0
+
+# Energy efficiency
+energy-efficiency>=1.0.0
+conservation>=1.0.0
+optimization>=1.0.0
+
+# Green technology
+green-technology>=1.0.0
+clean>=1.0.0
+sustainable>=1.0.0
+
+# Circular economy
+circular-economy>=1.0.0
+recycling>=1.0.0
+reuse>=1.0.0
+
+# Zero waste
+zero-waste>=1.0.0
+elimination>=1.0.0
+diversion>=1.0.0
+
+# Carbon footprint
+carbon-footprint>=1.0.0
+emissions>=1.0.0
+reduction>=1.0.0
+
+# Life cycle assessment
+lca>=1.0.0
+cradle-to-grave>=1.0.0
+impact>=1.0.0
+
+# Environmental management
+environmental-management>=1.0.0
+systems>=1.0.0
+standards>=1.0.0
+
+# ISO 14001
+iso-14001>=1.0.0
+ems>=1.0.0
+certification>=1.0.0
+
+# Environmental auditing
+environmental-auditing>=1.0.0
+assessment>=1.0.0
+verification>=1.0.0
+
+# Environmental reporting
+environmental-reporting>=1.0.0
+disclosure>=1.0.0
+transparency>=1.0.0
+
+# Corporate sustainability
+corporate-sustainability>=1.0.0
+esg>=1.0.0
+reporting>=1.0.0
+
+# Social responsibility
+social-responsibility>=1.0.0
+csr>=1.0.0
+stakeholders>=1.0.0
+
+# Ethics
+ethics>=1.0.0
+morality>=1.0.0
+principles>=1.0.0
+
+# Philosophy
+philosophy>=1.0.0
+metaphysics>=1.0.0
+epistemology>=1.0.0
+
+# Religion
+religion>=1.0.0
+faith>=1.0.0
+spirituality>=1.0.0
+
+# Theology
+theology>=1.0.0
+divinity>=1.0.0
+doctrine>=1.0.0
+
+# Spirituality
+spirituality>=1.0.0
+soul>=1.0.0
+consciousness>=1.0.0
+
+# Meditation
+meditation>=1.0.0
+mindfulness>=1.0.0
+contemplation>=1.0.0
+
+# Yoga
+yoga>=1.0.0
+asana>=1.0.0
+philosophy>=1.0.0
+
+# Tai chi
+tai-chi>=1.0.0
+qigong>=1.0.0
+energy>=1.0.0
+
+# Martial arts
+martial-arts>=1.0.0
+self-defense>=1.0.0
+discipline>=1.0.0
+
+# Fitness
+fitness>=1.0.0
+exercise>=1.0.0
+health>=1.0.0
+
+# Nutrition
+nutrition>=1.0.0
+diet>=1.0.0
+wellness>=1.0.0
+
+# Wellness
+wellness>=1.0.0
+holistic>=1.0.0
+balance>=1.0.0
+
+# Mental health
+mental-health>=1.0.0
+psychology>=1.0.0
+therapy>=1.0.0
+
+# Physical health
+physical-health>=1.0.0
+medicine>=1.0.0
+treatment>=1.0.0
+
+# Alternative medicine
+alternative-medicine>=1.0.0
+holistic>=1.0.0
+natural>=1.0.0
+
+# Traditional medicine
+traditional-medicine>=1.0.0
+herbal>=1.0.0
+ancient>=1.0.0
+
+# Western medicine
+western-medicine>=1.0.0
+allopathic>=1.0.0
+evidence-based>=1.0.0
+
+# Eastern medicine
+eastern-medicine>=1.0.0
+traditional-chinese>=1.0.0
+ayurveda>=1.0.0
+
+# Homeopathy
+homeopathy>=1.0.0
+dilutions>=1.0.0
+remedies>=1.0.0
+
+# Naturopathy
+naturopathy>=1.0.0
+natural-healing>=1.0.0
+prevention>=1.0.0
+
+# Chiropractic
+chiropractic>=1.0.0
+spinal>=1.0.0
+adjustment>=1.0.0
+
+# Osteopathy
+osteopathy>=1.0.0
+manipulation>=1.0.0
+treatment>=1.0.0
+
+# Massage therapy
+massage-therapy>=1.0.0
+therapeutic>=1.0.0
+touch>=1.0.0
+
+# Acupuncture
+acupuncture>=1.0.0
+needles>=1.0.0
+meridians>=1.0.0
+
+# Aromatherapy
+aromatherapy>=1.0.0
+essential-oils>=1.0.0
+scent>=1.0.0
+
+# Herbal medicine
+herbal-medicine>=1.0.0
+plants>=1.0.0
+remedies>=1.0.0
+
+# Flower essences
+flower-essences>=1.0.0
+vibrational>=1.0.0
+energy>=1.0.0
+
+# Crystal healing
+crystal-healing>=1.0.0
+gemstones>=1.0.0
+vibrations>=1.0.0
+
+# Reiki
+reiki>=1.0.0
+energy-healing>=1.0.0
+hands-on>=1.0.0
+
+# Energy healing
+energy-healing>=1.0.0
+prana>=1.0.0
+chi>=1.0.0
+
+# Sound healing
+sound-healing>=1.0.0
+frequencies>=1.0.0
+vibrations>=1.0.0
+
+# Music therapy
+music-therapy>=1.0.0
+healing>=1.0.0
+expression>=1.0.0
+
+# Art therapy
+art-therapy>=1.0.0
+expression>=1.0.0
+healing>=1.0.0
+
+# Dance therapy
+dance-therapy>=1.0.0
+movement>=1.0.0
+expression>=1.0.0
+
+# Drama therapy
+drama-therapy>=1.0.0
+role-play>=1.0.0
+expression>=1.0.0
+
+# Poetry therapy
+poetry-therapy>=1.0.0
+writing>=1.0.0
+expression>=1.0.0
+
+# Bibliotherapy
+bibliotherapy>=1.0.0
+reading>=1.0.0
+healing>=1.0.0
+
+# Animal therapy
+animal-therapy>=1.0.0
+pets>=1.0.0
+companionship>=1.0.0
+
+# Horticultural therapy
+horticultural-therapy>=1.0.0
+gardening>=1.0.0
+plants>=1.0.0
+
+# Wilderness therapy
+wilderness-therapy>=1.0.0
+outdoor>=1.0.0
+adventure>=1.0.0
+
+# Adventure therapy
+adventure-therapy>=1.0.0
+outdoor>=1.0.0
+challenge>=1.0.0
+
+# Recreational therapy
+recreational-therapy>=1.0.0
+activities>=1.0.0
+fun>=1.0.0
+
+# Occupational therapy
+occupational-therapy>=1.0.0
+daily-living>=1.0.0
+function>=1.0.0
+
+# Physical therapy
+physical-therapy>=1.0.0
+rehabilitation>=1.0.0
+mobility>=1.0.0
+
+# Speech therapy
+speech-therapy>=1.0.0
+communication>=1.0.0
+language>=1.0.0
+
+# Respiratory therapy
+respiratory-therapy>=1.0.0
+breathing>=1.0.0
+lungs>=1.0.0
+
+# Occupational health
+occupational-health>=1.0.0
+workplace>=1.0.0
+safety>=1.0.0
+
+# Public health
+public-health>=1.0.0
+population>=1.0.0
+prevention>=1.0.0
+
+# Epidemiology
+epidemiology>=1.0.0
+disease>=1.0.0
+patterns>=1.0.0
+
+# Health policy
+health-policy>=1.0.0
+reform>=1.0.0
+access>=1.0.0
+
+# Health economics
+health-economics>=1.0.0
+costs>=1.0.0
+financing>=1.0.0
+
+# Health informatics
+health-informatics>=1.0.0
+data>=1.0.0
+technology>=1.0.0
+
+# Telemedicine
+telemedicine>=1.0.0
+remote>=1.0.0
+virtual>=1.0.0
+
+# Digital health
+digital-health>=1.0.0
+apps>=1.0.0
+wearables>=1.0.0
+
+# Personalized medicine
+personalized-medicine>=1.0.0
+genomics>=1.0.0
+precision>=1.0.0
+
+# Precision medicine
+precision-medicine>=1.0.0
+targeted>=1.0.0
+individualized>=1.0.0
+
+# Regenerative medicine
+regenerative-medicine>=1.0.0
+stem-cells>=1.0.0
+tissue>=1.0.0
+
+# Stem cell research
+stem-cell>=1.0.0
+pluripotent>=1.0.0
+differentiation>=1.0.0
+
+# Gene therapy
+gene-therapy>=1.0.0
+vectors>=1.0.0
+correction>=1.0.0
+
+# Gene editing
+gene-editing>=1.0.0
+crispr>=1.0.0
+modification>=1.0.0
+
+# Immunotherapy
+immunotherapy>=1.0.0
+immune-system>=1.0.0
+cancer>=1.0.0
+
+# Vaccine development
+vaccine>=1.0.0
+immunization>=1.0.0
+prevention>=1.0.0
+
+# Drug discovery
+drug-discovery>=1.0.0
+screening>=1.0.0
+development>=1.0.0
+
+# Clinical trials
+clinical-trials>=1.0.0
+phases>=1.0.0
+regulation>=1.0.0
+
+# Medical devices
+medical-devices>=1.0.0
+regulation>=1.0.0
+innovation>=1.0.0
+
+# Diagnostics
+diagnostics>=1.0.0
+testing>=1.0.0
+accuracy>=1.0.0
+
+# Imaging
+imaging>=1.0.0
+mri>=1.0.0
+ct>=1.0.0
+
+# Radiology
+radiology>=1.0.0
+x-ray>=1.0.0
+ultrasound>=1.0.0
+
+# Pathology
+pathology>=1.0.0
+tissue>=1.0.0
+diagnosis>=1.0.0
+
+# Laboratory medicine
+laboratory>=1.0.0
+testing>=1.0.0
+analysis>=1.0.0
+
+# Pharmacy
+pharmacy>=1.0.0
+medication>=1.0.0
+dispensing>=1.0.0
+
+# Pharmacology
+pharmacology>=1.0.0
+drugs>=1.0.0
+effects>=1.0.0
+
+# Toxicology
+toxicology>=1.0.0
+poisons>=1.0.0
+safety>=1.0.0
+
+# Nursing
+nursing>=1.0.0
+care>=1.0.0
+patient>=1.0.0
+
+# Medicine
+medicine>=1.0.0
+practice>=1.0.0
+art>=1.0.0
+
+# Surgery
+surgery>=1.0.0
+operation>=1.0.0
+procedure>=1.0.0
+
+# Emergency medicine
+emergency-medicine>=1.0.0
+trauma>=1.0.0
+critical-care>=1.0.0
+
+# Internal medicine
+internal-medicine>=1.0.0
+organs>=1.0.0
+systems>=1.0.0
+
+# Family medicine
+family-medicine>=1.0.0
+primary-care>=1.0.0
+comprehensive>=1.0.0
+
+# Pediatrics
+pediatrics>=1.0.0
+children>=1.0.0
+development>=1.0.0
+
+# Geriatrics
+geriatrics>=1.0.0
+elderly>=1.0.0
+aging>=1.0.0
+
+# Psychiatry
+psychiatry>=1.0.0
+mental-disorders>=1.0.0
+treatment>=1.0.0
+
+# Neurology
+neurology>=1.0.0
+nervous-system>=1.0.0
+brain>=1.0.0
+
+# Cardiology
+cardiology>=1.0.0
+heart>=1.0.0
+circulatory>=1.0.0
+
+# Pulmonology
+pulmonology>=1.0.0
+lungs>=1.0.0
+respiratory>=1.0.0
+
+# Gastroenterology
+gastroenterology>=1.0.0
+digestive>=1.0.0
+liver>=1.0.0
+
+# Endocrinology
+endocrinology>=1.0.0
+hormones>=1.0.0
+glands>=1.0.0
+
+# Nephrology
+nephrology>=1.0.0
+kidneys>=1.0.0
+urinary>=1.0.0
+
+# Urology
+urology>=1.0.0
+urinary-tract>=1.0.0
+male-reproductive>=1.0.0
+
+# Gynecology
+gynecology>=1.0.0
+female-reproductive>=1.0.0
+health>=1.0.0
+
+# Obstetrics
+obstetrics>=1.0.0
+pregnancy>=1.0.0
+childbirth>=1.0.0
+
+# Oncology
+oncology>=1.0.0
+cancer>=1.0.0
+treatment>=1.0.0
+
+# Hematology
+hematology>=1.0.0
+blood>=1.0.0
+disorders>=1.0.0
+
+# Infectious disease
+infectious-disease>=1.0.0
+infection>=1.0.0
+treatment>=1.0.0
+
+# Dermatology
+dermatology>=1.0.0
+skin>=1.0.0
+conditions>=1.0.0
+
+# Ophthalmology
+ophthalmology>=1.0.0
+eyes>=1.0.0
+vision>=1.0.0
+
+# Otolaryngology
+otolaryngology>=1.0.0
+ear-nose-throat>=1.0.0
+hearing>=1.0.0
+
+# Orthopedics
+orthopedics>=1.0.0
+bones>=1.0.0
+joints>=1.0.0
+
+# Rheumatology
+rheumatology>=1.0.0
+joints>=1.0.0
+autoimmune>=1.0.0
+
+# Allergy and immunology
+allergy-immunology>=1.0.0
+allergic>=1.0.0
+immune>=1.0.0
+
+# Anesthesiology
+anesthesiology>=1.0.0
+anesthesia>=1.0.0
+pain>=1.0.0
+
+# Pain management
+pain-management>=1.0.0
+chronic>=1.0.0
+treatment>=1.0.0
+
+# Palliative care
+palliative-care>=1.0.0
+end-of-life>=1.0.0
+comfort>=1.0.0
+
+# Hospice care
+hospice-care>=1.0.0
+terminal>=1.0.0
+support>=1.0.0
+
+# Rehabilitation
+rehabilitation>=1.0.0
+recovery>=1.0.0
+function>=1.0.0
+
+# Sports medicine
+sports-medicine>=1.0.0
+athletes>=1.0.0
+injuries>=1.0.0
+
+# Occupational medicine
+occupational-medicine>=1.0.0
+work-related>=1.0.0
+health>=1.0.0
+
+# Aerospace medicine
+aerospace-medicine>=1.0.0
+flight>=1.0.0
+space>=1.0.0
+
+# Diving medicine
+diving-medicine>=1.0.0
+underwater>=1.0.0
+pressure>=1.0.0
+
+# Tropical medicine
+tropical-medicine>=1.0.0
+tropical-diseases>=1.0.0
+travel>=1.0.0
+
+# Travel medicine
+travel-medicine>=1.0.0
+vaccinations>=1.0.0
+prevention>=1.0.0
+
+# Forensic medicine
+forensic-medicine>=1.0.0
+legal>=1.0.0
+investigation>=1.0.0
+
+# Legal medicine
+legal-medicine>=1.0.0
+court>=1.0.0
+testimony>=1.0.0
+
+# Medical ethics
+medical-ethics>=1.0.0
+principles>=1.0.0
+dilemmas>=1.0.0
+
+# Medical law
+medical-law>=1.0.0
+regulation>=1.0.0
+liability>=1.0.0
+
+# Medical education
+medical-education>=1.0.0
+training>=1.0.0
+curriculum>=1.0.0
+
+# Medical research
+medical-research>=1.0.0
+studies>=1.0.0
+trials>=1.0.0
+
+# Medical writing
+medical-writing>=1.0.0
+publications>=1.0.0
+communication>=1.0.0
+
+# Medical journalism
+medical-journalism>=1.0.0
+reporting>=1.0.0
+accuracy>=1.0.0
+
+# Medical translation
+medical-translation>=1.0.0
+languages>=1.0.0
+accuracy>=1.0.0
+
+# Medical illustration
+medical-illustration>=1.0.0
+visual>=1.0.0
+education>=1.0.0
+
+# Medical photography
+medical-photography>=1.0.0
+clinical>=1.0.0
+documentation>=1.0.0
+
+# Medical informatics
+medical-informatics>=1.0.0
+healthcare-it>=1.0.0
+systems>=1.0.0
+
+# Health information technology
+hit>=1.0.0
+ehr>=1.0.0
+interoperability>=1.0.0
+
+# Electronic health records
+ehr>=1.0.0
+digital>=1.0.0
+records>=1.0.0
+
+# Health information exchange
+hie>=1.0.0
+sharing>=1.0.0
+interoperability>=1.0.0
+
+# Clinical decision support
+cds>=1.0.0
+guidelines>=1.0.0
+alerts>=1.0.0
+
+# Computerized physician order entry
+cpoe>=1.0.0
+orders>=1.0.0
+safety>=1.0.0
+
+# Medication reconciliation
+medication-reconciliation>=1.0.0
+accuracy>=1.0.0
+safety>=1.0.0
+
+# Patient safety
+patient-safety>=1.0.0
+quality>=1.0.0
+improvement>=1.0.0
+
+# Quality improvement
+quality-improvement>=1.0.0
+processes>=1.0.0
+outcomes>=1.0.0
+
+# Patient satisfaction
+patient-satisfaction>=1.0.0
+experience>=1.0.0
+feedback>=1.0.0
+
+# Patient engagement
+patient-engagement>=1.0.0
+activation>=1.0.0
+participation>=1.0.0
+
+# Shared decision making
+shared-decision-making>=1.0.0
+collaboration>=1.0.0
+patient-centered>=1.0.0
+
+# Patient-centered care
+patient-centered>=1.0.0
+individualized>=1.0.0
+holistic>=1.0.0
+
+# Family-centered care
+family-centered>=1.0.0
+inclusion>=1.0.0
+support>=1.0.0
+
+# Community health
+community-health>=1.0.0
+population>=1.0.0
+wellness>=1.0.0
+
+# Population health
+population-health>=1.0.0
+management>=1.0.0
+analytics>=1.0.0
+
+# Health disparities
+health-disparities>=1.0.0
+inequities>=1.0.0
+social-determinants>=1.0.0
+
+# Social determinants of health
+sdoh>=1.0.0
+social-factors>=1.0.0
+health-equity>=1.0.0
+
+# Health equity
+health-equity>=1.0.0
+justice>=1.0.0
+fairness>=1.0.0
+
+# Cultural competence
+cultural-competence>=1.0.0
+sensitivity>=1.0.0
+awareness>=1.0.0
+
+# Health literacy
+health-literacy>=1.0.0
+understanding>=1.0.0
+communication>=1.0.0
+
+# Language access
+language-access>=1.0.0
+interpretation>=1.0.0
+translation>=1.0.0
+
+# Disability access
+disability-access>=1.0.0
+accommodation>=1.0.0
+inclusion>=1.0.0
+
+# LGBTQ+ health
+lgbtq-health>=1.0.0
+inclusive>=1.0.0
+affirming>=1.0.0
+
+# Women's health
+womens-health>=1.0.0
+gender-specific>=1.0.0
+reproductive>=1.0.0
+
+# Men's health
+mens-health>=1.0.0
+gender-specific>=1.0.0
+prostate>=1.0.0
+
+# Children's health
+childrens-health>=1.0.0
+pediatric>=1.0.0
+development>=1.0.0
+
+# Adolescent health
+adolescent-health>=1.0.0
+teen>=1.0.0
+development>=1.0.0
+
+# Young adult health
+young-adult-health>=1.0.0
+transition>=1.0.0
+independence>=1.0.0
+
+# Adult health
+adult-health>=1.0.0
+chronic-disease>=1.0.0
+prevention>=1.0.0
+
+# Senior health
+senior-health>=1.0.0
+aging>=1.0.0
+geriatric>=1.0.0
+
+# Global health
+global-health>=1.0.0
+international>=1.0.0
+development>=1.0.0
+
+# One health
+one-health>=1.0.0
+human-animal-environment>=1.0.0
+interconnected>=1.0.0
+
+# Planetary health
+planetary-health>=1.0.0
+earth-systems>=1.0.0
+sustainability>=1.0.0
+
+# Environmental health
+environmental-health>=1.0.0
+exposure>=1.0.0
+protection>=1.0.0
+
+# Occupational health
+occupational-health>=1.0.0
+workplace>=1.0.0
+safety>=1.0.0
+
+# Public health
+public-health>=1.0.0
+population>=1.0.0
+prevention>=1.0.0
+
+# Community health
+community-health>=1.0.0
+local>=1.0.0
+engagement>=1.0.0
+
+# School health
+school-health>=1.0.0
+education>=1.0.0
+services>=1.0.0
+
+# Mental health
+mental-health>=1.0.0
+wellbeing>=1.0.0
+support>=1.0.0
+
+# Behavioral health
+behavioral-health>=1.0.0
+habits>=1.0.0
+lifestyle>=1.0.0
+
+# Substance abuse
+substance-abuse>=1.0.0
+addiction>=1.0.0
+treatment>=1.0.0
+
+# Addiction medicine
+addiction-medicine>=1.0.0
+dependency>=1.0.0
+recovery>=1.0.0
+
+# Eating disorders
+eating-disorders>=1.0.0
+anorexia>=1.0.0
+bulimia>=1.0.0
+
+# Mood disorders
+mood-disorders>=1.0.0
+depression>=1.0.0
+bipolar>=1.0.0
+
+# Anxiety disorders
+anxiety-disorders>=1.0.0
+panic>=1.0.0
+phobia>=1.0.0
+
+# Psychotic disorders
+psychotic-disorders>=1.0.0
+schizophrenia>=1.0.0
+delusions>=1.0.0
+
+# Personality disorders
+personality-disorders>=1.0.0
+traits>=1.0.0
+behavior>=1.0.0
+
+# Neurodevelopmental disorders
+neurodevelopmental>=1.0.0
+autism>=1.0.0
+adhd>=1.0.0
+
+# Neurocognitive disorders
+neurocognitive>=1.0.0
+dementia>=1.0.0
+alzheimer>=1.0.0
+
+# Trauma and stressor related disorders
+trauma>=1.0.0
+ptsd>=1.0.0
+stress>=1.0.0
+
+# Dissociative disorders
+dissociative>=1.0.0
+identity>=1.0.0
+amnesia>=1.0.0
+
+# Somatic symptom disorders
+somatic>=1.0.0
+physical>=1.0.0
+psychological>=1.0.0
+
+# Feeding and eating disorders
+feeding-disorders>=1.0.0
+nutrition>=1.0.0
+behavior>=1.0.0
+
+# Sleep-wake disorders
+sleep-disorders>=1.0.0
+insomnia>=1.0.0
+apnea>=1.0.0
+
+# Sexual dysfunctions
+sexual-dysfunctions>=1.0.0
+desire>=1.0.0
+arousal>=1.0.0
+
+# Gender dysphoria
+gender-dysphoria>=1.0.0
+identity>=1.0.0
+congruence>=1.0.0
+
+# Disruptive disorders
+disruptive>=1.0.0
+behavior>=1.0.0
+conduct>=1.0.0
+
+# Impulse control disorders
+impulse-control>=1.0.0
+behavior>=1.0.0
+regulation>=1.0.0
+
+# Substance-related disorders
+substance-related>=1.0.0
+use>=1.0.0
+dependence>=1.0.0
+
+# Addictive disorders
+addictive>=1.0.0
+behavioral>=1.0.0
+process>=1.0.0
+
+# Gambling disorder
+gambling>=1.0.0
+addiction>=1.0.0
+behavior>=1.0.0
+
+# Internet gaming disorder
+internet-gaming>=1.0.0
+addiction>=1.0.0
+online>=1.0.0
+
+# Tobacco use disorder
+tobacco>=1.0.0
+nicotine>=1.0.0
+dependence>=1.0.0
+
+# Alcohol use disorder
+alcohol>=1.0.0
+dependence>=1.0.0
+abuse>=1.0.0
+
+# Cannabis use disorder
+cannabis>=1.0.0
+dependence>=1.0.0
+abuse>=1.0.0
+
+# Stimulant use disorder
+stimulant>=1.0.0
+cocaine>=1.0.0
+amphetamine>=1.0.0
+
+# Opioid use disorder
+opioid>=1.0.0
+heroin>=1.0.0
+prescription>=1.0.0
+
+# Hallucinogen use disorder
+hallucinogen>=1.0.0
+lsd>=1.0.0
+mushrooms>=1.0.0
+
+# Inhalant use disorder
+inhalant>=1.0.0
+solvents>=1.0.0
+gases>=1.0.0
+
+# Sedative use disorder
+sedative>=1.0.0
+benzodiazepine>=1.0.0
+barbiturate>=1.0.0
+
+# Hypnotic use disorder
+hypnotic>=1.0.0
+sleep>=1.0.0
+dependence>=1.0.0
+
+# Anxiolytic use disorder
+anxiolytic>=1.0.0
+anti-anxiety>=1.0.0
+dependence>=1.0.0
+
+# Caffeine use disorder
+caffeine>=1.0.0
+stimulant>=1.0.0
+dependence>=1.0.0
+
+# Steroid use disorder
+steroid>=1.0.0
+anabolic>=1.0.0
+dependence>=1.0.0
+
+# Performance enhancing drug use disorder
+performance-enhancing>=1.0.0
+doping>=1.0.0
+athletic>=1.0.0
+
+# Unknown substance use disorder
+unknown-substance>=1.0.0
+novel>=1.0.0
+designer>=1.0.0
+
+# Poly substance use disorder
+poly-substance>=1.0.0
+multiple>=1.0.0
+combined>=1.0.0
+
+# Substance induced disorders
+substance-induced>=1.0.0
+intoxication>=1.0.0
+withdrawal>=1.0.0
+
+# Substance intoxication
+intoxication>=1.0.0
+acute>=1.0.0
+effects>=1.0.0
+
+# Substance withdrawal
+withdrawal>=1.0.0
+abstinence>=1.0.0
+syndrome>=1.0.0
+
+# Substance induced delirium
+delirium>=1.0.0
+confusion>=1.0.0
+disorientation>=1.0.0
+
+# Substance induced psychosis
+psychosis>=1.0.0
+hallucinations>=1.0.0
+delusions>=1.0.0
+
+# Substance induced bipolar disorder
+bipolar>=1.0.0
+mood-swings>=1.0.0
+episodes>=1.0.0
+
+# Substance induced depressive disorder
+depressive>=1.0.0
+sadness>=1.0.0
+hopelessness>=1.0.0
+
+# Substance induced anxiety disorder
+anxiety>=1.0.0
+worry>=1.0.0
+fear>=1.0.0
+
+# Substance induced obsessive compulsive disorder
+ocd>=1.0.0
+obsessions>=1.0.0
+compulsions>=1.0.0
+
+# Substance induced sleep disorder
+sleep-disorder>=1.0.0
+insomnia>=1.0.0
+hypersomnia>=1.0.0
+
+# Substance induced sexual dysfunction
+sexual-dysfunction>=1.0.0
+desire>=1.0.0
+performance>=1.0.0
+
+# Substance induced delirium tremens
+delirium-tremens>=1.0.0
+tremor>=1.0.0
+hallucinations>=1.0.0
+
+# Substance induced korsakoff syndrome
+korsakoff>=1.0.0
+amnesia>=1.0.0
+confabulation>=1.0.0
+
+# Substance induced wernicke encephalopathy
+wernicke>=1.0.0
+encephalopathy>=1.0.0
+ataxia>=1.0.0
+
+# Substance induced persisting dementia
+dementia>=1.0.0
+cognitive>=1.0.0
+decline>=1.0.0
+
+# Substance induced persisting amnestic disorder
+amnestic>=1.0.0
+memory>=1.0.0
+disorder>=1.0.0
+
+# Medication induced disorders
+medication-induced>=1.0.0
+side-effects>=1.0.0
+adverse-reactions>=1.0.0
+
+# Medication induced movement disorders
+movement-disorders>=1.0.0
+tardive-dyskinesia>=1.0.0
+parkinsonism>=1.0.0
+
+# Medication induced postural tremor
+postural-tremor>=1.0.0
+shaking>=1.0.0
+medication>=1.0.0
+
+# Medication induced akathisia
+akathisia>=1.0.0
+restlessness>=1.0.0
+medication>=1.0.0
+
+# Medication induced dystonia
+dystonia>=1.0.0
+muscle>=1.0.0
+spasm>=1.0.0
+
+# Medication induced parkinsonism
+parkinsonism>=1.0.0
+rigidity>=1.0.0
+tremor>=1.0.0
+
+# Neuroleptic malignant syndrome
+nms>=1.0.0
+fever>=1.0.0
+rigidity>=1.0.0
+
+# Serotonin syndrome
+serotonin>=1.0.0
+toxicity>=1.0.0
+agitation>=1.0.0
+
+# Anticholinergic syndrome
+anticholinergic>=1.0.0
+delirium>=1.0.0
+toxicity>=1.0.0
+
+# Malignant hyperthermia
+malignant-hyperthermia>=1.0.0
+fever>=1.0.0
+muscle>=1.0.0
+
+# Medication induced delirium
+medication-delirium>=1.0.0
+confusion>=1.0.0
+disorientation>=1.0.0
+
+# Medication induced psychosis
+medication-psychosis>=1.0.0
+hallucinations>=1.0.0
+delusions>=1.0.0
+
+# Medication induced mania
+medication-mania>=1.0.0
+euphoria>=1.0.0
+grandiosity>=1.0.0
+
+# Medication induced depression
+medication-depression>=1.0.0
+sadness>=1.0.0
+anhedonia>=1.0.0
+
+# Medication induced anxiety
+medication-anxiety>=1.0.0
+worry>=1.0.0
+nervousness>=1.0.0
+
+# Medication induced obsessive compulsive disorder
+medication-ocd>=1.0.0
+obsessions>=1.0.0
+compulsions>=1.0.0
+
+# Medication induced sleep disorder
+medication-sleep>=1.0.0
+insomnia>=1.0.0
+somnolence>=1.0.0
+
+# Medication induced sexual dysfunction
+medication-sexual>=1.0.0
+desire>=1.0.0
+arousal>=1.0.0
+
+# Medication induced gastrointestinal disorder
+medication-gi>=1.0.0
+nausea>=1.0.0
+vomiting>=1.0.0
+
+# Medication induced cardiovascular disorder
+medication-cardiovascular>=1.0.0
+heart>=1.0.0
+blood-pressure>=1.0.0
+
+# Medication induced respiratory disorder
+medication-respiratory>=1.0.0
+breathing>=1.0.0
+lungs>=1.0.0
+
+# Medication induced renal disorder
+medication-renal>=1.0.0
+kidneys>=1.0.0
+function>=1.0.0
+
+# Medication induced hepatic disorder
+medication-hepatic>=1.0.0
+liver>=1.0.0
+function>=1.0.0
+
+# Medication induced endocrine disorder
+medication-endocrine>=1.0.0
+hormones>=1.0.0
+glands>=1.0.0
+
+# Medication induced immune disorder
+medication-immune>=1.0.0
+allergy>=1.0.0
+reaction>=1.0.0
+
+# Medication induced hematologic disorder
+medication-hematologic>=1.0.0
+blood>=1.0.0
+cells>=1.0.0
+
+# Medication induced dermatologic disorder
+medication-dermatologic>=1.0.0
+skin>=1.0.0
+rash>=1.0.0
+
+# Medication induced musculoskeletal disorder
+medication-musculoskeletal>=1.0.0
+muscles>=1.0.0
+bones>=1.0.0
+
+# Medication induced sensory disorder
+medication-sensory>=1.0.0
+hearing>=1.0.0
+vision>=1.0.0
+
+# Medication induced neurological disorder
+medication-neurological>=1.0.0
+nervous-system>=1.0.0
+brain>=1.0.0
+
+# Medication induced psychiatric disorder
+medication-psychiatric>=1.0.0
+mental>=1.0.0
+behavior>=1.0.0
+
+# Medication induced reproductive disorder
+medication-reproductive>=1.0.0
+fertility>=1.0.0
+sexual>=1.0.0
+
+# Medication induced genitourinary disorder
+medication-genitourinary>=1.0.0
+urinary>=1.0.0
+genital>=1.0.0
+
+# Medication induced ocular disorder
+medication-ocular>=1.0.0
+eyes>=1.0.0
+vision>=1.0.0
+
+# Medication induced auditory disorder
+medication-auditory>=1.0.0
+ears>=1.0.0
+hearing>=1.0.0
+
+# Medication induced vestibular disorder
+medication-vestibular>=1.0.0
+balance>=1.0.0
+dizziness>=1.0.0
+
+# Medication induced taste disorder
+medication-taste>=1.0.0
+taste>=1.0.0
+flavor>=1.0.0
+
+# Medication induced smell disorder
+medication-smell>=1.0.0
+olfaction>=1.0.0
+aroma>=1.0.0
+
+# Medication induced touch disorder
+medication-touch>=1.0.0
+sensation>=1.0.0
+feeling>=1.0.0
+
+# Medication induced pain disorder
+medication-pain>=1.0.0
+discomfort>=1.0.0
+suffering>=1.0.0
+
+# Medication induced temperature regulation disorder
+medication-temperature>=1.0.0
+fever>=1.0.0
+chills>=1.0.0
+
+# Medication induced appetite disorder
+medication-appetite>=1.0.0
+hunger>=1.0.0
+satiety>=1.0.0
+
+# Medication induced weight disorder
+medication-weight>=1.0.0
+gain>=1.0.0
+loss>=1.0.0
+
+# Medication induced fluid disorder
+medication-fluid>=1.0.0
+retention>=1.0.0
+dehydration>=1.0.0
+
+# Medication induced electrolyte disorder
+medication-electrolyte>=1.0.0
+imbalance>=1.0.0
+ions>=1.0.0
+
+# Medication induced acid base disorder
+medication-acid-base>=1.0.0
+ph>=1.0.0
+balance>=1.0.0
+
+# Medication induced metabolic disorder
+medication-metabolic>=1.0.0
+metabolism>=1.0.0
+function>=1.0.0
+
+# Medication induced nutritional disorder
+medication-nutritional>=1.0.0
+deficiency>=1.0.0
+malnutrition>=1.0.0
+
+# Medication induced vitamin disorder
+medication-vitamin>=1.0.0
+deficiency>=1.0.0
+excess>=1.0.0
+
+# Medication induced mineral disorder
+medication-mineral>=1.0.0
+deficiency>=1.0.0
+excess>=1.0.0
+
+# Medication induced endocrine disorder
+medication-endocrine>=1.0.0
+hormones>=1.0.0
+glands>=1.0.0
+
+# Medication induced thyroid disorder
+medication-thyroid>=1.0.0
+thyroxine>=1.0.0
+metabolism>=1.0.0
+
+# Medication induced adrenal disorder
+medication-adrenal>=1.0.0
+cortisol>=1.0.0
+stress>=1.0.0
+
+# Medication induced pituitary disorder
+medication-pituitary>=1.0.0
+hormones>=1.0.0
+growth>=1.0.0
+
+# Medication induced gonadal disorder
+medication-gonadal>=1.0.0
+sex-hormones>=1.0.0
+reproduction>=1.0.0
+
+# Medication induced pancreatic disorder
+medication-pancreatic>=1.0.0
+insulin>=1.0.0
+glucose>=1.0.0
+
+# Medication induced parathyroid disorder
+medication-parathyroid>=1.0.0
+calcium>=1.0.0
+bones>=1.0.0
+
+# Medication induced pineal disorder
+medication-pineal>=1.0.0
+melatonin>=1.0.0
+sleep>=1.0.0
+
+# Medication induced immune disorder
+medication-immune>=1.0.0
+allergy>=1.0.0
+autoimmunity>=1.0.0
+
+# Medication induced hematologic disorder
+medication-hematologic>=1.0.0
+blood>=1.0.0
+cells>=1.0.0
+
+# Medication induced coagulation disorder
+medication-coagulation>=1.0.0
+clotting>=1.0.0
+bleeding>=1.0.0
+
+# Medication induced platelet disorder
+medication-platelet>=1.0.0
+clumping>=1.0.0
+function>=1.0.0
+
+# Medication induced white blood cell disorder
+medication-wbc>=1.0.0
+infection-fighting>=1.0.0
+immunity>=1.0.0
+
+# Medication induced red blood cell disorder
+medication-rbc>=1.0.0
+oxygen-carrying>=1.0.0
+anemia>=1.0.0
+
+# Medication induced bone marrow disorder
+medication-bone-marrow>=1.0.0
+blood-cell-production>=1.0.0
+stem-cells>=1.0.0
+
+# Medication induced lymphatic disorder
+medication-lymphatic>=1.0.0
+lymph-nodes>=1.0.0
+immune>=1.0.0
+
+# Medication induced spleen disorder
+medication-spleen>=1.0.0
+blood-filtering>=1.0.0
+immune>=1.0.0
+
+# Medication induced liver disorder
+medication-liver>=1.0.0
+metabolism>=1.0.0
+detoxification>=1.0.0
+
+# Medication induced gallbladder disorder
+medication-gallbladder>=1.0.0
+bile>=1.0.0
+digestion>=1.0.0
+
+# Medication induced pancreatic disorder
+medication-pancreas>=1.0.0
+insulin>=1.0.0
+enzymes>=1.0.0
+
+# Medication induced gastrointestinal disorder
+medication-gi>=1.0.0
+digestion>=1.0.0
+absorption>=1.0.0
+
+# Medication induced esophageal disorder
+medication-esophageal>=1.0.0
+swallowing>=1.0.0
+reflux>=1.0.0
+
+# Medication induced stomach disorder
+medication-stomach>=1.0.0
+digestion>=1.0.0
+ulcers>=1.0.0
+
+# Medication induced intestinal disorder
+medication-intestinal>=1.0.0
+absorption>=1.0.0
+motility>=1.0.0
+
+# Medication induced colon disorder
+medication-colon>=1.0.0
+water-absorption>=1.0.0
+bacteria>=1.0.0
+
+# Medication induced rectal disorder
+medication-rectal>=1.0.0
+elimination>=1.0.0
+continence>=1.0.0
+
+# Medication induced anal disorder
+medication-anal>=1.0.0
+elimination>=1.0.0
+sphincter>=1.0.0
+
+# Medication induced cardiovascular disorder
+medication-cardiovascular>=1.0.0
+heart>=1.0.0
+blood-vessels>=1.0.0
+
+# Medication induced heart disorder
+medication-heart>=1.0.0
+cardiac>=1.0.0
+rhythm>=1.0.0
+
+# Medication induced blood pressure disorder
+medication-blood-pressure>=1.0.0
+hypertension>=1.0.0
+hypotension>=1.0.0
+
+# Medication induced vascular disorder
+medication-vascular>=1.0.0
+arteries>=1.0.0
+veins>=1.0.0
+
+# Medication induced respiratory disorder
+medication-respiratory>=1.0.0
+lungs>=1.0.0
+breathing>=1.0.0
+
+# Medication induced pulmonary disorder
+medication-pulmonary>=1.0.0
+lungs>=1.0.0
+gas-exchange>=1.0.0
+
+# Medication induced bronchial disorder
+medication-bronchial>=1.0.0
+airways>=1.0.0
+asthma>=1.0.0
+
+# Medication induced nasal disorder
+medication-nasal>=1.0.0
+nose>=1.0.0
+sinuses>=1.0.0
+
+# Medication induced throat disorder
+medication-throat>=1.0.0
+pharynx>=1.0.0
+larynx>=1.0.0
+
+# Medication induced renal disorder
+medication-renal>=1.0.0
+kidneys>=1.0.0
+filtration>=1.0.0
+
+# Medication induced urinary disorder
+medication-urinary>=1.0.0
+bladder>=1.0.0
+urethra>=1.0.0
+
+# Medication induced genital disorder
+medication-genital>=1.0.0
+reproductive>=1.0.0
+sexual>=1.0.0
+
+# Medication induced reproductive disorder
+medication-reproductive>=1.0.0
+fertility>=1.0.0
+pregnancy>=1.0.0
+
+# Medication induced endocrine disorder
+medication-endocrine>=1.0.0
+hormones>=1.0.0
+glands>=1.0.0
+
+# Medication induced metabolic disorder
+medication-metabolic>=1.0.0
+metabolism>=1.0.0
+energy>=1.0.0
+
+# Medication induced musculoskeletal disorder
+medication-musculoskeletal>=1.0.0
+muscles>=1.0.0
+bones>=1.0.0
+
+# Medication induced joint disorder
+medication-joint>=1.0.0
+arthritis>=1.0.0
+mobility>=1.0.0
+
+# Medication induced muscle disorder
+medication-muscle>=1.0.0
+myopathy>=1.0.0
+weakness>=1.0.0
+
+# Medication induced bone disorder
+medication-bone>=1.0.0
+osteoporosis>=1.0.0
+fractures>=1.0.0
+
+# Medication induced skin disorder
+medication-skin>=1.0.0
+rash>=1.0.0
+itching>=1.0.0
+
+# Medication induced hair disorder
+medication-hair>=1.0.0
+loss>=1.0.0
+growth>=1.0.0
+
+# Medication induced nail disorder
+medication-nail>=1.0.0
+brittle>=1.0.0
+discoloration>=1.0.0
+
+# Medication induced eye disorder
+medication-eye>=1.0.0
+vision>=1.0.0
+discomfort>=1.0.0
+
+# Medication induced ear disorder
+medication-ear>=1.0.0
+hearing>=1.0.0
+balance>=1.0.0
+
+# Medication induced nose disorder
+medication-nose>=1.0.0
+smell>=1.0.0
+congestion>=1.0.0
+
+# Medication induced mouth disorder
+medication-mouth>=1.0.0
+taste>=1.0.0
+salivation>=1.0.0
+
+# Medication induced tooth disorder
+medication-tooth>=1.0.0
+decay>=1.0.0
+sensitivity>=1.0.0
+
+# Medication induced gum disorder
+medication-gum>=1.0.0
+gingivitis>=1.0.0
+periodontitis>=1.0.0
+
+# Medication induced tongue disorder
+medication-tongue>=1.0.0
+taste>=1.0.0
+movement>=1.0.0
+
+# Medication induced throat disorder
+medication-throat>=1.0.0
+swallowing>=1.0.0
+pain>=1.0.0
+
+# Medication induced voice disorder
+medication-voice>=1.0.0
+hoarseness>=1.0.0
+quality>=1.0.0
+
+# Medication induced breast disorder
+medication-breast>=1.0.0
+lactation>=1.0.0
+tenderness>=1.0.0
+
+# Medication induced genital disorder
+medication-genital>=1.0.0
+sexual-function>=1.0.0
+discomfort>=1.0.0
+
+# Medication induced pregnancy disorder
+medication-pregnancy>=1.0.0
+fetal-development>=1.0.0
+maternal-health>=1.0.0
+
+# Medication induced lactation disorder
+medication-lactation>=1.0.0
+milk-production>=1.0.0
+breastfeeding>=1.0.0
+
+# Medication induced menstrual disorder
+medication-menstrual>=1.0.0
+cycle>=1.0.0
+bleeding>=1.0.0
+
+# Medication induced fertility disorder
+medication-fertility>=1.0.0
+conception>=1.0.0
+reproduction>=1.0.0
+
+# Medication induced sexual disorder
+medication-sexual>=1.0.0
+desire>=1.0.0
+performance>=1.0.0
+
+# Medication induced growth disorder
+medication-growth>=1.0.0
+development>=1.0.0
+height>=1.0.0
+
+# Medication induced aging disorder
+medication-aging>=1.0.0
+senescence>=1.0.0
+longevity>=1.0.0
+
+# Medication induced death
+medication-death>=1.0.0
+fatality>=1.0.0
+mortality>=1.0.0
+
+# Medication induced birth defect
+medication-birth-defect>=1.0.0
+teratogen>=1.0.0
+malformation>=1.0.0
+
+# Medication induced cancer
+medication-cancer>=1.0.0
+carcinogen>=1.0.0
+tumor>=1.0.0
+
+# Medication induced mutation
+medication-mutation>=1.0.0
+genetic>=1.0.0
+change>=1.0.0
+
+# Medication induced allergy
+medication-allergy>=1.0.0
+hypersensitivity>=1.0.0
+reaction>=1.0.0
+
+# Medication induced anaphylaxis
+medication-anaphylaxis>=1.0.0
+severe-allergy>=1.0.0
+shock>=1.0.0
+
+# Medication induced angioedema
+medication-angioedema>=1.0.0
+swelling>=1.0.0
+airway>=1.0.0
+
+# Medication induced urticaria
+medication-urticaria>=1.0.0
+hives>=1.0.0
+itching>=1.0.0
+
+# Medication induced rash
+medication-rash>=1.0.0
+skin-eruption>=1.0.0
+redness>=1.0.0
+
+# Medication induced blister
+medication-blister>=1.0.0
+bubble>=1.0.0
+fluid>=1.0.0
+
+# Medication induced burn
+medication-burn>=1.0.0
+thermal>=1.0.0
+chemical>=1.0.0
+
+# Medication induced frostbite
+medication-frostbite>=1.0.0
+cold>=1.0.0
+injury>=1.0.0
+
+# Medication induced heat stroke
+medication-heat-stroke>=1.0.0
+hyperthermia>=1.0.0
+dehydration>=1.0.0
+
+# Medication induced hypothermia
+medication-hypothermia>=1.0.0
+low-temperature>=1.0.0
+shivering>=1.0.0
+
+# Medication induced dehydration
+medication-dehydration>=1.0.0
+fluid-loss>=1.0.0
+thirst>=1.0.0
+
+# Medication induced edema
+medication-edema>=1.0.0
+swelling>=1.0.0
+fluid-retention>=1.0.0
+
+# Medication induced ascites
+medication-ascites>=1.0.0
+abdominal-fluid>=1.0.0
+swelling>=1.0.0
+
+# Medication induced pleural effusion
+medication-pleural-effusion>=1.0.0
+lung-fluid>=1.0.0
+breathing>=1.0.0
+
+# Medication induced pericardial effusion
+medication-pericardial-effusion>=1.0.0
+heart-fluid>=1.0.0
+compression>=1.0.0
+
+# Medication induced joint effusion
+medication-joint-effusion>=1.0.0
+joint-fluid>=1.0.0
+swelling>=1.0.0
+
+# Medication induced lymph edema
+medication-lymph-edema>=1.0.0
+lymph-fluid>=1.0.0
+swelling>=1.0.0
+
+# Medication induced hemorrhage
+medication-hemorrhage>=1.0.0
+bleeding>=1.0.0
+blood-loss>=1.0.0
+
+# Medication induced thrombosis
+medication-thrombosis>=1.0.0
+clot>=1.0.0
+blockage>=1.0.0
+
+# Medication induced embolism
+medication-embolism>=1.0.0
+clot-travel>=1.0.0
+blockage>=1.0.0
+
+# Medication induced stroke
+medication-stroke>=1.0.0
+brain-attack>=1.0.0
+ischemia>=1.0.0
+
+# Medication induced heart attack
+medication-heart-attack>=1.0.0
+myocardial-infarction>=1.0.0
+coronary>=1.0.0
+
+# Medication induced arrhythmia
+medication-arrhythmia>=1.0.0
+irregular-heartbeat>=1.0.0
+rhythm>=1.0.0
+
+# Medication induced hypertension
+medication-hypertension>=1.0.0
+high-blood-pressure>=1.0.0
+vascular>=1.0.0
+
+# Medication induced hypotension
+medication-hypotension>=1.0.0
+low-blood-pressure>=1.0.0
+dizziness>=1.0.0
+
+# Medication induced tachycardia
+medication-tachycardia>=1.0.0
+fast-heart-rate>=1.0.0
+palpitations>=1.0.0
+
+# Medication induced bradycardia
+medication-bradycardia>=1.0.0
+slow-heart-rate>=1.0.0
+fatigue>=1.0.0
+
+# Medication induced ischemia
+medication-ischemia>=1.0.0
+reduced-blood-flow>=1.0.0
+oxygen-deprivation>=1.0.0
+
+# Medication induced infarction
+medication-infarction>=1.0.0
+tissue-death>=1.0.0
+necrosis>=1.0.0
+
+# Medication induced necrosis
+medication-necrosis>=1.0.0
+cell-death>=1.0.0
+tissue>=1.0.0
+
+# Medication induced apoptosis
+medication-apoptosis>=1.0.0
+programmed-cell-death>=1.0.0
+suicide>=1.0.0
+
+# Medication induced autophagy
+medication-autophagy>=1.0.0
+self-eating>=1.0.0
+recycling>=1.0.0
+
+# Medication induced inflammation
+medication-inflammation>=1.0.0
+swelling>=1.0.0
+redness>=1.0.0
+
+# Medication induced infection
+medication-infection>=1.0.0
+pathogen>=1.0.0
+immune-response>=1.0.0
+
+# Medication induced sepsis
+medication-sepsis>=1.0.0
+blood-infection>=1.0.0
+systemic>=1.0.0
+
+# Medication induced shock
+medication-shock>=1.0.0
+circulatory-collapse>=1.0.0
+organ-failure>=1.0.0
+
+# Medication induced coma
+medication-coma>=1.0.0
+unconsciousness>=1.0.0
+brain>=1.0.0
+
+# Medication induced seizure
+medication-seizure>=1.0.0
+convulsion>=1.0.0
+electrical>=1.0.0
+
+# Medication induced paralysis
+medication-paralysis>=1.0.0
+immobility>=1.0.0
+nerve-damage>=1.0.0
+
+# Medication induced neuropathy
+medication-neuropathy>=1.0.0
+nerve-damage>=1.0.0
+numbness>=1.0.0
+
+# Medication induced myopathy
+medication-myopathy>=1.0.0
+muscle-damage>=1.0.0
+weakness>=1.0.0
+
+# Medication induced cardiomyopathy
+medication-cardiomyopathy>=1.0.0
+heart-muscle-damage>=1.0.0
+function>=1.0.0
+
+# Medication induced hepatotoxicity
+medication-hepatotoxicity>=1.0.0
+liver-damage>=1.0.0
+toxicity>=1.0.0
+
+# Medication induced nephrotoxicity
+medication-nephrotoxicity>=1.0.0
+kidney-damage>=1.0.0
+toxicity>=1.0.0
+
+# Medication induced ototoxicity
+medication-ototoxicity>=1.0.0
+ear-damage>=1.0.0
+hearing-loss>=1.0.0
+
+# Medication induced vestibulotoxicity
+medication-vestibulotoxicity>=1.0.0
+balance-damage>=1.0.0
+dizziness>=1.0.0
+
+# Medication induced retinopathy
+medication-retinopathy>=1.0.0
+eye-damage>=1.0.0
+vision-loss>=1.0.0
+
+# Medication induced cataract
+medication-cataract>=1.0.0
+lens-opacity>=1.0.0
+vision>=1.0.0
+
+# Medication induced glaucoma
+medication-glaucoma>=1.0.0
+eye-pressure>=1.0.0
+optic-nerve>=1.0.0
+
+# Medication induced macular degeneration
+medication-macular>=1.0.0
+retina-damage>=1.0.0
+central-vision>=1.0.0
+
+# Medication induced hearing loss
+medication-hearing-loss>=1.0.0
+ototoxicity>=1.0.0
+deafness>=1.0.0
+
+# Medication induced tinnitus
+medication-tinnitus>=1.0.0
+ringing>=1.0.0
+noise>=1.0.0
+
+# Medication induced vertigo
+medication-vertigo>=1.0.0
+dizziness>=1.0.0
+spinning>=1.0.0
+
+# Medication induced nausea
+medication-nausea>=1.0.0
+sickness>=1.0.0
+vomiting>=1.0.0
+
+# Medication induced vomiting
+medication-vomiting>=1.0.0
+emesis>=1.0.0
+sickness>=1.0.0
+
+# Medication induced diarrhea
+medication-diarrhea>=1.0.0
+loose-stools>=1.0.0
+dehydration>=1.0.0
+
+# Medication induced constipation
+medication-constipation>=1.0.0
+hard-stools>=1.0.0
+infrequent>=1.0.0
+
+# Medication induced abdominal pain
+medication-abdominal-pain>=1.0.0
+stomach-ache>=1.0.0
+discomfort>=1.0.0
+
+# Medication induced headache
+medication-headache>=1.0.0
+cephalalgia>=1.0.0
+pain>=1.0.0
+
+# Medication induced migraine
+medication-migraine>=1.0.0
+severe-headache>=1.0.0
+aura>=1.0.0
+
+# Medication induced dizziness
+medication-dizziness>=1.0.0
+lightheadedness>=1.0.0
+vertigo>=1.0.0
+
+# Medication induced fatigue
+medication-fatigue>=1.0.0
+tiredness>=1.0.0
+weakness>=1.0.0
+
+# Medication induced insomnia
+medication-insomnia>=1.0.0
+sleeplessness>=1.0.0
+wakefulness>=1.0.0
+
+# Medication induced somnolence
+medication-somnolence>=1.0.0
+sleepiness>=1.0.0
+drowsiness>=1.0.0
+
+# Medication induced confusion
+medication-confusion>=1.0.0
+disorientation>=1.0.0
+cognitive>=1.0.0
+
+# Medication induced memory loss
+medication-memory-loss>=1.0.0
+amnesia>=1.0.0
+forgetfulness>=1.0.0
+
+# Medication induced concentration difficulty
+medication-concentration>=1.0.0
+focus>=1.0.0
+attention>=1.0.0
+
+# Medication induced hallucination
+medication-hallucination>=1.0.0
+perception>=1.0.0
+sensory>=1.0.0
+
+# Medication induced delusion
+medication-delusion>=1.0.0
+belief>=1.0.0
+reality>=1.0.0
+
+# Medication induced paranoia
+medication-paranoia>=1.0.0
+suspicion>=1.0.0
+distrust>=1.0.0
+
+# Medication induced anxiety
+medication-anxiety>=1.0.0
+worry>=1.0.0
+fear>=1.0.0
+
+# Medication induced depression
+medication-depression>=1.0.0
+sadness>=1.0.0
+hopelessness>=1.0.0
+
+# Medication induced mania
+medication-mania>=1.0.0
+euphoria>=1.0.0
+energy>=1.0.0
+
+# Medication induced irritability
+medication-irritability>=1.0.0
+agitation>=1.0.0
+anger>=1.0.0
+
+# Medication induced aggression
+medication-aggression>=1.0.0
+violence>=1.0.0
+hostility>=1.0.0
+
+# Medication induced suicidal ideation
+medication-suicidal>=1.0.0
+self-harm>=1.0.0
+thoughts>=1.0.0
+
+# Medication induced homicidal ideation
+medication-homicidal>=1.0.0
+harm-others>=1.0.0
+thoughts>=1.0.0
+
+# Medication induced psychosis
+medication-psychosis>=1.0.0
+reality-break>=1.0.0
+hallucinations>=1.0.0
+
+# Medication induced schizophrenia
+medication-schizophrenia>=1.0.0
+chronic-psychosis>=1.0.0
+disorganized>=1.0.0
+
+# Medication induced bipolar disorder
+medication-bipolar>=1.0.0
+mood-swings>=1.0.0
+episodes>=1.0.0
+
+# Medication induced major depressive disorder
+medication-mdd>=1.0.0
+clinical-depression>=1.0.0
+persistent>=1.0.0
+
+# Medication induced generalized anxiety disorder
+medication-gad>=1.0.0
+chronic-worry>=1.0.0
+excessive>=1.0.0
+
+# Medication induced panic disorder
+medication-panic>=1.0.0
+panic-attacks>=1.0.0
+fear>=1.0.0
+
+# Medication induced obsessive compulsive disorder
+medication-ocd>=1.0.0
+obsessions>=1.0.0
+compulsions>=1.0.0
+
+# Medication induced post traumatic stress disorder
+medication-ptsd>=1.0.0
+trauma>=1.0.0
+flashbacks>=1.0.0
+
+# Medication induced attention deficit hyperactivity disorder
+medication-adhd>=1.0.0
+inattention>=1.0.0
+hyperactivity>=1.0.0
+
+# Medication induced autism spectrum disorder
+medication-autism>=1.0.0
+social-communication>=1.0.0
+restricted-interests>=1.0.0
+
+# Medication induced intellectual disability
+medication-intellectual-disability>=1.0.0
+cognitive-impairment>=1.0.0
+adaptive-functioning>=1.0.0
+
+# Medication induced dementia
+medication-dementia>=1.0.0
+cognitive-decline>=1.0.0
+memory-loss>=1.0.0
+
+# Medication induced alzheimer disease
+medication-alzheimer>=1.0.0
+neurodegenerative>=1.0.0
+plaques>=1.0.0
+
+# Medication induced parkinson disease
+medication-parkinson>=1.0.0
+movement-disorder>=1.0.0
+dopamine>=1.0.0
+
+# Medication induced huntington disease
+medication-huntington>=1.0.0
+genetic>=1.0.0
+chorea>=1.0.0
+
+# Medication induced amyotrophic lateral sclerosis
+medication-als>=1.0.0
+motor-neuron>=1.0.0
+degeneration>=1.0.0
+
+# Medication induced multiple sclerosis
+medication-ms>=1.0.0
+autoimmune>=1.0.0
+demyelination>=1.0.0
+
+# Medication induced epilepsy
+medication-epilepsy>=1.0.0
+seizures>=1.0.0
+electrical>=1.0.0
+
+# Medication induced stroke
+medication-stroke>=1.0.0
+cerebrovascular-accident>=1.0.0
+brain-damage>=1.0.0
+
+# Medication induced transient ischemic attack
+medication-tia>=1.0.0
+mini-stroke>=1.0.0
+temporary>=1.0.0
+
+# Medication induced cerebral aneurysm
+medication-aneurysm>=1.0.0
+brain-vessel>=1.0.0
+rupture>=1.0.0
+
+# Medication induced arteriovenous malformation
+medication-avm>=1.0.0
+brain-vessels>=1.0.0
+abnormal>=1.0.0
+
+# Medication induced cavernous malformation
+medication-cavernous>=1.0.0
+brain-vessels>=1.0.0
+abnormal>=1.0.0
+
+# Medication induced brain tumor
+medication-brain-tumor>=1.0.0
+neoplasm>=1.0.0
+growth>=1.0.0
+
+# Medication induced meningioma
+medication-meningioma>=1.0.0
+brain-membrane>=1.0.0
+tumor>=1.0.0
+
+# Medication induced glioma
+medication-glioma>=1.0.0
+brain-tissue>=1.0.0
+tumor>=1.0.0
+
+# Medication induced glioblastoma
+medication-glioblastoma>=1.0.0
+brain-cancer>=1.0.0
+aggressive>=1.0.0
+
+# Medication induced medulloblastoma
+medication-medulloblastoma>=1.0.0
+brain-cancer>=1.0.0
+childhood>=1.0.0
+
+# Medication induced neuroblastoma
+medication-neuroblastoma>=1.0.0
+nerve-cancer>=1.0.0
+childhood>=1.0.0
+
+# Medication induced retinoblastoma
+medication-retinoblastoma>=1.0.0
+eye-cancer>=1.0.0
+childhood>=1.0.0
+
+# Medication induced wilms tumor
+medication-wilms>=1.0.0
+kidney-cancer>=1.0.0
+childhood>=1.0.0
+
+# Medication induced hepatoblastoma
+medication-hepatoblastoma>=1.0.0
+liver-cancer>=1.0.0
+childhood>=1.0.0
+
+# Medication induced rhabdomyosarcoma
+medication-rhabdomyosarcoma>=1.0.0
+muscle-cancer>=1.0.0
+childhood>=1.0.0
+
+# Medication induced osteosarcoma
+medication-osteosarcoma>=1.0.0
+bone-cancer>=1.0.0
+adolescent>=1.0.0
+
+# Medication induced ewing sarcoma
+medication-ewing>=1.0.0
+bone-cancer>=1.0.0
+childhood>=1.0.0
+
+# Medication induced leukemia
+medication-leukemia>=1.0.0
+blood-cancer>=1.0.0
+white-cells>=1.0.0
+
+# Medication induced lymphoma
+medication-lymphoma>=1.0.0
+lymph-cancer>=1.0.0
+immune-system>=1.0.0
+
+# Medication induced hodgkin lymphoma
+medication-hodgkin>=1.0.0
+lymph-cancer>=1.0.0
+reed-sternberg>=1.0.0
+
+# Medication induced non hodgkin lymphoma
+medication-non-hodgkin>=1.0.0
+lymph-cancer>=1.0.0
+various>=1.0.0
+
+# Medication induced multiple myeloma
+medication-multiple-myeloma>=1.0.0
+plasma-cell-cancer>=1.0.0
+bone-marrow>=1.0.0
+
+# Medication induced myelodysplastic syndrome
+medication-mds>=1.0.0
+blood-disorder>=1.0.0
+pre-leukemia>=1.0.0
+
+# Medication induced myeloproliferative disorder
+medication-mpd>=1.0.0
+blood-disorder>=1.0.0
+overproduction>=1.0.0
+
+# Medication induced aplastic anemia
+medication-aplastic-anemia>=1.0.0
+bone-marrow-failure>=1.0.0
+pancytopenia>=1.0.0
+
+# Medication induced hemolytic anemia
+medication-hemolytic-anemia>=1.0.0
+red-cell-destruction>=1.0.0
+breakdown>=1.0.0
+
+# Medication induced sickle cell disease
+medication-sickle-cell>=1.0.0
+red-cell-shape>=1.0.0
+genetic>=1.0.0
+
+# Medication induced thalassemia
+medication-thalassemia>=1.0.0
+hemoglobin>=1.0.0
+genetic>=1.0.0
+
+# Medication induced glucose 6 phosphate dehydrogenase deficiency
+medication-g6pd>=1.0.0
+enzyme-deficiency>=1.0.0
+hemolytic>=1.0.0
+
+# Medication induced hemophilia
+medication-hemophilia>=1.0.0
+clotting-factor>=1.0.0
+bleeding>=1.0.0
+
+# Medication induced von willebrand disease
+medication-vwd>=1.0.0
+clotting-factor>=1.0.0
+bleeding>=1.0.0
+
+# Medication induced thrombocytopenia
+medication-thrombocytopenia>=1.0.0
+low-platelets>=1.0.0
+bleeding>=1.0.0
+
+# Medication induced disseminated intravascular coagulation
+medication-dic>=1.0.0
+clotting>=1.0.0
+bleeding>=1.0.0
+
+# Medication induced deep vein thrombosis
+medication-dvt>=1.0.0
+leg-clot>=1.0.0
+pulmonary-embolism>=1.0.0
+
+# Medication induced pulmonary embolism
+medication-pe>=1.0.0
+lung-clot>=1.0.0
+breathing>=1.0.0
+
+# Medication induced myocardial infarction
+medication-mi>=1.0.0
+heart-attack>=1.0.0
+coronary-artery>=1.0.0
+
+# Medication induced angina
+medication-angina>=1.0.0
+chest-pain>=1.0.0
+heart>=1.0.0
+
+# Medication induced heart failure
+medication-heart-failure>=1.0.0
+pump-failure>=1.0.0
+fluid>=1.0.0
+
+# Medication induced cardiomyopathy
+medication-cardiomyopathy>=1.0.0
+heart-muscle>=1.0.0
+weakness>=1.0.0
+
+# Medication induced myocarditis
+medication-myocarditis>=1.0.0
+heart-inflammation>=1.0.0
+damage>=1.0.0
+
+# Medication induced pericarditis
+medication-pericarditis>=1.0.0
+heart-sac-inflammation>=1.0.0
+pain>=1.0.0
+
+# Medication induced endocarditis
+medication-endocarditis>=1.0.0
+heart-valve-infection>=1.0.0
+bacteria>=1.0.0
+
+# Medication induced valvular heart disease
+medication-valvular>=1.0.0
+heart-valve>=1.0.0
+dysfunction>=1.0.0
+
+# Medication induced congenital heart disease
+medication-congenital-heart>=1.0.0
+birth-defect>=1.0.0
+structure>=1.0.0
+
+# Medication induced arrhythmia
+medication-arrhythmia>=1.0.0
+irregular-rhythm>=1.0.0
+electrical>=1.0.0
+
+# Medication induced atrial fibrillation
+medication-afib>=1.0.0
+irregular-rhythm>=1.0.0
+stroke-risk>=1.0.0
+
+# Medication induced ventricular fibrillation
+medication-vfib>=1.0.0
+deadly-rhythm>=1.0.0
+cardiac-arrest>=1.0.0
+
+# Medication induced supraventricular tachycardia
+medication-svt>=1.0.0
+fast-rhythm>=1.0.0
+palpitations>=1.0.0
+
+# Medication induced ventricular tachycardia
+medication-vtach>=1.0.0
+fast-dangerous-rhythm>=1.0.0
+arrest-risk>=1.0.0
+
+# Medication induced bradycardia
+medication-bradycardia>=1.0.0
+slow-rhythm>=1.0.0
+fatigue>=1.0.0
+
+# Medication induced heart block
+medication-heart-block>=1.0.0
+electrical-block>=1.0.0
+slow-rhythm>=1.0.0
+
+# Medication induced bundle branch block
+medication-bbb>=1.0.0
+electrical-block>=1.0.0
+ventricles>=1.0.0
+
+# Medication induced long qt syndrome
+medication-long-qt>=1.0.0
+electrical-delay>=1.0.0
+arrhythmia-risk>=1.0.0
+
+# Medication induced short qt syndrome
+medication-short-qt>=1.0.0
+electrical-short>=1.0.0
+arrhythmia-risk>=1.0.0
+
+# Medication induced brugada syndrome
+medication-brugada>=1.0.0
+electrical-abnormality>=1.0.0
+sudden-death-risk>=1.0.0
+
+# Medication induced wolff parkinson white syndrome
+medication-wpw>=1.0.0
+extra-pathway>=1.0.0
+arrhythmia-risk>=1.0.0
+
+# Medication induced hypertension
+medication-hypertension>=1.0.0
+high-blood-pressure>=1.0.0
+cardiovascular-risk>=1.0.0
+
+# Medication induced hypotension
+medication-hypotension>=1.0.0
+low-blood-pressure>=1.0.0
+dizziness>=1.0.0
+
+# Medication induced orthostatic hypotension
+medication-orthostatic>=1.0.0
+positional-low-pressure>=1.0.0
+fainting>=1.0.0
+
+# Medication induced pulmonary hypertension
+medication-pulmonary-hypertension>=1.0.0
+lung-vessel-pressure>=1.0.0
+heart-strain>=1.0.0
+
+# Medication induced portal hypertension
+medication-portal-hypertension>=1.0.0
+liver-vessel-pressure>=1.0.0
+varices>=1.0.0
+
+# Medication induced atherosclerosis
+medication-atherosclerosis>=1.0.0
+plaque-buildup>=1.0.0
+narrowing>=1.0.0
+
+# Medication induced coronary artery disease
+medication-cad>=1.0.0
+heart-vessel-disease>=1.0.0
+angina>=1.0.0
+
+# Medication induced peripheral artery disease
+medication-pad>=1.0.0
+limb-vessel-disease>=1.0.0
+claudication>=1.0.0
+
+# Medication induced carotid artery disease
+medication-carotid>=1.0.0
+neck-vessel-disease>=1.0.0
+stroke-risk>=1.0.0
+
+# Medication induced renal artery stenosis
+medication-renal-artery>=1.0.0
+kidney-vessel-narrowing>=1.0.0
+hypertension>=1.0.0
+
+# Medication induced aortic aneurysm
+medication-aortic-aneurysm>=1.0.0
+vessel-bulge>=1.0.0
+rupture-risk>=1.0.0
+
+# Medication induced aortic dissection
+medication-aortic-dissection>=1.0.0
+vessel-tear>=1.0.0
+emergency>=1.0.0
+
+# Medication induced varicose veins
+medication-varicose>=1.0.0
+swollen-vessels>=1.0.0
+cosmetic>=1.0.0
+
+# Medication induced deep vein thrombosis
+medication-dvt>=1.0.0
+leg-clot>=1.0.0
+pulmonary-risk>=1.0.0
+
+# Medication induced superficial thrombophlebitis
+medication-thrombophlebitis>=1.0.0
+vein-inflammation>=1.0.0
+clot>=1.0.0
+
+# Medication induced lymphedema
+medication-lymphedema>=1.0.0
+lymph-swelling>=1.0.0
+chronic>=1.0.0
+
+# Medication induced vasculitis
+medication-vasculitis>=1.0.0
+vessel-inflammation>=1.0.0
+autoimmune>=1.0.0
+
+# Medication induced raynaud phenomenon
+medication-raynaud>=1.0.0
+vessel-spasm>=1.0.0
+cold-fingers>=1.0.0
+
+# Medication induced buerger disease
+medication-buerger>=1.0.0
+vessel-inflammation>=1.0.0
+smoking-related>=1.0.0
+
+# Medication induced takayasu arteritis
+medication-takayasu>=1.0.0
+large-vessel-inflammation>=1.0.0
+autoimmune>=1.0.0
+
+# Medication induced giant cell arteritis
+medication-giant-cell>=1.0.0
+large-vessel-inflammation>=1.0.0
+temporal-artery>=1.0.0
+
+# Medication induced polyarteritis nodosa
+medication-pan>=1.0.0
+medium-vessel-inflammation>=1.0.0
+autoimmune>=1.0.0
+
+# Medication induced kawasaki disease
+medication-kawasaki>=1.0.0
+vessel-inflammation>=1.0.0
+children>=1.0.0
+
+# Medication induced henoch schonlein purpura
+medication-hsp>=1.0.0
+small-vessel-inflammation>=1.0.0
+children>=1.0.0
+
+# Medication induced cryoglobulinemia
+medication-cryoglobulinemia>=1.0.0
+protein-blood>=1.0.0
+cold-precipitation>=1.0.0
+
+# Medication induced sickle cell disease
+medication-sickle-cell>=1.0.0
+red-cell-shape>=1.0.0
+genetic>=1.0.0
+
+# Medication induced thalassemia
+medication-thalassemia>=1.0.0
+hemoglobin-production>=1.0.0
+genetic>=1.0.0
+
+# Medication induced glucose 6 phosphate dehydrogenase deficiency
+medication-g6pd>=1.0.0
+enzyme-deficiency>=1.0.0
+hemolytic>=1.0.0
+
+# Medication induced hereditary spherocytosis
+medication-spherocytosis>=1.0.0
+red-cell-shape>=1.0.0
+genetic>=1.0.0
+
+# Medication induced hereditary elliptocytosis
+medication-elliptocytosis>=1.0.0
+red-cell-shape>=1.0.0
+genetic>=1.0.0
+
+# Medication induced paroxysmal nocturnal hemoglobinuria
+medication-pnh>=1.0.0
+red-cell-destruction>=1.0.0
+genetic>=1.0.0
+
+# Medication induced autoimmune hemolytic anemia
+medication-aiha>=1.0.0
+red-cell-destruction>=1.0.0
+autoimmune>=1.0.0
+
+# Medication induced cold agglutinin disease
+medication-cold-agglutinin>=1.0.0
+red-cell-clumping>=1.0.0
+cold>=1.0.0
+
+# Medication induced warm agglutinin disease
+medication-warm-agglutinin>=1.0.0
+red-cell-clumping>=1.0.0
+warm>=1.0.0
+
+# Medication induced microangiopathic hemolytic anemia
+medication-maha>=1.0.0
+red-cell-fragmentation>=1.0.0
+small-vessels>=1.0.0
+
+# Medication induced thrombotic thrombocytopenic purpura
+medication-ttp>=1.0.0
+platelet-clumping>=1.0.0
+microangiopathy>=1.0.0
+
+# Medication induced hemolytic uremic syndrome
+medication-hus>=1.0.0
+kidney-failure>=1.0.0
+microangiopathy>=1.0.0
+
+# Medication induced disseminated intravascular coagulation
+medication-dic>=1.0.0
+clotting-consumption>=1.0.0
+bleeding>=1.0.0
+
+# Medication induced hemophagocytic lymphohistiocytosis
+medication-hlh>=1.0.0
+immune-overactivation>=1.0.0
+cytokine-storm>=1.0.0
+
+# Medication induced mast cell activation syndrome
+medication-mcas>=1.0.0
+allergic-overreaction>=1.0.0
+multiple-symptoms>=1.0.0
+
+# Medication induced systemic mastocytosis
+medication-systemic-mastocytosis>=1.0.0
+mast-cell-overgrowth>=1.0.0
+allergic-symptoms>=1.0.0
+
+# Medication induced anaphylaxis
+medication-anaphylaxis>=1.0.0
+severe-allergic-reaction>=1.0.0
+shock>=1.0.0
+
+# Medication induced angioedema
+medication-angioedema>=1.0.0
+deep-swelling>=1.0.0
+airway-compromise>=1.0.0
+
+# Medication induced urticaria
+medication-urticaria>=1.0.0
+hives>=1.0.0
+itching>=1.0.0
+
+# Medication induced atopic dermatitis
+medication-atopic-dermatitis>=1.0.0
+eczema>=1.0.0
+allergic-skin>=1.0.0
+
+# Medication induced contact dermatitis
+medication-contact-dermatitis>=1.0.0
+irritant-skin>=1.0.0
+allergic-skin>=1.0.0
+
+# Medication induced psoriasis
+medication-psoriasis>=1.0.0
+skin-condition>=1.0.0
+autoimmune>=1.0.0
+
+# Medication induced rosacea
+medication-rosacea>=1.0.0
+facial-redness>=1.0.0
+inflammatory>=1.0.0
+
+# Medication induced acne
+medication-acne>=1.0.0
+skin-condition>=1.0.0
+hormonal>=1.0.0
+
+# Medication induced alopecia
+medication-alopecia>=1.0.0
+hair-loss>=1.0.0
+autoimmune>=1.0.0
+
+# Medication induced hirsutism
+medication-hirsutism>=1.0.0
+excess-hair>=1.0.0
+hormonal>=1.0.0
+
+# Medication induced hypertrichosis
+medication-hypertrichosis>=1.0.0
+excess-hair>=1.0.0
+medication-induced>=1.0.0
+
+# Medication induced vitiligo
+medication-vitiligo>=1.0.0
+skin-depigmentation>=1.0.0
+autoimmune>=1.0.0
+
+# Medication induced melasma
+medication-melasma>=1.0.0
+skin-darkening>=1.0.0
+hormonal>=1.0.0
+
+# Medication induced skin cancer
+medication-skin-cancer>=1.0.0
+melanoma>=1.0.0
+basal-cell>=1.0.0
+
+# Medication induced basal cell carcinoma
+medication-bcc>=1.0.0
+skin-cancer>=1.0.0
+common>=1.0.0
+
+# Medication induced squamous cell carcinoma
+medication-scc>=1.0.0
+skin-cancer>=1.0.0
+scaly>=1.0.0
+
+# Medication induced melanoma
+medication-melanoma>=1.0.0
+skin-cancer>=1.0.0
+pigment>=1.0.0
+
+# Medication induced merkel cell carcinoma
+medication-merkel-cell>=1.0.0
+skin-cancer>=1.0.0
+rare>=1.0.0
+
+# Medication induced dermatofibrosarcoma protuberans
+medication-dfps>=1.0.0
+skin-cancer>=1.0.0
+rare>=1.0.0
+
+# Medication induced kaposi sarcoma
+medication-kaposi>=1.0.0
+skin-cancer>=1.0.0
+hiv-related>=1.0.0
+
+# Medication induced cutaneous t cell lymphoma
+medication-ctcl>=1.0.0
+skin-cancer>=1.0.0
+lymphoma>=1.0.0
+
+# Medication induced sezary syndrome
+medication-sezary>=1.0.0
+skin-cancer>=1.0.0
+leukemia>=1.0.0
+
+# Medication induced paget disease
+medication-paget>=1.0.0
+skin-condition>=1.0.0
+nipple>=1.0.0
+
+# Medication induced bowen disease
+medication-bowen>=1.0.0
+skin-condition>=1.0.0
+pre-cancerous>=1.0.0
+
+# Medication induced actinic keratosis
+medication-actinic-keratosis>=1.0.0
+skin-condition>=1.0.0
+sun-damage>=1.0.0
+
+# Medication induced seborrheic keratosis
+medication-seborrheic-keratosis>=1.0.0
+skin-condition>=1.0.0
+benign>=1.0.0
+
+# Medication induced keratoacanthoma
+medication-keratoacanthoma>=1.0.0
+skin-condition>=1.0.0
+benign>=1.0.0
+
+# Medication induced dermatofibroma
+medication-dermatofibroma>=1.0.0
+skin-condition>=1.0.0
+benign>=1.0.0
+
+# Medication induced lipoma
+medication-lipoma>=1.0.0
+fat-tumor>=1.0.0
+benign>=1.0.0
+
+# Medication induced fibroma
+medication-fibroma>=1.0.0
+connective-tissue-tumor>=1.0.0
+benign>=1.0.0
+
+# Medication induced hemangioma
+medication-hemangioma>=1.0.0
+blood-vessel-tumor>=1.0.0
+benign>=1.0.0
+
+# Medication induced lymphangioma
+medication-lymphangioma>=1.0.0
+lymph-vessel-tumor>=1.0.0
+benign>=1.0.0
+
+# Medication induced nevus
+medication-nevus>=1.0.0
+mole>=1.0.0
+pigmented>=1.0.0
+
+# Medication induced melanoma in situ
+medication-mis>=1.0.0
+skin-cancer>=1.0.0
+early-stage>=1.0.0
+
+# Medication induced lentigo maligna
+medication-lentigo-maligna>=1.0.0
+skin-cancer>=1.0.0
+face>=1.0.0
+
+# Medication induced acral lentiginous melanoma
+medication-alm>=1.0.0
+skin-cancer>=1.0.0
+palms-soles>=1.0.0
+
+# Medication induced nodular melanoma
+medication-nodular-melanoma>=1.0.0
+skin-cancer>=1.0.0
+aggressive>=1.0.0
+
+# Medication induced superficial spreading melanoma
+medication-ssm>=1.0.0
+skin-cancer>=1.0.0
+common>=1.0.0
+
+# Medication induced desmoplastic melanoma
+medication-desmoplastic-melanoma>=1.0.0
+skin-cancer>=1.0.0
+scar-like>=1.0.0
+
+# Medication induced amelanotic melanoma
+medication-amelanotic-melanoma>=1.0.0
+skin-cancer>=1.0.0
+no-pigment>=1.0.0
+
+# Medication induced ocular melanoma
+medication-ocular-melanoma>=1.0.0
+eye-cancer>=1.0.0
+uvea>=1.0.0
+
+# Medication induced conjunctival melanoma
+medication-conjunctival-melanoma>=1.0.0
+eye-cancer>=1.0.0
+conjunctiva>=1.0.0
+
+# Medication induced choroidal melanoma
+medication-choroidal-melanoma>=1.0.0
+eye-cancer>=1.0.0
+choroid>=1.0.0
+
+# Medication induced ciliary body melanoma
+medication-ciliary-melanoma>=1.0.0
+eye-cancer>=1.0.0
+ciliary-body>=1.0.0
+
+# Medication induced iris melanoma
+medication-iris-melanoma>=1.0.0
+eye-cancer>=1.0.0
+iris>=1.0.0
+
+# Medication induced eyelid melanoma
+medication-eyelid-melanoma>=1.0.0
+eye-cancer>=1.0.0
+eyelid>=1.0.0
+
+# Medication induced orbital melanoma
+medication-orbital-melanoma>=1.0.0
+eye-cancer>=1.0.0
+orbit>=1.0.0
+
+# Medication induced uveal melanoma
+medication-uveal-melanoma>=1.0.0
+eye-cancer>=1.0.0
+uvea>=1.0.0
+
+# Medication induced retinal melanoma
+medication-retinal-melanoma>=1.0.0
+eye-cancer>=1.0.0
+retina>=1.0.0
+
+# Medication induced optic nerve melanoma
+medication-optic-nerve-melanoma>=1.0.0
+eye-cancer>=1.0.0
+optic-nerve>=1.0.0
+
+# Medication induced lacrimal gland melanoma
+medication-lacrimal-melanoma>=1.0.0
+eye-cancer>=1.0.0
+lacrimal-gland>=1.0.0
+
+# Medication induced extraocular melanoma
+medication-extraocular-melanoma>=1.0.0
+eye-cancer>=1.0.0
+outside-eye>=1.0.0
+
+# Medication induced mucosal melanoma
+medication-mucosal-melanoma>=1.0.0
+cancer>=1.0.0
+mucous-membrane>=1.0.0
+
+# Medication induced vulvar melanoma
+medication-vulvar-melanoma>=1.0.0
+cancer>=1.0.0
+vulva>=1.0.0
+
+# Medication induced vaginal melanoma
+medication-vaginal-melanoma>=1.0.0
+cancer>=1.0.0
+vagina>=1.0.0
+
+# Medication induced cervical melanoma
+medication-cervical-melanoma>=1.0.0
+cancer>=1.0.0
+cervix>=1.0.0
+
+# Medication induced penile melanoma
+medication-penile-melanoma>=1.0.0
+cancer>=1.0.0
+penis>=1.0.0
+
+# Medication induced scrotal melanoma
+medication-scrotal-melanoma>=1.0.0
+cancer>=1.0.0
+scrotum>=1.0.0
+
+# Medication induced anal melanoma
+medication-anal-melanoma>=1.0.0
+cancer>=1.0.0
+anus>=1.0.0
+
+# Medication induced oral melanoma
+medication-oral-melanoma>=1.0.0
+cancer>=1.0.0
+mouth>=1.0.0
+
+# Medication induced nasal melanoma
+medication-nasal-melanoma>=1.0.0
+cancer>=1.0.0
+nose>=1.0.0
+
+# Medication induced sinus melanoma
+medication-sinus-melanoma>=1.0.0
+cancer>=1.0.0
+sinuses>=1.0.0
+
+# Medication induced pharyngeal melanoma
+medication-pharyngeal-melanoma>=1.0.0
+cancer>=1.0.0
+throat>=1.0.0
+
+# Medication induced laryngeal melanoma
+medication-laryngeal-melanoma>=1.0.0
+cancer>=1.0.0
+voice-box>=1.0.0
+
+# Medication induced esophageal melanoma
+medication-esophageal-melanoma>=1.0.0
+cancer>=1.0.0
+esophagus>=1.0.0
+
+# Medication induced gastric melanoma
+medication-gastric-melanoma>=1.0.0
+cancer>=1.0.0
+stomach>=1.0.0
+
+# Medication induced intestinal melanoma
+medication-intestinal-melanoma>=1.0.0
+cancer>=1.0.0
+intestines>=1.0.0
+
+# Medication induced colorectal melanoma
+medication-colorectal-melanoma>=1.0.0
+cancer>=1.0.0
+colon-rectum>=1.0.0
+
+# Medication induced hepatic melanoma
+medication-hepatic-melanoma>=1.0.0
+cancer>=1.0.0
+liver>=1.0.0
+
+# Medication induced pancreatic melanoma
+medication-pancreatic-melanoma>=1.0.0
+cancer>=1.0.0
+pancreas>=1.0.0
+
+# Medication induced biliary melanoma
+medication-biliary-melanoma>=1.0.0
+cancer>=1.0.0
+bile-ducts>=1.0.0
+
+# Medication induced gallbladder melanoma
+medication-gallbladder-melanoma>=1.0.0
+cancer>=1.0.0
+gallbladder>=1.0.0
+
+# Medication induced renal melanoma
+medication-renal-melanoma>=1.0.0
+cancer>=1.0.0
+kidney>=1.0.0
+
+# Medication induced bladder melanoma
+medication-bladder-melanoma>=1.0.0
+cancer>=1.0.0
+bladder>=1.0.0
+
+# Medication induced ureteral melanoma
+medication-ureteral-melanoma>=1.0.0
+cancer>=1.0.0
+ureter>=1.0.0
+
+# Medication induced urethral melanoma
+medication-urethral-melanoma>=1.0.0
+cancer>=1.0.0
+urethra>=1.0.0
+
+# Medication induced prostatic melanoma
+medication-prostatic-melanoma>=1.0.0
+cancer>=1.0.0
+prostate>=1.0.0
+
+# Medication induced testicular melanoma
+medication-testicular-melanoma>=1.0.0
+cancer>=1.0.0
+testicle>=1.0.0
+
+# Medication induced ovarian melanoma
+medication-ovarian-melanoma>=1.0.0
+cancer>=1.0.0
+ovary>=1.0.0
+
+# Medication induced uterine melanoma
+medication-uterine-melanoma>=1.0.0
+cancer>=1.0.0
+uterus>=1.0.0
+
+# Medication induced endometrial melanoma
+medication-endometrial-melanoma>=1.0.0
+cancer>=1.0.0
+endometrium>=1.0.0
+
+# Medication induced cervical melanoma
+medication-cervical-melanoma>=1.0.0
+cancer>=1.0.0
+cervix>=1.0.0
+
+# Medication induced vaginal melanoma
+medication-vaginal-melanoma>=1.0.0
+cancer>=1.0.0
+vagina>=1.0.0
+
+# Medication induced vulvar melanoma
+medication-vulvar-melanoma>=1.0.0
+cancer>=1.0.0
+vulva>=1.0.0
+
+# Medication induced penile melanoma
+medication-penile-melanoma>=1.0.0
+cancer>=1.0.0
+penis>=1.0.0
+
+# Medication induced scrotal melanoma
+medication-scrotal-melanoma>=1.0.0
+cancer>=1.0.0
+scrotum>=1.0.0
+
+# Medication induced breast melanoma
+medication-breast-melanoma>=1.0.0
+cancer>=1.0.0
+breast>=1.0.0
+
+# Medication induced pulmonary melanoma
+medication-pulmonary-melanoma>=1.0.0
+cancer>=1.0.0
+lung>=1.0.0
+
+# Medication induced pleural melanoma
+medication-pleural-melanoma>=1.0.0
+cancer>=1.0.0
+pleura>=1.0.0
+
+# Medication induced mediastinal melanoma
+medication-mediastinal-melanoma>=1.0.0
+cancer>=1.0.0
+mediastinum>=1.0.0
+
+# Medication induced cardiac melanoma
+medication-cardiac-melanoma>=1.0.0
+cancer>=1.0.0
+heart>=1.0.0
+
+# Medication induced pericardial melanoma
+medication-pericardial-melanoma>=1.0.0
+cancer>=1.0.0
+pericardium>=1.0.0
+
+# Medication induced thymic melanoma
+medication-thymic-melanoma>=1.0.0
+cancer>=1.0.0
+thymus>=1.0.0
+
+# Medication induced thyroid melanoma
+medication-thyroid-melanoma>=1.0.0
+cancer>=1.0.0
+thyroid>=1.0.0
+
+# Medication induced parathyroid melanoma
+medication-parathyroid-melanoma>=1.0.0
+cancer>=1.0.0
+parathyroid>=1.0.0
+
+# Medication induced adrenal melanoma
+medication-adrenal-melanoma>=1.0.0
+cancer>=1.0.0
+adrenal>=1.0.0
+
+# Medication induced pituitary melanoma
+medication-pituitary-melanoma>=1.0.0
+cancer>=1.0.0
+pituitary>=1.0.0
+
+# Medication induced pineal melanoma
+medication-pineal-melanoma>=1.0.0
+cancer>=1.0.0
+pineal>=1.0.0
+
+# Medication induced central nervous system melanoma
+medication-cns-melanoma>=1.0.0
+cancer>=1.0.0
+brain-spinal-cord>=1.0.0
+
+# Medication induced brain melanoma
+medication-brain-melanoma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced spinal cord melanoma
+medication-spinal-cord-melanoma>=1.0.0
+cancer>=1.0.0
+spinal-cord>=1.0.0
+
+# Medication induced meningeal melanoma
+medication-meningeal-melanoma>=1.0.0
+cancer>=1.0.0
+meninges>=1.0.0
+
+# Medication induced cranial nerve melanoma
+medication-cranial-nerve-melanoma>=1.0.0
+cancer>=1.0.0
+cranial-nerves>=1.0.0
+
+# Medication induced peripheral nerve melanoma
+medication-peripheral-nerve-melanoma>=1.0.0
+cancer>=1.0.0
+peripheral-nerves>=1.0.0
+
+# Medication induced autonomic nervous system melanoma
+medication-autonomic-melanoma>=1.0.0
+cancer>=1.0.0
+autonomic-system>=1.0.0
+
+# Medication induced sympathetic nervous system melanoma
+medication-sympathetic-melanoma>=1.0.0
+cancer>=1.0.0
+sympathetic-system>=1.0.0
+
+# Medication induced parasympathetic nervous system melanoma
+medication-parasympathetic-melanoma>=1.0.0
+cancer>=1.0.0
+parasympathetic-system>=1.0.0
+
+# Medication induced neuroendocrine melanoma
+medication-neuroendocrine-melanoma>=1.0.0
+cancer>=1.0.0
+neuroendocrine>=1.0.0
+
+# Medication induced carcinoid tumor
+medication-carcinoid>=1.0.0
+cancer>=1.0.0
+neuroendocrine>=1.0.0
+
+# Medication induced pheochromocytoma
+medication-pheochromocytoma>=1.0.0
+cancer>=1.0.0
+adrenal>=1.0.0
+
+# Medication induced paraganglioma
+medication-paraganglioma>=1.0.0
+cancer>=1.0.0
+neuroendocrine>=1.0.0
+
+# Medication induced neuroblastoma
+medication-neuroblastoma>=1.0.0
+cancer>=1.0.0
+nerve>=1.0.0
+
+# Medication induced ganglioneuroma
+medication-ganglioneuroma>=1.0.0
+cancer>=1.0.0
+nerve>=1.0.0
+
+# Medication induced ganglioneuroblastoma
+medication-ganglioneuroblastoma>=1.0.0
+cancer>=1.0.0
+nerve>=1.0.0
+
+# Medication induced retinoblastoma
+medication-retinoblastoma>=1.0.0
+cancer>=1.0.0
+eye>=1.0.0
+
+# Medication induced medulloblastoma
+medication-medulloblastoma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced ependymoma
+medication-ependymoma>=1.0.0
+cancer>=1.0.0
+brain-spinal-cord>=1.0.0
+
+# Medication induced choroid plexus tumor
+medication-choroid-plexus>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced pineoblastoma
+medication-pineoblastoma>=1.0.0
+cancer>=1.0.0
+pineal>=1.0.0
+
+# Medication induced craniopharyngioma
+medication-craniopharyngioma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced germ cell tumor
+medication-germ-cell>=1.0.0
+cancer>=1.0.0
+reproductive-cells>=1.0.0
+
+# Medication induced teratoma
+medication-teratoma>=1.0.0
+cancer>=1.0.0
+multiple-tissues>=1.0.0
+
+# Medication induced yolk sac tumor
+medication-yolk-sac>=1.0.0
+cancer>=1.0.0
+embryonic>=1.0.0
+
+# Medication induced embryonal carcinoma
+medication-embryonal-carcinoma>=1.0.0
+cancer>=1.0.0
+embryonic>=1.0.0
+
+# Medication induced choriocarcinoma
+medication-choriocarcinoma>=1.0.0
+cancer>=1.0.0
+placental>=1.0.0
+
+# Medication induced seminoma
+medication-seminoma>=1.0.0
+cancer>=1.0.0
+testicle>=1.0.0
+
+# Medication induced dysgerminoma
+medication-dysgerminoma>=1.0.0
+cancer>=1.0.0
+ovary>=1.0.0
+
+# Medication induced endodermal sinus tumor
+medication-endodermal-sinus>=1.0.0
+cancer>=1.0.0
+embryonic>=1.0.0
+
+# Medication induced polyembryoma
+medication-polyembryoma>=1.0.0
+cancer>=1.0.0
+embryonic>=1.0.0
+
+# Medication induced gonadoblastoma
+medication-gonadoblastoma>=1.0.0
+cancer>=1.0.0
+gonad>=1.0.0
+
+# Medication induced hepatoblastoma
+medication-hepatoblastoma>=1.0.0
+cancer>=1.0.0
+liver>=1.0.0
+
+# Medication induced nephroblastoma
+medication-nephroblastoma>=1.0.0
+cancer>=1.0.0
+kidney>=1.0.0
+
+# Medication induced rhabdomyosarcoma
+medication-rhabdomyosarcoma>=1.0.0
+cancer>=1.0.0
+muscle>=1.0.0
+
+# Medication induced leiomyosarcoma
+medication-leiomyosarcoma>=1.0.0
+cancer>=1.0.0
+smooth-muscle>=1.0.0
+
+# Medication induced liposarcoma
+medication-liposarcoma>=1.0.0
+cancer>=1.0.0
+fat>=1.0.0
+
+# Medication induced fibrosarcoma
+medication-fibrosarcoma>=1.0.0
+cancer>=1.0.0
+connective-tissue>=1.0.0
+
+# Medication induced malignant fibrous histiocytoma
+medication-mfh>=1.0.0
+cancer>=1.0.0
+connective-tissue>=1.0.0
+
+# Medication induced dermatofibrosarcoma protuberans
+medication-dfps>=1.0.0
+cancer>=1.0.0
+skin>=1.0.0
+
+# Medication induced angiosarcoma
+medication-angiosarcoma>=1.0.0
+cancer>=1.0.0
+blood-vessels>=1.0.0
+
+# Medication induced hemangiosarcoma
+medication-hemangiosarcoma>=1.0.0
+cancer>=1.0.0
+blood-vessels>=1.0.0
+
+# Medication induced lymphangiosarcoma
+medication-lymphangiosarcoma>=1.0.0
+cancer>=1.0.0
+lymph-vessels>=1.0.0
+
+# Medication induced kaposi sarcoma
+medication-kaposi>=1.0.0
+cancer>=1.0.0
+blood-vessels>=1.0.0
+
+# Medication induced synovial sarcoma
+medication-synovial-sarcoma>=1.0.0
+cancer>=1.0.0
+joint-tissue>=1.0.0
+
+# Medication induced ewing sarcoma
+medication-ewing>=1.0.0
+cancer>=1.0.0
+bone-soft-tissue>=1.0.0
+
+# Medication induced primitive neuroectodermal tumor
+medication-pnet>=1.0.0
+cancer>=1.0.0
+nerve>=1.0.0
+
+# Medication induced neuroblastoma
+medication-neuroblastoma>=1.0.0
+cancer>=1.0.0
+nerve>=1.0.0
+
+# Medication induced ganglioneuroblastoma
+medication-ganglioneuroblastoma>=1.0.0
+cancer>=1.0.0
+nerve>=1.0.0
+
+# Medication induced esthesioneuroblastoma
+medication-esthesioneuroblastoma>=1.0.0
+cancer>=1.0.0
+nose>=1.0.0
+
+# Medication induced olfactory neuroblastoma
+medication-olfactory-neuroblastoma>=1.0.0
+cancer>=1.0.0
+nose>=1.0.0
+
+# Medication induced retinoblastoma
+medication-retinoblastoma>=1.0.0
+cancer>=1.0.0
+eye>=1.0.0
+
+# Medication induced pineoblastoma
+medication-pineoblastoma>=1.0.0
+cancer>=1.0.0
+pineal>=1.0.0
+
+# Medication induced medulloblastoma
+medication-medulloblastoma>=1.0.0
+cancer>=1.0.0
+cerebellum>=1.0.0
+
+# Medication induced atypical teratoid rhabdoid tumor
+medication-atrt>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced choroid plexus carcinoma
+medication-choroid-plexus-carcinoma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced anaplastic ependymoma
+medication-anaplastic-ependymoma>=1.0.0
+cancer>=1.0.0
+brain-spinal-cord>=1.0.0
+
+# Medication induced glioblastoma
+medication-glioblastoma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced anaplastic astrocytoma
+medication-anaplastic-astrocytoma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced diffuse astrocytoma
+medication-diffuse-astrocytoma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced pilocytic astrocytoma
+medication-pilocytic-astrocytoma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced pleomorphic xanthoastrocytoma
+medication-pxa>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced subependymal giant cell astrocytoma
+medication-sega>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced oligodendroglioma
+medication-oligodendroglioma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced anaplastic oligodendroglioma
+medication-anaplastic-oligodendroglioma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced mixed glioma
+medication-mixed-glioma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced optic pathway glioma
+medication-optic-pathway-glioma>=1.0.0
+cancer>=1.0.0
+optic-nerve>=1.0.0
+
+# Medication induced brainstem glioma
+medication-brainstem-glioma>=1.0.0
+cancer>=1.0.0
+brainstem>=1.0.0
+
+# Medication induced thalamic glioma
+medication-thalamic-glioma>=1.0.0
+cancer>=1.0.0
+thalamus>=1.0.0
+
+# Medication induced hypothalamic glioma
+medication-hypothalamic-glioma>=1.0.0
+cancer>=1.0.0
+hypothalamus>=1.0.0
+
+# Medication induced spinal cord glioma
+medication-spinal-cord-glioma>=1.0.0
+cancer>=1.0.0
+spinal-cord>=1.0.0
+
+# Medication induced ependymoma
+medication-ependymoma>=1.0.0
+cancer>=1.0.0
+brain-spinal-cord>=1.0.0
+
+# Medication induced myxopapillary ependymoma
+medication-myxopapillary-ependymoma>=1.0.0
+cancer>=1.0.0
+spinal-cord>=1.0.0
+
+# Medication induced subependymoma
+medication-subependymoma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced choroid plexus papilloma
+medication-choroid-plexus-papilloma>=1.0.0
+cancer>=1.0.0
+brain>=1.0.0
+
+# Medication induced atypical choroid plexus papill

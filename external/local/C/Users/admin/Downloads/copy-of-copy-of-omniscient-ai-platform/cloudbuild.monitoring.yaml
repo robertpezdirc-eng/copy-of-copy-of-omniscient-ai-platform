@@ -1,0 +1,44 @@
+# Cloud Build example to switch monitoring policies and run smoke tests using reusable scripts
+# Substitutions:
+#   _PROJECT_ID:        GCP project id
+#   _CLOUD_RUN_SERVICE: Cloud Run service name (optional if using cloudrun-url.json)
+#   _REGION:            Cloud Run region (optional if using cloudrun-url.json)
+#   _MQL_POLICY_DISPLAY_NAME: Exact displayName for the MQL policy to keep enabled
+#   _POLICY_FILTER:           Base regex to match legacy policies to disable
+substitutions:
+  _PROJECT_ID: REPLACE_ME
+  _CLOUD_RUN_SERVICE: omni-dashboard
+  _REGION: europe-west1
+  _MQL_POLICY_DISPLAY_NAME: "OMNI Dashboard - Uptime Check (MQL Multi-Region)"
+  _POLICY_FILTER: "^OMNI Dashboard - Uptime Check"
+
+steps:
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    id: Switch Policies
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        apt-get update && apt-get install -y jq curl
+        chmod +x infra/monitoring/scripts/*.sh
+        # Enable MQL and disable legacy (exclude MQL by displayName)
+        ./infra/monitoring/scripts/enable_policy.sh -p "$_PROJECT_ID" -f "$_MQL_POLICY_DISPLAY_NAME" --exact -y
+        ./infra/monitoring/scripts/disable_policy.sh -p "$_PROJECT_ID" -f "$_POLICY_FILTER" -x "$_MQL_POLICY_DISPLAY_NAME" -y
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    id: Uptime Smoke Test
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        chmod +x infra/monitoring/scripts/smoke_test.sh
+        if [[ -f cloudrun-url.json ]]; then URL_ARG="--url-file cloudrun-url.json"; else URL_ARG="--service $_CLOUD_RUN_SERVICE --region $_REGION"; fi
+        ./infra/monitoring/scripts/smoke_test.sh \
+          ${URL_ARG} \
+          --path /health \
+          --retries 20 \
+          --delay 5
+options:
+  logging: CLOUD_LOGGING_ONLY

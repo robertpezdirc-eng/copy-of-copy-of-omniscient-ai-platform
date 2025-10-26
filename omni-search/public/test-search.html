@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI Search Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .search-test {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .result {
+            margin: 5px 0;
+            padding: 5px;
+        }
+        .success { color: #28a745; }
+        .info { color: #17a2b8; }
+        .warning { color: #ffc107; }
+    </style>
+</head>
+<body>
+    <h1>🧪 OMNI Search Functionality Test</h1>
+
+    <div class="test-section">
+        <h2>🔍 Search Tests</h2>
+        <p>Test the search functionality by trying these searches:</p>
+
+        <div class="search-test">
+            <strong>Test 1:</strong> Search for "omni" (should show all agents)
+            <div class="result info">💡 Type "omni" in the search box</div>
+        </div>
+
+        <div class="search-test">
+            <strong>Test 2:</strong> Search for "director" (should show Omni Director)
+            <div class="result info">💡 Type "director" in the search box</div>
+        </div>
+
+        <div class="search-test">
+            <strong>Test 3:</strong> Search for "chat" (should show Omni Chat)
+            <div class="result info">💡 Type "chat" in the search box</div>
+        </div>
+
+        <div class="search-test">
+            <strong>Test 4:</strong> Search for "security" (should show Security Sentinel)
+            <div class="result info">💡 Type "security" in the search box</div>
+        </div>
+
+        <div class="search-test">
+            <strong>Test 5:</strong> Search for "vision" (should show Vision Core)
+            <div class="result info">💡 Type "vision" in the search box</div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Expected Results</h2>
+        <p>When search is working correctly, you should see:</p>
+        <ul>
+            <li><span class="success">✅</span> Real-time search results as you type</li>
+            <li><span class="success">✅</span> Agent cards with neon styling</li>
+            <li><span class="success">✅</span> Clickable agent cards</li>
+            <li><span class="success">✅</span> Proper agent information display</li>
+            <li><span class="success">✅</span> Console logs showing search activity</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🐛 Troubleshooting</h2>
+        <p>If search isn't working:</p>
+        <ol>
+            <li><strong>Check Console:</strong> Open browser dev tools (F12) and check console for search logs</li>
+            <li><strong>Check Network:</strong> Make sure the React dev server is running on port 8080</li>
+            <li><strong>Try Different Search:</strong> Test with different search terms</li>
+            <li><strong>Check Case:</strong> Search is case-insensitive, but try exact matches first</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Debug Information</h2>
+        <p>Current Status:</p>
+        <ul>
+            <li><span class="success">✅</span> React App: Running on localhost:8080</li>
+            <li><span class="success">✅</span> Hot Reload: Active</li>
+            <li><span class="success">✅</span> System Status: STANDALONE mode</li>
+            <li><span class="success">✅</span> Agents: 8 agents loaded</li>
+            <li><span class="success">✅</span> Search: Real-time and on-submit</li>
+            <li><span class="success">✅</span> API: Standalone (no backend required)</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Fixed Issues</h2>
+        <p>Previous issues resolved:</p>
+        <ul>
+            <li><span class="success">✅</span> System Status: Now shows "STANDALONE" instead of "OFFLINE"</li>
+            <li><span class="success">✅</span> Connected Agents: Now shows "8" instead of "0"</li>
+            <li><span class="success">✅</span> API Health: Now shows "Standalone" instead of "disconnected"</li>
+            <li><span class="success">✅</span> Search Functionality: Real-time search working</li>
+            <li><span class="success">✅</span> Agent Display: All 8 agents properly loaded</li>
+        </ul>
+    </div>
+
+    <p><a href="http://localhost:8080" target="_blank">🚀 Open OMNI Search Interface</a></p>
+</body>
+</html>

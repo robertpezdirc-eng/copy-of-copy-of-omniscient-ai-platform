@@ -1,0 +1,4 @@
+# White-Label Setup Dependencies
+colorama>=0.4.6
+pyyaml>=6.0
+python-dotenv>=1.0.0

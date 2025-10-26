@@ -1,0 +1,25 @@
+version: "3.8"
+
+name: quantum-min
+
+services:
+  quantum-platform:
+    build:
+      context: ..
+      dockerfile: Dockerfile.quantum-platform
+      target: production
+    container_name: omni-quantum-platform
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - quantum-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  quantum-network:
+    driver: bridge

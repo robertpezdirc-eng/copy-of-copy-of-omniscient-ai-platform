@@ -1,0 +1,95 @@
+groups:
+  - name: system.rules
+    rules:
+      - alert: NodeExporterDown
+        expr: up{job="system"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node Exporter is down on {{ $labels.instance }}"
+          description: "Prometheus can't scrape node-exporter metrics from {{ $labels.instance }} for at least 2 minutes."
+
+      - alert: HostHighCPUUsage
+        expr: 100 * (1 - avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[5m]))) > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is above 90% for more than 5 minutes."
+
+      - alert: HostHighMemoryUsage
+        expr: 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is above 90% for more than 5 minutes."
+
+      - alert: HostDiskSpaceLow
+        expr: 100 * (1 - (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay",mountpoint!~"/var/lib/docker.*|/var/run.*|/snap.*"}
+              / node_filesystem_size_bytes{fstype!~"tmpfs|overlay",mountpoint!~"/var/lib/docker.*|/var/run.*|/snap.*"})) > 90
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }} {{ $labels.mountpoint }}"
+          description: "Disk usage is above 90% on {{ $labels.instance }} mount {{ $labels.mountpoint }} for more than 10 minutes."
+
+      - alert: HostHighIOWaitWarning
+        expr: 100 * avg by(instance)(rate(node_cpu_seconds_total{mode="iowait"}[5m])) > 20
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU IO wait on {{ $labels.instance }}"
+          description: "CPU IO wait is above 20% for more than 10 minutes. Investigate disk IO saturation or storage latency."
+
+      - alert: HostHighIOWaitCritical
+        expr: 100 * avg by(instance)(rate(node_cpu_seconds_total{mode="iowait"}[5m])) > 40
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "CRITICAL: CPU IO wait very high on {{ $labels.instance }}"
+          description: "CPU IO wait is above 40% for more than 5 minutes. Immediate investigation recommended."
+
+      - alert: HostInodeUsageHighWarning
+        expr: 100 * (1 - (node_filesystem_files_free{fstype!~"tmpfs|overlay",mountpoint!~"/var/lib/docker.*|/var/run.*|/snap.*"}
+              / node_filesystem_files{fstype!~"tmpfs|overlay",mountpoint!~"/var/lib/docker.*|/var/run.*|/snap.*"})) > 85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High inode usage on {{ $labels.instance }} {{ $labels.mountpoint }}"
+          description: "Inode usage above 85% for more than 10 minutes; file creation may start failing soon."
+
+      - alert: HostInodeUsageHighCritical
+        expr: 100 * (1 - (node_filesystem_files_free{fstype!~"tmpfs|overlay",mountpoint!~"/var/lib/docker.*|/var/run.*|/snap.*"}
+              / node_filesystem_files{fstype!~"tmpfs|overlay",mountpoint!~"/var/lib/docker.*|/var/run.*|/snap.*"})) > 95
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "CRITICAL: inode usage very high on {{ $labels.instance }} {{ $labels.mountpoint }}"
+          description: "Inode usage above 95% for more than 5 minutes; systems may fail to create files. Immediate cleanup required."
+
+      - alert: HostHighLoadWarning
+        expr: (node_load5 / count(node_cpu_seconds_total{mode="idle"}) by (instance)) > 1.0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High normalized load on {{ $labels.instance }}"
+          description: "5-minute load average is higher than number of CPU cores (normalized > 1) for more than 10 minutes."
+
+      - alert: HostHighLoadCritical
+        expr: (node_load5 / count(node_cpu_seconds_total{mode="idle"}) by (instance)) > 2.0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "CRITICAL: normalized load very high on {{ $labels.instance }}"
+          description: "5-minute load average is more than 2x number of CPU cores (normalized > 2) for more than 5 minutes. Immediate investigation recommended."

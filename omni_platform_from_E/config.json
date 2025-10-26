@@ -1,0 +1,30 @@
+{
+  "platform": {
+    "name": "OMNI Platform",
+    "version": "3.0.0",
+    "environment": "development",
+    "debug": true
+  },
+  "server": {
+    "host": "localhost",
+    "port": 8080,
+    "workers": 4,
+    "timeout": 300
+  },
+  "database": {
+    "type": "sqlite",
+    "path": "./omni_platform/data/omni_platform.db"
+  },
+  "security": {
+    "secret_key": "change_this_in_production",
+    "encryption_enabled": true,
+    "cors_enabled": true
+  },
+  "features": {
+    "ai_agents": true,
+    "http_platform": true,
+    "real_time": true,
+    "monitoring": true,
+    "backup": true
+  }
+}

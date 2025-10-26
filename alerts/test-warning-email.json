@@ -1,0 +1,8 @@
+[
+  {
+    "labels": { "alertname": "TestWarningEmailE2E", "severity": "warning", "service": "omni-unified" },
+    "annotations": { "summary": "Warning email e2e test", "description": "Simulacija opozorila za Mailhog" },
+    "startsAt": "2025-10-21T23:12:00Z",
+    "endsAt": "2025-10-21T23:22:00Z"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "brand_name": "Moja Znamka",
+  "primary_color": "#1e90ff",
+  "secondary_color": "#22c55e",
+  "accent_color": "#ff9800",
+  "logo_path": "/logo.svg",
+  "seo": {
+    "site_name": "Ultimate Omni Package",
+    "default_description": "Modularni, takoj uporaben paket vsebin za splet, učenje, kodo, dokumente, video in audio.",
+    "default_keywords": ["splet", "blog", "e-commerce", "učenje", "programiranje", "predloge", "white-label"]
+  }
+}

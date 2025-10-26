@@ -1,0 +1,33 @@
+{
+  "displayName": "OMNI Platform - High CPU Usage",
+  "documentation": {
+    "content": "Alert when CPU usage exceeds 80% for more than 5 minutes",
+    "mimeType": "text/markdown"
+  },
+  "conditions": [
+    {
+      "displayName": "CPU usage for Cloud Run services",
+      "conditionThreshold": {
+        "filter": "resource.type = \"cloud_run_revision\" AND metric.type = \"run.googleapis.com/container/cpu/utilization\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "crossSeriesReducer": "REDUCE_MEAN",
+            "perSeriesAligner": "ALIGN_MEAN"
+          }
+        ],
+        "comparison": "COMPARISON_GT",
+        "thresholdValue": 0.8,
+        "duration": "300s"
+      }
+    }
+  ],
+  "alertStrategy": {
+    "notificationRateLimit": {
+      "timeWindow": "3600s"
+    }
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": []
+}

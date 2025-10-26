@@ -1,0 +1,34 @@
+{
+  "test": {
+    "tenant_id": "test",
+    "api_key": "37e8190053cb4a4eb829c001e4bf90ef",
+    "roles": [
+      "user"
+    ],
+    "created_at": 139807215048597527
+  },
+  "mg-demo": {
+    "tenant_id": "mg-demo",
+    "api_key": "3bdb8224afe84bf3bbc22e2df60c3b1b",
+    "roles": [
+      "user"
+    ],
+    "created_at": 139807281583665604
+  },
+  "finops-demo": {
+    "tenant_id": "finops-demo",
+    "api_key": "d405a71f7bee4f358497640f31deac0e",
+    "roles": [
+      "user"
+    ],
+    "created_at": 139807525897331255
+  },
+  "demo-tenant": {
+    "tenant_id": "demo-tenant",
+    "api_key": "909cd3f8a6554d5398f98d113dd04374",
+    "roles": [
+      "user"
+    ],
+    "created_at": 139807561073110179
+  }
+}

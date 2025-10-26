@@ -1,0 +1,17 @@
+[
+  {
+    "labels": {
+      "alertname": "TestWarningEmailE2E2",
+      "severity": "warning",
+      "service": "omni-unified",
+      "instance": "local"
+    },
+    "annotations": {
+      "summary": "Second synthetic warning alert for email route",
+      "description": "This should be routed to default receiver with Mailhog SMTP."
+    },
+    "startsAt": "2025-10-21T23:25:00Z",
+    "endsAt": "2099-01-01T00:00:00Z",
+    "generatorURL": "http://localhost:9093"
+  }
+]

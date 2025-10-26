@@ -1,0 +1,83 @@
+substitutions:
+  _REGION: "europe-west1"
+  _ENV: "prod"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+# Build backend image
+- name: "gcr.io/kaniko-project/executor:latest"
+  id: "build-backend"
+  args:
+    - "--destination=europe-west1-docker.pkg.dev/$PROJECT_ID/omni/omni-backend:${BUILD_ID}-${_ENV}"
+    - "--dockerfile=Dockerfile.backend"
+    - "--context=."
+    - "--snapshotMode=redo"
+    - "--cache=true"
+    - "--cache-ttl=48h"
+
+# Push backend image
+- name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+  id: "push-backend"
+  entrypoint: "bash"
+  args:
+    - "-c"
+    - "echo 'Skipping push: Kaniko already pushed omni-backend image'"
+
+# Deploy backend to Cloud Run
+- name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+  id: "deploy-backend"
+  entrypoint: "bash"
+  args:
+    - "-c"
+    - |
+      gcloud run deploy omni-backend \
+        --image europe-west1-docker.pkg.dev/$PROJECT_ID/omni/omni-backend:${BUILD_ID}-${_ENV} \
+          --region ${_REGION} \
+          --platform managed \
+          --service-account=${_RUNTIME_SA} \
+          --allow-unauthenticated \
+          --labels env=${_ENV} \
+          --port 8080 \
+          --set-env-vars GOOGLE_CLOUD_PROJECT=$PROJECT_ID,GOOGLE_CLOUD_REGION=global,VERTEX_AI_MODEL=gemini-2.5-flash-preview-09-2025,OPENAI_MODEL=gpt-4o-mini,APP_ENV=${_ENV} \
+          --update-secrets OPENAI_API_KEY=openai-api-key:latest,GEMINI_API_KEY=gemini-api-key:latest,GOOGLE_API_KEY=google-api-key:latest
+
+# Build frontend image
+- name: "gcr.io/kaniko-project/executor:latest"
+  id: "build-frontend"
+  args:
+    - "--destination=europe-west1-docker.pkg.dev/$PROJECT_ID/omni/omni-frontend:${BUILD_ID}-${_ENV}"
+    - "--dockerfile=Dockerfile.frontend"
+    - "--context=."
+    - "--snapshotMode=redo"
+    - "--cache=true"
+    - "--cache-ttl=48h"
+
+# Push frontend image
+- name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+  id: "push-frontend"
+  entrypoint: "bash"
+  args:
+    - "-c"
+    - "echo 'Skipping push: Kaniko already pushed omni-frontend image'"
+
+# Deploy frontend to Cloud Run
+- name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+  id: "deploy-frontend"
+  entrypoint: "bash"
+  args:
+    - "-c"
+    - |
+      gcloud run deploy omni-frontend \
+        --image europe-west1-docker.pkg.dev/$PROJECT_ID/omni/omni-frontend:${BUILD_ID}-${_ENV} \
+          --region ${_REGION} \
+          --platform managed \
+          --service-account=${_RUNTIME_SA} \
+          --allow-unauthenticated \
+          --labels env=${_ENV} \
+          --port 80
+
+images:
+- "europe-west1-docker.pkg.dev/$PROJECT_ID/omni/omni-backend:${BUILD_ID}-${_ENV}"
+- "europe-west1-docker.pkg.dev/$PROJECT_ID/omni/omni-frontend:${BUILD_ID}-${_ENV}"

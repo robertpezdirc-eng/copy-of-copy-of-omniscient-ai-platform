@@ -1,0 +1,33 @@
+{
+  "revenue": {
+    "history": [
+      {
+        "id": "34ed2fb35b344e0a9dc82699dacad581",
+        "tenant_id": "finops-demo",
+        "feature_name": "auto-generated-api",
+        "rollout": 100,
+        "enabled": true,
+        "created_at": 1761462515773,
+        "notes": "initial enable via script"
+      },
+      {
+        "id": "a753cc02541a46e48511fba5bf17036c",
+        "tenant_id": null,
+        "feature_name": "market-services",
+        "rollout": 100,
+        "enabled": true,
+        "created_at": 1761463309626,
+        "notes": "Distributed 2 services globally from market data"
+      }
+    ],
+    "last": {
+      "id": "a753cc02541a46e48511fba5bf17036c",
+      "tenant_id": null,
+      "feature_name": "market-services",
+      "rollout": 100,
+      "enabled": true,
+      "created_at": 1761463309626,
+      "notes": "Distributed 2 services globally from market data"
+    }
+  }
+}

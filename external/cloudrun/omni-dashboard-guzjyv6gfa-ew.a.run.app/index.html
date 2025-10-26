@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Omni Platform Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-online { background: #4CAF50; }
+        .status-offline { background: #f44336; }
+
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message.bot {
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .chat-input {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .chat-input button {
+            margin-top: 10px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            opacity: 0.9;
+        }
+
+        .api-test {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .api-test h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .api-test input, .api-test select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .api-test button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .response {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 Omni Platform Dashboard</h1>
+            <p>Advanced AI-Powered Platform with Gemini Integration</p>
+        </header>
+
+        <!-- System Metrics -->
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value" id="status">●</div>
+                <div class="metric-label">Platform Status</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="response-time">-</div>
+                <div class="metric-label">Response Time</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="model">Gemini 2.0</div>
+                <div class="metric-label">AI Model</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="uptime">-</div>
+                <div class="metric-label">Uptime</div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <!-- Gemini AI Chat -->
+            <div class="card chat-container">
+                <div class="chat-header">
+                    <h3><i class="fas fa-robot"></i> Gemini AI Assistant</h3>
+                    <p>Powered by Vertex AI</p>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot">
+                        <strong>Omni AI:</strong> Hello! I'm your Gemini-powered assistant. How can I help you today?
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <textarea id="user-input" placeholder="Ask me anything..." rows="3"></textarea>
+                    <div>
+                        <button onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i> Send
+                        </button>
+                        <button onclick="clearChat()">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Testing -->
+            <div class="card api-test">
+                <h3><i class="fas fa-code"></i> API Testing</h3>
+                <select id="api-endpoint">
+                    <option value="/api/gcp/gemini">Gemini AI Generate</option>
+                    <option value="/readyz">Health Check</option>
+                    <option value="/api/docs">API Documentation</option>
+                </select>
+                <input type="text" id="api-prompt" placeholder="Enter your prompt or request...">
+                <div>
+                    <button onclick="testAPI()">
+                        <i class="fas fa-play"></i> Test API
+                    </button>
+                    <button onclick="clearResponse()">
+                        <i class="fas fa-eraser"></i> Clear
+                    </button>
+                </div>
+                <div class="response" id="api-response">API response will appear here...</div>
+            </div>
+
+            <!-- System Information -->
+            <div class="card">
+                <h3><i class="fas fa-info-circle"></i> System Information</h3>
+                <div id="system-info">
+                    <p><strong>Platform:</strong> Omni Dashboard</p>
+                    <p><strong>AI Model:</strong> Gemini 2.0 Flash</p>
+                    <p><strong>Region:</strong> europe-west1</p>
+                    <p><strong>Service:</strong> Cloud Run</p>
+                    <p><strong>Status:</strong> <span id="health-status">Checking...</span></p>
+                </div>
+                <button onclick="checkHealth()" style="margin-top: 15px;">
+                    <i class="fas fa-sync"></i> Refresh Status
+                </button>
+            </div>
+
+            <!-- Platform Features -->
+            <div class="card">
+                <h3><i class="fas fa-star"></i> Platform Features</h3>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                        <span>Real-time AI Chat</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                        <span>API Endpoint Testing</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                        <span>System Health Monitoring</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                        <span>Cloud Run Deployment</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                        <span>Vertex AI Integration</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://omni-unified-platform-guzjyv6gfa-ew.a.run.app';
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkHealth();
+            updateMetrics();
+            setInterval(updateMetrics, 30000); // Update every 30 seconds
+        });
+
+        // Send chat message
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage('user', message);
+            userInput.value = '';
+
+            // Show loading
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot';
+            loadingDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Thinking...</div>';
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/gcp/gemini`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: message,
+                        model: 'gemini-2.0-flash'
+                    })
+                });
+
+                const data = await response.json();
+                chatMessages.removeChild(loadingDiv);
+
+                if (data.ok) {
+                    addMessage('bot', data.reply);
+                } else {
+                    addMessage('bot', 'Error: ' + data.reply);
+                }
+            } catch (error) {
+                chatMessages.removeChild(loadingDiv);
+                addMessage('bot', 'Network error: ' + error.message);
+            }
+        }
+
+        // Add message to chat
+        function addMessage(sender, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `<strong>${sender === 'user' ? 'You' : 'Omni AI'}:</strong> ${message}`;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Test API endpoint
+        async function testAPI() {
+            const endpoint = document.getElementById('api-endpoint').value;
+            const prompt = document.getElementById('api-prompt').value;
+            const responseDiv = document.getElementById('api-response');
+
+            if (endpoint === '/api/gcp/gemini' && !prompt) {
+                responseDiv.textContent = 'Please enter a prompt for the Gemini API test.';
+                return;
+            }
+
+            responseDiv.textContent = 'Testing API...';
+
+            try {
+                let response;
+                if (endpoint === '/api/gcp/gemini') {
+                    response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            prompt: prompt,
+                            model: 'gemini-2.0-flash'
+                        })
+                    });
+                } else {
+                    response = await fetch(`${API_BASE_URL}${endpoint}`);
+                }
+
+                const data = await response.text();
+                responseDiv.textContent = `Status: ${response.status}\nResponse: ${data}`;
+            } catch (error) {
+                responseDiv.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        // Check system health
+        async function checkHealth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/readyz`);
+                const statusElement = document.getElementById('health-status');
+                const statusIndicator = document.getElementById('status');
+
+                if (response.ok) {
+                    statusElement.textContent = 'Online';
+                    statusIndicator.textContent = '🟢';
+                    statusIndicator.style.color = '#4CAF50';
+                } else {
+                    statusElement.textContent = 'Offline';
+                    statusIndicator.textContent = '🔴';
+                    statusIndicator.style.color = '#f44336';
+                }
+            } catch (error) {
+                document.getElementById('health-status').textContent = 'Error';
+                document.getElementById('status').textContent = '🟡';
+            }
+        }
+
+        // Update metrics
+        async function updateMetrics() {
+            const startTime = Date.now();
+            try {
+                await fetch(`${API_BASE_URL}/readyz`);
+                const responseTime = Date.now() - startTime;
+                document.getElementById('response-time').textContent = responseTime + 'ms';
+            } catch (error) {
+                document.getElementById('response-time').textContent = 'Error';
+            }
+        }
+
+        // Clear functions
+        function clearChat() {
+            chatMessages.innerHTML = '<div class="message bot"><strong>Omni AI:</strong> Hello! I\'m your Gemini-powered assistant. How can I help you today?</div>';
+        }
+
+        function clearResponse() {
+            document.getElementById('api-response').textContent = 'API response will appear here...';
+        }
+
+        // Enter key to send message
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Auto-refresh health every 60 seconds
+        setInterval(checkHealth, 60000);
+    </script>
+</body>
+</html>

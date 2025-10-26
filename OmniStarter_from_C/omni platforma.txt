@@ -1,0 +1,108 @@
+{
+  "displayName": "OMNI Dashboard - Overview",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "OMNI Dashboard - Request Rate",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"run.googleapis.com/request_count\" resource.type=\"cloud_run_revision\" resource.label.service_name=\"omni-dashboard\"",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_RATE",
+                    "crossSeriesReducer": "REDUCE_SUM"
+                  }
+                },
+                "unitOverride": "1/s"
+              },
+              "plotType": "LINE"
+            }
+          ],
+          "yAxis": {
+            "label": "Requests/s",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "OMNI Dashboard - P95 Latency",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"run.googleapis.com/request_latencies\" resource.type=\"cloud_run_revision\" resource.label.service_name=\"omni-dashboard\"",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_PERCENTILE_95",
+                    "crossSeriesReducer": "REDUCE_NONE"
+                  }
+                },
+                "unitOverride": "ms"
+              },
+              "plotType": "LINE"
+            }
+          ],
+          "yAxis": {
+            "label": "Latency (ms)",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "OMNI Dashboard - Error Rate (5xx)",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"run.googleapis.com/request_count\" resource.type=\"cloud_run_revision\" resource.label.service_name=\"omni-dashboard\" metric.label.response_code_class=\"5xx\"",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_RATE",
+                    "crossSeriesReducer": "REDUCE_SUM"
+                  }
+                },
+                "unitOverride": "1/s"
+              },
+              "plotType": "LINE"
+            }
+          ],
+          "yAxis": {
+            "label": "Errors/s",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "OMNI Dashboard - Container Instance Count",
+        "xyChart": {
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"run.googleapis.com/container/instance_count\" resource.type=\"cloud_run_revision\" resource.label.service_name=\"omni-dashboard\"",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_SUM"
+                  }
+                },
+                "unitOverride": "count"
+              },
+              "plotType": "LINE"
+            }
+          ],
+          "yAxis": {
+            "label": "Instances",
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  }
+}

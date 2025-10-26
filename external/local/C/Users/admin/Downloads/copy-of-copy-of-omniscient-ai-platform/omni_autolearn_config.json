@@ -1,0 +1,40 @@
+{
+  "system": {
+    "auto_learning": true,
+    "logging": true,
+    "data_sync": true,
+    "dashboard_required": false,
+    "use_google_cloud": true
+  },
+
+  "learning_engine": {
+    "mode": "continuous",
+    "interval_seconds": 30,
+    "max_memory_gb": 8,
+    "model_storage": "gs://omni-meta-data/models/",
+    "cache_dir": "./cache/",
+    "backup": true
+  },
+
+  "integrations": {
+    "openai_enabled": true,
+    "gemini_enabled": true,
+    "local_sensors_enabled": false,
+    "cloud_storage": "google",
+    "pubsub_channel": "omni_learning_events"
+  },
+
+  "data_sources": [
+    "logs/system.log",
+    "logs/events.log",
+    "gs://omni-meta-data/sensor-streams/",
+    "https://api.openai.com/v1/usage"
+  ],
+
+  "output": {
+    "save_results": true,
+    "export_csv": true,
+    "upload_to_google_cloud": true,
+    "local_summary_file": "./learn_summary.json"
+  }
+}

@@ -1,0 +1,95 @@
+name: Deploy OMNI Platform to Cloud Run (Production)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: cloud-run-prod-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud via OIDC
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/661612368188/locations/global/workloadIdentityPools/github/providers/github
+          service_account: ci-deployer@refined-graph-471712-n9.iam.gserviceaccount.com
+          create_credentials: true
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker gcr.io
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${REGION}-docker.pkg.dev
+
+      - name: Set project and region
+        shell: bash
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          REGION: ${{ secrets.GCP_REGION }}
+        run: |
+          PROJECT_ID=${PROJECT_ID:-refined-graph-471712-n9}
+          REGION=${REGION:-europe-west1}
+          gcloud config set project "$PROJECT_ID"
+          echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
+          echo "REGION=$REGION" >> $GITHUB_ENV
+
+      - name: Capture previous image (omni-api-gateway)
+        shell: bash
+        run: |
+          IMG=$(gcloud run services describe omni-api-gateway --region "$REGION" --format='value(spec.template.spec.containers[0].image)' || true)
+          echo "PREV_IMAGE_OMNI_API_GATEWAY=$IMG" >> $GITHUB_ENV
+          echo "Prev image omni-api-gateway: $IMG"
+
+      - name: Submit Cloud Build (missing services)
+        shell: bash
+        run: |
+          if [ ! -f cloudbuild.missing-services.yaml ]; then
+            echo "cloudbuild.missing-services.yaml not found"; exit 1;
+          fi
+          gcloud builds submit --config cloudbuild.missing-services.yaml --project "$PROJECT_ID" --region "$REGION"
+
+      - name: Verify Cloud Run services
+        shell: bash
+        run: |
+          gcloud run services list --project "$PROJECT_ID" --format='table(metadata.name,metadata.labels.cloud\.googleapis\.com/location,status.url)'
+
+      - name: Smoke checks for critical endpoints
+        shell: bash
+        run: |
+          function check(){
+            local svc="$1"; local path="$2"; local region="$REGION";
+            URL=$(gcloud run services describe "$svc" --region "$region" --format='value(status.url)' || true)
+            if [ -z "$URL" ]; then echo "Skip $svc: no URL"; return 0; fi
+            echo "Checking $URL$path"; STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL$path");
+            if [ "$STATUS" -ne 200 ]; then echo "❌ $svc $path -> $STATUS"; exit 1; else echo "✅ $svc $path -> $STATUS"; fi
+          }
+          check omni-dashboard /healthz
+          check omni-api-gateway /healthz
+          check omni-singularity /health
+
+      - name: Rollback omni-api-gateway on failed smoke
+        if: failure()
+        shell: bash
+        run: |
+          if [ -n "$PREV_IMAGE_OMNI_API_GATEWAY" ]; then
+            echo "Rolling back omni-api-gateway to $PREV_IMAGE_OMNI_API_GATEWAY"
+            gcloud run services update omni-api-gateway --image "$PREV_IMAGE_OMNI_API_GATEWAY" --region "$REGION"
+          else
+            echo "No previous image captured; skipping rollback."
+          fi

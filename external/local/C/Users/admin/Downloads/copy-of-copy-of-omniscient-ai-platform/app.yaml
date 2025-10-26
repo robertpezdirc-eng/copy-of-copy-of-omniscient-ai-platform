@@ -1,0 +1,35 @@
+runtime: python311
+service: omni-platform
+
+handlers:
+  - url: /.*
+    script: auto
+    secure: always
+
+env_variables:
+  PROJECT_ID: "gen-lang-client-0885737339"
+  GOOGLE_CLOUD_PROJECT: "gen-lang-client-0885737339"
+  GEMINI_MODEL: "gemini-2.0-flash"
+  ORCHESTRATION_ENABLED: "1"
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 10
+  target_cpu_utilization: 0.6
+
+resources:
+  cpu: 1
+  memory_gb: 1
+  disk_size_gb: 10
+
+# Health check
+liveness_check:
+  path: "/health"
+
+readiness_check:
+  path: "/ready"
+  check_interval_sec: 5
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
+  app_start_timeout_sec: 300

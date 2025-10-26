@@ -1,0 +1,38 @@
+# Cloud Build pipeline to build and deploy OMNI Dashboard frontend to Cloud Run
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.frontend'
+      - '-t'
+      - 'europe-west1-docker.pkg.dev/refined-graph-471712-n9/cloud-run-source-deploy/omni-dashboard/frontend:latest'
+      - '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'europe-west1-docker.pkg.dev/refined-graph-471712-n9/cloud-run-source-deploy/omni-dashboard/frontend:latest'
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'omni-dashboard'
+      - '--image'
+      - 'europe-west1-docker.pkg.dev/refined-graph-471712-n9/cloud-run-source-deploy/omni-dashboard/frontend:latest'
+      - '--platform'
+      - 'managed'
+      - '--region'
+      - 'europe-west1'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+
+images:
+- 'europe-west1-docker.pkg.dev/refined-graph-471712-n9/cloud-run-source-deploy/omni-dashboard/frontend:latest'

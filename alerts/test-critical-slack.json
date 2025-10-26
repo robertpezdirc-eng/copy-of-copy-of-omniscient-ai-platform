@@ -1,0 +1,8 @@
+[
+  {
+    "labels": { "alertname": "TestCriticalSlackE2E", "severity": "critical", "service": "omni-unified" },
+    "annotations": { "summary": "Critical Slack e2e test", "description": "Simulacija kritične napake za Slack mock" },
+    "startsAt": "2025-10-21T23:09:00Z",
+    "endsAt": "2025-10-21T23:19:00Z"
+  }
+]

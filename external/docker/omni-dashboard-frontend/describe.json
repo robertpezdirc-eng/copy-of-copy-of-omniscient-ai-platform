@@ -1,0 +1,9 @@
+{
+  "image_summary": {
+    "digest": "sha256:d9717656fd7c618476508fe298c8fe4fdfed9830798ee92a202f426e8d139652",
+    "fully_qualified_digest": "europe-west1-docker.pkg.dev/refined-graph-471712-n9/cloud-run-source-deploy/omni-dashboard/frontend@sha256:d9717656fd7c618476508fe298c8fe4fdfed9830798ee92a202f426e8d139652",
+    "registry": "europe-west1-docker.pkg.dev",
+    "repository": "cloud-run-source-deploy",
+    "slsa_build_level": 3
+  }
+}

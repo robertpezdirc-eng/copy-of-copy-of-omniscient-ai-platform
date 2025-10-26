@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT UI - Angel Learning Converter</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .panel h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .json-input {
+            width: 100%;
+            height: 300px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            background: white;
+        }
+
+        .human-output {
+            width: 100%;
+            height: 300px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+            overflow-y: auto;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .controls {
+            grid-column: span 2;
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .learning-status {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .learning-status h3 {
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #fff;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .angel-learning-feed {
+            grid-column: span 2;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .angel-learning-feed h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .learning-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .learning-item .timestamp {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .learning-item .angel {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .learning-item .insight {
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
+        .stats {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .real-time-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); }
+            to { box-shadow: 0 4px 20px rgba(40, 167, 69, 0.6); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="real-time-indicator">
+        <span class="status-dot"></span>
+        Angeli se učijo v realnem času
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🤖 GPT UI - Angel Learning Converter</h1>
+            <p>Pretvarjanje JSON sporočil angelov v človeku razumljive informacije</p>
+        </div>
+
+        <div class="main-content">
+            <div class="panel">
+                <h3>📥 JSON Vhod (Angel Output)</h3>
+                <textarea class="json-input" id="jsonInput" placeholder='Prilepite JSON izhod od angela tukaj...
+
+Na primer:
+{
+  "angel": "GlobalOptimizationAngel",
+  "type": "learning_update",
+  "data": {
+    "pattern": "weather_optimization",
+    "confidence": 0.85,
+    "action": "adjust_irrigation_schedule",
+    "reasoning": "Vreme se spreminja, optimalna vlažnost tal se je izboljšala"
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}'></textarea>
+            </div>
+
+            <div class="panel">
+                <h3>📤 Človeku Razumljiv Izhod</h3>
+                <div class="human-output" id="humanOutput">
+                    <div class="placeholder">
+                        <p>💡 <strong>Prilepite JSON zgoraj in kliknite "Pretvori"</strong></p>
+                        <p>Angel se bo "naučil" in podal razumljive informacije za kmete.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="convertToHumanReadable()">🔄 Pretvori v Človeški Jezik</button>
+            <button class="btn btn-secondary" onclick="clearAll()">🗑️ Počisti</button>
+            <button class="btn btn-primary" onclick="generateSampleData()">🎲 Generiraj Vzorec</button>
+        </div>
+
+        <div class="learning-status">
+            <h3>🎓 Stanje Angel Učenja</h3>
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span id="learningStatus">Aktivno - Angeli se učijo vsake 30 sekund</span>
+            </div>
+        </div>
+
+        <div class="angel-learning-feed">
+            <h3>📚 Real-time Angel Learning Feed</h3>
+            <div id="learningFeed"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalLearningEvents">0</div>
+                <div class="stat-label">Skupaj Učnih Dogodkov</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeAngels">0</div>
+                <div class="stat-label">Aktivni Angeli</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="insightsGenerated">0</div>
+                <div class="stat-label">Generiranih Vpogledov</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgConfidence">0%</div>
+                <div class="stat-label">Povprečna Zaupanja</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables for tracking learning
+        let learningEvents = [];
+        let angelStats = {};
+        let continuousLearningInterval;
+
+        // Initialize the UI
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeGPTUI();
+            startContinuousLearningSimulation();
+        });
+
+        function initializeGPTUI() {
+            console.log('🚀 GPT UI inicializiran - Začenjam angel učenje...');
+
+            // Update learning status
+            updateLearningStatus('Inicializacija angel sistemov...');
+
+            // Simulate initial learning
+            setTimeout(() => {
+                addLearningEvent({
+                    angel: 'GlobalOptimizationAngel',
+                    type: 'system_initialization',
+                    insight: 'Sistem angel učenja je pripravljen za kontinuirano delovanje',
+                    confidence: 0.95,
+                    timestamp: new Date().toISOString()
+                });
+            }, 1000);
+        }
+
+        function convertToHumanReadable() {
+            const jsonInput = document.getElementById('jsonInput').value.trim();
+
+            if (!jsonInput) {
+                alert('Prosim vnesite JSON podatke od angela.');
+                return;
+            }
+
+            try {
+                const jsonData = JSON.parse(jsonInput);
+                const humanOutput = convertJSONToHuman(jsonData);
+
+                document.getElementById('humanOutput').innerHTML = humanOutput;
+
+                // Add to learning feed
+                addLearningEvent({
+                    angel: jsonData.angel || 'UnknownAngel',
+                    type: 'json_conversion',
+                    insight: extractInsightFromJSON(jsonData),
+                    confidence: jsonData.confidence || 0.8,
+                    timestamp: new Date().toISOString()
+                });
+
+            } catch (error) {
+                document.getElementById('humanOutput').innerHTML =
+                    `<div style="color: #dc3545; padding: 10px; background: #f8d7da; border-radius: 5px; margin: 10px 0;">
+                        <strong>❌ Napaka pri pretvorbi JSON:</strong><br>
+                        ${error.message}<br><br>
+                        <small>Preverite, da je JSON pravilno formatiran.</small>
+                    </div>`;
+            }
+        }
+
+        function convertJSONToHuman(jsonData) {
+            let output = '';
+
+            // Header with angel and timestamp
+            output += `<div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">`;
+            output += `<h4>🤖 ${jsonData.angel || 'Angel'} - ${formatTimestamp(jsonData.timestamp)}</h4>`;
+            output += `</div>`;
+
+            // Main content based on data type
+            if (jsonData.type === 'learning_update') {
+                output += `<div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #28a745;">`;
+                output += `<h5>📚 Učni Posodobitev</h5>`;
+                output += `<p><strong>Vzorec:</strong> ${jsonData.data?.pattern || 'N/A'}</p>`;
+                output += `<p><strong>Akcija:</strong> ${jsonData.data?.action || 'N/A'}</p>`;
+                output += `<p><strong>Obrazložitev:</strong> ${jsonData.data?.reasoning || 'N/A'}</p>`;
+                output += `<p><strong>Zaupanje:</strong> ${Math.round((jsonData.data?.confidence || 0) * 100)}%</p>`;
+                output += `</div>`;
+            } else if (jsonData.type === 'pattern_detected') {
+                output += `<div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #ffc107;">`;
+                output += `<h5>🔍 Zaznan Vzorec</h5>`;
+                output += `<p><strong>Vrsta Vzorca:</strong> ${jsonData.pattern?.type || 'N/A'}</p>`;
+                output += `<p><strong>Moč Vzorca:</strong> ${jsonData.pattern?.strength || 'N/A'}</p>`;
+                output += `<p><strong>Pomen:</strong> ${jsonData.pattern?.significance || 'N/A'}</p>`;
+                output += `</div>`;
+            } else if (jsonData.type === 'optimization_suggestion') {
+                output += `<div style="background: #d1ecf1; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #17a2b8;">`;
+                output += `<h5>💡 Predlog Optimizacije</h5>`;
+                output += `<p><strong>Področje:</strong> ${jsonData.optimization?.area || 'N/A'}</p>`;
+                output += `<p><strong>Priporočilo:</strong> ${jsonData.optimization?.recommendation || 'N/A'}</p>`;
+                output += `<p><strong>Pričakovani Učinek:</strong> ${jsonData.optimization?.expected_impact || 'N/A'}</p>`;
+                output += `</div>`;
+            } else {
+                // Generic conversion
+                output += `<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 10px;">`;
+                output += `<h5>📋 Splošne Informacije</h5>`;
+                output += `<pre style="background: white; padding: 10px; border-radius: 5px; overflow-x: auto;">${JSON.stringify(jsonData, null, 2)}</pre>`;
+                output += `</div>`;
+            }
+
+            // Add learning interpretation
+            output += `<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #667eea;">`;
+            output += `<h5>🎓 KAJ SE JE ANGEL NAUČIL:</h5>`;
+            output += `<p>${extractInsightFromJSON(jsonData)}</p>`;
+            output += `</div>`;
+
+            return output;
+        }
+
+        function extractInsightFromJSON(jsonData) {
+            // Extract meaningful insights from JSON data
+            if (jsonData.type === 'learning_update') {
+                return `Angel ${jsonData.angel} se je naučil optimizirati ${jsonData.data?.pattern} z akcijo "${jsonData.data?.action}". ${jsonData.data?.reasoning} To pomeni boljšo učinkovitost pri upravljanju kmetijskih procesov.`;
+            } else if (jsonData.type === 'pattern_detected') {
+                return `Zaznan je bil pomemben vzorec v podatkih: ${jsonData.pattern?.type} z močjo ${Math.round((jsonData.pattern?.strength || 0) * 100)}%. Ta vzorec lahko pomaga pri napovedovanju in optimizaciji kmetijskih aktivnosti.`;
+            } else if (jsonData.type === 'optimization_suggestion') {
+                return `Predlagana je optimizacija na področju ${jsonData.optimization?.area}: ${jsonData.optimization?.recommendation}. Pričakovani učinek: ${jsonData.optimization?.expected_impact}.`;
+            } else {
+                return `Angel ${jsonData.angel || 'neznani angel'} je obdelal podatke in zagotovil vpogled v sistem. Zaupanje v to informacijo: ${Math.round((jsonData.confidence || 0) * 100)}%.`;
+            }
+        }
+
+        function formatTimestamp(timestamp) {
+            if (!timestamp) return 'Trenutni čas';
+
+            const date = new Date(timestamp);
+            return date.toLocaleString('sl-SI', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function clearAll() {
+            document.getElementById('jsonInput').value = '';
+            document.getElementById('humanOutput').innerHTML =
+                '<div class="placeholder"><p>💡 <strong>Prilepite JSON zgoraj in kliknite "Pretvori"</strong></p></div>';
+        }
+
+        function generateSampleData() {
+            const sampleData = {
+                angel: 'GlobalOptimizationAngel',
+                type: 'learning_update',
+                data: {
+                    pattern: 'weather_based_irrigation',
+                    confidence: 0.87,
+                    action: 'optimize_watering_schedule',
+                    reasoning: 'Na podlagi vremenskih podatkov in zgodovine pridelka, optimalen čas zalivanja se je premaknil za 2 uri naprej',
+                    impact: '15% prihranek vode, 8% večji pridelek'
+                },
+                timestamp: new Date().toISOString()
+            };
+
+            document.getElementById('jsonInput').value = JSON.stringify(sampleData, null, 2);
+        }
+
+        function addLearningEvent(event) {
+            learningEvents.unshift(event);
+
+            // Update stats
+            updateAngelStats(event);
+
+            // Add to feed
+            addToLearningFeed(event);
+
+            // Update counters
+            updateStatsDisplay();
+
+            // Simulate continuous learning
+            if (Math.random() > 0.7) { // 30% chance to trigger new learning
+                setTimeout(() => {
+                    simulateAngelLearning();
+                }, 2000 + Math.random() * 3000);
+            }
+        }
+
+        function updateAngelStats(event) {
+            if (!angelStats[event.angel]) {
+                angelStats[event.angel] = {
+                    events: 0,
+                    totalConfidence: 0,
+                    lastActivity: event.timestamp
+                };
+            }
+
+            angelStats[event.angel].events++;
+            angelStats[event.angel].totalConfidence += event.confidence;
+            angelStats[event.angel].lastActivity = event.timestamp;
+        }
+
+        function addToLearningFeed(event) {
+            const feed = document.getElementById('learningFeed');
+            const learningItem = document.createElement('div');
+            learningItem.className = 'learning-item';
+
+            learningItem.innerHTML = `
+                <div class="timestamp">${formatTimestamp(event.timestamp)}</div>
+                <div class="angel">${event.angel}</div>
+                <div class="insight">${event.insight}</div>
+            `;
+
+            // Add to beginning of feed
+            if (feed.firstChild) {
+                feed.insertBefore(learningItem, feed.firstChild);
+            } else {
+                feed.appendChild(learningItem);
+            }
+
+            // Limit feed items
+            while (feed.children.length > 20) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+
+        function updateStatsDisplay() {
+            document.getElementById('totalLearningEvents').textContent = learningEvents.length;
+            document.getElementById('activeAngels').textContent = Object.keys(angelStats).length;
+            document.getElementById('insightsGenerated').textContent = learningEvents.length;
+
+            // Calculate average confidence
+            const totalConfidence = learningEvents.reduce((sum, event) => sum + event.confidence, 0);
+            const avgConfidence = learningEvents.length > 0 ? Math.round((totalConfidence / learningEvents.length) * 100) : 0;
+            document.getElementById('avgConfidence').textContent = `${avgConfidence}%`;
+        }
+
+        function updateLearningStatus(status) {
+            document.getElementById('learningStatus').textContent = status;
+        }
+
+        function startContinuousLearningSimulation() {
+            console.log('🔄 Začenjam kontinuirano učenje angelov...');
+
+            // Simulate continuous learning every 30 seconds
+            continuousLearningInterval = setInterval(() => {
+                simulateAngelLearning();
+            }, 30000); // 30 seconds
+
+            // Initial learning simulation
+            simulateAngelLearning();
+        }
+
+        function simulateAngelLearning() {
+            const angels = [
+                'GlobalOptimizationAngel',
+                'WeatherPatternAngel',
+                'SoilOptimizationAngel',
+                'CropHealthAngel',
+                'IrrigationAngel',
+                'HarvestTimingAngel'
+            ];
+
+            const learningTypes = [
+                'pattern_optimization',
+                'efficiency_improvement',
+                'resource_optimization',
+                'yield_prediction',
+                'risk_assessment'
+            ];
+
+            const randomAngel = angels[Math.floor(Math.random() * angels.length)];
+            const randomType = learningTypes[Math.floor(Math.random() * learningTypes.length)];
+
+            const learningEvent = {
+                angel: randomAngel,
+                type: randomType,
+                insight: generateRandomInsight(randomAngel, randomType),
+                confidence: 0.7 + Math.random() * 0.25, // 70-95% confidence
+                timestamp: new Date().toISOString()
+            };
+
+            addLearningEvent(learningEvent);
+
+            // Update status
+            updateLearningStatus(`${randomAngel} se uči: ${randomType.replace('_', ' ')}`);
+
+            console.log(`🎓 ${randomAngel} se je naučil: ${learningEvent.insight}`);
+        }
+
+        function generateRandomInsight(angel, type) {
+            const insights = {
+                'GlobalOptimizationAngel': {
+                    'pattern_optimization': 'Zaznal sem optimizacijski vzorec, ki lahko izboljša skupno učinkovitost sistema za 12%',
+                    'efficiency_improvement': 'Identificiral sem priložnost za izboljšanje energetske učinkovitosti črpalk',
+                    'resource_optimization': 'Optimizacija razporeditve virov lahko prihrani 18% operativnih stroškov'
+                },
+                'WeatherPatternAngel': {
+                    'pattern_optimization': 'Vremenski vzorci kažejo na optimalno okno za setev v naslednjih 48 urah',
+                    'efficiency_improvement': 'Napoved vremena omogoča boljšo pripravo na prihajajoče spremembe',
+                    'risk_assessment': 'Zaznana je potencialna nevarnost pozebe v naslednjem tednu'
+                },
+                'SoilOptimizationAngel': {
+                    'pattern_optimization': 'Tla kažejo optimalne pogoje za mikorizne glive, kar izboljša absorpcijo hranil',
+                    'efficiency_improvement': 'pH vrednost tal se je stabilizirala, kar omogoča boljšo absorpcijo gnojil',
+                    'resource_optimization': 'Zmanjšal sem količino potrebnih gnojil za 15% na podlagi analize tal'
+                }
+            };
+
+            const angelInsights = insights[angel] || {};
+            return angelInsights[type] || `${angel} se je naučil nekaj novega o ${type}`;
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        convertToHumanReadable();
+                        break;
+                    case 'k':
+                        e.preventDefault();
+                        clearAll();
+                        break;
+                }
+            }
+        });
+
+        // Auto-resize textareas
+        document.getElementById('jsonInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        console.log('✅ GPT UI naložen - Angeli so pripravljeni na kontinuirano učenje!');
+    </script>
+</body>
+</html>

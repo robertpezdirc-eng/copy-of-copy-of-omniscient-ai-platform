@@ -1,0 +1,53 @@
+# Cloud Build pipeline for OMNI Unified Platform backend
+# Builds Docker image and deploys to Cloud Run with CORS frontend origin
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _REGION: "europe-west1"
+  _SERVICE: "omni-unified-platform"
+  _FRONTEND_ORIGIN: "https://omni-dashboard-guzjyv6gfa-ew.a.run.app"
+
+steps:
+  # Build the backend image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/${_SERVICE}:latest",
+        "-f",
+        "Dockerfile.unified",
+        ".",
+      ]
+
+  # Push the image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/${_SERVICE}:latest"]
+
+  # Deploy to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    entrypoint: "gcloud"
+    args:
+      [
+        "run",
+        "deploy",
+        "${_SERVICE}",
+        "--image",
+        "gcr.io/$PROJECT_ID/${_SERVICE}:latest",
+        "--region",
+        "${_REGION}",
+        "--platform",
+        "managed",
+        "--port",
+        "8080",
+        "--set-env-vars",
+        "OMNI_FRONTEND_ORIGIN=${_FRONTEND_ORIGIN}",
+        "--allow-unauthenticated",
+      ]
+
+images:
+  - "gcr.io/$PROJECT_ID/${_SERVICE}:latest"
+
+timeout: "1200s"

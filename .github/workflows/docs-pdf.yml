@@ -1,0 +1,40 @@
+name: Build Investor Brief PDF
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'omni-platform/docs/**'
+      - '.github/workflows/docs-pdf.yml'
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Mermaid and md-to-pdf
+        run: |
+          npm i -g @mermaid-js/mermaid-cli md-to-pdf
+
+      - name: Render Mermaid diagrams
+        working-directory: omni-platform/docs
+        run: |
+          mmdc -i diagrams/architecture.mmd -o diagrams/architecture.png
+
+      - name: Build Investor Brief PDF
+        working-directory: omni-platform/docs
+        run: |
+          md-to-pdf investor_brief.md --pdf-options '{"format":"A4"}' --stylesheet '{"content":"body{font-family:sans-serif} img{max-width:100%}"}'
+
+      - name: Upload PDF Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: investor-brief-pdf
+          path: omni-platform/docs/investor_brief.pdf

@@ -1,0 +1,43 @@
+notepad brainActivity.js
+// brainActivity.js
+require('dotenv').config();
+const { Configuration, OpenAIApi } = require("openai");
+
+// Preveri, da imamo OpenAI ključ
+if (!process.env.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) {
+    console.error("🔴 NIMAŠ nastavljenega OpenAI ključa v .env!");
+    process.exit(1);
+}
+
+const configuration = new Configuration({
+    apiKey: process.env.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,
+});
+
+const openai = new OpenAIApi(configuration);
+
+/**
+ * Pošlje prompt na OpenAI in vrne odgovor
+ * @param {string} prompt - vprašanje za AI
+ * @returns {Promise<string>} - AI odgovor
+ */
+async function askOpenAI(prompt) {
+    try {
+        const response = await openai.createChatCompletion({
+            model: "gpt-5-mini",
+            messages: [
+                { role: "system", content: "Ti si Omni Brain, inteligentni pomočnik." },
+                { role: "user", content: prompt }
+            ],
+            temperature: 0.7,
+        });
+
+        const answer = response.data.choices[0].message.content.trim();
+        return answer;
+
+    } catch (error) {
+        console.error("Napaka pri klicu OpenAI:", error);
+        return "Oprostite, prišlo je do napake pri komunikaciji z OpenAI.";
+    }
+}
+
+module.exports = { askOpenAI };

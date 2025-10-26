@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "omni-platform/frontend/index.html", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/omni-platform/frontend/index.html" }
+  ],
+  "env": {
+    "VITE_API_BASE_URL": "https://<your-cloud-run-backend>"
+  }
+}

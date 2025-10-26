@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="sl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Omni SSE Test Page</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 1.5rem; }
+    label { display: block; margin: 0.5rem 0; }
+    input, select { padding: 0.35rem; }
+    button { padding: 0.5rem 0.8rem; margin-top: 0.8rem; }
+    pre { background: #f7f7f7; padding: 1rem; border: 1px solid #ddd; height: 300px; overflow: auto; }
+    .row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <h1>Omni SSE Test</h1>
+  <p>Preprost EventSource odjemalec za preverjanje <code>/api/gcp/gemini/stream</code> z možnostmi simulacije.</p>
+
+  <div class="row">
+    <label>URL:
+      <input id="url" size="60" value="http://localhost:8082/api/gcp/gemini/stream" />
+    </label>
+  </div>
+  <div class="row">
+    <label>Prompt:
+      <input id="prompt" size="40" value="EventSource demo" />
+    </label>
+    <label>Model:
+      <input id="model" size="16" value="gemini-2.5-pro" />
+    </label>
+    <label>Source:
+      <select id="source">
+        <option value="">auto</option>
+        <option value="sim">sim</option>
+      </select>
+    </label>
+  </div>
+  <div class="row">
+    <label>timeout (ms):
+      <input id="timeout" type="number" value="2000" />
+    </label>
+    <label>chunk_size:
+      <input id="chunk_size" type="number" value="24" />
+    </label>
+    <label>delay_ms:
+      <input id="delay_ms" type="number" value="10" />
+    </label>
+  </div>
+
+  <button id="start">Start SSE</button>
+  <button id="stop">Stop</button>
+
+  <h3>Log</h3>
+  <pre id="log"></pre>
+
+  <script>
+    let es = null;
+    function logLine(s) {
+      const el = document.getElementById('log');
+      el.textContent += s + "\n";
+      el.scrollTop = el.scrollHeight;
+    }
+    function buildUrl() {
+      const base = document.getElementById('url').value.trim();
+      const qs = new URLSearchParams();
+      const prompt = document.getElementById('prompt').value.trim();
+      const model = document.getElementById('model').value.trim();
+      const source = document.getElementById('source').value;
+      const timeout = document.getElementById('timeout').value.trim();
+      const chunkSize = document.getElementById('chunk_size').value.trim();
+      const delayMs = document.getElementById('delay_ms').value.trim();
+      if (prompt) qs.set('prompt', prompt);
+      if (model) qs.set('model', model);
+      if (source) qs.set('source', source);
+      if (timeout) qs.set('timeout', timeout);
+      if (chunkSize) qs.set('chunk_size', chunkSize);
+      if (delayMs) qs.set('delay_ms', delayMs);
+      return base + '?' + qs.toString();
+    }
+    document.getElementById('start').onclick = () => {
+      const url = buildUrl();
+      if (es) { try { es.close(); } catch (e) {} es = null; }
+      logLine('Connecting to: ' + url);
+      es = new EventSource(url);
+      es.onopen = (e) => logLine('[open] Connected');
+      es.onmessage = (e) => logLine('data: ' + e.data);
+      es.addEventListener('start', (e) => logLine('event: start ' + e.data));
+      es.addEventListener('done', (e) => { logLine('event: done ' + e.data); try { es.close(); } catch (err) {} es = null; });
+      es.onerror = (e) => { logLine('[error] ' + (e && e.message ? e.message : 'see console')); console.error(e); try { es.close(); } catch (err) {} es = null; };
+    };
+    document.getElementById('stop').onclick = () => { if (es) { try { es.close(); } catch (e) {} es = null; logLine('[stop] closed'); } };
+  </script>
+</body>
+</html>

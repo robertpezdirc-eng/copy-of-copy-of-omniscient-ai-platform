@@ -1,0 +1,12 @@
+event: start
+data: {"event": "start", "ts": "2025-10-21T20:34:19.723515", "project": "refined-graph-471712-n9", "region": "europe-west1"}
+
+data: {"ok": true, "tick": 1, "ts": "2025-10-21T20:34:19.723587"}
+
+data: {"ok": true, "tick": 2, "ts": "2025-10-21T20:34:20.238003"}
+
+data: {"ok": true, "tick": 3, "ts": "2025-10-21T20:34:20.750545"}
+
+event: done
+data: {"ok": true}
+

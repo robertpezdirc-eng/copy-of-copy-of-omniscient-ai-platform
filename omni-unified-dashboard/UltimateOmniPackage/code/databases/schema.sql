@@ -1,0 +1,14 @@
+-- Vzorčna shema baze
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE products (
+  id INTEGER PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  category VARCHAR(64)
+);

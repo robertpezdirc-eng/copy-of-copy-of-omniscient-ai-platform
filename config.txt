@@ -1,0 +1,194 @@
+# ============================================
+# OMNI SINGULARITY Quantum Dashboard v10.0
+# Master Configuration File (config.txt)
+# ============================================
+
+[CORE]
+version = 10.0
+mode = full
+platform_name = Omni Singularity Quantum Dashboard
+run_hidden = true
+default_language = sl
+local_path = C:\OmniSingularity\
+workspace = C:\OmniSingularity\workspace\
+memory_path = C:\OmniSingularity\memory\
+log_path = C:\OmniSingularity\logs\
+default_port = 8093
+
+[INTERFACE]
+dashboard_path = web/dashboard.html
+terminal_enabled = true
+bci_integration = true
+voice_commands = true
+ai_chat_enabled = true
+display_mode = minimal_overlay
+theme = quantum_dark
+
+[BRAIN]
+active = true
+ai_model = GPT-5
+local_fallback = true
+multi_agent = true
+agents = 5
+cores = 10
+auto_learn = true
+memory_retention = high
+context_awareness = full
+cognitive_boost = ON
+creativity_level = 10
+logic_level = 10
+quantum_reasoning = true
+
+[BCI]
+enabled = true
+device = auto_detect
+supported_devices = OpenBCI, Emotiv, Muse
+signal_processing = adaptive
+modes = [focus, relax, confirm, cancel]
+neural_latency = 0.05s
+thought_trigger = true
+silent_execution = true
+
+[AI_MODULES]
+video_core = active
+image_core = active
+text_core = active
+data_core = active
+company_core = active
+agriculture_core = active
+audio_core = active
+security_core = active
+ai_core = active
+tourism_core = active
+
+[AGENTS]
+agent_creator = active
+agent_engineer = active
+agent_analyzer = active
+agent_connector = active
+agent_meta = active
+
+[NETWORK]
+connectivity_mode = hybrid
+allow_local_execution = true
+allow_api_execution = true
+api_ports = [3000, 8080, 8093]
+proxy_enabled = false
+firewall_integration = true
+remote_sync = optional
+ssl = true
+
+[SECURITY]
+user_auth = true
+encryption = AES-256
+allow_guest = false
+log_activity = true
+sandbox_execution = true
+integrity_check = ON
+
+[FILESYSTEM]
+auto_save = true
+auto_backup = true
+backup_interval = 6h
+default_file_format = json
+max_log_size = 100MB
+temp_cleanup = true
+
+[COMMANDS]
+prompt_prefix = omni>
+allow_voice_input = true
+allow_thought_input = true
+allow_text_input = true
+confirm_before_execute = true
+show_preview_window = true
+save_option_enabled = true
+send_option_enabled = true
+
+[OUTPUT]
+preview_window = true
+allow_zoom = true
+allow_save = true
+allow_send = true
+render_engine = quantum_visualizer
+audio_engine = omni_sonic_core
+graphics_engine = omni_render_v10
+display_refresh_rate = 144hz
+
+[PERFORMANCE]
+max_cpu_usage = 85%
+max_ram_usage = 90%
+quantum_acceleration = true
+thread_priority = high
+background_mode = optimized
+multi_core_load_balance = true
+
+[INTEGRATIONS]
+openai_key = YOUR_OPENAI_API_KEY
+gemini_key = YOUR_GEMINI_API_KEY
+claude_key = optional
+google_cloud_key = AIzaSyAyKCIUE1b8SQF9g-Ok2WDB_zvtkCkYC8M
+local_models_path = models/
+auto_switch_ai = true
+ai_failover = enabled
+media_tools = ffmpeg, imagemagick
+system_tools = python, nodejs
+
+[USER]
+name = Robert Pezdirc
+role = System Operator
+permissions = full
+language = sl
+timezone = Europe/Ljubljana
+voice = omni_default
+bci_profile = default_focus_mode
+
+# ============================================
+# QUANTUM PLATFORM INTEGRATION
+# ============================================
+
+[QUANTUM_PLATFORM]
+enabled = true
+auto_start = true
+docker_mode = true
+kubernetes_ready = true
+
+[QUANTUM_CORES]
+max_cores = 10
+auto_scaling = true
+gpu_acceleration = true
+load_balancing = true
+
+[QUANTUM_STORAGE]
+persistent_storage = true
+compression_enabled = true
+encryption_enabled = true
+backup_frequency = 6h
+
+[QUANTUM_ENTANGLEMENT]
+multi_node_enabled = true
+topology = mesh
+auto_maintenance = true
+fidelity_monitoring = true
+
+[QUANTUM_SECURITY]
+post_quantum_crypto = true
+qkd_enabled = true
+quantum_attack_detection = true
+key_rotation_interval = 24h
+
+[QUANTUM_MONITORING]
+real_time_monitoring = true
+alerting_enabled = true
+performance_tracking = true
+health_checks = true
+
+[INDUSTRY_INTEGRATION]
+healthcare_api = true
+manufacturing_mes = true
+financial_feeds = true
+iot_sensors = true
+energy_grid = true
+
+# ============================================
+# END OF CONFIG
+# ============================================

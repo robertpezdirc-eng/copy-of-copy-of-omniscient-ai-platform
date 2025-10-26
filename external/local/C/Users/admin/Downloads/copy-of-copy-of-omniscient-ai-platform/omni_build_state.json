@@ -1,0 +1,23 @@
+{
+    "modules":  [
+                    {
+                        "name":  "omni-platform-v1.0.0",
+                        "status":  "pending",
+                        "age":  0,
+                        "last_build":  null
+                    },
+                    {
+                        "name":  "omni-desktop-v1.0.0",
+                        "status":  "pending",
+                        "age":  0,
+                        "last_build":  null
+                    },
+                    {
+                        "name":  "omni-frontend-v1.0.0",
+                        "status":  "pending",
+                        "age":  0,
+                        "last_build":  null
+                    }
+                ],
+    "last_updated":  "2025-10-14T05:04:59.967214"
+}

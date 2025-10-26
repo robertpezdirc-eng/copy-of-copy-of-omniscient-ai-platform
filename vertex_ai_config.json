@@ -1,0 +1,32 @@
+{
+  "vertex_ai": {
+    "api_key": "AQ.Ab8RN6LjDXj9_BHBcp-XvbSm0WCE2ftjfwyobHz-Zc3oNMVfhQ",
+    "project_id": "refined-graph-471712-n9",
+    "region": "us-central1",
+    "model": "gemini-2.5-pro",
+    "enabled": true,
+    "authentication": {
+      "method": "api_key",
+      "service_account": null
+    },
+    "endpoints": {
+      "generate_content": "https://us-central1-aiplatform.googleapis.com/v1/projects/refined-graph-471712-n9/locations/us-central1/publishers/google/models/gemini-2.5-pro:generateContent",
+      "stream_generate_content": "https://us-central1-aiplatform.googleapis.com/v1/projects/refined-graph-471712-n9/locations/us-central1/publishers/google/models/gemini-2.5-pro:streamGenerateContent"
+    },
+    "parameters": {
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "max_output_tokens": 2048,
+      "top_k": 40
+    }
+  },
+  "omni_platform": {
+    "ai_provider": "vertex_ai",
+    "fallback_provider": "gemini_api",
+    "learning_mode": "adaptive",
+    "knowledge_base_path": "/app/data/knowledge_base",
+    "log_level": "INFO",
+    "auto_save": true,
+    "save_interval": 300
+  }
+}

@@ -1,0 +1,36 @@
+:root {
+  --bg: #0b0f1a;
+  --panel: #111826;
+  --accent: #1e90ff;
+  --text: #e5e7eb;
+  --muted: #9aa3af;
+  --ok: #22c55e;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell; background: var(--bg); color: var(--text); }
+.site-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background: var(--panel); border-bottom: 1px solid #1f2937; position: sticky; top:0; }
+.brand { display:flex; align-items:center; gap:10px; }
+.logo { width: 36px; height: 36px; }
+.nav a { color: var(--text); text-decoration: none; margin: 0 8px; padding: 6px 10px; border:1px solid #1f2937; border-radius:8px; }
+.nav a.active, .nav a:hover { border-color: var(--accent); }
+.content { padding: 20px; max-width: 1100px; margin: 0 auto; }
+.hero { background:#0f172a; border:1px solid #1f2937; border-radius:12px; padding:20px; }
+.hero .btn { display:inline-block; margin-right:10px; padding:10px 14px; border-radius:8px; text-decoration:none; }
+.btn.primary { background: var(--accent); color: #fff; }
+.btn.secondary { background: #0f172a; color: var(--text); border:1px solid #1f2937; }
+.features { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-top: 20px; }
+.feature { background:#0f172a; border:1px solid #1f2937; border-radius:12px; padding:16px; }
+.gallery { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:20px; }
+.gallery img { width:100%; height:auto; border:1px solid #1f2937; border-radius:8px; }
+.site-footer { text-align:center; padding:16px; color: var(--muted); }
+
+.posts { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.post { background:#0f172a; border:1px solid #1f2937; border-radius:12px; padding:16px; }
+.post h3 { margin: 0 0 8px; }
+.post .meta { color: var(--muted); font-size: 0.9rem; }
+
+.shop-controls { display:flex; gap:10px; margin: 10px 0 20px; }
+.products { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.product { background:#0f172a; border:1px solid #1f2937; border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:8px; }
+.product img { width:100%; height:auto; border-radius:8px; }
+.product .price { color: var(--ok); font-weight:600; }

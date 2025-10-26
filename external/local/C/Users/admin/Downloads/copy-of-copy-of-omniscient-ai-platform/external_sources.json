@@ -1,0 +1,24 @@
+{
+  "github_repos": [
+    "robertpezdirc/omniscient-ai-platform",
+    "robertpezdirc-eng/OMNIBOT12"
+  ],
+  "gcs_buckets": [
+    "omni-assets-471712-n9"
+  ],
+  "cloud_run_urls": [
+    "https://omni-dashboard-661612368188.europe-west1.run.app",
+    "https://omni-dashboard-guzjyv6gfa-ew.a.run.app",
+    "https://omni-unified-platform-661612368188.europe-west1.run.app",
+    "https://omni-exec-api-661612368188.europe-west1.run.app",
+    "https://omni-frontend-661612368188.europe-west1.run.app",
+    "https://omni-professional-dashboard-661612368188.europe-west1.run.app",
+    "https://omni-platform-api-661612368188.europe-west1.run.app"
+  ],
+  "service_account_candidates": [
+    "service-account.json",
+    "service_account.json",
+    "service_account.omni-deployer.json"
+  ],
+  "destination_root": "external"
+}

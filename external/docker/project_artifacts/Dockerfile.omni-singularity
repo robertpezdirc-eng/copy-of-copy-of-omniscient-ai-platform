@@ -1,0 +1,173 @@
+# OMNI Singularity Quantum Dashboard v10.0 - Docker Container
+# Advanced Quantum Computing Platform with BCI Integration
+
+FROM python:3.11-slim as base
+
+# Set environment variables for OMNI Singularity
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV DEBIAN_FRONTEND=noninteractive
+ENV OMNI_VERSION=10.0
+ENV OMNI_MODE=full
+ENV RUN_HIDDEN=true
+ENV DEFAULT_LANGUAGE=sl
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
+    curl \
+    wget \
+    git \
+    libportaudio2 \
+    libasound2-dev \
+    libjack-dev \
+    espeak \
+    espeak-ng \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create omni user for security
+RUN useradd --create-home --shell /bin/bash omni
+
+# Set working directory
+WORKDIR /app
+
+# Copy and install Python requirements
+COPY requirements-omni.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy OMNI Singularity source code
+COPY . /app/
+
+# Create necessary directories
+RUN mkdir -p /app/OmniSingularity /app/OmniSingularity/workspace /app/OmniSingularity/memory /app/OmniSingularity/logs
+RUN chown -R omni:omni /app
+
+# Switch to omni user
+USER omni
+
+# Expose ports for OMNI services
+EXPOSE 8093 8080 8081 8082 8083
+
+# Health check for OMNI Singularity
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8093/health || exit 1
+
+# Default command for OMNI Singularity
+CMD ["python3", "omni_singularity_quantum_dashboard.py"]
+
+# BCI-Enhanced image with brain-computer interface support
+FROM base as bci-enhanced
+
+USER root
+
+# Install BCI-specific dependencies
+RUN apt-get update && apt-get install -y \
+    libusb-1.0-0 \
+    libbluetooth3 \
+    libbluetooth-dev \
+    bluez \
+    bluetooth \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install BCI Python libraries
+RUN pip install --no-cache-dir \
+    pylsl \
+    mne \
+    pyautogui \
+    keyboard \
+    mouse \
+    brainflow \
+    muselsl
+
+USER omni
+
+# BCI startup script
+RUN echo '#!/bin/bash\n\
+echo "🧠 Starting OMNI Singularity with BCI Integration..."\n\
+echo "🔬 Initializing brain-computer interface..."\n\
+python3 -c "import brainflow; print(\"✅ BrainFlow BCI library loaded\")"\n\
+python3 -c "import pylsl; print(\"✅ Lab Streaming Layer loaded\")"\n\
+python3 -c "import omni_quantum_cores; print(\"✅ Quantum cores loaded\")"\n\
+python3 -c "import omni_quantum_bci; print(\"✅ BCI integration loaded\")"\n\
+echo "🎯 OMNI Singularity with BCI ready!"\n\
+exec "$@"' > /app/start_bci.sh
+
+RUN chmod +x /app/start_bci.sh
+
+CMD ["/app/start_bci.sh", "python3", "omni_singularity_quantum_dashboard.py"]
+
+# GPU-Accelerated OMNI image
+FROM nvidia/cuda:12.1-devel-ubuntu22.04 as gpu-omni
+
+# Set environment variables for CUDA and OMNI
+ENV CUDA_VISIBLE_DEVICES=0
+ENV TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6 9.0"
+ENV OMNI_GPU_MODE=true
+
+# Install Python and dependencies
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-pip \
+    python3.11-dev \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    git \
+    curl \
+    wget \
+    libportaudio2 \
+    libasound2-dev \
+    libusb-1.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create omni user
+RUN useradd --create-home --shell /bin/bash omni
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements
+COPY requirements-omni.txt requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Install GPU-accelerated libraries
+RUN pip3 install --no-cache-dir \
+    torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 \
+    cupy-cuda12x \
+    numba \
+    qiskit-aer-gpu \
+    pennylane-gpu
+
+# Copy OMNI source code
+COPY . /app/
+
+# Create directories
+RUN mkdir -p /app/OmniSingularity /app/OmniSingularity/workspace /app/OmniSingularity/memory /app/OmniSingularity/logs
+RUN chown -R omni:omni /app
+
+# Switch to omni user
+USER omni
+
+# Expose ports
+EXPOSE 8093 8080 8081 8082 8083
+
+# GPU health check
+HEALTHCHECK --interval=60s --timeout=30s --start-period=120s --retries=3 \
+    CMD curl -f http://localhost:8093/health || exit 1
+
+# GPU startup script
+RUN echo '#!/bin/bash\n\
+echo "🚀 Starting OMNI Singularity Quantum Dashboard v10.0 (GPU Mode)"\n\
+echo "🔬 Initializing CUDA-accelerated quantum computing..."\n\
+python3 -c "import torch; print(f\"CUDA: {torch.cuda.is_available()}, GPUs: {torch.cuda.device_count()}\")"\n\
+python3 -c "import omni_quantum_cores; print(\"✅ GPU quantum cores loaded\")"\n\
+python3 -c "import omni_quantum_bci; print(\"✅ BCI integration loaded\")"\n\
+echo "🎯 OMNI Singularity with GPU + BCI ready!"\n\
+exec "$@"' > /app/start_gpu_bci.sh
+
+RUN chmod +x /app/start_gpu_bci.sh
+
+CMD ["/app/start_gpu_bci.sh", "python3", "omni_singularity_quantum_dashboard.py"]

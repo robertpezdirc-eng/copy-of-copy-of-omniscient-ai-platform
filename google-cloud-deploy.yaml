@@ -1,0 +1,272 @@
+
+# OMNI Platform - Google Cloud Deployment Configuration
+# Complete Kubernetes deployment for production environment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omni-platform-deployment
+  labels:
+    app: omni-platform
+    version: "4.0.0"
+    environment: production
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: omni-platform
+  template:
+    metadata:
+      labels:
+        app: omni-platform
+        version: "4.0.0"
+        environment: production
+    spec:
+      containers:
+      - name: omni-platform
+        image: gcr.io/omni-platform-2024/omni-platform:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: PORT
+          value: "8080"
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: omni-secrets
+              key: secret-key
+        - name: GCS_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: omni-secrets
+              key: gcs-bucket
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: omni-secrets
+              key: openai-api-key
+        - name: GOOGLE_CLOUD_PROJECT
+          value: "omni-platform-2024"
+        - name: GOOGLE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: omni-secrets
+              key: google-api-key
+        - name: QUANTUM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: omni-secrets
+              key: quantum-api-key
+        - name: DEV_MODE
+          value: "false"
+        - name: OMNI_SYSTEM_CHECKS
+          value: "false"
+        - name: ENVIRONMENT
+          value: "production"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        volumeMounts:
+        - name: logs-volume
+          mountPath: /app/logs
+        - name: config-volume
+          mountPath: /app/config
+      volumes:
+      - name: logs-volume
+        emptyDir: {}
+      - name: config-volume
+        configMap:
+          name: omni-config
+      # Sidecar container for monitoring
+      - name: monitoring-sidecar
+        image: gcr.io/omni-platform-2024/omni-monitoring:latest
+        ports:
+        - containerPort: 9090
+          name: prometheus
+        env:
+        - name: PROMETHEUS_TARGET
+          value: "localhost:8080"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omni-platform-service
+  labels:
+    app: omni-platform
+spec:
+  selector:
+    app: omni-platform
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omni-platform-internal
+  labels:
+    app: omni-platform
+spec:
+  selector:
+    app: omni-platform
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: omni-secrets
+  labels:
+    app: omni-platform
+type: Opaque
+data:
+  # Base64 encoded production secrets (replace with actual values)
+  secret-key: b21uaV9wbGF0Zm9ybV9wcm9kdWN0aW9uX3NlY3JldF9rZXlfMjAyNF9jaGFuZ2VfaW5fcHJvZHVjdGlvbg==
+  gcs-bucket: b21uaS1zaW5ndWxhcml0eS1zdG9yYWdl
+  openai-api-key: WU9VUl9PQ1RFVEVOVUFJVF9LRVk=
+  google-api-key: WU9VUl9HT09HTEVfQVBJX0tFWQ==
+  quantum-api-key: WU9VUl9RVUFOVFVNX0FQSV9LRVk=
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omni-config
+  labels:
+    app: omni-platform
+data:
+  config.json: |
+    {
+      "platform": {
+        "name": "OMNI Platform",
+        "version": "4.0.0",
+        "environment": "production",
+        "features": {
+          "quantum_singularity": true,
+          "google_cloud_integration": true,
+          "openai_integration": true,
+          "monitoring": true,
+          "logging": true
+        }
+      },
+      "google_cloud": {
+        "project_id": "omni-platform-2024",
+        "region": "europe-west1",
+        "storage_bucket": "omni-singularity-storage",
+        "monitoring_enabled": true,
+        "logging_enabled": true
+      },
+      "monitoring": {
+        "metrics_interval": 30,
+        "health_check_interval": 60,
+        "alert_thresholds": {
+          "cpu_usage": 80,
+          "memory_usage": 85,
+          "error_rate": 5
+        }
+      }
+    }
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: omni-platform-ingress
+  labels:
+    app: omni-platform
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: "omni-platform-ip"
+    networking.gke.io/managed-certificates: "omni-platform-cert"
+spec:
+  defaultBackend:
+    service:
+      name: omni-platform-service
+      port:
+        number: 80
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: omni-platform-cert
+spec:
+  domains:
+  - omni-platform.yourdomain.com
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: omni-platform-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: omni-platform
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: omni-platform-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: omni-platform-deployment
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80

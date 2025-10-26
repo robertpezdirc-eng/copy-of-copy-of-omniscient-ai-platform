@@ -1,0 +1,75 @@
+{
+  "name": "omni_desktop",
+  "version": "1.0.0",
+  "description": "OMNI AI Desktop Application - Electron Wrapper",
+  "main": "electron_main.js",
+  "homepage": "./",
+  "scripts": {
+    "start": "electron .",
+    "dev": "ELECTRON_IS_DEV=true electron .",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "build-mac": "electron-builder --mac",
+    "build-linux": "electron-builder --linux",
+    "dist": "npm run build",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.omni.ai.desktop",
+    "productName": "OMNI AI Dashboard",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "**/*",
+      "!**/*.md",
+      "!dist-electron/**/*",
+      "!build/**/*",
+      "!**/*.log"
+    ],
+    "win": {
+      "icon": "assets/omni_icon.ico",
+      "target": "nsis"
+    },
+    "mac": {
+      "icon": "assets/omni_icon.icns",
+      "target": "dmg"
+    },
+    "linux": {
+      "icon": "assets/omni_icon.png",
+      "target": "AppImage"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/omni_icon.ico",
+      "uninstallerIcon": "assets/omni_icon.ico",
+      "installerHeaderIcon": "assets/omni_icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "OMNI AI Dashboard"
+    }
+  },
+  "devDependencies": {
+    "electron": "^26.0.0",
+    "electron-builder": "^24.6.4",
+    "concurrently": "^8.2.0"
+  },
+  "dependencies": {
+    "electron-log": "^5.0.0",
+    "electron-updater": "^6.1.4"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "omni",
+    "ai",
+    "dashboard",
+    "electron",
+    "desktop",
+    "artificial-intelligence"
+  ],
+  "author": "OMNI AI Team",
+  "license": "MIT"
+}

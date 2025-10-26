@@ -1,0 +1,47 @@
+# Cloud Build pipeline to build and deploy omni12 placeholder to Cloud Run
+# Stabilizes the service with a minimal FastAPI server on port 8080
+
+substitutions:
+  _REGION: "europe-west1"
+  _PROJECT_ID: "refined-graph-471712-n9"
+  _SERVICE_NAME: "omni12"
+  _REPO_NAME: "cloud-run-source-deploy"
+  _IMAGE_PATH: "cloud-run-source-deploy/omnibot12/omni12"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+  # Build and push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        echo "Building image with Dockerfile.omni12"
+        docker build -f Dockerfile.omni12 -t "${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_IMAGE_PATH}:$SHORT_SHA" .
+        docker push "${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_IMAGE_PATH}:$SHORT_SHA"
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        echo "Deploying image to Cloud Run service ${_SERVICE_NAME} in ${_REGION}"
+        gcloud run deploy "${_SERVICE_NAME}" \
+          --image "${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_IMAGE_PATH}:$SHORT_SHA" \
+          --platform managed \
+          --region "${_REGION}" \
+          --allow-unauthenticated \
+          --port 8080 \
+          --timeout 300 \
+          --max-instances=3 \
+          --memory=512Mi \
+          --cpu=1 \
+          --set-env-vars PORT=8080
+
+images:
+- '${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_IMAGE_PATH}:$SHORT_SHA'

@@ -1,0 +1,112 @@
+name: omni-blue-green
+
+services:
+
+  omni-api-blue:
+    build:
+      context: ./OMNIBOT13
+      dockerfile: server/Dockerfile
+    container_name: omni-api-blue
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "3001"
+      # Connect to existing host-published MongoDB container via host.docker.internal (no auth)
+      MONGODB_URI: mongodb://host.docker.internal:27017/omni
+      # 🔐 Security hardening: strong secrets for JWT/auth/session/encryption
+      JWT_SECRET: "77fdc36c8e21b8fa50f2ad7c9be0173e89ca274bfbc8543f6d3260a1fa3c56e2"
+      JWT_REFRESH_SECRET: "30b1e2f3c4d5a6b7c8d9e0f1a23b45c67d8901e2f3c4a5b6d7e8f9a0b1c2d3e4"
+      SESSION_SECRET: "b167a0ceff93d52e94b2b005bdad7e4a6dee12c59fb60cff4e7f1a33b8ffec2a"
+      ENCRYPTION_KEY: "c834780ed961f2a3b45c6789d0e1f2a3b45c6789d0e1f2143658709abcdeff12"
+      # Global server CORS (HTTP + Socket.IO)
+      OMNI_CORS_ORIGINS: "http://localhost:3000 http://localhost:3001 http://127.0.0.1:3000 http://127.0.0.1:3001 http://192.168.2.105:3000 http://192.168.2.105:3001 https://localhost:3000 https://localhost:3001 https://127.0.0.1:3000 https://127.0.0.1:3001 https://192.168.2.105:3000 https://192.168.2.105:3001"
+      # Explicitly disable BIC on blue (canary on green)
+      BIC_ENABLED: "false"
+      BIC_MODE: "disabled"
+      # Optional: point to key file (mounted below). Avoids issues with host env/newlines on Windows.
+      OPENAI_API_KEY_FILE: "/app/openai key.txt"
+      # Disable external brokers for events to avoid Kafka ECONNREFUSED noise
+      EVENT_BUS: "local"
+      # Optional: proxy/no_proxy if needed in corporate networks
+      # HTTP_PROXY: ${HTTP_PROXY}
+      # HTTPS_PROXY: ${HTTPS_PROXY}
+      # NO_PROXY: ${NO_PROXY}
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./openai key.txt:/app/openai key.txt:ro
+    networks:
+      - omni-net
+
+  omni-api-green:
+    build:
+      context: ./OMNIBOT13
+      dockerfile: server/Dockerfile
+    container_name: omni-api-green
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "3002"
+      # Connect to existing host-published MongoDB container via host.docker.internal (no auth)
+      MONGODB_URI: mongodb://host.docker.internal:27017/omni
+      # 🔐 Security hardening: strong secrets for JWT/auth/session/encryption
+      JWT_SECRET: "77fdc36c8e21b8fa50f2ad7c9be0173e89ca274bfbc8543f6d3260a1fa3c56e2"
+      JWT_REFRESH_SECRET: "30b1e2f3c4d5a6b7c8d9e0f1a23b45c67d8901e2f3c4a5b6d7e8f9a0b1c2d3e4"
+      SESSION_SECRET: "b167a0ceff93d52e94b2b005bdad7e4a6dee12c59fb60cff4e7f1a33b8ffec2a"
+      ENCRYPTION_KEY: "c834780ed961f2a3b45c6789d0e1f2a3b45c6789d0e1f2143658709abcdeff12"
+      # 🤖 Runtime tuning
+      ANGEL_LEARNING_ENABLE: "true"
+      ANGEL_LEARNING_INTERVAL_MS: "30000"
+      OMNI_MAX_CONCURRENCY: "6"
+      # Global server CORS (HTTP + Socket.IO)
+      OMNI_CORS_ORIGINS: "http://localhost:3000 http://localhost:3001 http://127.0.0.1:3000 http://127.0.0.1:3001 http://192.168.2.105:3000 http://192.168.2.105:3001 https://localhost:3000 https://localhost:3001 https://127.0.0.1:3000 https://127.0.0.1:3001 https://192.168.2.105:3000 https://192.168.2.105:3001"
+      BIC_ENABLED: "true"
+      BIC_MODE: "remote"
+      # Remote BIC API configuration (set these to your external service)
+      BIC_API_URL: ""
+      BIC_API_TOKEN: ""
+      # Optional: direct company register API for local plugin fallback
+      COMPANY_REG_API_URL: ""
+      COMPANY_REG_API_TOKEN: ""
+      # Simple auth for /api/bic/task (change this in production)
+      BIC_AUTH_ENABLE: "true"
+      BIC_AUTH_KEYS: "2f652c16b13a45e98f0c3d71a2b4c9de0f1a2b3c4d5e6f708192a3b4c5d6e7f8 fe3b98c1247ad0e56391a4b7c8d9e0f1a2b3c4d5e6f7098a1b2c3d4e5f607182 7a9c3e12d5f84b6a9170c3d2e5f6a8b9c0d1e2f3a4b5c6d7e8091a2b3c4d5e6f c0ffee42deadbeef00aa11bb22cc33dd44ee55ff6677889900aabbccddeeff1"
+      BIC_AUTH_ROLES: "2f652c16b13a45e98f0c3d71a2b4c9de0f1a2b3c4d5e6f708192a3b4c5d6e7f8:admin; fe3b98c1247ad0e56391a4b7c8d9e0f1a2b3c4d5e6f7098a1b2c3d4e5f607182:readonly; 7a9c3e12d5f84b6a9170c3d2e5f6a8b9c0d1e2f3a4b5c6d7e8091a2b3c4d5e6f:worker; c0ffee42deadbeef00aa11bb22cc33dd44ee55ff6677889900aabbccddeeff1:ocr"
+      BIC_DEFAULT_ROLE: "readonly"
+      # BIC route hardening configs
+      BIC_CORS_ORIGINS: "http://localhost:3000 http://localhost:3001 http://127.0.0.1:3000 http://127.0.0.1:3001 http://192.168.2.105:3000 http://192.168.2.105:3001"
+      BIC_RATE_LIMIT_MAX: "20"
+      BIC_RATE_LIMIT_WINDOW_MS: "60000"
+      BIC_JSON_SIZE_BYTES: "1500000"
+      # Global JSON limit for app
+      JSON_BODY_LIMIT: "2mb"
+      # Optional: point to key file (mounted below). Avoids issues with host env/newlines on Windows.
+      OPENAI_API_KEY_FILE: "/app/openai key.txt"
+      # Disable external brokers for events to avoid Kafka ECONNREFUSED noise
+      EVENT_BUS: "local"
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./openai key.txt:/app/openai key.txt:ro
+    networks:
+      - omni-net
+
+  omni-proxy:
+    image: nginx:alpine
+    container_name: omni-proxy
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+      - "8443:443"
+    volumes:
+      - ./nginx/omni-proxy.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./frontend/build:/usr/share/nginx/html:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - omni-api-green
+    networks:
+      - omni-net
+
+networks:
+  omni-net:
+    driver: bridge

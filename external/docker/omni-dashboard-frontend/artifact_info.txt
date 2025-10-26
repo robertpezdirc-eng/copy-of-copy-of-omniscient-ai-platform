@@ -1,0 +1,5 @@
+Project: refined-graph-471712-n9
+Region: europe-west1
+Repository: cloud-run-source-deploy
+Image: omni-dashboard/frontend
+Digest: sha256:d9717656fd7c618476508fe298c8fe4fdfed9830798ee92a202f426e8d139652

@@ -1,0 +1,377 @@
+version: '3.8'
+
+# OMNI Quantum Platform - Docker Compose Orchestration
+# Complete microservices deployment for quantum computing infrastructure
+
+services:
+  # Main Quantum Platform Service
+  quantum-platform:
+    build:
+      context: .
+      dockerfile: Dockerfile.quantum-platform
+      target: production
+    container_name: omni-quantum-platform
+    restart: unless-stopped
+
+    # Resource allocation for quantum computing
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 20G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+
+    # Environment configuration
+    environment:
+      - QUANTUM_PLATFORM_MODE=production
+      - QUANTUM_CORES_MAX=8
+      - QUANTUM_STORAGE_PATH=/app/quantum_storage
+      - MONITORING_LEVEL=standard
+      - LOG_LEVEL=INFO
+      - ENABLE_GPU=${ENABLE_GPU:-false}
+
+    # Volume mounts for persistent data
+    volumes:
+      - quantum_storage_data:/app/quantum_storage
+      - quantum_logs:/app/logs
+      - ./config:/app/config:ro
+
+    # Network configuration
+    networks:
+      - quantum-network
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    # Dependencies
+    depends_on:
+      quantum-storage:
+        condition: service_healthy
+      quantum-redis:
+        condition: service_healthy
+
+  # Quantum Storage Service (SQLite backend)
+  quantum-storage:
+    image: nouchka/sqlite3:latest
+    container_name: omni-quantum-storage
+    restart: unless-stopped
+
+    # Storage configuration
+    environment:
+      - SQLITE_DATABASE=quantum_storage.db
+      - SQLITE_PATH=/data
+
+    volumes:
+      - quantum_storage_db:/data
+
+    networks:
+      - quantum-network
+
+    healthcheck:
+      test: ["CMD", "sqlite3", "/data/quantum_storage.db", "SELECT 1;"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Redis Cache for Quantum Operations
+  quantum-redis:
+    image: redis:7-alpine
+    container_name: omni-quantum-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-quantum_redis_pass}
+
+    volumes:
+      - quantum_redis_data:/data
+
+    networks:
+      - quantum-network
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # Quantum Monitoring Dashboard
+  quantum-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: omni-quantum-dashboard
+    restart: unless-stopped
+
+    environment:
+      - DASHBOARD_PORT=8081
+      - MONITORING_UPDATE_INTERVAL=5
+
+    volumes:
+      - quantum_logs:/app/logs:ro
+
+    networks:
+      - quantum-network
+
+    depends_on:
+      - quantum-platform
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Load Balancer for Quantum Services
+  quantum-load-balancer:
+    image: nginx:alpine
+    container_name: omni-quantum-lb
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./ssl:/etc/nginx/ssl:ro
+
+    networks:
+      - quantum-network
+
+    depends_on:
+      - quantum-platform
+      - quantum-dashboard
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Quantum API Gateway
+  quantum-api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.api-gateway
+    container_name: omni-quantum-api
+    restart: unless-stopped
+
+    environment:
+      - API_PORT=8082
+      - QUANTUM_PLATFORM_URL=http://quantum-platform:8080
+      - ENABLE_CORS=true
+      - API_VERSION=v1
+
+    networks:
+      - quantum-network
+
+    depends_on:
+      - quantum-platform
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Quantum Worker Nodes (for distributed computing)
+  quantum-worker-1:
+    build:
+      context: .
+      dockerfile: Dockerfile.quantum-worker
+    container_name: omni-quantum-worker-1
+    restart: unless-stopped
+
+    environment:
+      - WORKER_ID=worker-1
+      - QUANTUM_PLATFORM_URL=http://quantum-platform:8080
+      - WORKER_CORES=4
+      - WORKER_MEMORY=4G
+
+    volumes:
+      - quantum_worker_data:/app/worker_data
+
+    networks:
+      - quantum-network
+
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+
+    depends_on:
+      - quantum-platform
+
+  quantum-worker-2:
+    build:
+      context: .
+      dockerfile: Dockerfile.quantum-worker
+    container_name: omni-quantum-worker-2
+    restart: unless-stopped
+
+    environment:
+      - WORKER_ID=worker-2
+      - QUANTUM_PLATFORM_URL=http://quantum-platform:8080
+      - WORKER_CORES=4
+      - WORKER_MEMORY=4G
+
+    volumes:
+      - quantum_worker_data:/app/worker_data
+
+    networks:
+      - quantum-network
+
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+
+    depends_on:
+      - quantum-platform
+
+  # Quantum Entanglement Node
+  quantum-entanglement-node:
+    build:
+      context: .
+      dockerfile: Dockerfile.entanglement-node
+    container_name: omni-quantum-entanglement
+    restart: unless-stopped
+
+    environment:
+      - NODE_ID=entanglement-node-1
+      - ENTANGLEMENT_PORT=8083
+      - QUANTUM_PLATFORM_URL=http://quantum-platform:8080
+
+    networks:
+      - quantum-network
+
+    depends_on:
+      - quantum-platform
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/entanglement/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Prometheus for Metrics Collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: omni-quantum-prometheus
+    restart: unless-stopped
+
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+
+    networks:
+      - quantum-network
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Grafana for Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: omni-quantum-grafana
+    restart: unless-stopped
+
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-quantum_grafana_pass}
+
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/dashboards:ro
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+
+    networks:
+      - quantum-network
+
+    depends_on:
+      - prometheus
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# Named volumes for data persistence
+volumes:
+  quantum_storage_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/quantum_storage
+
+  quantum_storage_db:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/quantum_db
+
+  quantum_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/logs
+
+  quantum_redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/redis
+
+  quantum_worker_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/worker_data
+
+  prometheus_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/prometheus
+
+  grafana_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/grafana
+
+# Networks for service communication
+networks:
+  quantum-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1

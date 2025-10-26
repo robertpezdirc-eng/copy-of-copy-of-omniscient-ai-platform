@@ -1,0 +1,10 @@
+{
+  "f546dd6f1ad04d00813634f21198ecce": {
+    "id": "f546dd6f1ad04d00813634f21198ecce",
+    "tenant_id": "db-demo",
+    "mode": "bidirectional",
+    "batches": 2,
+    "status": "completed",
+    "created_at": 1761435421539
+  }
+}
