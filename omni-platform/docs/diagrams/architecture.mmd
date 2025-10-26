@@ -1,20 +1,20 @@
 flowchart TD
-    U[Users / Admin] -->|React (Vite)| F[Frontend Admin Dashboard]
+    U[Users/Admin] -->|React Vite| F[Frontend Admin Dashboard]
     F -->|REST| B[FastAPI Main App]
 
     subgraph Agents
-      A[Access Controller\nUserAgent\nAPI Keys] --> B
-      L[Billing Agent\nCatalog CRUD] --> B
-      P[Policy Agent\nRevenue History] --> B
-      R[RL Core Agent\nMarket Process] --> B
+      A[Access Controller UserAgent API Keys] --> B
+      L[Billing Agent Catalog CRUD] --> B
+      P[Policy Agent Revenue History] --> B
+      R[RL Core Agent Market Process] --> B
     end
 
-    B -->|Read/Write| J[(JSON Storage\nagents.json\nbilling_catalog.json\npolicies.json)]
+    B -->|Read/Write| J[JSON Storage: agents.json, billing_catalog.json, policies.json]
 
     R -->|Create| L
     R -->|Record Distribution| P
 
     subgraph Deploy
-      C[Cloud Run\nPORT=8080] --> B
-      V[Vercel Frontend\nVITE_API_BASE_URL] --> F
+      C[Cloud Run PORT=8080] --> B
+      V[Vercel Frontend VITE_API_BASE_URL] --> F
     end
