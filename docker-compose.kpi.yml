@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  revenue-exporter:
+    build:
+      context: ./exporters
+      dockerfile: Dockerfile.revenue
+    container_name: omni-revenue-exporter
+    restart: always
+    environment:
+      INITIAL_REVENUE_EUR: "2000000" # začetna referenca
+      INITIAL_ACTIVE_USERS: "10000"
+      INITIAL_CONVERSION_RATE: "0.05"
+      KPI_FILE: "/data/business_kpis.json"
+      POLL_SECONDS: "10"
+    volumes:
+      - ./data:/data:ro
+    ports:
+      - "9101:9101"
+    networks:
+      - omni-network
+
+networks:
+  omni-network:
+    external: true

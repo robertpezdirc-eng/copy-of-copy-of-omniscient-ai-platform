@@ -74,7 +74,10 @@ Add `.github/workflows/cloudrun.yml` (needs secrets `GCP_PROJECT`, `GCP_REGION`,
 - Set env `VITE_API_BASE_URL` to your backend URL.
 - Deploy with Vercel; optional `vercel.json` included.
 
-## Investor Brief (see `docs/investor_brief.md`)
+## Monetization Status
+- Status: Active — preparing listings and investor outreach.
+- Deploy targets: Cloud Run (backend), Vercel (frontend).
+- Assets: Investor Brief PDF, demo script, marketplace guide.
 - Architecture overview and agents.
 - Market positioning.
 - Monetization and valuation approach.

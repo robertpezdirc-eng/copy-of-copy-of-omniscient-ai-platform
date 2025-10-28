@@ -1,0 +1,62 @@
+{
+  "ai_agent": {
+    "service": "ai_agent",
+    "pricing_model": "pay_per_use",
+    "base_price": 0.0,
+    "per_request_price": 0.01,
+    "per_mb_price": 0.0,
+    "per_minute_price": 0.0,
+    "tier_multipliers": {
+      "free": 0.0,
+      "basic": 0.5,
+      "pro": 0.8,
+      "enterprise": 1.0
+    },
+    "free_tier_quota": 100
+  },
+  "quantum_compute": {
+    "service": "quantum_compute",
+    "pricing_model": "pay_per_use",
+    "base_price": 0.0,
+    "per_request_price": 0.5,
+    "per_mb_price": 0.0,
+    "per_minute_price": 1.0,
+    "tier_multipliers": {
+      "free": 0.0,
+      "basic": 0.3,
+      "pro": 0.7,
+      "enterprise": 1.0
+    },
+    "free_tier_quota": 10
+  },
+  "monitoring": {
+    "service": "monitoring",
+    "pricing_model": "tiered",
+    "base_price": 0.0,
+    "per_request_price": 0.001,
+    "per_mb_price": 0.0,
+    "per_minute_price": 0.0,
+    "tier_multipliers": {
+      "free": 0.0,
+      "basic": 0.5,
+      "pro": 0.8,
+      "enterprise": 1.0
+    },
+    "free_tier_quota": 1000
+  },
+  "analytics": {
+    "service": "analytics",
+    "pricing_model": "pay_per_use",
+    "base_price": 0.0,
+    "per_request_price": 0.005,
+    "per_mb_price": 0.1,
+    "per_minute_price": 0.0,
+    "tier_multipliers": {
+      "free": 0.0,
+      "basic": 0.6,
+      "pro": 0.8,
+      "enterprise": 1.0
+    },
+    "free_tier_quota": 500
+  }
+}

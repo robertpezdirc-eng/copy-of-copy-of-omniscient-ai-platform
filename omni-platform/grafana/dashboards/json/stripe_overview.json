@@ -1,0 +1,106 @@
+{
+  "id": null,
+  "uid": "stripe-overview",
+  "title": "Stripe Overview",
+  "tags": ["stripe", "infinity"],
+  "schemaVersion": 38,
+  "version": 1,
+  "time": {"from": "now-30d", "to": "now"},
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Charges (count)",
+      "gridPos": {"h": 6, "w": 8, "x": 0, "y": 0},
+      "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": ""},
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": ""},
+          "queryType": "url",
+          "source": "url",
+          "format": "json",
+          "url": "https://api.stripe.com/v1/charges?limit=100&created[gte]=${__unixEpochFrom}&created[lte]=${__unixEpochTo}",
+          "root_selector": "data",
+          "columns": [
+            {"selector": "id", "text": "id"}
+          ]
+        }
+      ],
+      "options": {"reduceOptions": {"calcs": ["count"], "fields": "id"}}
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Customers (count)",
+      "gridPos": {"h": 6, "w": 8, "x": 8, "y": 0},
+      "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": ""},
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": ""},
+          "queryType": "url",
+          "source": "url",
+          "format": "json",
+          "url": "https://api.stripe.com/v1/customers?limit=100",
+          "root_selector": "data",
+          "columns": [
+            {"selector": "id", "text": "id"}
+          ]
+        }
+      ],
+      "options": {"reduceOptions": {"calcs": ["count"], "fields": "id"}}
+    },
+    {
+      "id": 3,
+      "type": "bargauge",
+      "title": "Subscriptions by status",
+      "gridPos": {"h": 8, "w": 16, "x": 16, "y": 0},
+      "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": ""},
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": ""},
+          "queryType": "url",
+          "source": "url",
+          "format": "json",
+          "url": "https://api.stripe.com/v1/subscriptions?limit=100",
+          "root_selector": "data",
+          "columns": [
+            {"selector": "status", "text": "status"}
+          ]
+        }
+      ],
+      "transformations": [
+        {"id": "groupBy", "options": {"fields": {"status": {"aggregations": ["count"]}}}}
+      ]
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Charges per day",
+      "gridPos": {"h": 10, "w": 24, "x": 0, "y": 8},
+      "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": ""},
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": ""},
+          "queryType": "url",
+          "source": "url",
+          "format": "json",
+          "url": "https://api.stripe.com/v1/charges?limit=100&created[gte]=${__unixEpochFrom}&created[lte]=${__unixEpochTo}",
+          "root_selector": "data",
+          "columns": [
+            {"selector": "created", "text": "created"},
+            {"selector": "amount", "text": "amount"}
+          ]
+        }
+      ],
+      "transformations": [
+        {"id": "organize", "options": {"renameByName": {"created": "time", "amount": "value"}}},
+        {"id": "convertFieldType", "options": {"conversions": [{"targetField": "time", "type": "number"}, {"targetField": "value", "type": "number"}]}},
+        {"id": "groupBy", "options": {"fields": {"time": {"aggregations": ["last"]}, "value": {"aggregations": ["sum"]}}}}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+groups:
+  - name: availability
+    rules:
+      - alert: HighErrorRate5xx
+        expr: sum(rate(http_requests_total{code=~"5.."}[5m])) / clamp_min(sum(rate(http_requests_total[5m])), 1) > 0.05
+        for: 10m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: "HTTP 5xx error rate >5%"
+          description: "High error rate detected. Investigate services with elevated 5xx."
+
+      - alert: LowSuccessRate
+        expr: sum(rate(http_requests_total{code=~"2.."}[5m])) / clamp_min(sum(rate(http_requests_total[5m])), 1) < 0.95
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: "HTTP success rate <95%"
+          description: "Success rate below SLO threshold."

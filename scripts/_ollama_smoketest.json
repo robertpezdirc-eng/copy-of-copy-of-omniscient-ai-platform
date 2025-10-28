@@ -1,0 +1,27 @@
+﻿{
+    "Version":  "ollama version is 0.12.6",
+    "ApiReachable":  true,
+    "ApiVersion":  {
+                       "version":  "0.12.6"
+                   },
+    "ApiModels":  [
+                      "qwen3-coder:30b"
+                  ],
+    "CliModels":  [
+                      "qwen3-coder:30b"
+                  ],
+    "Generate":  {
+                     "Method":  "API /generate",
+                     "Model":  "qwen3-coder:30b",
+                     "Ok":  false,
+                     "DurationSec":  303.4,
+                     "ResponsePreview":  null,
+                     "Error":  "The operation has timed out"
+                 },
+    "CliFallback":  {
+                        "Method":  "CLI run",
+                        "Model":  "qwen3-coder:30b",
+                        "Ok":  false,
+                        "Error":  "Exception calling \"Substring\" with \"2\" argument(s): \"Index and length must refer to a location within the string.\r\nParameter name: length\""
+                    }
+}

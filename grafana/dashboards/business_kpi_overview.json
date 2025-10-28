@@ -1,0 +1,63 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "title": "Omni Business KPI Overview",
+  "timezone": "browser",
+  "schemaVersion": 37,
+  "version": 1,
+  "refresh": "30s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Revenue (EUR)",
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+      "targets": [{"expr": "omni_revenue_eur"}],
+      "options": {"reduceOptions": {"calcs": ["last"]}},
+      "fieldConfig": {"defaults": {"unit": "currency:EUR"}}
+    },
+    {
+      "type": "stat",
+      "title": "Active Users",
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+      "targets": [{"expr": "omni_active_users"}],
+      "options": {"reduceOptions": {"calcs": ["last"]}}
+    },
+    {
+      "type": "stat",
+      "title": "Conversion Rate",
+      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+      "targets": [{"expr": "omni_conversion_rate"}],
+      "options": {"reduceOptions": {"calcs": ["last"]}},
+      "fieldConfig": {"defaults": {"unit": "percentunit"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Revenue Trend (24h)",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+      "targets": [{"expr": "omni_revenue_eur"}],
+      "fieldConfig": {"defaults": {"unit": "currency:EUR"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "HTTP Success Rate",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+      "targets": [{"expr": "sum(rate(http_requests_total{code=~\"2..\"}[5m])) / sum(rate(http_requests_total[5m]))"}],
+      "fieldConfig": {"defaults": {"unit": "percentunit"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Error Rate 5xx",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+      "targets": [{"expr": "sum(rate(http_requests_total{code=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))"}],
+      "fieldConfig": {"defaults": {"unit": "percentunit"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency P95",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+      "targets": [{"expr": "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket[5m])))"}],
+      "fieldConfig": {"defaults": {"unit": "s"}}
+    }
+  ]
+}

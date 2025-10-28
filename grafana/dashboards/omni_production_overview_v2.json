@@ -1,0 +1,106 @@
+{
+  "id": null,
+  "uid": "omni-prod-overview-v2",
+  "title": "Omni Production Overview (v2)",
+  "tags": ["omni", "production"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "templating": {
+    "list": [
+      {
+        "type": "query",
+        "name": "job",
+        "label": "Job",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "Prometheus"
+        },
+        "query": "label_values(up, job)",
+        "refresh": 1,
+        "hide": 0
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Service Up",
+      "gridPos": {"x": 0, "y": 0, "w": 6, "h": 6},
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [
+        {"expr": "avg(up{job=~\"$job\"})", "legendFormat": "up"}
+      ],
+      "options": {
+        "reduceOptions": {"calcs": ["last"], "values": false},
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            {"value": null, "color": "red"},
+            {"value": 0.5, "color": "orange"},
+            {"value": 0.9, "color": "green"}
+          ]
+        }
+      }
+    },
+    {
+      "type": "timeSeries",
+      "title": "HTTP Success Rate",
+      "gridPos": {"x": 6, "y": 0, "w": 9, "h": 6},
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [
+        {"expr": "sum(rate(http_requests_total{code=~\"2..\",job=~\"$job\"}[5m])) / sum(rate(http_requests_total{job=~\"$job\"}[5m]))", "legendFormat": "success"}
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {"mode": "absolute", "steps": [{"value": null, "color": "red"}, {"value": 0.95, "color": "green"}]}
+        }
+      }
+    },
+    {
+      "type": "timeSeries",
+      "title": "Latency p95",
+      "gridPos": {"x": 15, "y": 0, "w": 9, "h": 6},
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [
+        {"expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=~\"$job\"}[5m])) by (le))", "legendFormat": "p95"}
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Revenue (EUR)",
+      "gridPos": {"x": 0, "y": 6, "w": 6, "h": 6},
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [
+        {"expr": "sum(omni_revenue_eur{job=~\"$job\"})", "legendFormat": "revenue"}
+      ],
+      "options": {
+        "reduceOptions": {"calcs": ["last"], "values": false}
+      }
+    },
+    {
+      "type": "timeSeries",
+      "title": "Errors Rate",
+      "gridPos": {"x": 6, "y": 6, "w": 9, "h": 6},
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [
+        {"expr": "sum(rate(http_requests_total{code=~\"5..\",job=~\"$job\"}[5m]))", "legendFormat": "5xx"}
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "AI Provider Availability",
+      "gridPos": {"x": 15, "y": 6, "w": 9, "h": 6},
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [
+        {"expr": "avg(up{job=~\"vertex-ai\"})", "legendFormat": "vertex"}
+      ]
+    }
+  ],
+  "annotations": {
+    "list": [
+      {"name": "Deployments", "type": "tags", "enable": true, "iconColor": "blue"}
+    ]
+  }
+}

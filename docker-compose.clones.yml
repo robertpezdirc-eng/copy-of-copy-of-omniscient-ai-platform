@@ -1,0 +1,50 @@
+services:
+  omni-pov-clone-1:
+    image: omni-agent:latest
+    container_name: omni-pov-clone-1
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_pov
+      PORT: 8000
+      LOG_LEVEL: info
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >
+          python -c "import urllib.request,sys; r=urllib.request.urlopen('http://localhost:8000/ready', timeout=5); s=r.read().decode(); sys.exit(0 if (r.getcode()==200 and '\"ok\":true' in s) else 1)"
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - omni-net
+    ports:
+      - "8210:8000"
+    expose:
+      - "8000"
+  omni-pov-clone-2:
+    image: omni-agent:latest
+    container_name: omni-pov-clone-2
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_pov
+      PORT: 8000
+      LOG_LEVEL: info
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >
+          python -c "import urllib.request,sys; r=urllib.request.urlopen('http://localhost:8000/ready', timeout=5); s=r.read().decode(); sys.exit(0 if (r.getcode()==200 and '\"ok\":true' in s) else 1)"
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - omni-net
+    ports:
+      - "8211:8000"
+    expose:
+      - "8000"
+networks:
+  omni-net:
+    external: true

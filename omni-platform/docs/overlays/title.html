@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Omni Platform – Title</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1f2937 50%, #0b1020 100%);
+      color: #e5e7eb;
+      font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
+    .wrap {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      gap: 24px;
+    }
+    .title { font-size: 56px; font-weight: 800; letter-spacing: 0.5px; }
+    .subtitle { font-size: 24px; color: #cbd5e1; }
+    .pill {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: #93c5fd;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .footer {
+      position: fixed; bottom: 24px; left: 0; right: 0;
+      text-align: center; color: #94a3b8; font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="pill">Live Demo</div>
+    <div class="title">Omni Platform</div>
+    <div class="subtitle">Architecture • Admin Dashboard • FinOps Analytics</div>
+  </div>
+  <div class="footer">Vite Frontend • FastAPI Backend • Cloud Run & Vercel</div>
+</body>
+</html>

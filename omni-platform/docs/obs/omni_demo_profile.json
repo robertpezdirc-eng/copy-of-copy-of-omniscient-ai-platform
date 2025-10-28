@@ -1,0 +1,101 @@
+{
+  "name": "Omni Demo Profile",
+  "video": {
+    "base_width": 1920,
+    "base_height": 1080,
+    "output_width": 1920,
+    "output_height": 1080,
+    "fps_type": 1,
+    "fps_num": 30,
+    "fps_den": 1,
+    "format": "NV12",
+    "colorspace": "709",
+    "range": "Partial"
+  },
+  "audio": {
+    "sample_rate": 48000,
+    "channels": 2,
+    "format": "Float"
+  },
+  "output": {
+    "mode": "Simple",
+    "recording": {
+      "format": "mp4",
+      "encoder": "jim_nvenc",
+      "rate_control": "CBR",
+      "bitrate": 8000,
+      "keyframe_interval": 2,
+      "preset": "hq",
+      "profile": "high",
+      "level": "auto",
+      "b_frames": 2,
+      "gpu": 0,
+      "max_bitrate": 12000,
+      "buffer_size": 16000,
+      "path": "%USERPROFILE%\\Videos\\OBS_Recordings",
+      "filename": "Omni_Demo_%CCYY-%MM-%DD_%hh-%mm-%ss"
+    },
+    "streaming": {
+      "service": "Twitch",
+      "encoder": "jim_nvenc",
+      "rate_control": "CBR",
+      "bitrate": 6000,
+      "keyframe_interval": 2,
+      "preset": "llhq",
+      "profile": "main",
+      "level": "auto",
+      "b_frames": 2,
+      "gpu": 0
+    }
+  },
+  "advanced": {
+    "process_priority": "High",
+    "color_format": "NV12",
+    "color_space": "709",
+    "color_range": "Partial",
+    "renderer": "Direct3D 11",
+    "adapter": 0,
+    "monitor_capture_method": "DXGI",
+    "force_scaling": false,
+    "scale_filtering": "Bicubic",
+    "disable_audio_ducking": true,
+    "low_latency_mode": false
+  },
+  "hotkeys": {
+    "OBS_KEY_SPACE": "StartRecording",
+    "OBS_KEY_ESCAPE": "StopRecording",
+    "OBS_KEY_F1": "SwitchToScene.Intro",
+    "OBS_KEY_F2": "SwitchToScene.Demo", 
+    "OBS_KEY_F3": "SwitchToScene.Health",
+    "OBS_KEY_F4": "SwitchToScene.Brief",
+    "OBS_KEY_F5": "SwitchToScene.Outro",
+    "OBS_KEY_F9": "StartStreaming",
+    "OBS_KEY_F10": "StopStreaming",
+    "OBS_KEY_F11": "EnableStudioMode",
+    "OBS_KEY_F12": "TransitionToProgram"
+  },
+  "filters": {
+    "noise_suppression": {
+      "enabled": true,
+      "method": "speex",
+      "suppression_level": -30
+    },
+    "noise_gate": {
+      "enabled": true,
+      "close_threshold": -32,
+      "open_threshold": -26,
+      "attack_time": 25,
+      "hold_time": 200,
+      "release_time": 150
+    },
+    "compressor": {
+      "enabled": true,
+      "ratio": 10,
+      "threshold": -18,
+      "attack": 6,
+      "release": 60,
+      "output_gain": 0,
+      "sidechain_source": "none"
+    }
+  }
+}

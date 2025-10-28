@@ -1,0 +1,5 @@
+{
+  "model": "qwen3-coder:30b",
+  "prompt": "Pozdrav! Napiši en kratek stavek v slovenščini.",
+  "stream": false
+}

@@ -537,3 +537,263 @@ async def paypal_webhook(request: Request) -> Dict[str, Any]:
             subs[sid] = item
             _save_json(SUBS_FILE, subs)
     return {"ok": True, "event": event, "updated": updated, "notified": notified}
+
+
+@router.post("/saas/checkout/mock")
+def saas_checkout_mock(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Mock SaaS checkout: creates subscription and sends welcome email.
+    Body: { email: str, plan: str in [starter, pro, enterprise] }
+    """
+    # Optional reCAPTCHA gate
+    try:
+        from utils.recaptcha import verify_token
+        if not verify_token(payload.get("recaptchaToken")):
+            raise HTTPException(status_code=400, detail="recaptcha_failed")
+    except HTTPException:
+        raise
+    except Exception:
+        pass
+
+    email = str(payload.get("email") or "").strip()
+    plan = str(payload.get("plan") or "starter").lower()
+    if plan not in ("starter", "pro", "enterprise"):
+        raise HTTPException(status_code=400, detail="invalid plan")
+    if not email:
+        raise HTTPException(status_code=400, detail="email required")
+
+    # Derive tenant_id
+    base = email.split("@")[0] if "@" in email else email
+    tenant_id = (base or "tenant") + "-" + uuid.uuid4().hex[:6]
+
+    # Create subscription
+    subs = _load_json(SUBS_FILE)
+    sid = uuid.uuid4().hex
+    session_id = "sess_" + uuid.uuid4().hex[:24]
+    item = {
+        "id": sid,
+        "tenant_id": tenant_id,
+        "plan": plan,
+        "status": "active",
+        "created_at": int(time.time() * 1000),
+        "meta": {"email": email, "mock": True, "session_id": session_id},
+        "last_payment": {
+            "gateway": "stripe-mock",
+            "status": "succeeded",
+            "amount": {"starter": 29, "pro": 99, "enterprise": 499}.get(plan, 29),
+            "currency": "USD",
+            "ts": int(time.time() * 1000),
+        },
+    }
+    subs[sid] = item
+    _save_json(SUBS_FILE, subs)
+
+    # Send welcome email
+    try:
+        from utils.emailer import send_template
+        dash_url = os.environ.get("DASHBOARD_URL", "https://dashboard.omni.local")
+        api_base = os.environ.get("API_BASE_URL", "http://localhost:8080/api/v1")
+        send_template(
+            to=email,
+            subject="Dobrodošli v Omni SaaS",
+            template="saas_welcome",
+            variables={
+                "name": base or email,
+                "plan": plan.title(),
+                "tenant_id": tenant_id,
+                "dashboard_url": dash_url,
+                "api_base": api_base,
+                "year": str(int(time.strftime("%Y"))),
+            }
+        )
+    except Exception:
+        pass
+
+    return {
+        "ok": True,
+        "checkout": {
+            "subscription_id": sid,
+            "tenant_id": tenant_id,
+            "plan": plan,
+            "status": "active",
+            "session_id": session_id,
+        },
+    }
+
+@router.post("/saas/checkout/mock/confirm")
+def saas_checkout_mock_confirm(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Confirm a mock checkout session and mark subscription confirmed.
+    Body: { session_id: str }
+    """
+    try:
+        from utils.recaptcha import verify_token
+        if not verify_token(payload.get("recaptchaToken")):
+            raise HTTPException(status_code=400, detail="recaptcha_failed")
+    except HTTPException:
+        raise
+    except Exception:
+        pass
+
+    session_id = str(payload.get("session_id") or "").strip()
+    if not session_id:
+        raise HTTPException(status_code=400, detail="session_id required")
+
+    subs = _load_json(SUBS_FILE)
+    target_sid = None
+    for sid, item in subs.items():
+        if (item.get("meta") or {}).get("session_id") == session_id:
+            target_sid = sid
+            break
+    if not target_sid:
+        raise HTTPException(status_code=404, detail="session_not_found")
+
+    # Mark as confirmed (no-op for mock, but set flag)
+    item = subs[target_sid]
+    meta = item.get("meta") or {}
+    meta["confirmed"] = True
+    item["meta"] = meta
+    item["updated_at"] = int(time.time() * 1000)
+    subs[target_sid] = item
+    _save_json(SUBS_FILE, subs)
+
+    return {"ok": True, "subscription_id": target_sid, "confirmed": True}
+
+
+# ---- Stripe Checkout (test mode) ----
+
+@router.post("/saas/checkout/stripe/session")
+def saas_checkout_stripe_session(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Create Stripe Checkout Session (test mode) and return hosted URL.
+    Body: { email: str, plan: str in [starter, pro, enterprise] }
+    """
+    # Optional reCAPTCHA gate
+    try:
+        from utils.recaptcha import verify_token
+        if not verify_token(payload.get("recaptchaToken")):
+            raise HTTPException(status_code=400, detail="recaptcha_failed")
+    except HTTPException:
+        raise
+    except Exception:
+        pass
+
+    email = str(payload.get("email") or "").strip()
+    plan = str(payload.get("plan") or "starter").lower()
+    if plan not in ("starter", "pro", "enterprise"):
+        raise HTTPException(status_code=400, detail="invalid plan")
+    if not email:
+        raise HTTPException(status_code=400, detail="email required")
+
+    secret = os.environ.get("STRIPE_SECRET_KEY")
+    if not secret:
+        raise HTTPException(status_code=400, detail="stripe_not_configured")
+
+    # Amount mapping (cents)
+    amount_cents = {"starter": 2900, "pro": 9900, "enterprise": 49900}.get(plan, 2900)
+    public_base = os.environ.get("PUBLIC_BASE_URL", "http://localhost:8003/").rstrip("/")
+    success_url = f"{public_base}/?session_id={{CHECKOUT_SESSION_ID}}"
+    cancel_url = f"{public_base}/?cancelled=1"
+
+    try:
+        import stripe  # type: ignore
+        stripe.api_key = secret
+        session = stripe.checkout.Session.create(
+            mode="payment",
+            payment_method_types=["card"],
+            customer_email=email,
+            line_items=[{
+                "price_data": {
+                    "currency": "usd",
+                    "product_data": {"name": f"Omni SaaS {plan.title()}"},
+                    "unit_amount": amount_cents,
+                },
+                "quantity": 1,
+            }],
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={"plan": plan, "flow": "omni"},
+        )
+        return {"ok": True, "session": {"id": session.id, "url": session.url}}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"stripe_error: {e}")
+
+
+@router.post("/saas/checkout/confirm")
+def saas_checkout_confirm(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Generic confirm endpoint: supports mock sessions and Stripe checkout.
+    Body: { session_id: str }
+    """
+    try:
+        from utils.recaptcha import verify_token
+        if not verify_token(payload.get("recaptchaToken")):
+            raise HTTPException(status_code=400, detail="recaptcha_failed")
+    except HTTPException:
+        raise
+    except Exception:
+        pass
+
+    session_id = str(payload.get("session_id") or "").strip()
+    if not session_id:
+        raise HTTPException(status_code=400, detail="session_id required")
+
+    # If Stripe checkout session
+    if session_id.startswith("cs_"):
+        secret = os.environ.get("STRIPE_SECRET_KEY")
+        if not secret:
+            raise HTTPException(status_code=400, detail="stripe_not_configured")
+        try:
+            import stripe  # type: ignore
+            stripe.api_key = secret
+            sess = stripe.checkout.Session.retrieve(session_id)
+            # Ensure paid/complete
+            status = getattr(sess, "status", "")
+            payment_status = getattr(sess, "payment_status", "")
+            if not (status == "complete" or payment_status == "paid"):
+                raise HTTPException(status_code=402, detail="payment_not_completed")
+            email = (getattr(sess, "customer_details", None) or {}).get("email") or getattr(sess, "customer_email", None) or ""
+            plan = (getattr(sess, "metadata", {}) or {}).get("plan") or "starter"
+            amount_cents = {"starter": 2900, "pro": 9900, "enterprise": 49900}.get(plan, 2900)
+            # Create subscription (similar to mock)
+            base = email.split("@")[0] if "@" in email else (email or "tenant")
+            tenant_id = (base or "tenant") + "-" + uuid.uuid4().hex[:6]
+            subs = _load_json(SUBS_FILE)
+            sid = uuid.uuid4().hex
+            item = {
+                "id": sid,
+                "tenant_id": tenant_id,
+                "plan": plan,
+                "status": "active",
+                "created_at": int(time.time() * 1000),
+                "meta": {"email": email, "stripe": True, "session_id": session_id, "confirmed": True},
+                "last_payment": {
+                    "gateway": "stripe",
+                    "status": "succeeded",
+                    "amount": amount_cents / 100.0,
+                    "currency": "USD",
+                    "ts": int(time.time() * 1000),
+                },
+            }
+            subs[sid] = item
+            _save_json(SUBS_FILE, subs)
+            return {"ok": True, "subscription_id": sid, "confirmed": True}
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"stripe_error: {e}")
+
+    # Fallback to mock confirmation
+    subs = _load_json(SUBS_FILE)
+    target_sid = None
+    for sid, item in subs.items():
+        if (item.get("meta") or {}).get("session_id") == session_id:
+            target_sid = sid
+            break
+    if not target_sid:
+        raise HTTPException(status_code=404, detail="session_not_found")
+
+    itm = subs[target_sid]
+    meta = itm.get("meta") or {}
+    meta["confirmed"] = True
+    itm["meta"] = meta
+    itm["updated_at"] = int(time.time() * 1000)
+    subs[target_sid] = itm
+    _save_json(SUBS_FILE, subs)
+    return {"ok": True, "subscription_id": target_sid, "confirmed": True}

@@ -1,0 +1,14 @@
+apiVersion: 1
+providers:
+  - name: omni-dashboards
+    orgId: 1
+    folder: Omni Dashboards
+    type: file
+    disableDeletion: false
+    editable: true
+    allowUiUpdates: true
+    updateIntervalSeconds: 30
+    options:
+      path: /etc/grafana/provisioning/dashboards
+      # Load all json dashboards in this directory
+      foldersFromFilesStructure: false

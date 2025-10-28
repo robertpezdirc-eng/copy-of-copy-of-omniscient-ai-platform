@@ -1,0 +1,17 @@
+[
+  {
+    "log_id": "log_1761549372_key_1",
+    "api_key": "ATATT3xFfGF0k4wTCtBpNeaKIFjvZZ8V2S8wh0aBUxVgencgZOTRar1R86EtJJEKtD643MOoPjhNGLFjCJO_q2htdG4q_QRflBO0yQUDTZZ5fCSiSMv957mWrcDWTd5_3KCjBFrJ-qk8EoXo_6m1wtIbvsk_kg0lSNcDQHGXmCWWgx_6-idrmZI=DFDC724F",
+    "user_id": "user_system",
+    "service": "monitoring",
+    "endpoint": "/metrics",
+    "method": "GET",
+    "timestamp": "2025-10-27 07:16:12.688862",
+    "response_time_ms": 50,
+    "status_code": 200,
+    "request_size_bytes": 0,
+    "response_size_bytes": 0,
+    "cost": 0.0008,
+    "metadata": null
+  }
+]

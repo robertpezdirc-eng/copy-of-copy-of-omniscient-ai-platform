@@ -1,0 +1,10 @@
+services:
+  omni-proliferate:
+    ports:
+      - "8110:8000"
+    environment:
+      LOG_LEVEL: info
+
+networks:
+  omni-net:
+    external: true

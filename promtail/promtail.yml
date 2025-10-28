@@ -1,0 +1,61 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /etc/promtail/positions.yaml
+
+clients:
+  - url: http://omni-loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: omni-backend-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: omni-backend
+          env: dev
+          service: omni-backend
+          __path__: /var/log/omni/*.log
+    pipeline_stages:
+      # Try parse JSON logs first
+      - json:
+          expressions:
+            level: level
+            msg: message
+            traceid: traceID
+            trace_id: trace_id
+            traceId: traceId
+            service: service
+            request_id: requestId
+          on_error: continue
+      # If not JSON, parse logfmt pairs
+      - logfmt:
+          mapping:
+            level: level
+            msg: message
+            traceid: traceID
+            trace_id: trace_id
+            traceId: traceId
+            service: service
+            request_id: requestId
+          on_error: continue
+      # Fallback: regex to extract trace id variants
+      - regex:
+          expression: '(?i)(traceid|trace_id|traceId)=(?P<traceid>[a-f0-9\-]+)'
+          source: message
+          on_error: keep
+      # Normalize to single label 'traceid'
+      - labels:
+          traceid:
+      # Set severity from level if present
+      - labeldrop:
+          - trace_id
+          - traceId
+      - timestamp:
+          source: ts
+          format: RFC3339
+          on_error: ignore
+      - output:
+          source: message

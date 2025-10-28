@@ -5,3 +5,6 @@ logs/
 node_modules/
 .DS_Store
 Thumbs.db
+# Sensitive alert configs and secrets
+alerts/alertmanager.generated.yml
+alerts/smtp_password.txt

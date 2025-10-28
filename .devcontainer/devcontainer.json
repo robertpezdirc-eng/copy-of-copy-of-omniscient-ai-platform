@@ -1,0 +1,22 @@
+{
+  "name": "Omni Platform Dev",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+  "postCreateCommand": "pip install -r agents/requirements.txt || true",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "humao.rest-client",
+        "Grafana.vscode-jsonnet"
+      ]
+    }
+  },
+  "remoteUser": "vscode"
+}

@@ -1,0 +1,2250 @@
+{
+  "generated_at": "2025-10-26T23:16:55Z",
+  "total_count": 202,
+  "recent_window_hours": 48,
+  "recent_count": 118,
+  "files": [
+    {
+      "path": "DASHBOARD_DEPLOYMENT_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\DASHBOARD_DEPLOYMENT_README.md",
+      "size": 6150,
+      "mtime": 1760877158.8090067,
+      "mtime_dt": "2025-10-19T14:32:38"
+    },
+    {
+      "path": "DEPLOYMENT_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\DEPLOYMENT_README.md",
+      "size": 16309,
+      "mtime": 1761079875.6338215,
+      "mtime_dt": "2025-10-21T22:51:15"
+    },
+    {
+      "path": "GOOGLE_CLOUD_DEPLOYMENT_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\GOOGLE_CLOUD_DEPLOYMENT_README.md",
+      "size": 8440,
+      "mtime": 1760988893.9426186,
+      "mtime_dt": "2025-10-20T21:34:53"
+    },
+    {
+      "path": "GRAFANA_LOCAL_SETUP.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\GRAFANA_LOCAL_SETUP.md",
+      "size": 5680,
+      "mtime": 1761515717.8582141,
+      "mtime_dt": "2025-10-26T22:55:17"
+    },
+    {
+      "path": "OMNI_DASHBOARD_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_DASHBOARD_README.md",
+      "size": 8017,
+      "mtime": 1760980586.2189693,
+      "mtime_dt": "2025-10-20T19:16:26"
+    },
+    {
+      "path": "OMNI_ENHANCED_PLATFORM_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_ENHANCED_PLATFORM_GUIDE.md",
+      "size": 11821,
+      "mtime": 1760874242.6853082,
+      "mtime_dt": "2025-10-19T13:44:02"
+    },
+    {
+      "path": "OMNI_IMMORTAL_DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_IMMORTAL_DEPLOYMENT.md",
+      "size": 4011,
+      "mtime": 1760829173.6465397,
+      "mtime_dt": "2025-10-19T01:12:53"
+    },
+    {
+      "path": "OMNI_MASTER_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_MASTER_README.md",
+      "size": 10478,
+      "mtime": 1761520066.0936048,
+      "mtime_dt": "2025-10-27T00:07:46"
+    },
+    {
+      "path": "omni_operational_architecture.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni_operational_architecture.md",
+      "size": 14684,
+      "mtime": 1760785371.9178011,
+      "mtime_dt": "2025-10-18T13:02:51"
+    },
+    {
+      "path": "omni_optimization_report_1760496038.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni_optimization_report_1760496038.md",
+      "size": 786,
+      "mtime": 1760496038.8932793,
+      "mtime_dt": "2025-10-15T04:40:38"
+    },
+    {
+      "path": "OMNI_PLATFORM_FINAL_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_PLATFORM_FINAL_README.md",
+      "size": 11108,
+      "mtime": 1760499042.1759372,
+      "mtime_dt": "2025-10-15T05:30:42"
+    },
+    {
+      "path": "OMNI_PLATFORM_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_PLATFORM_README.md",
+      "size": 10051,
+      "mtime": 1760496321.7233236,
+      "mtime_dt": "2025-10-15T04:45:21"
+    },
+    {
+      "path": "omni_setup_report_1760498525.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni_setup_report_1760498525.md",
+      "size": 3895,
+      "mtime": 1760498525.7041583,
+      "mtime_dt": "2025-10-15T05:22:05"
+    },
+    {
+      "path": "OMNI_SMOKE_TEST_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_SMOKE_TEST_README.md",
+      "size": 11181,
+      "mtime": 1760907102.319322,
+      "mtime_dt": "2025-10-19T22:51:42"
+    },
+    {
+      "path": "QUANTUM_INTERFACE_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\QUANTUM_INTERFACE_README.md",
+      "size": 20320,
+      "mtime": 1760894743.3522558,
+      "mtime_dt": "2025-10-19T19:25:43"
+    },
+    {
+      "path": "QUICK_START.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\QUICK_START.md",
+      "size": 3148,
+      "mtime": 1761474541.5585728,
+      "mtime_dt": "2025-10-26T11:29:01"
+    },
+    {
+      "path": "README-DEPLOY.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\README-DEPLOY.md",
+      "size": 3725,
+      "mtime": 1761323512.85153,
+      "mtime_dt": "2025-10-24T18:31:52"
+    },
+    {
+      "path": "README-DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\README-DEPLOYMENT.md",
+      "size": 18504,
+      "mtime": 1761081981.66377,
+      "mtime_dt": "2025-10-21T23:26:21"
+    },
+    {
+      "path": "README-OMNI-SINGULARITY.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\README-OMNI-SINGULARITY.md",
+      "size": 14416,
+      "mtime": 1760766385.2290769,
+      "mtime_dt": "2025-10-18T07:46:25"
+    },
+    {
+      "path": "README_OMNI_ADVANCED_BUILD.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\README_OMNI_ADVANCED_BUILD.md",
+      "size": 9265,
+      "mtime": 1760413470.7963798,
+      "mtime_dt": "2025-10-14T05:44:30"
+    },
+    {
+      "path": "README_OMNI_ALL_IN_ONE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\README_OMNI_ALL_IN_ONE.md",
+      "size": 11591,
+      "mtime": 1760409655.124452,
+      "mtime_dt": "2025-10-14T04:40:55"
+    },
+    {
+      "path": "VIDEO-AUTOMATION-README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\VIDEO-AUTOMATION-README.md",
+      "size": 7511,
+      "mtime": 1761475274.7192276,
+      "mtime_dt": "2025-10-26T11:41:14"
+    },
+    {
+      "path": "docs/billing.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\docs\\billing.md",
+      "size": 2878,
+      "mtime": 1761427351.2912097,
+      "mtime_dt": "2025-10-25T23:22:31"
+    },
+    {
+      "path": "docs/DEPLOYMENT_CI_CD.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\docs\\DEPLOYMENT_CI_CD.md",
+      "size": 2214,
+      "mtime": 1761126747.5683472,
+      "mtime_dt": "2025-10-22T11:52:27"
+    },
+    {
+      "path": "docs/MONITORING_CLOUD_RUN.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\docs\\MONITORING_CLOUD_RUN.md",
+      "size": 2086,
+      "mtime": 1761126748.6621087,
+      "mtime_dt": "2025-10-22T11:52:28"
+    },
+    {
+      "path": "docs/omni_prometheus.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\docs\\omni_prometheus.md",
+      "size": 1731,
+      "mtime": 1761080688.6926062,
+      "mtime_dt": "2025-10-21T23:04:48"
+    },
+    {
+      "path": "docs/PRODUCTION_RUNBOOK.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\docs\\PRODUCTION_RUNBOOK.md",
+      "size": 2743,
+      "mtime": 1761322491.95046,
+      "mtime_dt": "2025-10-24T18:14:51"
+    },
+    {
+      "path": "docs/SECRETS_AND_ENV.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\docs\\SECRETS_AND_ENV.md",
+      "size": 1782,
+      "mtime": 1761322493.0032275,
+      "mtime_dt": "2025-10-24T18:14:53"
+    },
+    {
+      "path": "docs/WORKLOAD_IDENTITY_FEDERATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\docs\\WORKLOAD_IDENTITY_FEDERATION.md",
+      "size": 2355,
+      "mtime": 1761127000.2657733,
+      "mtime_dt": "2025-10-22T11:56:40"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/access-guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\access-guide.md",
+      "size": 3678,
+      "mtime": 1761393131.1958742,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/angel-validation-summary.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\angel-validation-summary.md",
+      "size": 4460,
+      "mtime": 1761393131.3380778,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/API-DOCUMENTATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\API-DOCUMENTATION.md",
+      "size": 2298,
+      "mtime": 1761393130.9545329,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/API.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\API.md",
+      "size": 13091,
+      "mtime": 1761393130.9545329,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/API_DOCUMENTATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\API_DOCUMENTATION.md",
+      "size": 15809,
+      "mtime": 1761393130.955533,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/auto-deployment-guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\auto-deployment-guide.md",
+      "size": 11103,
+      "mtime": 1761393131.3470795,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/CHANGELOG.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\CHANGELOG.md",
+      "size": 12380,
+      "mtime": 1761393130.9565375,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/cloud-migration-checklist.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\cloud-migration-checklist.md",
+      "size": 4270,
+      "mtime": 1761393131.518601,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/deploy-complete.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\deploy-complete.md",
+      "size": 9045,
+      "mtime": 1761393131.543603,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/deploy-instructions.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\deploy-instructions.md",
+      "size": 6121,
+      "mtime": 1761393131.5456073,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/deploy-quick-start.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\deploy-quick-start.md",
+      "size": 7289,
+      "mtime": 1761393131.547603,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\DEPLOYMENT.md",
+      "size": 11213,
+      "mtime": 1761393130.9576306,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/DOCKER-INSTALLATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\DOCKER-INSTALLATION.md",
+      "size": 7954,
+      "mtime": 1761393130.9586406,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/DOCKER-TROUBLESHOOTING.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\DOCKER-TROUBLESHOOTING.md",
+      "size": 7638,
+      "mtime": 1761393130.959643,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/FINAL_VALIDATION_REPORT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\FINAL_VALIDATION_REPORT.md",
+      "size": 6127,
+      "mtime": 1761393130.96264,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/Google-Drive-Cleanup-Guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\Google-Drive-Cleanup-Guide.md",
+      "size": 4935,
+      "mtime": 1761393130.9636397,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/GOOGLE_SETUP_INSTRUCTIONS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\GOOGLE_SETUP_INSTRUCTIONS.md",
+      "size": 2285,
+      "mtime": 1761393130.9636397,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/INSTALLATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\INSTALLATION.md",
+      "size": 9094,
+      "mtime": 1761393130.9646404,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/IoT_PRODUCTION_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\IoT_PRODUCTION_GUIDE.md",
+      "size": 10044,
+      "mtime": 1761393130.9646404,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/marketing-strategy.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\marketing-strategy.md",
+      "size": 4856,
+      "mtime": 1761393131.928685,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OMNI-BRAIN-INSTALLATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OMNI-BRAIN-INSTALLATION.md",
+      "size": 7818,
+      "mtime": 1761393130.9656408,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OMNI-MAXI-ULTRA-README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OMNI-MAXI-ULTRA-README.md",
+      "size": 7522,
+      "mtime": 1761393130.9656408,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OMNI-REAL-MAX-MASTER-PROMPT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OMNI-REAL-MAX-MASTER-PROMPT.md",
+      "size": 5859,
+      "mtime": 1761393130.9666395,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omniversal-concept.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omniversal-concept.md",
+      "size": 12857,
+      "mtime": 1761393150.6088703,
+      "mtime_dt": "2025-10-25T13:52:30"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OMNI_DEPLOYMENT_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OMNI_DEPLOYMENT_GUIDE.md",
+      "size": 4639,
+      "mtime": 1761393130.9676392,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/pre-migration-checklist.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\pre-migration-checklist.md",
+      "size": 5573,
+      "mtime": 1761393150.7978356,
+      "mtime_dt": "2025-10-25T13:52:30"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/PRODUCTION-DEPLOYMENT-GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\PRODUCTION-DEPLOYMENT-GUIDE.md",
+      "size": 13201,
+      "mtime": 1761393131.1013238,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/quick-migration-steps.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\quick-migration-steps.md",
+      "size": 2421,
+      "mtime": 1761393151.5226986,
+      "mtime_dt": "2025-10-25T13:52:31"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README-DOCKER.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README-DOCKER.md",
+      "size": 6111,
+      "mtime": 1761393131.1023228,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README-OMNI-CLOUD-DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README-OMNI-CLOUD-DEPLOYMENT.md",
+      "size": 22763,
+      "mtime": 1761393131.1023228,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README-PRODUCTION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README-PRODUCTION.md",
+      "size": 7173,
+      "mtime": 1761393131.1033225,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README-SSL.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README-SSL.md",
+      "size": 7151,
+      "mtime": 1761393131.1043236,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README-THREO-SSL.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README-THREO-SSL.md",
+      "size": 8077,
+      "mtime": 1761393131.1073215,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README.md",
+      "size": 13701,
+      "mtime": 1761393131.185886,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_BING_INTEGRACIJA.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_BING_INTEGRACIJA.md",
+      "size": 5995,
+      "mtime": 1761393131.1868763,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_FINAL_DASHBOARD.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_FINAL_DASHBOARD.md",
+      "size": 5569,
+      "mtime": 1761393131.1878748,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_IOT_MODUL.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_IOT_MODUL.md",
+      "size": 9677,
+      "mtime": 1761393131.1878748,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_OMNI_FIXED.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_OMNI_FIXED.md",
+      "size": 4186,
+      "mtime": 1761393131.1888738,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_OPTIMIZACIJE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_OPTIMIZACIJE.md",
+      "size": 4556,
+      "mtime": 1761393131.1898742,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_REALTIME_FLOW_INTEGRATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_REALTIME_FLOW_INTEGRATION.md",
+      "size": 7506,
+      "mtime": 1761393131.1898742,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_SVG_NAMESPACE_FIX.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_SVG_NAMESPACE_FIX.md",
+      "size": 3935,
+      "mtime": 1761393131.191877,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/SECURITY.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\SECURITY.md",
+      "size": 15399,
+      "mtime": 1761393131.1928756,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/ssh-migration-guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\ssh-migration-guide.md",
+      "size": 5350,
+      "mtime": 1761393153.8098943,
+      "mtime_dt": "2025-10-25T13:52:33"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/THEA_SYSTEM_DOCUMENTATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\THEA_SYSTEM_DOCUMENTATION.md",
+      "size": 9521,
+      "mtime": 1761393131.1928756,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/thea_workspace_recommendation.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\thea_workspace_recommendation.md",
+      "size": 0,
+      "mtime": 1761393155.820446,
+      "mtime_dt": "2025-10-25T13:52:35"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/THREO-CLOUD-MIGRATION-GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\THREO-CLOUD-MIGRATION-GUIDE.md",
+      "size": 8302,
+      "mtime": 1761393131.1938746,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/VALIDATION-REPORT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\VALIDATION-REPORT.md",
+      "size": 6100,
+      "mtime": 1761393131.1938746,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/WEBSOCKET_DOCUMENTATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\WEBSOCKET_DOCUMENTATION.md",
+      "size": 18924,
+      "mtime": 1761393131.1948752,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/Windows-System-Cleanup-Guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\Windows-System-Cleanup-Guide.md",
+      "size": 0,
+      "mtime": 1761393131.1948752,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/backups/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\backups\\README.md",
+      "size": 1597,
+      "mtime": 1761393131.3500779,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/certs/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\certs\\README.md",
+      "size": 1242,
+      "mtime": 1761393131.352078,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/docs/IoT_Real_Integration_Guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\docs\\IoT_Real_Integration_Guide.md",
+      "size": 14342,
+      "mtime": 1761393131.8404064,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/AUTONOMOUS_LEARNING_REPORT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\AUTONOMOUS_LEARNING_REPORT.md",
+      "size": 6158,
+      "mtime": 1761393139.122447,
+      "mtime_dt": "2025-10-25T13:52:19"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/IoT_SYSTEM_SUMMARY.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\IoT_SYSTEM_SUMMARY.md",
+      "size": 5401,
+      "mtime": 1761393139.1234438,
+      "mtime_dt": "2025-10-25T13:52:19"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/README_IoT_Security.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\README_IoT_Security.md",
+      "size": 4096,
+      "mtime": 1761393139.1234438,
+      "mtime_dt": "2025-10-25T13:52:19"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/docs/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\docs\\README.md",
+      "size": 7872,
+      "mtime": 1761393139.915538,
+      "mtime_dt": "2025-10-25T13:52:19"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/API_DOKUMENTACIJA.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\API_DOKUMENTACIJA.md",
+      "size": 7619,
+      "mtime": 1761393140.9345617,
+      "mtime_dt": "2025-10-25T13:52:20"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/IMPLEMENTACIJA_POROCILO.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\IMPLEMENTACIJA_POROCILO.md",
+      "size": 5896,
+      "mtime": 1761393140.9350696,
+      "mtime_dt": "2025-10-25T13:52:20"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/OMNI_LICENSE_SYSTEM_DOKUMENTACIJA.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\OMNI_LICENSE_SYSTEM_DOKUMENTACIJA.md",
+      "size": 8874,
+      "mtime": 1761393140.9360783,
+      "mtime_dt": "2025-10-25T13:52:20"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\README.md",
+      "size": 7316,
+      "mtime": 1761393140.9370778,
+      "mtime_dt": "2025-10-25T13:52:20"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/ULTIMATE_SYSTEM_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\ULTIMATE_SYSTEM_README.md",
+      "size": 7845,
+      "mtime": 1761393140.9390833,
+      "mtime_dt": "2025-10-25T13:52:20"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/omni-client-demo/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\omni-client-demo\\README.md",
+      "size": 11011,
+      "mtime": 1761393141.6165378,
+      "mtime_dt": "2025-10-25T13:52:21"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/omni-system/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\omni-system\\README.md",
+      "size": 6259,
+      "mtime": 1761393142.9823568,
+      "mtime_dt": "2025-10-25T13:52:22"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/omni-system/server/ssl/omni-global/DEPLOYMENT_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\omni-system\\server\\ssl\\omni-global\\DEPLOYMENT_GUIDE.md",
+      "size": 8687,
+      "mtime": 1761393144.163581,
+      "mtime_dt": "2025-10-25T13:52:24"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/omni-system/server/ssl/omni-global/QUICK_PROMPTS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\omni-system\\server\\ssl\\omni-global\\QUICK_PROMPTS.md",
+      "size": 9083,
+      "mtime": 1761393144.4874775,
+      "mtime_dt": "2025-10-25T13:52:24"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/omni-system/server/ssl/omni-global/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\omni-system\\server\\ssl\\omni-global\\README.md",
+      "size": 7225,
+      "mtime": 1761393144.5853128,
+      "mtime_dt": "2025-10-25T13:52:24"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/ui/mobile/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\ui\\mobile\\README.md",
+      "size": 6036,
+      "mtime": 1761393148.581012,
+      "mtime_dt": "2025-10-25T13:52:28"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud/DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud\\DEPLOYMENT.md",
+      "size": 11785,
+      "mtime": 1761393133.0293374,
+      "mtime_dt": "2025-10-25T13:52:13"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud\\README.md",
+      "size": 11994,
+      "mtime": 1761393133.0323393,
+      "mtime_dt": "2025-10-25T13:52:13"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud/TEST_RESULTS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud\\TEST_RESULTS.md",
+      "size": 4244,
+      "mtime": 1761393133.034338,
+      "mtime_dt": "2025-10-25T13:52:13"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud-pushbutton/DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud-pushbutton\\DEPLOYMENT.md",
+      "size": 13116,
+      "mtime": 1761393132.0511312,
+      "mtime_dt": "2025-10-25T13:52:12"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud-pushbutton/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud-pushbutton\\README.md",
+      "size": 5894,
+      "mtime": 1761393132.052131,
+      "mtime_dt": "2025-10-25T13:52:12"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud-ready/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud-ready\\README.md",
+      "size": 10480,
+      "mtime": 1761393132.774279,
+      "mtime_dt": "2025-10-25T13:52:12"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud-ready/USAGE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud-ready\\USAGE.md",
+      "size": 7866,
+      "mtime": 1761393132.775277,
+      "mtime_dt": "2025-10-25T13:52:12"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-docker/INSTALL.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-docker\\INSTALL.md",
+      "size": 6416,
+      "mtime": 1761393137.0724826,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-docker/PRODUCTION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-docker\\PRODUCTION.md",
+      "size": 12126,
+      "mtime": 1761393137.0734818,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-docker/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-docker\\README.md",
+      "size": 4632,
+      "mtime": 1761393137.0744808,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-docker/TEST.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-docker\\TEST.md",
+      "size": 6499,
+      "mtime": 1761393137.075481,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/DOCKER-COMPOSE-VERSIONS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\DOCKER-COMPOSE-VERSIONS.md",
+      "size": 4973,
+      "mtime": 1761393137.6406083,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/INSTALL.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\INSTALL.md",
+      "size": 15612,
+      "mtime": 1761393137.6406083,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/QUICK-START.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\QUICK-START.md",
+      "size": 5480,
+      "mtime": 1761393137.6416075,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\README.md",
+      "size": 11162,
+      "mtime": 1761393137.6416075,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/certs/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\certs\\README.md",
+      "size": 3211,
+      "mtime": 1761393137.893169,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/server/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\server\\README.md",
+      "size": 8049,
+      "mtime": 1761393138.1106448,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-license-demo/README_JWT_SYSTEM.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-license-demo\\README_JWT_SYSTEM.md",
+      "size": 5019,
+      "mtime": 1761393138.1146443,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/API_TEST.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\API_TEST.md",
+      "size": 5509,
+      "mtime": 1761393138.496472,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\DEPLOYMENT.md",
+      "size": 9183,
+      "mtime": 1761393138.4974716,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/DEPLOYMENT_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\DEPLOYMENT_GUIDE.md",
+      "size": 6873,
+      "mtime": 1761393138.4974716,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/DEPLOYMENT_STATUS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\DEPLOYMENT_STATUS.md",
+      "size": 4486,
+      "mtime": 1761393138.49847,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/INSTALLATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\INSTALLATION.md",
+      "size": 3834,
+      "mtime": 1761393138.499471,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/MONGODB_SETUP.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\MONGODB_SETUP.md",
+      "size": 3585,
+      "mtime": 1761393138.8701432,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/QUICKSTART.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\QUICKSTART.md",
+      "size": 2951,
+      "mtime": 1761393138.9195902,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\README.md",
+      "size": 9277,
+      "mtime": 1761393138.9195902,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omnicore-global/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omnicore-global\\README.md",
+      "size": 13423,
+      "mtime": 1761393150.4157712,
+      "mtime_dt": "2025-10-25T13:52:30"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OmniCore-Global-Package/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OmniCore-Global-Package\\README.md",
+      "size": 6845,
+      "mtime": 1761393130.9686434,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OmniCore-Global-Package/omnicore-global/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OmniCore-Global-Package\\omnicore-global\\README.md",
+      "size": 13423,
+      "mtime": 1761393130.9696398,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/production/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\production\\README.md",
+      "size": 1975,
+      "mtime": 1761393150.8038356,
+      "mtime_dt": "2025-10-25T13:52:30"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/DOCKER-DIAGNOSIS-REPORT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\DOCKER-DIAGNOSIS-REPORT.md",
+      "size": 5137,
+      "mtime": 1761393151.76635,
+      "mtime_dt": "2025-10-25T13:52:31"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/LICENSE-API-DOCUMENTATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\LICENSE-API-DOCUMENTATION.md",
+      "size": 7873,
+      "mtime": 1761393151.767351,
+      "mtime_dt": "2025-10-25T13:52:31"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/README-COMPLETE-HTTPS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\README-COMPLETE-HTTPS.md",
+      "size": 6038,
+      "mtime": 1761393151.7683501,
+      "mtime_dt": "2025-10-25T13:52:31"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/README-HTTPS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\README-HTTPS.md",
+      "size": 6203,
+      "mtime": 1761393151.7683501,
+      "mtime_dt": "2025-10-25T13:52:31"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/ssl/omni-global/DEPLOYMENT_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\ssl\\omni-global\\DEPLOYMENT_GUIDE.md",
+      "size": 8687,
+      "mtime": 1761393152.6985419,
+      "mtime_dt": "2025-10-25T13:52:32"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/ssl/omni-global/QUICK_PROMPTS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\ssl\\omni-global\\QUICK_PROMPTS.md",
+      "size": 9083,
+      "mtime": 1761393152.700542,
+      "mtime_dt": "2025-10-25T13:52:32"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/ssl/omni-global/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\ssl\\omni-global\\README.md",
+      "size": 7225,
+      "mtime": 1761393152.7015438,
+      "mtime_dt": "2025-10-25T13:52:32"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/snippets/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\snippets\\README.md",
+      "size": 6187,
+      "mtime": 1761393153.808894,
+      "mtime_dt": "2025-10-25T13:52:33"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/DASHBOARD_DEPLOYMENT_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\DASHBOARD_DEPLOYMENT_README.md",
+      "size": 6150,
+      "mtime": 1760877158.8090067,
+      "mtime_dt": "2025-10-19T14:32:38"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/DEPLOYMENT_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\DEPLOYMENT_README.md",
+      "size": 16309,
+      "mtime": 1761079875.6338215,
+      "mtime_dt": "2025-10-21T22:51:15"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/GOOGLE_CLOUD_DEPLOYMENT_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\GOOGLE_CLOUD_DEPLOYMENT_README.md",
+      "size": 8440,
+      "mtime": 1760988893.9426186,
+      "mtime_dt": "2025-10-20T21:34:53"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/LICENSE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\LICENSE.md",
+      "size": 1541,
+      "mtime": 1761145081.2109387,
+      "mtime_dt": "2025-10-22T16:58:01"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/OMNI_DASHBOARD_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_DASHBOARD_README.md",
+      "size": 8017,
+      "mtime": 1760980586.2189693,
+      "mtime_dt": "2025-10-20T19:16:26"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/OMNI_ENHANCED_PLATFORM_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_ENHANCED_PLATFORM_GUIDE.md",
+      "size": 11821,
+      "mtime": 1760874242.6853082,
+      "mtime_dt": "2025-10-19T13:44:02"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/OMNI_IMMORTAL_DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_IMMORTAL_DEPLOYMENT.md",
+      "size": 4011,
+      "mtime": 1760829173.6465397,
+      "mtime_dt": "2025-10-19T01:12:53"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/omni_operational_architecture.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni_operational_architecture.md",
+      "size": 14684,
+      "mtime": 1760785371.9178011,
+      "mtime_dt": "2025-10-18T13:02:51"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/omni_optimization_report_1760496038.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni_optimization_report_1760496038.md",
+      "size": 786,
+      "mtime": 1760496038.8932793,
+      "mtime_dt": "2025-10-15T04:40:38"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/OMNI_PLATFORM_FINAL_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_PLATFORM_FINAL_README.md",
+      "size": 11108,
+      "mtime": 1760499042.1759372,
+      "mtime_dt": "2025-10-15T05:30:42"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/OMNI_PLATFORM_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_PLATFORM_README.md",
+      "size": 10051,
+      "mtime": 1760496321.7233236,
+      "mtime_dt": "2025-10-15T04:45:21"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/omni_setup_report_1760498525.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni_setup_report_1760498525.md",
+      "size": 3895,
+      "mtime": 1760498525.7041583,
+      "mtime_dt": "2025-10-15T05:22:05"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/OMNI_SMOKE_TEST_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_SMOKE_TEST_README.md",
+      "size": 11181,
+      "mtime": 1760907102.319322,
+      "mtime_dt": "2025-10-19T22:51:42"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/QUANTUM_INTERFACE_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\QUANTUM_INTERFACE_README.md",
+      "size": 20320,
+      "mtime": 1760894743.3522558,
+      "mtime_dt": "2025-10-19T19:25:43"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/README-DEPLOY.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\README-DEPLOY.md",
+      "size": 3725,
+      "mtime": 1761323512.85153,
+      "mtime_dt": "2025-10-24T18:31:52"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/README-DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\README-DEPLOYMENT.md",
+      "size": 18504,
+      "mtime": 1761081981.66377,
+      "mtime_dt": "2025-10-21T23:26:21"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/README-OMNI-SINGULARITY.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\README-OMNI-SINGULARITY.md",
+      "size": 14416,
+      "mtime": 1760766385.2290769,
+      "mtime_dt": "2025-10-18T07:46:25"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\README.md",
+      "size": 228,
+      "mtime": 1761156189.4336672,
+      "mtime_dt": "2025-10-22T20:03:09"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/README_OMNI_ADVANCED_BUILD.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\README_OMNI_ADVANCED_BUILD.md",
+      "size": 9265,
+      "mtime": 1760413470.7963798,
+      "mtime_dt": "2025-10-14T05:44:30"
+    },
+    {
+      "path": "external/local/C/Users/admin/Downloads/copy-of-copy-of-omniscient-ai-platform/README_OMNI_ALL_IN_ONE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\local\\C\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\README_OMNI_ALL_IN_ONE.md",
+      "size": 11591,
+      "mtime": 1760409655.124452,
+      "mtime_dt": "2025-10-14T04:40:55"
+    },
+    {
+      "path": "infra/monitoring/scripts/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\infra\\monitoring\\scripts\\README.md",
+      "size": 23418,
+      "mtime": 1761142860.231626,
+      "mtime_dt": "2025-10-22T16:21:00"
+    },
+    {
+      "path": "omni-platform/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\README.md",
+      "size": 4165,
+      "mtime": 1761467474.8440857,
+      "mtime_dt": "2025-10-26T09:31:14"
+    },
+    {
+      "path": "omni-platform/docs/ci-smoke-tests.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\ci-smoke-tests.md",
+      "size": 2798,
+      "mtime": 1761428504.76641,
+      "mtime_dt": "2025-10-25T23:41:44"
+    },
+    {
+      "path": "omni-platform/docs/demo_script.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\demo_script.md",
+      "size": 3390,
+      "mtime": 1761467376.439012,
+      "mtime_dt": "2025-10-26T09:29:36"
+    },
+    {
+      "path": "omni-platform/docs/demo_video_shotlist.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\demo_video_shotlist.md",
+      "size": 3370,
+      "mtime": 1761472279.313877,
+      "mtime_dt": "2025-10-26T10:51:19"
+    },
+    {
+      "path": "omni-platform/docs/investor_brief.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\investor_brief.md",
+      "size": 2891,
+      "mtime": 1761465084.8886137,
+      "mtime_dt": "2025-10-26T08:51:24"
+    },
+    {
+      "path": "omni-platform/docs/marketplaces.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\marketplaces.md",
+      "size": 1317,
+      "mtime": 1761465109.1640978,
+      "mtime_dt": "2025-10-26T08:51:49"
+    },
+    {
+      "path": "omni-platform/docs/obs/OBS_SETUP_NAVODILA.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\obs\\OBS_SETUP_NAVODILA.md",
+      "size": 3838,
+      "mtime": 1761473629.832621,
+      "mtime_dt": "2025-10-26T11:13:49"
+    },
+    {
+      "path": "omni-platform/scripts/README_vertex_check.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\scripts\\README_vertex_check.md",
+      "size": 2502,
+      "mtime": 1761327638.695858,
+      "mtime_dt": "2025-10-24T19:40:38"
+    },
+    {
+      "path": "omni-search/API_SETUP.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-search\\API_SETUP.md",
+      "size": 2992,
+      "mtime": 1760301506.717945,
+      "mtime_dt": "2025-10-12T22:38:26"
+    },
+    {
+      "path": "omni-search/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-search\\README.md",
+      "size": 4230,
+      "mtime": 1760306660.8380146,
+      "mtime_dt": "2025-10-13T00:04:20"
+    },
+    {
+      "path": "omni-unified-dashboard/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\README.md",
+      "size": 3792,
+      "mtime": 1761334248.419611,
+      "mtime_dt": "2025-10-24T21:30:48"
+    },
+    {
+      "path": "omni-unified-dashboard/WHITE_LABEL_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\WHITE_LABEL_README.md",
+      "size": 1985,
+      "mtime": 1760603752.3598523,
+      "mtime_dt": "2025-10-16T10:35:52"
+    },
+    {
+      "path": "omni-unified-dashboard/WHITE_LABEL_SETUP.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\WHITE_LABEL_SETUP.md",
+      "size": 4480,
+      "mtime": 1761334133.5511906,
+      "mtime_dt": "2025-10-24T21:28:53"
+    },
+    {
+      "path": "omni-unified-dashboard/UltimateOmniPackage/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\UltimateOmniPackage\\README.md",
+      "size": 1985,
+      "mtime": 1760603752.3598523,
+      "mtime_dt": "2025-10-16T10:35:52"
+    },
+    {
+      "path": "omni-unified-dashboard/UltimateOmniPackage/audio/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\UltimateOmniPackage\\audio\\README.md",
+      "size": 62,
+      "mtime": 1760604590.068202,
+      "mtime_dt": "2025-10-16T10:49:50"
+    },
+    {
+      "path": "omni-unified-dashboard/UltimateOmniPackage/docs/ebooks/sample_ebook.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\UltimateOmniPackage\\docs\\ebooks\\sample_ebook.md",
+      "size": 78,
+      "mtime": 1760604246.8961473,
+      "mtime_dt": "2025-10-16T10:44:06"
+    },
+    {
+      "path": "omni-unified-dashboard/UltimateOmniPackage/docs/forms/contract_template.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\UltimateOmniPackage\\docs\\forms\\contract_template.md",
+      "size": 134,
+      "mtime": 1760604244.2206974,
+      "mtime_dt": "2025-10-16T10:44:04"
+    },
+    {
+      "path": "omni-unified-dashboard/UltimateOmniPackage/docs/forms/invoice_template.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\UltimateOmniPackage\\docs\\forms\\invoice_template.md",
+      "size": 89,
+      "mtime": 1760604241.4884233,
+      "mtime_dt": "2025-10-16T10:44:01"
+    },
+    {
+      "path": "omni-unified-dashboard/UltimateOmniPackage/docs/manuals/getting_started.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\UltimateOmniPackage\\docs\\manuals\\getting_started.md",
+      "size": 289,
+      "mtime": 1760604264.0506866,
+      "mtime_dt": "2025-10-16T10:44:24"
+    },
+    {
+      "path": "omni-unified-dashboard/UltimateOmniPackage/docs/planners/weekly_planner.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\UltimateOmniPackage\\docs\\planners\\weekly_planner.md",
+      "size": 74,
+      "mtime": 1760604238.7763264,
+      "mtime_dt": "2025-10-16T10:43:58"
+    },
+    {
+      "path": "omni-unified-dashboard/UltimateOmniPackage/docs/templates/business_plan_template.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\UltimateOmniPackage\\docs\\templates\\business_plan_template.md",
+      "size": 274,
+      "mtime": 1760604235.9600499,
+      "mtime_dt": "2025-10-16T10:43:55"
+    },
+    {
+      "path": "omni-unified-dashboard/UltimateOmniPackage/slike/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\UltimateOmniPackage\\slike\\README.md",
+      "size": 146,
+      "mtime": 1760604508.9313273,
+      "mtime_dt": "2025-10-16T10:48:28"
+    },
+    {
+      "path": "omni-unified-dashboard/UltimateOmniPackage/video/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\UltimateOmniPackage\\video\\README.md",
+      "size": 127,
+      "mtime": 1760604503.302149,
+      "mtime_dt": "2025-10-16T10:48:23"
+    },
+    {
+      "path": "omni-unified-dashboard/UltimateOmniPackage/white-label/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\UltimateOmniPackage\\white-label\\README.md",
+      "size": 346,
+      "mtime": 1760604098.3059182,
+      "mtime_dt": "2025-10-16T10:41:38"
+    },
+    {
+      "path": "omni-unified-dashboard/white-label-docs/ebooks/sample_ebook.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\white-label-docs\\ebooks\\sample_ebook.md",
+      "size": 78,
+      "mtime": 1760604246.8961473,
+      "mtime_dt": "2025-10-16T10:44:06"
+    },
+    {
+      "path": "omni-unified-dashboard/white-label-docs/forms/contract_template.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\white-label-docs\\forms\\contract_template.md",
+      "size": 134,
+      "mtime": 1760604244.2206974,
+      "mtime_dt": "2025-10-16T10:44:04"
+    },
+    {
+      "path": "omni-unified-dashboard/white-label-docs/forms/invoice_template.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\white-label-docs\\forms\\invoice_template.md",
+      "size": 89,
+      "mtime": 1760604241.4884233,
+      "mtime_dt": "2025-10-16T10:44:01"
+    },
+    {
+      "path": "omni-unified-dashboard/white-label-docs/manuals/getting_started.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\white-label-docs\\manuals\\getting_started.md",
+      "size": 289,
+      "mtime": 1760604264.0506866,
+      "mtime_dt": "2025-10-16T10:44:24"
+    },
+    {
+      "path": "omni-unified-dashboard/white-label-docs/planners/weekly_planner.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\white-label-docs\\planners\\weekly_planner.md",
+      "size": 74,
+      "mtime": 1760604238.7763264,
+      "mtime_dt": "2025-10-16T10:43:58"
+    },
+    {
+      "path": "omni-unified-dashboard/white-label-docs/templates/business_plan_template.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\white-label-docs\\templates\\business_plan_template.md",
+      "size": 274,
+      "mtime": 1760604235.9600499,
+      "mtime_dt": "2025-10-16T10:43:55"
+    },
+    {
+      "path": "omni-unified-dashboard/white-label-package/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-unified-dashboard\\white-label-package\\README.md",
+      "size": 346,
+      "mtime": 1760604098.3059182,
+      "mtime_dt": "2025-10-16T10:41:38"
+    },
+    {
+      "path": "OMNIBOT13/OMNI-BRAIN-README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNIBOT13\\OMNI-BRAIN-README.md",
+      "size": 0,
+      "mtime": 1760975137.7628665,
+      "mtime_dt": "2025-10-20T17:45:37"
+    },
+    {
+      "path": "omni_desktop_from_E/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni_desktop_from_E\\README.md",
+      "size": 6935,
+      "mtime": 1760302590.0,
+      "mtime_dt": "2025-10-12T22:56:30"
+    },
+    {
+      "path": "omni_learning_overlay_from_E/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni_learning_overlay_from_E\\README.md",
+      "size": 7394,
+      "mtime": 1760301224.0,
+      "mtime_dt": "2025-10-12T22:33:44"
+    },
+    {
+      "path": "quantum-package/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\quantum-package\\README.md",
+      "size": 1063,
+      "mtime": 1761409488.094484,
+      "mtime_dt": "2025-10-25T18:24:48"
+    },
+    {
+      "path": "UltimateOmniPackage/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\UltimateOmniPackage\\README.md",
+      "size": 1985,
+      "mtime": 1760603752.3598523,
+      "mtime_dt": "2025-10-16T10:35:52"
+    },
+    {
+      "path": "UltimateOmniPackage/audio/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\UltimateOmniPackage\\audio\\README.md",
+      "size": 62,
+      "mtime": 1760604590.068202,
+      "mtime_dt": "2025-10-16T10:49:50"
+    },
+    {
+      "path": "UltimateOmniPackage/docs/ebooks/sample_ebook.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\UltimateOmniPackage\\docs\\ebooks\\sample_ebook.md",
+      "size": 78,
+      "mtime": 1760604246.8961473,
+      "mtime_dt": "2025-10-16T10:44:06"
+    },
+    {
+      "path": "UltimateOmniPackage/docs/forms/contract_template.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\UltimateOmniPackage\\docs\\forms\\contract_template.md",
+      "size": 134,
+      "mtime": 1760604244.2206974,
+      "mtime_dt": "2025-10-16T10:44:04"
+    },
+    {
+      "path": "UltimateOmniPackage/docs/forms/invoice_template.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\UltimateOmniPackage\\docs\\forms\\invoice_template.md",
+      "size": 89,
+      "mtime": 1760604241.4884233,
+      "mtime_dt": "2025-10-16T10:44:01"
+    },
+    {
+      "path": "UltimateOmniPackage/docs/manuals/getting_started.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\UltimateOmniPackage\\docs\\manuals\\getting_started.md",
+      "size": 289,
+      "mtime": 1760604264.0506866,
+      "mtime_dt": "2025-10-16T10:44:24"
+    },
+    {
+      "path": "UltimateOmniPackage/docs/planners/weekly_planner.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\UltimateOmniPackage\\docs\\planners\\weekly_planner.md",
+      "size": 74,
+      "mtime": 1760604238.7763264,
+      "mtime_dt": "2025-10-16T10:43:58"
+    },
+    {
+      "path": "UltimateOmniPackage/docs/templates/business_plan_template.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\UltimateOmniPackage\\docs\\templates\\business_plan_template.md",
+      "size": 274,
+      "mtime": 1760604235.9600499,
+      "mtime_dt": "2025-10-16T10:43:55"
+    },
+    {
+      "path": "UltimateOmniPackage/slike/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\UltimateOmniPackage\\slike\\README.md",
+      "size": 146,
+      "mtime": 1760604508.9313273,
+      "mtime_dt": "2025-10-16T10:48:28"
+    },
+    {
+      "path": "UltimateOmniPackage/video/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\UltimateOmniPackage\\video\\README.md",
+      "size": 127,
+      "mtime": 1760604503.302149,
+      "mtime_dt": "2025-10-16T10:48:23"
+    },
+    {
+      "path": "UltimateOmniPackage/white-label/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\UltimateOmniPackage\\white-label\\README.md",
+      "size": 346,
+      "mtime": 1760604098.3059182,
+      "mtime_dt": "2025-10-16T10:41:38"
+    },
+    {
+      "path": "vr_projects/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\vr_projects\\README.md",
+      "size": 4556,
+      "mtime": 1760802966.9405725,
+      "mtime_dt": "2025-10-18T17:56:06"
+    }
+  ],
+  "recent_files": [
+    {
+      "path": "OMNI_MASTER_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\OMNI_MASTER_README.md",
+      "size": 10478,
+      "mtime": 1761520066.0936048,
+      "mtime_dt": "2025-10-27T00:07:46"
+    },
+    {
+      "path": "GRAFANA_LOCAL_SETUP.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\GRAFANA_LOCAL_SETUP.md",
+      "size": 5680,
+      "mtime": 1761515717.8582141,
+      "mtime_dt": "2025-10-26T22:55:17"
+    },
+    {
+      "path": "VIDEO-AUTOMATION-README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\VIDEO-AUTOMATION-README.md",
+      "size": 7511,
+      "mtime": 1761475274.7192276,
+      "mtime_dt": "2025-10-26T11:41:14"
+    },
+    {
+      "path": "QUICK_START.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\QUICK_START.md",
+      "size": 3148,
+      "mtime": 1761474541.5585728,
+      "mtime_dt": "2025-10-26T11:29:01"
+    },
+    {
+      "path": "omni-platform/docs/obs/OBS_SETUP_NAVODILA.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\obs\\OBS_SETUP_NAVODILA.md",
+      "size": 3838,
+      "mtime": 1761473629.832621,
+      "mtime_dt": "2025-10-26T11:13:49"
+    },
+    {
+      "path": "omni-platform/docs/demo_video_shotlist.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\demo_video_shotlist.md",
+      "size": 3370,
+      "mtime": 1761472279.313877,
+      "mtime_dt": "2025-10-26T10:51:19"
+    },
+    {
+      "path": "omni-platform/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\README.md",
+      "size": 4165,
+      "mtime": 1761467474.8440857,
+      "mtime_dt": "2025-10-26T09:31:14"
+    },
+    {
+      "path": "omni-platform/docs/demo_script.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\demo_script.md",
+      "size": 3390,
+      "mtime": 1761467376.439012,
+      "mtime_dt": "2025-10-26T09:29:36"
+    },
+    {
+      "path": "omni-platform/docs/marketplaces.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\marketplaces.md",
+      "size": 1317,
+      "mtime": 1761465109.1640978,
+      "mtime_dt": "2025-10-26T08:51:49"
+    },
+    {
+      "path": "omni-platform/docs/investor_brief.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\investor_brief.md",
+      "size": 2891,
+      "mtime": 1761465084.8886137,
+      "mtime_dt": "2025-10-26T08:51:24"
+    },
+    {
+      "path": "omni-platform/docs/ci-smoke-tests.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\omni-platform\\docs\\ci-smoke-tests.md",
+      "size": 2798,
+      "mtime": 1761428504.76641,
+      "mtime_dt": "2025-10-25T23:41:44"
+    },
+    {
+      "path": "docs/billing.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\docs\\billing.md",
+      "size": 2878,
+      "mtime": 1761427351.2912097,
+      "mtime_dt": "2025-10-25T23:22:31"
+    },
+    {
+      "path": "quantum-package/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\quantum-package\\README.md",
+      "size": 1063,
+      "mtime": 1761409488.094484,
+      "mtime_dt": "2025-10-25T18:24:48"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/thea_workspace_recommendation.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\thea_workspace_recommendation.md",
+      "size": 0,
+      "mtime": 1761393155.820446,
+      "mtime_dt": "2025-10-25T13:52:35"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/ssh-migration-guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\ssh-migration-guide.md",
+      "size": 5350,
+      "mtime": 1761393153.8098943,
+      "mtime_dt": "2025-10-25T13:52:33"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/snippets/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\snippets\\README.md",
+      "size": 6187,
+      "mtime": 1761393153.808894,
+      "mtime_dt": "2025-10-25T13:52:33"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/ssl/omni-global/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\ssl\\omni-global\\README.md",
+      "size": 7225,
+      "mtime": 1761393152.7015438,
+      "mtime_dt": "2025-10-25T13:52:32"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/ssl/omni-global/QUICK_PROMPTS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\ssl\\omni-global\\QUICK_PROMPTS.md",
+      "size": 9083,
+      "mtime": 1761393152.700542,
+      "mtime_dt": "2025-10-25T13:52:32"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/ssl/omni-global/DEPLOYMENT_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\ssl\\omni-global\\DEPLOYMENT_GUIDE.md",
+      "size": 8687,
+      "mtime": 1761393152.6985419,
+      "mtime_dt": "2025-10-25T13:52:32"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/README-COMPLETE-HTTPS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\README-COMPLETE-HTTPS.md",
+      "size": 6038,
+      "mtime": 1761393151.7683501,
+      "mtime_dt": "2025-10-25T13:52:31"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/README-HTTPS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\README-HTTPS.md",
+      "size": 6203,
+      "mtime": 1761393151.7683501,
+      "mtime_dt": "2025-10-25T13:52:31"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/LICENSE-API-DOCUMENTATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\LICENSE-API-DOCUMENTATION.md",
+      "size": 7873,
+      "mtime": 1761393151.767351,
+      "mtime_dt": "2025-10-25T13:52:31"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/server/DOCKER-DIAGNOSIS-REPORT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\server\\DOCKER-DIAGNOSIS-REPORT.md",
+      "size": 5137,
+      "mtime": 1761393151.76635,
+      "mtime_dt": "2025-10-25T13:52:31"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/quick-migration-steps.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\quick-migration-steps.md",
+      "size": 2421,
+      "mtime": 1761393151.5226986,
+      "mtime_dt": "2025-10-25T13:52:31"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/production/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\production\\README.md",
+      "size": 1975,
+      "mtime": 1761393150.8038356,
+      "mtime_dt": "2025-10-25T13:52:30"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/pre-migration-checklist.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\pre-migration-checklist.md",
+      "size": 5573,
+      "mtime": 1761393150.7978356,
+      "mtime_dt": "2025-10-25T13:52:30"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omniversal-concept.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omniversal-concept.md",
+      "size": 12857,
+      "mtime": 1761393150.6088703,
+      "mtime_dt": "2025-10-25T13:52:30"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omnicore-global/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omnicore-global\\README.md",
+      "size": 13423,
+      "mtime": 1761393150.4157712,
+      "mtime_dt": "2025-10-25T13:52:30"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/ui/mobile/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\ui\\mobile\\README.md",
+      "size": 6036,
+      "mtime": 1761393148.581012,
+      "mtime_dt": "2025-10-25T13:52:28"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/omni-system/server/ssl/omni-global/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\omni-system\\server\\ssl\\omni-global\\README.md",
+      "size": 7225,
+      "mtime": 1761393144.5853128,
+      "mtime_dt": "2025-10-25T13:52:24"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/omni-system/server/ssl/omni-global/QUICK_PROMPTS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\omni-system\\server\\ssl\\omni-global\\QUICK_PROMPTS.md",
+      "size": 9083,
+      "mtime": 1761393144.4874775,
+      "mtime_dt": "2025-10-25T13:52:24"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/omni-system/server/ssl/omni-global/DEPLOYMENT_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\omni-system\\server\\ssl\\omni-global\\DEPLOYMENT_GUIDE.md",
+      "size": 8687,
+      "mtime": 1761393144.163581,
+      "mtime_dt": "2025-10-25T13:52:24"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/omni-system/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\omni-system\\README.md",
+      "size": 6259,
+      "mtime": 1761393142.9823568,
+      "mtime_dt": "2025-10-25T13:52:22"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/omni-client-demo/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\omni-client-demo\\README.md",
+      "size": 11011,
+      "mtime": 1761393141.6165378,
+      "mtime_dt": "2025-10-25T13:52:21"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/ULTIMATE_SYSTEM_README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\ULTIMATE_SYSTEM_README.md",
+      "size": 7845,
+      "mtime": 1761393140.9390833,
+      "mtime_dt": "2025-10-25T13:52:20"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\README.md",
+      "size": 7316,
+      "mtime": 1761393140.9370778,
+      "mtime_dt": "2025-10-25T13:52:20"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/OMNI_LICENSE_SYSTEM_DOKUMENTACIJA.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\OMNI_LICENSE_SYSTEM_DOKUMENTACIJA.md",
+      "size": 8874,
+      "mtime": 1761393140.9360783,
+      "mtime_dt": "2025-10-25T13:52:20"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/IMPLEMENTACIJA_POROCILO.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\IMPLEMENTACIJA_POROCILO.md",
+      "size": 5896,
+      "mtime": 1761393140.9350696,
+      "mtime_dt": "2025-10-25T13:52:20"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/modules/tourism/API_DOKUMENTACIJA.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\modules\\tourism\\API_DOKUMENTACIJA.md",
+      "size": 7619,
+      "mtime": 1761393140.9345617,
+      "mtime_dt": "2025-10-25T13:52:20"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/docs/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\docs\\README.md",
+      "size": 7872,
+      "mtime": 1761393139.915538,
+      "mtime_dt": "2025-10-25T13:52:19"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/IoT_SYSTEM_SUMMARY.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\IoT_SYSTEM_SUMMARY.md",
+      "size": 5401,
+      "mtime": 1761393139.1234438,
+      "mtime_dt": "2025-10-25T13:52:19"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/README_IoT_Security.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\README_IoT_Security.md",
+      "size": 4096,
+      "mtime": 1761393139.1234438,
+      "mtime_dt": "2025-10-25T13:52:19"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni/AUTONOMOUS_LEARNING_REPORT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni\\AUTONOMOUS_LEARNING_REPORT.md",
+      "size": 6158,
+      "mtime": 1761393139.122447,
+      "mtime_dt": "2025-10-25T13:52:19"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/QUICKSTART.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\QUICKSTART.md",
+      "size": 2951,
+      "mtime": 1761393138.9195902,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\README.md",
+      "size": 9277,
+      "mtime": 1761393138.9195902,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/MONGODB_SETUP.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\MONGODB_SETUP.md",
+      "size": 3585,
+      "mtime": 1761393138.8701432,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/INSTALLATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\INSTALLATION.md",
+      "size": 3834,
+      "mtime": 1761393138.499471,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/DEPLOYMENT_STATUS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\DEPLOYMENT_STATUS.md",
+      "size": 4486,
+      "mtime": 1761393138.49847,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\DEPLOYMENT.md",
+      "size": 9183,
+      "mtime": 1761393138.4974716,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/DEPLOYMENT_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\DEPLOYMENT_GUIDE.md",
+      "size": 6873,
+      "mtime": 1761393138.4974716,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-threo/API_TEST.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-threo\\API_TEST.md",
+      "size": 5509,
+      "mtime": 1761393138.496472,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-license-demo/README_JWT_SYSTEM.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-license-demo\\README_JWT_SYSTEM.md",
+      "size": 5019,
+      "mtime": 1761393138.1146443,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/server/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\server\\README.md",
+      "size": 8049,
+      "mtime": 1761393138.1106448,
+      "mtime_dt": "2025-10-25T13:52:18"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/certs/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\certs\\README.md",
+      "size": 3211,
+      "mtime": 1761393137.893169,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/QUICK-START.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\QUICK-START.md",
+      "size": 5480,
+      "mtime": 1761393137.6416075,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\README.md",
+      "size": 11162,
+      "mtime": 1761393137.6416075,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/DOCKER-COMPOSE-VERSIONS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\DOCKER-COMPOSE-VERSIONS.md",
+      "size": 4973,
+      "mtime": 1761393137.6406083,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-global/INSTALL.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-global\\INSTALL.md",
+      "size": 15612,
+      "mtime": 1761393137.6406083,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-docker/TEST.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-docker\\TEST.md",
+      "size": 6499,
+      "mtime": 1761393137.075481,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-docker/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-docker\\README.md",
+      "size": 4632,
+      "mtime": 1761393137.0744808,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-docker/PRODUCTION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-docker\\PRODUCTION.md",
+      "size": 12126,
+      "mtime": 1761393137.0734818,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-docker/INSTALL.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-docker\\INSTALL.md",
+      "size": 6416,
+      "mtime": 1761393137.0724826,
+      "mtime_dt": "2025-10-25T13:52:17"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud/TEST_RESULTS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud\\TEST_RESULTS.md",
+      "size": 4244,
+      "mtime": 1761393133.034338,
+      "mtime_dt": "2025-10-25T13:52:13"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud\\README.md",
+      "size": 11994,
+      "mtime": 1761393133.0323393,
+      "mtime_dt": "2025-10-25T13:52:13"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud/DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud\\DEPLOYMENT.md",
+      "size": 11785,
+      "mtime": 1761393133.0293374,
+      "mtime_dt": "2025-10-25T13:52:13"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud-ready/USAGE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud-ready\\USAGE.md",
+      "size": 7866,
+      "mtime": 1761393132.775277,
+      "mtime_dt": "2025-10-25T13:52:12"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud-ready/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud-ready\\README.md",
+      "size": 10480,
+      "mtime": 1761393132.774279,
+      "mtime_dt": "2025-10-25T13:52:12"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud-pushbutton/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud-pushbutton\\README.md",
+      "size": 5894,
+      "mtime": 1761393132.052131,
+      "mtime_dt": "2025-10-25T13:52:12"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/omni-cloud-pushbutton/DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\omni-cloud-pushbutton\\DEPLOYMENT.md",
+      "size": 13116,
+      "mtime": 1761393132.0511312,
+      "mtime_dt": "2025-10-25T13:52:12"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/marketing-strategy.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\marketing-strategy.md",
+      "size": 4856,
+      "mtime": 1761393131.928685,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/docs/IoT_Real_Integration_Guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\docs\\IoT_Real_Integration_Guide.md",
+      "size": 14342,
+      "mtime": 1761393131.8404064,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/deploy-quick-start.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\deploy-quick-start.md",
+      "size": 7289,
+      "mtime": 1761393131.547603,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/deploy-instructions.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\deploy-instructions.md",
+      "size": 6121,
+      "mtime": 1761393131.5456073,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/deploy-complete.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\deploy-complete.md",
+      "size": 9045,
+      "mtime": 1761393131.543603,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/cloud-migration-checklist.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\cloud-migration-checklist.md",
+      "size": 4270,
+      "mtime": 1761393131.518601,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/certs/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\certs\\README.md",
+      "size": 1242,
+      "mtime": 1761393131.352078,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/backups/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\backups\\README.md",
+      "size": 1597,
+      "mtime": 1761393131.3500779,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/auto-deployment-guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\auto-deployment-guide.md",
+      "size": 11103,
+      "mtime": 1761393131.3470795,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/angel-validation-summary.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\angel-validation-summary.md",
+      "size": 4460,
+      "mtime": 1761393131.3380778,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/access-guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\access-guide.md",
+      "size": 3678,
+      "mtime": 1761393131.1958742,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/WEBSOCKET_DOCUMENTATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\WEBSOCKET_DOCUMENTATION.md",
+      "size": 18924,
+      "mtime": 1761393131.1948752,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/Windows-System-Cleanup-Guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\Windows-System-Cleanup-Guide.md",
+      "size": 0,
+      "mtime": 1761393131.1948752,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/THREO-CLOUD-MIGRATION-GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\THREO-CLOUD-MIGRATION-GUIDE.md",
+      "size": 8302,
+      "mtime": 1761393131.1938746,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/VALIDATION-REPORT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\VALIDATION-REPORT.md",
+      "size": 6100,
+      "mtime": 1761393131.1938746,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/SECURITY.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\SECURITY.md",
+      "size": 15399,
+      "mtime": 1761393131.1928756,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/THEA_SYSTEM_DOCUMENTATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\THEA_SYSTEM_DOCUMENTATION.md",
+      "size": 9521,
+      "mtime": 1761393131.1928756,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_SVG_NAMESPACE_FIX.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_SVG_NAMESPACE_FIX.md",
+      "size": 3935,
+      "mtime": 1761393131.191877,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_OPTIMIZACIJE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_OPTIMIZACIJE.md",
+      "size": 4556,
+      "mtime": 1761393131.1898742,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_REALTIME_FLOW_INTEGRATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_REALTIME_FLOW_INTEGRATION.md",
+      "size": 7506,
+      "mtime": 1761393131.1898742,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_OMNI_FIXED.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_OMNI_FIXED.md",
+      "size": 4186,
+      "mtime": 1761393131.1888738,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_FINAL_DASHBOARD.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_FINAL_DASHBOARD.md",
+      "size": 5569,
+      "mtime": 1761393131.1878748,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_IOT_MODUL.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_IOT_MODUL.md",
+      "size": 9677,
+      "mtime": 1761393131.1878748,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README_BING_INTEGRACIJA.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README_BING_INTEGRACIJA.md",
+      "size": 5995,
+      "mtime": 1761393131.1868763,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README.md",
+      "size": 13701,
+      "mtime": 1761393131.185886,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README-THREO-SSL.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README-THREO-SSL.md",
+      "size": 8077,
+      "mtime": 1761393131.1073215,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README-SSL.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README-SSL.md",
+      "size": 7151,
+      "mtime": 1761393131.1043236,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README-PRODUCTION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README-PRODUCTION.md",
+      "size": 7173,
+      "mtime": 1761393131.1033225,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README-DOCKER.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README-DOCKER.md",
+      "size": 6111,
+      "mtime": 1761393131.1023228,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/README-OMNI-CLOUD-DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\README-OMNI-CLOUD-DEPLOYMENT.md",
+      "size": 22763,
+      "mtime": 1761393131.1023228,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/PRODUCTION-DEPLOYMENT-GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\PRODUCTION-DEPLOYMENT-GUIDE.md",
+      "size": 13201,
+      "mtime": 1761393131.1013238,
+      "mtime_dt": "2025-10-25T13:52:11"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OmniCore-Global-Package/omnicore-global/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OmniCore-Global-Package\\omnicore-global\\README.md",
+      "size": 13423,
+      "mtime": 1761393130.9696398,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OmniCore-Global-Package/README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OmniCore-Global-Package\\README.md",
+      "size": 6845,
+      "mtime": 1761393130.9686434,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OMNI_DEPLOYMENT_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OMNI_DEPLOYMENT_GUIDE.md",
+      "size": 4639,
+      "mtime": 1761393130.9676392,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OMNI-REAL-MAX-MASTER-PROMPT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OMNI-REAL-MAX-MASTER-PROMPT.md",
+      "size": 5859,
+      "mtime": 1761393130.9666395,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OMNI-BRAIN-INSTALLATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OMNI-BRAIN-INSTALLATION.md",
+      "size": 7818,
+      "mtime": 1761393130.9656408,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/OMNI-MAXI-ULTRA-README.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\OMNI-MAXI-ULTRA-README.md",
+      "size": 7522,
+      "mtime": 1761393130.9656408,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/INSTALLATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\INSTALLATION.md",
+      "size": 9094,
+      "mtime": 1761393130.9646404,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/IoT_PRODUCTION_GUIDE.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\IoT_PRODUCTION_GUIDE.md",
+      "size": 10044,
+      "mtime": 1761393130.9646404,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/Google-Drive-Cleanup-Guide.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\Google-Drive-Cleanup-Guide.md",
+      "size": 4935,
+      "mtime": 1761393130.9636397,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/GOOGLE_SETUP_INSTRUCTIONS.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\GOOGLE_SETUP_INSTRUCTIONS.md",
+      "size": 2285,
+      "mtime": 1761393130.9636397,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/FINAL_VALIDATION_REPORT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\FINAL_VALIDATION_REPORT.md",
+      "size": 6127,
+      "mtime": 1761393130.96264,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/DOCKER-TROUBLESHOOTING.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\DOCKER-TROUBLESHOOTING.md",
+      "size": 7638,
+      "mtime": 1761393130.959643,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/DOCKER-INSTALLATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\DOCKER-INSTALLATION.md",
+      "size": 7954,
+      "mtime": 1761393130.9586406,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/DEPLOYMENT.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\DEPLOYMENT.md",
+      "size": 11213,
+      "mtime": 1761393130.9576306,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/CHANGELOG.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\CHANGELOG.md",
+      "size": 12380,
+      "mtime": 1761393130.9565375,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/API_DOCUMENTATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\API_DOCUMENTATION.md",
+      "size": 15809,
+      "mtime": 1761393130.955533,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/API-DOCUMENTATION.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\API-DOCUMENTATION.md",
+      "size": 2298,
+      "mtime": 1761393130.9545329,
+      "mtime_dt": "2025-10-25T13:52:10"
+    },
+    {
+      "path": "external/github/OMNIBOT12_from_github/API.md",
+      "abs_path": "C:\\Users\\admin\\Downloads\\copy-of-copy-of-omniscient-ai-platform\\external\\github\\OMNIBOT12_from_github\\API.md",
+      "size": 13091,
+      "mtime": 1761393130.9545329,
+      "mtime_dt": "2025-10-25T13:52:10"
+    }
+  ]
+}

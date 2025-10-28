@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets: ['omni-alertmanager:9093']
+
+rule_files:
+  - alert_rules.yml
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['omni-prometheus:9090']
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['omni-loki:3100']
+  - job_name: 'tempo'
+    static_configs:
+      - targets: ['omni-tempo:3200']
+  - job_name: 'pyroscope'
+    static_configs:
+      - targets: ['omni-pyroscope:4040']

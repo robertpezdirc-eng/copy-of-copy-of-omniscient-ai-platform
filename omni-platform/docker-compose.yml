@@ -28,7 +28,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../nginx.conf:/etc/nginx/nginx.conf:ro
       - ./ssl:/etc/nginx/ssl:ro
     depends_on:
       - omni-dashboard
@@ -40,10 +40,10 @@ services:
     image: prom/prometheus:latest
     container_name: omni-prometheus
     ports:
-      - "9090:9090"
+      - "9091:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./alerts:/etc/prometheus/alerts:ro
+      - ../prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../alerts:/etc/prometheus/alerts:ro
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -62,6 +62,11 @@ services:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=omni_admin_2024
+      - "GF_SECURITY_CONTENT_SECURITY_POLICY_TEMPLATE=script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: https://www.google-analytics.com https://analytics.google.com; frame-src 'self' https://tally.so;"
+      - GF_PANELS_DISABLE_SANITIZE_HTML=true
+      - GF_INSTALL_PLUGINS=grafana-bigquery-datasource,grafana-google-analytics-datasource,yesoreyeram-infinity-datasource
+    env_file:
+      - .env
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
@@ -80,7 +85,7 @@ services:
       - "--cluster.listen-address=0.0.0.0:9094"
       - "--web.listen-address=0.0.0.0:9093"
     volumes:
-      - ./alerts/alertmanager.generated.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ../alerts/alertmanager.generated.yml:/etc/alertmanager/alertmanager.yml:ro
     env_file:
       - .env
     environment:

@@ -1,0 +1,114 @@
+groups:
+- name: omni-basics
+  rules:
+  - alert: TargetDown
+    expr: up == 0
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Target down"
+      description: "Job {{ $labels.job }} instance {{ $labels.instance }} is down."
+
+- name: omni-slo-alerts
+  rules:
+  # Release Quality Gate Alerts
+  - alert: ReleaseQualityGateFailed
+    expr: (sum(rate(http_requests_total{code=~"2.."}[5m])) / sum(rate(http_requests_total[5m]))) < 0.995
+    for: 5m
+    labels:
+      severity: critical
+      team: platform
+      alert_type: release_quality
+    annotations:
+      summary: "Release Quality Gate Failed - Success Rate Below 99.5%"
+      description: "HTTP success rate is {{ $value | humanizePercentage }}, below the 99.5% SLO threshold. Release deployment should be blocked."
+      runbook_url: "https://docs.omni-platform.com/runbooks/release-quality-gate"
+
+  - alert: HighLatencyReleaseGate
+    expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 0.5
+    for: 5m
+    labels:
+      severity: critical
+      team: platform
+      alert_type: release_quality
+    annotations:
+      summary: "Release Quality Gate Failed - High P95 Latency"
+      description: "P95 latency is {{ $value }}s, above 500ms threshold. Release deployment should be blocked."
+      runbook_url: "https://docs.omni-platform.com/runbooks/release-quality-gate"
+
+  - alert: High5xxErrorRate
+    expr: (sum(rate(http_requests_total{code=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))) > 0.005
+    for: 5m
+    labels:
+      severity: critical
+      team: platform
+      alert_type: release_quality
+    annotations:
+      summary: "Release Quality Gate Failed - High 5xx Error Rate"
+      description: "5xx error rate is {{ $value | humanizePercentage }}, above 0.5% threshold. Release deployment should be blocked."
+      runbook_url: "https://docs.omni-platform.com/runbooks/release-quality-gate"
+
+  # Error Budget Burn Rate Alerts
+  - alert: ErrorBudgetBurnRateHigh1h
+    expr: (1 - (sum(rate(http_requests_total{code=~"2.."}[1h])) / sum(rate(http_requests_total[1h])))) > (1 - 0.995) * 14.4
+    for: 2m
+    labels:
+      severity: critical
+      team: platform
+      alert_type: error_budget
+      burn_rate: "1h"
+    annotations:
+      summary: "Critical Error Budget Burn Rate - 1 Hour Window"
+      description: "Error budget is burning at {{ $value | humanizePercentage }} rate over 1 hour. At this rate, monthly budget will be exhausted in 2 hours."
+      runbook_url: "https://docs.omni-platform.com/runbooks/error-budget-burn"
+
+  - alert: ErrorBudgetBurnRateHigh6h
+    expr: (1 - (sum(rate(http_requests_total{code=~"2.."}[6h])) / sum(rate(http_requests_total[6h])))) > (1 - 0.995) * 6
+    for: 15m
+    labels:
+      severity: warning
+      team: platform
+      alert_type: error_budget
+      burn_rate: "6h"
+    annotations:
+      summary: "High Error Budget Burn Rate - 6 Hour Window"
+      description: "Error budget is burning at {{ $value | humanizePercentage }} rate over 6 hours. At this rate, monthly budget will be exhausted in 5 days."
+      runbook_url: "https://docs.omni-platform.com/runbooks/error-budget-burn"
+
+  - alert: ErrorBudgetExhausted
+    expr: (1 - (sum(rate(http_requests_total{code=~"2.."}[7d])) / sum(rate(http_requests_total[7d])))) > (1 - 0.995)
+    for: 5m
+    labels:
+      severity: critical
+      team: platform
+      alert_type: error_budget
+    annotations:
+      summary: "Error Budget Exhausted"
+      description: "7-day error budget has been exhausted. Current error rate: {{ $value | humanizePercentage }}"
+      runbook_url: "https://docs.omni-platform.com/runbooks/error-budget-exhausted"
+
+  # Business KPI Alerts
+  - alert: RevenueDropAlert
+    expr: increase(business_revenue_eur[1h]) < increase(business_revenue_eur[1h] offset 24h) * 0.8
+    for: 30m
+    labels:
+      severity: warning
+      team: business
+      alert_type: kpi
+    annotations:
+      summary: "Revenue Drop Detected"
+      description: "Hourly revenue is 20% below same time yesterday. Current: €{{ $value }}"
+      runbook_url: "https://docs.omni-platform.com/runbooks/revenue-drop"
+
+  - alert: ConversionRateDropAlert
+    expr: business_conversion_rate < 0.02
+    for: 15m
+    labels:
+      severity: warning
+      team: business
+      alert_type: kpi
+    annotations:
+      summary: "Low Conversion Rate"
+      description: "Conversion rate dropped to {{ $value | humanizePercentage }}, below 2% threshold"
+      runbook_url: "https://docs.omni-platform.com/runbooks/conversion-rate"

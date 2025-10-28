@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omni Platform - The Ultimate AI Experience</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .hero {
+            padding: 50px 20px;
+            text-align: center;
+            background-color: #fff;
+        }
+        .features {
+            padding: 40px 20px;
+            background-color: #f4f4f4;
+        }
+        .features ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .features li {
+            background: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .benefits {
+            padding: 40px 20px;
+            background-color: #fff;
+        }
+        .cta {
+            padding: 40px 20px;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        h3 {
+            color: #007bff;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Omni Platform</h1>
+        <p>The Ultimate AI-Powered Omniscient Experience</p>
+    </header>
+    <section class="hero">
+        <h2>Welcome to the Future of AI</h2>
+        <p>Discover what makes users excited about the Omni Platform. Experience unified dashboards, intelligent agents, and seamless integration that transforms how you interact with technology.</p>
+    </section>
+    <section class="features">
+        <h2>Key Features</h2>
+        <h3>AI and Machine Learning</h3>
+        <ul>
+            <li>Omni Brain: Advanced AI core for intelligent decision-making.</li>
+            <li>Auto Learning: Continuous improvement and adaptation.</li>
+            <li>OpenAI Integration: Seamless connection to leading AI models.</li>
+            <li>Speech AI Manager: Voice recognition and processing.</li>
+            <li>Quantum Interface: Next-gen computing capabilities.</li>
+        </ul>
+        <h3>Monitoring and Analytics</h3>
+        <ul>
+            <li>Health Dashboard: Real-time system health monitoring.</li>
+            <li>Performance Analyzer: Deep insights into performance metrics.</li>
+            <li>Log Analyzer: Comprehensive logging and error tracking.</li>
+            <li>System Monitor: Proactive monitoring and alerting.</li>
+            <li>Heartbeat Monitor: Ensure uptime and reliability.</li>
+        </ul>
+        <h3>Development and Tools</h3>
+        <ul>
+            <li>Code Analyzer: Automated code review and optimization.</li>
+            <li>Test Generator: Automatic test case creation.</li>
+            <li>Refactoring Tool: Smart code refactoring suggestions.</li>
+            <li>Debug Assistant: AI-powered debugging support.</li>
+            <li>Collaboration Hub: Team collaboration features.</li>
+        </ul>
+        <h3>Security and Compliance</h3>
+        <ul>
+            <li>Security Tester: Vulnerability scanning and testing.</li>
+            <li>Encryption Manager: Secure data handling.</li>
+            <li>Compliance Checker: Ensure regulatory compliance.</li>
+            <li>Rate Limiter: Protect against abuse.</li>
+            <li>User Manager: Advanced user access controls.</li>
+        </ul>
+        <h3>Deployment and Operations</h3>
+        <ul>
+            <li>Deployment Manager: Automated deployment pipelines.</li>
+            <li>Container Orchestrator: Manage containers efficiently.</li>
+            <li>Load Balancer: Distribute traffic optimally.</li>
+            <li>Recovery System: Disaster recovery and backups.</li>
+            <li>Resource Optimizer: Maximize resource utilization.</li>
+        </ul>
+        <h3>Integration and Automation</h3>
+        <ul>
+            <li>API Integration Manager: Connect to external services.</li>
+            <li>Webhook Manager: Handle webhooks and events.</li>
+            <li>Protocol Converter: Seamless data format conversions.</li>
+            <li>Notification System: Real-time alerts and notifications.</li>
+            <li>Event Processor: Handle complex event flows.</li>
+        </ul>
+        <h3>Specialized Features</h3>
+        <ul>
+            <li>VR Manager: Virtual reality integrations.</li>
+            <li>Video Automation: Automated video processing and creation.</li>
+            <li>Feedback Collector: Gather and analyze user feedback.</li>
+            <li>Quality Analyzer: Ensure high-quality outputs.</li>
+            <li>Unified Dashboard: All tools in one intuitive interface.</li>
+        </ul>
+    </section>
+    <section class="benefits">
+        <h2>Why Choose Omni Platform?</h2>
+        <p>Users are drawn to the Omni Platform because it offers unparalleled convenience, innovation, and power. Imagine a system that anticipates your needs, automates routine tasks, and provides deep insights into your operations. Whether you're a developer, business owner, or enthusiast, Omni Platform elevates your productivity and creativity.</p>
+    </section>
+    <section class="cta">
+        <h2>Ready to Experience It?</h2>
+        <p>Join thousands of users who have transformed their workflow with Omni Platform.</p>
+        <button onclick="alert('Learn more about Omni Platform!')">Get Started</button>
+    </section>
+    <script>
+        // Simple interactivity
+        document.querySelector('button').addEventListener('click', function() {
+            // Could redirect or show more info
+        });
+    </script>
+    <!-- Grafana Faro Frontend Observability -->
+    <script src="https://unpkg.com/@grafana/faro-web-sdk@1.3.6/dist/bundle/faro-web-sdk.iife.js"></script>
+    <script>
+      var faro = window.GrafanaFaroWebSdk.initializeFaro({
+        url: 'https://faro-collector-prod-eu-west-2.grafana.net/collect/4754efe0a6b96f7a8d8bfad4d1117e19',
+        app: { name: 'omni-platforma', version: '1.0.0', environment: 'production' }
+      });
+      window.faro = faro; // omogoči preverjanje v konzoli
+      // Opcijsko: zajemi klike na gumbe kot custom evente
+      document.querySelectorAll('button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          faro.api.pushEvent('button_click', { button: this.innerText });
+        });
+      });
+    </script>
+</body>
+</html>

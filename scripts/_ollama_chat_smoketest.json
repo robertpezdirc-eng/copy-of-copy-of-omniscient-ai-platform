@@ -1,0 +1,15 @@
+﻿{
+    "Version":  "ollama version is 0.12.6",
+    "ApiReachable":  true,
+    "ApiVersion":  {
+                       "version":  "0.12.6"
+                   },
+    "Chat":  {
+                 "Method":  "API /chat",
+                 "Model":  "qwen3-coder:30b",
+                 "Ok":  true,
+                 "DurationSec":  62.6,
+                 "ResponsePreview":  "OK",
+                 "Error":  null
+             }
+}

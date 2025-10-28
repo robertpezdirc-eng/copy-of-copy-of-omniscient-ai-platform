@@ -1,0 +1,446 @@
+
+"title": "Omni Business Integrations",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-30d", "to": "now" },
+  "templating": {
+    "list": [
+      { "type": "textbox", "name": "JIRA_BASE_URL", "label": "Jira Base URL", "query": "https://robertpezdirc.atlassian.net", "current": { "text": "https://robertpezdirc.atlassian.net", "value": "https://robertpezdirc.atlassian.net" } },
+      { "type": "textbox", "name": "JIRA_PROJECT", "label": "Jira Project Key", "query": "KAN", "current": { "text": "KAN", "value": "KAN" } },
+      { "type": "textbox", "name": "SNOW_BASE_URL", "label": "ServiceNow Base URL", "query": "https://your-instance.service-now.com", "current": { "text": "https://your-instance.service-now.com", "value": "https://your-instance.service-now.com" } },
+      { "type": "textbox", "name": "GRAPHQL_BASE_URL", "label": "GraphQL Endpoint", "query": "https://api.example/graphql", "current": { "text": "https://api.example/graphql", "value": "https://api.example/graphql" } }
+    ]
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Jira Backlog P1/P2 (last 30d)",
+      "gridPos": { "x": 0, "y": 0, "w": 8, "h": 6 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+priority+in+($JIRA_P1_NAME,$JIRA_P2_NAME)+AND+statusCategory+!=+Done",
+          "uql": "parse-json; set rows = value.issues; eval backlog = len(rows); project backlog",
+          "format": "table"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "backlog" } }
+    },
+    {
+      "type": "stat",
+      "title": "ServiceNow Incidents Backlog (Open)",
+      "gridPos": { "x": 8, "y": 0, "w": 8, "h": 6 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_SNOW" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$SNOW_BASE_URL/api/now/table/incident?sysparm_query=stateNOT%20IN%20closed,resolved&sysparm_limit=1000",
+          "uql": "parse-json; set rows = result; eval backlog = len(rows); project backlog",
+          "format": "table"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "backlog" } }
+    },
+    {
+      "type": "gauge",
+      "title": "ServiceNow MTTR (hours, last 30d)",
+      "gridPos": { "x": 16, "y": 0, "w": 8, "h": 6 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_SNOW" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$SNOW_BASE_URL/api/now/table/incident?sysparm_query=closed_at>javascript:gs.beginningOfLast30Days()&sysparm_fields=opened_at,closed_at&sysparm_limit=1000",
+          "uql": "parse-json; set rows = result; eval hours = map(rows, (r) => (to-unix(r.closed_at) - to-unix(r.opened_at))/3600); eval mttr = avg(hours); project mttr",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "min": 0, "max": 72 },
+        "overrides": []
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Jira SLA Breaches (last 30d)",
+      "gridPos": { "x": 0, "y": 6, "w": 8, "h": 6 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+issuetype%3DBug+AND+statusCategory+!=+Done",
+          "uql": "parse-json; set rows = value.issues; eval breaches = len(filter(rows, (r) => to-number(r.fields.customfield_time_to_resolution.status.percentile) > 100)); project breaches",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "GraphQL: P1 Incidents (last 24h)",
+      "gridPos": { "x": 8, "y": 6, "w": 8, "h": 6 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "graphql",
+          "source": "url",
+          "url": "$GRAPHQL_BASE_URL",
+          "graphql_query": "query { incidents(filter:{ severity:\"P1\", sinceHours:24 }) { id createdAt status } }",
+          "format": "table",
+          "uql": "set rows = data.incidents; eval count = len(rows); project count"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "JSON API: Budget vs Actual (current month)",
+      "gridPos": { "x": 16, "y": 6, "w": 8, "h": 6 },
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "JSONAPI" },
+      "targets": [
+        {
+          "refId": "A",
+          "urlPath": "/finance/budget-vs-actual",
+          "query": "",
+          "format": "table"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "variance" } }
+    },
+    {
+      "type": "state-timeline",
+      "title": "Pipeline Health (JSON)",
+      "gridPos": { "x": 0, "y": 12, "w": 24, "h": 8 },
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "JSONAPI" },
+      "targets": [
+        {
+          "refId": "A",
+          "urlPath": "/pipeline/health",
+          "query": "",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Jira Lead Time (Created → In Progress)",
+      "gridPos": { "x": 0, "y": 20, "w": 12, "h": 6 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=created",
+          "uql": "parse-json; set rows = value.issues; eval leadHours = map(rows, (r) => { set inProg = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set created = to-unix(r.fields.created); return (inProg - created)/3600; }); eval leadAvg = avg(filter(leadHours, (x) => is-finite(x))); project leadAvg",
+          "format": "table"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "leadAvg" } }
+    },
+    {
+      "type": "stat",
+      "title": "Jira Cycle Time (In Progress → Done)",
+      "gridPos": { "x": 12, "y": 20, "w": 12, "h": 6 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=created",
+          "uql": "parse-json; set rows = value.issues; eval cycleHours = map(rows, (r) => { set started = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set done = last(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"Done\")), (h) => to-unix(h.created))); return (done - started)/3600; }); eval cycleAvg = avg(filter(cycleHours, (x) => is-finite(x))); project cycleAvg",
+          "format": "table"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "cycleAvg" } }
+    },
+    {
+      "type": "bargauge",
+      "title": "ServiceNow Aging Buckets (Open Incidents)",
+      "gridPos": { "x": 0, "y": 26, "w": 24, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$SNOW_BASE_URL/api/now/table/incident?sysparm_query=stateNOT%20IN%20closed,resolved&sysparm_fields=opened_at&sysparm_limit=1000",
+          "uql": "parse-json; set rows = result; eval ages = map(rows, (r) => (to-unix(now()) - to-unix(r.opened_at))/86400); eval b01 = len(filter(ages, (d) => d <= 1)); eval b12 = len(filter(ages, (d) => d > 1 && d <= 2)); eval b25 = len(filter(ages, (d) => d > 2 && d <= 5)); eval b5p = len(filter(ages, (d) => d > 5)); project { \"0-1d\": b01, \"1-2d\": b12, \"2-5d\": b25, \">5d\": b5p }",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    },
+    {
+      "type": "bargauge",
+      "title": "Jira Lead Time by IssueType (Bug vs Task)",
+      "gridPos": { "x": 0, "y": 34, "w": 12, "h": 6 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=created,issuetype",
+          "uql": "parse-json; set rows = value.issues; set bug = filter(rows, (r) => r.fields.issuetype.name == \"Bug\"); set task = filter(rows, (r) => r.fields.issuetype.name == \"Task\"); eval leadBug = map(bug, (r) => { set inProg = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set created = to-unix(r.fields.created); return (inProg - created)/3600; }); eval leadTask = map(task, (r) => { set inProg = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set created = to-unix(r.fields.created); return (inProg - created)/3600; }); eval bugAvg = avg(filter(leadBug, (x) => is-finite(x))); eval taskAvg = avg(filter(leadTask, (x) => is-finite(x))); project { \"Bug\": bugAvg, \"Task\": taskAvg }",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    },
+    {
+      "type": "bargauge",
+      "title": "Jira Cycle Time by IssueType (Bug vs Task)",
+      "gridPos": { "x": 12, "y": 34, "w": 12, "h": 6 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=created,issuetype",
+          "uql": "parse-json; set rows = value.issues; set bug = filter(rows, (r) => r.fields.issuetype.name == \"Bug\"); set task = filter(rows, (r) => r.fields.issuetype.name == \"Task\"); eval cycleBug = map(bug, (r) => { set started = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set done = last(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"Done\")), (h) => to-unix(h.created))); return (done - started)/3600; }); eval cycleTask = map(task, (r) => { set started = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set done = last(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"Done\")), (h) => to-unix(h.created))); return (done - started)/3600; }); eval bugAvg = avg(filter(cycleBug, (x) => is-finite(x))); eval taskAvg = avg(filter(cycleTask, (x) => is-finite(x))); project { \"Bug\": bugAvg, \"Task\": taskAvg }",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    },
+    {
+      "type": "timeseries",
+      "title": "ServiceNow Incidents Resolved per Day (last 30d)",
+      "gridPos": { "x": 0, "y": 40, "w": 24, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_SNOW" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$SNOW_BASE_URL/api/now/table/incident?sysparm_query=closed_at>javascript:gs.beginningOfLast30Days()&sysparm_fields=closed_at&sysparm_limit=1000",
+          "uql": "parse-json; set rows = result; set times = map(rows, (r) => floor(to-unix(r.closed_at)/86400)*86400*1000); set unique = uniq(times); set series = map(unique, (ts) => { time: ts, value: len(filter(times, (x) => x == ts)) }); project series",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    }
+  ,
+    {
+      "type": "bargauge",
+      "title": "Jira Throughput per Week (Issues Done)",
+      "gridPos": { "x": 0, "y": 68, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=created",
+          "uql": "parse-json; set rows = value.issues; set doneTimes = map(rows, (r) => last(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"Done\")), (h) => to-unix(h.created)))); set weeks = map(doneTimes, (t) => floor(t/604800)*604800*1000); set uniq = uniq(weeks); set series = map(uniq, (wk) => { label: wk, value: len(filter(weeks, (x) => x == wk)) }); project { series }",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    }
+  ,
+    {
+      "type": "bargauge",
+      "title": "Jira WIP by Assignee (Open/In Progress)",
+      "gridPos": { "x": 12, "y": 68, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%20!=%20Done&fields=assignee",
+          "uql": "parse-json; set rows = value.issues; set names = map(rows, (r) => coalesce(r.fields.assignee.displayName, \"Unassigned\")); set uniq = uniq(names); set series = map(slice(sort(map(uniq, (n) => { key: n, count: len(filter(names, (x) => x == n)) }), (a,b) => b.count - a.count), 0, 10), (p) => { label: p.key, value: p.count }); project { series }",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    }
+  ,
+    {
+      "type": "bargauge",
+      "title": "Jira Lead Time by Component (avg)",
+      "gridPos": { "x": 0, "y": 76, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=created,components",
+          "uql": "parse-json; set rows = value.issues; set comps = map(rows, (r) => coalesce(first(r.fields.components).name, \"(none)\")); eval leads = map(rows, (r, idx) => { set inProg = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set created = to-unix(r.fields.created); return { comp: comps[idx], lead: (inProg - created)/3600 }; }); set uniq = uniq(comps); set series = map(uniq, (c) => { label: c, value: avg(map(filter(leads, (l) => l.comp == c), (l) => l.lead)) }); project { series }",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    },
+    {
+      "type": "bargauge",
+      "title": "Jira Cycle Time by Component (avg)",
+      "gridPos": { "x": 12, "y": 76, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=components",
+          "uql": "parse-json; set rows = value.issues; set comps = map(rows, (r) => coalesce(first(r.fields.components).name, \"(none)\")); eval cycles = map(rows, (r, idx) => { set started = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set done = last(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"Done\")), (h) => to-unix(h.created))); return { comp: comps[idx], cycle: (done - started)/3600 }; }); set uniq = uniq(comps); set series = map(uniq, (c) => { label: c, value: avg(map(filter(cycles, (l) => l.comp == c), (l) => l.cycle)) }); project { series }",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    }
+  ,
+    {
+      "type": "table",
+      "title": "ServiceNow Aging by Assignment Group",
+      "gridPos": { "x": 0, "y": 84, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_SNOW" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$SNOW_BASE_URL/api/now/table/incident?sysparm_query=stateNOT%20IN%20closed,resolved&sysparm_fields=opened_at,assignment_group&sysparm_limit=1000",
+          "uql": "parse-json; set rows = result; eval ages = map(rows, (r) => (to-unix(now()) - to-unix(r.opened_at))/86400); set groups = map(rows, (r) => coalesce(r.assignment_group.name, \"(none)\")); set uniq = uniq(groups); set table = map(uniq, (g) => { set idx = map(filter(range(0, len(rows)), (i) => groups[i] == g), (i) => ages[i]); return { group: g, \"0-1d\": len(filter(idx, (d) => d <= 1)), \"1-2d\": len(filter(idx, (d) => d > 1 && d <= 2)), \"2-5d\": len(filter(idx, (d) => d > 2 && d <= 5)), \">5d\": len(filter(idx, (d) => d > 5)) }; }); project table",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "ServiceNow Reopen Rate (last 30d)",
+      "gridPos": { "x": 12, "y": 84, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_SNOW" },
+      "targets": [
+        {
+          "refId": "A",
+          "queryType": "uql",
+          "source": "url",
+          "url": "$SNOW_BASE_URL/api/now/table/incident?sysparm_query=closed_at>javascript:gs.beginningOfLast30Days()&sysparm_fields=reopen_count&sysparm_limit=1000",
+          "uql": "parse-json; set rows = result; eval reopened = len(filter(rows, (r) => to-number(r.reopen_count) > 0)); eval total = len(rows); eval rate = (total > 0 ? (reopened*100.0/total) : 0); project rate",
+          "format": "table"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "rate" } }
+    }
+  ,
+    {
+      "type": "bargauge",
+      "title": "Jira Lead Time by Epic (avg)",
+      "gridPos": { "x": 0, "y": 92, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {"refId":"A","queryType":"uql","source":"url",
+         "url":"$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=created,$JIRA_EPIC_FIELD",
+         "uql":"parse-json; set rows = value.issues; set epics = map(rows, (r) => coalesce((r.fields[$JIRA_EPIC_FIELD].name),(r.fields[$JIRA_EPIC_FIELD].value),\"(none)\")); eval leads = map(rows, (r, idx) => { set inProg = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set created = to-unix(r.fields.created); return { epic: epics[idx], lead: (inProg - created)/3600 }; }); set uniq = uniq(epics); set series = map(uniq, (e) => { label: e, value: avg(map(filter(leads, (l) => l.epic == e), (l) => l.lead)) }); project { series }",
+         "format":"table"}
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    },
+    {
+      "type": "bargauge",
+      "title": "Jira Cycle Time by Epic (avg)",
+      "gridPos": { "x": 12, "y": 92, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {"refId":"A","queryType":"uql","source":"url",
+         "url":"$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=$JIRA_EPIC_FIELD",
+         "uql":"parse-json; set rows = value.issues; set epics = map(rows, (r) => coalesce((r.fields[$JIRA_EPIC_FIELD].name),(r.fields[$JIRA_EPIC_FIELD].value),\"(none)\")); eval cycles = map(rows, (r, idx) => { set started = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set done = last(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"Done\")), (h) => to-unix(h.created))); return { epic: epics[idx], cycle: (done - started)/3600 }; }); set uniq = uniq(epics); set series = map(uniq, (e) => { label: e, value: avg(map(filter(cycles, (l) => l.epic == e), (l) => l.cycle)) }); project { series }",
+         "format":"table"}
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    }
+  ,
+    {
+      "type": "bargauge",
+      "title": "Jira Lead Time by Customer Segment (avg)",
+      "gridPos": { "x": 0, "y": 100, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {"refId":"A","queryType":"uql","source":"url",
+         "url":"$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=created,$JIRA_SEGMENT_FIELD",
+         "uql":"parse-json; set rows = value.issues; set segs = map(rows, (r) => coalesce((r.fields[$JIRA_SEGMENT_FIELD].value),(r.fields[$JIRA_SEGMENT_FIELD].name),\"(none)\")); eval leads = map(rows, (r, idx) => { set inProg = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set created = to-unix(r.fields.created); return { seg: segs[idx], lead: (inProg - created)/3600 }; }); set uniq = uniq(segs); set series = map(uniq, (s) => { label: s, value: avg(map(filter(leads, (l) => l.seg == s), (l) => l.lead)) }); project { series }",
+         "format":"table"}
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    },
+    {
+      "type": "bargauge",
+      "title": "Jira Cycle Time by Customer Segment (avg)",
+      "gridPos": { "x": 12, "y": 100, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {"refId":"A","queryType":"uql","source":"url",
+         "url":"$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=$JIRA_SEGMENT_FIELD",
+         "uql":"parse-json; set rows = value.issues; set segs = map(rows, (r) => coalesce((r.fields[$JIRA_SEGMENT_FIELD].value),(r.fields[$JIRA_SEGMENT_FIELD].name),\"(none)\")); eval cycles = map(rows, (r, idx) => { set started = first(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"In Progress\")), (h) => to-unix(h.created))); set done = last(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"Done\")), (h) => to-unix(h.created))); return { seg: segs[idx], cycle: (done - started)/3600 }; }); set uniq = uniq(segs); set series = map(uniq, (s) => { label: s, value: avg(map(filter(cycles, (l) => l.seg == s), (l) => l.cycle)) }); project { series }",
+         "format":"table"}
+      ],
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] }
+    }
+  ,
+    {
+      "type": "timeseries",
+      "title": "Jira Throughput Weekly Trend (last 12w)",
+      "gridPos": { "x": 0, "y": 108, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {"refId":"A","queryType":"uql","source":"url",
+         "url":"$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT+AND+statusCategory%3DDone&expand=changelog&fields=key",
+         "uql":"parse-json; set rows = value.issues; set doneTimes = map(rows, (r) => last(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"Done\")), (h) => to-unix(h.created)))); set weeks = map(doneTimes, (t) => floor(t/604800)*604800*1000); set uniq = sort(uniq(weeks)); set series = map(uniq, (wk) => { ts: wk, value: len(filter(weeks, (x) => x == wk)) }); project series",
+         "format":"timeseries"}
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Jira WIP Trend Daily (Open backlog, last 30d)",
+      "gridPos": { "x": 12, "y": 108, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "targets": [
+        {"refId":"A","queryType":"uql","source":"url",
+         "url":"$JIRA_BASE_URL/rest/api/3/search?jql=project%3D$JIRA_PROJECT&expand=changelog&fields=created",
+         "uql":"parse-json; set rows = value.issues; set created = map(rows, (r) => to-unix(r.fields.created)); set doneTs = map(rows, (r) => last(map(filter(r.changelog.histories, (h) => some(h.items, (i) => i.field == \"status\" && i.toString == \"Done\")), (h) => to-unix(h.created)))); set series = map(range(0,30), (i) => { set d = floor((to-unix(now()) - i*86400)/86400)*86400*1000; set cnt = len(filter(range(0,len(rows)), (idx) => created[idx] <= d && coalesce(doneTs[idx], 9999999999) > d)); return { ts: d, value: cnt }; }); project series",
+         "format":"timeseries"}
+      ]
+    }
+  ,
+    {
+      "type": "stat",
+      "title": "ServiceNow Resolved Duration p50/p90 (hours, last 30d)",
+      "gridPos": { "x": 0, "y": 116, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_SNOW" },
+      "targets": [
+        {"refId":"A","queryType":"uql","source":"url",
+         "url":"$SNOW_BASE_URL/api/now/table/incident?sysparm_query=resolved_at>javascript:gs.beginningOfLast30Days()^ORclosed_at>javascript:gs.beginningOfLast30Days()&sysparm_fields=opened_at,resolved_at,closed_at&sysparm_limit=1000",
+         "uql":"parse-json; set rows = result; eval durations = map(rows, (r) => { set end = coalesce(to-unix(r.resolved_at), to-unix(r.closed_at)); return (end - to-unix(r.opened_at))/3600; }); eval p50 = coalesce(percentile(durations,50), avg(durations)); eval p90 = coalesce(percentile(durations,90), avg(durations)); project { p50, p90 }",
+         "format":"table"}
+      ],
+      "options": { "reduceOptions": { "calcs": ["last"], "values": true } }
+    },
+    {
+      "type": "timeseries",
+      "title": "ServiceNow Resolved Duration Weekly Trend (avg hours, last 12w)",
+      "gridPos": { "x": 12, "y": 116, "w": 12, "h": 8 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_SNOW" },
+      "targets": [
+        {"refId":"A","queryType":"uql","source":"url",
+         "url":"$SNOW_BASE_URL/api/now/table/incident?sysparm_query=resolved_at>javascript:gs.beginningOfLast90Days()^ORclosed_at>javascript:gs.beginningOfLast90Days()&sysparm_fields=opened_at,resolved_at,closed_at&sysparm_limit=2000",
+         "uql":"parse-json; set rows = result; set ends = map(rows, (r) => coalesce(to-unix(r.resolved_at), to-unix(r.closed_at))); set durs = map(rows, (r, idx) => (ends[idx] - to-unix(r.opened_at))/3600); set weeks = map(ends, (t) => floor(t/604800)*604800*1000); set uniq = sort(uniq(weeks)); set series = map(uniq, (wk) => { ts: wk, value: avg(map(filter(range(0,len(rows)), (i) => weeks[i] == wk), (i) => durs[i])) }); project series",
+         "format":"timeseries"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+FROM python:3.11-alpine
+WORKDIR /app
+RUN pip install --no-cache-dir flask prometheus_client
+COPY revenue_exporter.py /app/revenue_exporter.py
+EXPOSE 9101
+ENV PORT=9101 POLL_SECONDS=10 KPI_FILE=/data/business_kpis.json
+CMD ["python", "/app/revenue_exporter.py"]

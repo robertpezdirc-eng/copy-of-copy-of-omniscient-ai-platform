@@ -1,0 +1,30 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://omni-prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: 15s
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://omni-loki:3100
+
+  - name: Tempo
+    type: tempo
+    access: proxy
+    url: http://omni-tempo:3200
+
+  - name: Alertmanager
+    type: camptocamp-prometheus-alertmanager-datasource
+    access: proxy
+    url: http://omni-alertmanager:9093
+
+  - name: Pyroscope
+    type: grafana-pyroscope-datasource
+    access: proxy
+    url: http://omni-pyroscope:4040

@@ -1,0 +1,919 @@
+## Compose version key is obsolete in v2; removing for clean start
+
+networks:
+  omni-net:
+    driver: bridge
+
+volumes:
+  tempo-data:
+  portainer_data:
+  mysql_data:
+  dind_data:
+  traefik_letsencrypt:
+  elevator_ws:
+
+secrets:
+  slack_webhook_url:
+    file: ./alerts/secrets/slack_webhook_url.txt
+  smtp_password:
+    file: ./alerts/secrets/smtp_password.txt
+
+services:
+  omni-grafana:
+    image: grafana/grafana:12.2.1
+    container_name: omni-grafana
+    restart: unless-stopped
+    depends_on:
+      omni-prometheus:
+        condition: service_healthy
+      omni-alertmanager:
+        condition: service_healthy
+      omni-loki:
+        condition: service_started
+      omni-tempo:
+        condition: service_started
+      omni-pyroscope:
+        condition: service_started
+    ports:
+      - "3003:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: "admin"
+      GF_SERVER_HTTP_PORT: "3000"
+      GF_SERVER_ROOT_URL: "http://localhost:3003"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/etc/grafana/provisioning/dashboards/omni_business_overview.json"
+      GF_INSTALL_PLUGINS: "yesoreyeram-infinity-datasource,marcusolsson-json-datasource"
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: "yesoreyeram-infinity-datasource,marcusolsson-json-datasource,marcusolsson-csv-datasource,hadesarchitect-cassandra-datasource,camptocamp-prometheus-alertmanager-datasource,alexanderzobnin-zabbix-app,grafana-pyroscope-datasource,grafana-servicenow-datasource,grafana-mongodb-datasource,grafana-azure-monitor-datasource,grafana-google-cloud-monitoring-datasource,grafana-mqtt-datasource,grafana-googlesheets-datasource"
+
+      GF_AUTH_GOOGLE_ENABLED: "false"
+      GF_AUTH_GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID}"
+      GF_AUTH_GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET}"
+      GF_AUTH_GOOGLE_SCOPES: "openid profile email"
+      GF_AUTH_GOOGLE_ALLOWED_DOMAINS: "${GOOGLE_ALLOWED_DOMAINS}"
+      GF_AUTH_SIGNUP_ALLOW: "true"
+      GF_AUTH_DISABLE_LOGIN_FORM: "false"
+    volumes:
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://localhost:3000/api/health >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    networks:
+      - omni-net
+    profiles: ["monitoring"]
+
+  omni-prometheus:
+    image: prom/prometheus:latest
+    container_name: omni-prometheus
+    restart: unless-stopped
+    ports:
+      - "9091:9090" # avoid host port conflict, Grafana uses service name inside network
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alerts:/etc/prometheus/alerts:ro
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.enable-lifecycle
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://localhost:9090/-/ready >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    networks:
+      - omni-net
+    profiles: ["monitoring"]
+
+  omni-alertmanager:
+    image: prom/alertmanager:latest
+    container_name: omni-alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alerts/${ALERTMANAGER_CONFIG:-alertmanager.yml}:/etc/alertmanager/alertmanager.yml:ro
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+    environment:
+      ALERT_EMAIL_TO: ${ALERT_EMAIL_TO}
+      ALERT_EMAIL_FROM: ${ALERT_EMAIL_FROM}
+      SMTP_SMARTHOST: ${SMTP_SMARTHOST}
+      SMTP_USER: ${SMTP_USER}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://localhost:9093/-/ready >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    secrets:
+      - slack_webhook_url
+      - smtp_password
+    networks:
+      - omni-net
+    profiles: ["monitoring"]
+
+  omni-loki:
+    image: grafana/loki:2.9.0
+    container_name: omni-loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    command:
+      - -config.file=/etc/loki/local-config.yaml
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://localhost:3100/ready >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    networks:
+      - omni-net
+    profiles: ["monitoring"]
+
+  omni-tempo:
+    image: grafana/tempo:2.4.1
+    container_name: omni-tempo
+    restart: unless-stopped
+    ports:
+      - "3200:3200"   # Tempo HTTP API
+      - "4318:4318"   # OTLP HTTP receiver (HTTP)
+      - "4317:4317"   # OTLP gRPC
+      - "9411:9411"   # Zipkin
+      - "14268:14268" # Jaeger Thrift HTTP
+      - "14250:14250" # Jaeger gRPC
+    volumes:
+      - ./tempo:/etc/tempo/local:ro
+      - tempo-data:/var/tempo
+    command:
+      - -config.file=/etc/tempo/local/tempo.yaml
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://localhost:3200/ready >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    networks:
+      - omni-net
+    profiles: ["monitoring"]
+
+  omni-promtail:
+    image: grafana/promtail:2.9.0
+    container_name: omni-promtail
+    restart: unless-stopped
+    depends_on:
+      omni-loki:
+        condition: service_healthy
+    volumes:
+      - ./promtail/promtail.yml:/etc/promtail/promtail.yml:ro
+      - ./logs:/var/log/omni:ro
+    command:
+      - -config.file=/etc/promtail/promtail.yml
+      - -config.expand-env=true
+    networks:
+      - omni-net
+    profiles: ["monitoring"]
+
+  omni-pyroscope:
+    image: grafana/pyroscope:1.5.0
+    container_name: omni-pyroscope
+    restart: unless-stopped
+    ports:
+      - "4040:4040"
+    environment:
+      PYROSCOPE_LOG_LEVEL: info
+    networks:
+      - omni-net
+    profiles: ["monitoring"]
+
+  omni-node-exporter:
+    image: prom/node-exporter:v1.7.0
+    container_name: omni-node-exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    networks:
+      - omni-net
+    profiles: ["monitoring"]
+
+  omni-cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    container_name: omni-cadvisor
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - omni-net
+    profiles: ["monitoring"]
+
+  omni-telemetrygen:
+    image: ghcr.io/jaegertracing/telemetrygen:latest
+    container_name: omni-telemetrygen
+    restart: unless-stopped
+    command:
+      - traces
+      - --endpoint=omni-tempo:4317
+      - --protocol=grpc
+      - --rate=5
+      - --duration=0s
+    networks:
+      - omni-net
+    profiles: ["loadgen"]
+
+  omni-loggen:
+    image: alpine:3.19
+    container_name: omni-loggen
+    restart: unless-stopped
+    command: >
+      sh -c 'mkdir -p /var/log/omni && while true; do echo "{\"ts\":\"$(date -Iseconds)\",\"level\":\"info\",\"service\":\"omni-backend\",\"message\":\"heartbeat\",\"traceId\":\"$(cat /proc/sys/kernel/random/uuid)\"}" >> /var/log/omni/app.log; sleep 5; done'
+    volumes:
+      - ./logs:/var/log/omni
+    networks:
+      - omni-net
+    profiles: ["monitoring"]
+ 
+  omni-kpi-ingestion:
+    image: python:3.11-slim
+    container_name: omni-kpi-ingestion
+    restart: unless-stopped
+    depends_on:
+      - omni-prometheus
+    environment:
+      DB_DSN: ${DB_DSN}
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+      ANALYTICS_ENDPOINT: ${ANALYTICS_ENDPOINT}
+      ANALYTICS_TOKEN: ${ANALYTICS_TOKEN}
+      KPI_OUTPUT_PATH: /data/business_kpis.json
+    volumes:
+      - ./omni-platform/ingestion:/app:ro
+      - ./omni-platform/backend/data:/data
+    command: >
+      bash -lc "pip install --no-cache-dir stripe psycopg2-binary requests && while true; do python /app/kpi_ingest.py; sleep 3600; done"
+    networks:
+      - omni-net
+    profiles: ["monitoring"]
+
+  omni-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    image: omni-backend:local
+    container_name: omni-backend
+    restart: unless-stopped
+    environment:
+      - PORT=8080
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - PROMETHEUS_SUM_REQUESTS_URL=${PROMETHEUS_SUM_REQUESTS_URL}
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://localhost:8080/api/health >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    networks:
+      - omni-net
+
+  omni-alloy:
+    image: grafana/alloy:latest
+    container_name: omni-alloy
+    restart: unless-stopped
+    depends_on:
+      omni-backend:
+        condition: service_healthy
+      omni-node-exporter:
+        condition: service_started
+      omni-cadvisor:
+        condition: service_started
+    environment:
+      - GRAFANA_CLOUD_PROM_URL=${GRAFANA_CLOUD_PROM_URL}
+      - GRAFANA_CLOUD_USER=${GRAFANA_CLOUD_USER}
+      - GRAFANA_CLOUD_API_KEY=${GRAFANA_CLOUD_API_KEY}
+    volumes:
+      - ./provisioning/alloy/config.river:/etc/alloy/config.river:ro
+    command: ["run", "--server.http.listen-addr=0.0.0.0:12345", "--config.file=/etc/alloy/config.river"]
+    profiles: ["monitoring"]
+    networks:
+      - omni-net
+
+  agent-agentic-ai:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: agent-agentic-ai
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_agentic_ai
+      PORT: 8000
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-governance:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-governance
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_governance
+      PORT: 8000
+      GOV_DB_PATH: /workspace/data/governance.json
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-autolearn:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-autolearn
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_autolearn
+      PORT: 8000
+      AUTOLEARN_PATCH_DIR: /workspace/patches
+      AUTOLEARN_STATE_PATH: /workspace/data/autolearn.json
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-revenue:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-revenue
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_revenue
+      PORT: 8000
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-knowledge:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-knowledge
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_knowledge
+      PORT: 8000
+      KNOW_DB_PATH: /workspace/data/knowledge.json
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-gcp:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-gcp
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_gcp
+      PORT: 8000
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+
+  agent-finops:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: agent-finops
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_finops
+      PORT: 8000
+      JIRA_API_TOKEN: ${JIRA_API_TOKEN}
+      JIRA_PROJECT: ${JIRA_PROJECT}
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+      SLACK_CHANNEL: ${SLACK_CHANNEL}
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+
+  agent-rl-core:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: agent-rl-core
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_rl_core
+      PORT: 8000
+      ENABLE_GPU: ${ENABLE_GPU:-false}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+
+  agent-devops-router:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: agent-devops-router
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_devops_router
+      PORT: 8000
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+
+  agent-premortem:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: agent-premortem
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_premortem
+      PORT: 8000
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+
+  agent-code-optimizer:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: agent-code-optimizer
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_code_optimizer
+      PORT: 8000
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-portainer:
+    image: portainer/portainer-ce:latest
+    container_name: omni-portainer
+    restart: unless-stopped
+    ports:
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - omni-net
+
+  omni-watchtower:
+    image: containrrr/watchtower:latest
+    container_name: omni-watchtower
+    restart: unless-stopped
+    command: ["--cleanup", "--include-restarting", "--label-enable", "--interval", "300"]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - omni-net
+
+  omni-mysql:
+    image: mysql:8.0
+    container_name: omni-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-omni}
+      MYSQL_USER: ${MYSQL_USER:-omni}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-omni123}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - omni-net
+
+  omni-phpmyadmin:
+    image: phpmyadmin:5.2
+    container_name: omni-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: omni-mysql
+      PMA_USER: ${MYSQL_USER:-omni}
+      PMA_PASSWORD: ${MYSQL_PASSWORD:-omni123}
+    depends_on:
+      - omni-mysql
+    ports:
+      - "8081:80"
+    networks:
+      - omni-net
+
+  omni-dind:
+    image: docker:24-dind
+    container_name: omni-dind
+    privileged: true
+    restart: unless-stopped
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - dind_data:/var/lib/docker
+    networks:
+      - omni-net
+    profiles: ["dind"]
+
+  omni-traefik:
+    image: traefik:v3.1
+    container_name: omni-traefik
+    restart: unless-stopped
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--api.dashboard=true"
+      # Enable Let's Encrypt by setting TRAEFIK_ACME_EMAIL and uncommenting the lines below
+      # - "--certificatesresolvers.le.acme.tlschallenge=true"
+      # - "--certificatesresolvers.le.acme.email=${TRAEFIK_ACME_EMAIL}"
+      # - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8088:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_letsencrypt:/letsencrypt
+    networks:
+      - omni-net
+    profiles: ["traefik"]
+
+  omni-chaos:
+    image: gaiaadm/pumba:0.7.9
+    container_name: omni-chaos
+    restart: unless-stopped
+    environment:
+      DOCKER_HOST: tcp://omni-dind:2375
+    depends_on:
+      - omni-dind
+    networks:
+      - omni-net
+    profiles: ["elevator"]
+
+  omni-elevator:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-elevator
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_elevator
+      PORT: 8000
+      DOCKER_HOST: tcp://omni-dind:2375
+      GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      GITHUB_OWNER: ${GITHUB_OWNER}
+      GITHUB_REPO: ${GITHUB_REPO}
+      JIRA_URL: ${JIRA_URL}
+      JIRA_API_TOKEN: ${JIRA_API_TOKEN}
+      JIRA_USER: ${JIRA_USER}
+      JIRA_PROJECT: ${JIRA_PROJECT}
+      OMNI_ADAPT_URL: http://omni-adapt:8000
+      RESOURCE_GUARD_URL: http://omni-resource-guard:8000
+      ADAPT_GATE_THRESHOLD: ${ADAPT_GATE_THRESHOLD:-0.7}
+    depends_on:
+      - omni-dind
+    volumes:
+      - elevator_ws:/workspace
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+    profiles: ["elevator"]
+
+  omni-rica:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-rica
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_rica
+      PORT: 8000
+      PROMETHEUS_URL: http://omni-prometheus:9090
+      LOKI_URL: http://omni-loki:3100
+      JIRA_URL: ${JIRA_URL}
+      JIRA_API_TOKEN: ${JIRA_API_TOKEN}
+      JIRA_USER: ${JIRA_USER}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-forensics:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-forensics
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_forensics
+      PORT: 8000
+      PROMETHEUS_URL: http://omni-prometheus:9090
+      LOKI_URL: http://omni-loki:3100
+      RICA_URL: http://omni-rica:8000
+      JIRA_URL: ${JIRA_URL}
+      JIRA_API_TOKEN: ${JIRA_API_TOKEN}
+      JIRA_USER: ${JIRA_USER}
+      JIRA_PROJECT: ${JIRA_PROJECT}
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-resource-guard:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-resource-guard
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_resource_guard
+      PORT: 8000
+      PROMETHEUS_URL: http://omni-prometheus:9090
+      RL_CORE_URL: http://agent-rl-core:8000
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-adapt:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-adapt
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_adapt
+      PORT: 8000
+      PROMETHEUS_URL: http://omni-prometheus:9090
+      RL_CORE_URL: http://agent-rl-core:8000
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  
+  omni-docgen:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-docgen
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_docgen
+      PORT: 8000
+      DOC_OUTPUT_DIR: ./docs/auto
+      DOC_INDEX_PATH: ./docs_index.json
+      REPO_PATH: /workspace
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  # Adjust omni-value to write docs into workspace and persist
+  omni-value:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-value
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_value
+      PORT: 8000
+      PROMETHEUS_URL: http://omni-prometheus:9090
+      OMNI_ADAPT_URL: http://omni-adapt:8000
+      DOC_OUTPUT_DIR: /workspace/docs/auto
+      DOC_INDEX_PATH: /workspace/docs_index.json
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-tasks:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-tasks
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_tasks
+      PORT: 8000
+      TASKS_DB_PATH: /workspace/data/tasks.json
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-marketing:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-marketing
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_marketing
+      PORT: 8000
+      VALUE_URL: http://omni-value:8000
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-feedback:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-feedback
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_feedback
+      PORT: 8000
+      DOCGEN_URL: http://omni-docgen:8000
+      RELOAD_FLAG_PATH: /workspace/.reload.flag
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-minctx:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-minctx
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_minctx
+      PORT: 8000
+      REPO_PATH: /workspace
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-pov:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-pov
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_pov
+      PORT: 8000
+      VALUE_URL: http://omni-value:8000
+      DOC_OUTPUT_DIR: /workspace/docs/auto
+      DOC_INDEX_PATH: /workspace/docs_index.json
+      POV_REGISTRY_PATH: /workspace/data/pov_registry.json
+      HEALTHCHECK_PATH: /ready
+      STRICT_READY: ${OMNI_POV_STRICT_READY:-true}
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8000"
+    ports:
+      - "8105:8000"
+    networks:
+      - omni-net
+  omni-arbitrage:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-arbitrage
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_arbitrage
+      PORT: 8000
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-burnout:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-burnout
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_burnout
+      PORT: 8000
+      TASKS_DB_PATH: /workspace/data/tasks.json
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-uncertainty:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-uncertainty
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_uncertainty
+      PORT: 8000
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+  omni-twin:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-twin
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_twin
+      PORT: 8000
+      FEEDBACK_URL: http://omni-feedback:8000/health
+      TASKS_URL: http://omni-tasks:8000/health
+      MARKETING_URL: http://omni-marketing:8000/health
+      MINCTX_URL: http://omni-minctx:8000/health
+      POV_URL: http://omni-pov:8000/health
+      VALUE_URL: http://omni-value:8000/health
+      FEEDBACK_REPORT_URL: http://omni-feedback:8000/feedback
+    expose:
+      - "8000"
+    networks:
+      - omni-net
+    depends_on:
+      omni-pov:
+        condition: service_healthy
+  omni-proliferate:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    image: omni-agent:latest
+    container_name: omni-proliferate
+    restart: unless-stopped
+    environment:
+      AGENT_MODULE: agent_proliferate
+      PORT: 8000
+      PROLIFERATE_OVERRIDE_PATH: /workspace/docker-compose.local.yml
+      PROLIFERATE_STATE_PATH: /workspace/data/proliferate.json
+      PROLIFERATE_MAX_PER_SERVICE: 5
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8000"
+    networks:
+      - omni-net

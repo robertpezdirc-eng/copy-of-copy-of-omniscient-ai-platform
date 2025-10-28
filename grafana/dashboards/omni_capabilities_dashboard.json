@@ -1,0 +1,403 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Infinity",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "columns": [
+            {
+              "selector": "name",
+              "text": "Service Name",
+              "type": "string"
+            },
+            {
+              "selector": "status",
+              "text": "Status",
+              "type": "string"
+            },
+            {
+              "selector": "port",
+              "text": "Port",
+              "type": "number"
+            },
+            {
+              "selector": "description",
+              "text": "Description",
+              "type": "string"
+            }
+          ],
+          "data": "[\n  {\"name\": \"omni-singularity\", \"status\": \"Core AI Engine\", \"port\": 8080, \"description\": \"Main AI processing unit\"},\n  {\"name\": \"omni-quantum-backend\", \"status\": \"Quantum Computing\", \"port\": 8081, \"description\": \"Quantum algorithms backend\"},\n  {\"name\": \"omni-dashboard\", \"status\": \"Web Interface\", \"port\": 8080, \"description\": \"Main dashboard UI\"},\n  {\"name\": \"omni-api-gateway\", \"status\": \"API Gateway\", \"port\": 8000, \"description\": \"API routing and management\"},\n  {\"name\": \"omni-api-blue\", \"status\": \"Blue Deployment\", \"port\": 3001, \"description\": \"Blue/Green API - Blue\"},\n  {\"name\": \"omni-api-green\", \"status\": \"Green Deployment\", \"port\": 3002, \"description\": \"Blue/Green API - Green\"},\n  {\"name\": \"Frontend\", \"status\": \"React App\", \"port\": 8000, \"description\": \"React frontend application\"},\n  {\"name\": \"MongoDB\", \"status\": \"Database\", \"port\": 27017, \"description\": \"Primary database\"},\n  {\"name\": \"RabbitMQ\", \"status\": \"Message Queue\", \"port\": 5672, \"description\": \"Message broker\"},\n  {\"name\": \"Redis\", \"status\": \"Cache\", \"port\": 6379, \"description\": \"Cache and session store\"}\n]",
+          "format": "table",
+          "refId": "A",
+          "type": "json"
+        }
+      ],
+      "title": "🏗️ OMNI Platform Services",
+      "type": "table"
+    },
+    {
+      "datasource": "Infinity",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "columns": [
+            {
+              "selector": "name",
+              "text": "Integration",
+              "type": "string"
+            },
+            {
+              "selector": "type",
+              "text": "Type",
+              "type": "string"
+            },
+            {
+              "selector": "status",
+              "text": "Status",
+              "type": "string"
+            },
+            {
+              "selector": "description",
+              "text": "Description",
+              "type": "string"
+            }
+          ],
+          "data": "[\n  {\"name\": \"Jira\", \"type\": \"Project Management\", \"status\": \"✅ Active\", \"description\": \"Issue tracking and project management\"},\n  {\"name\": \"ServiceNow\", \"type\": \"ITSM\", \"status\": \"🔧 Configured\", \"description\": \"IT service management\"},\n  {\"name\": \"Slack\", \"type\": \"Communication\", \"status\": \"✅ Mock Active\", \"description\": \"Team communication (Mock)\"},\n  {\"name\": \"Email\", \"type\": \"Notification\", \"status\": \"✅ Mailhog\", \"description\": \"Email testing via Mailhog\"},\n  {\"name\": \"CloudWatch\", \"type\": \"Cloud Monitoring\", \"status\": \"🔧 Configured\", \"description\": \"AWS monitoring\"},\n  {\"name\": \"Azure Monitor\", \"type\": \"Cloud Monitoring\", \"status\": \"🔧 Configured\", \"description\": \"Azure monitoring\"},\n  {\"name\": \"GCP Monitoring\", \"type\": \"Cloud Monitoring\", \"status\": \"🔧 Configured\", \"description\": \"Google Cloud monitoring\"},\n  {\"name\": \"Elasticsearch\", \"type\": \"Search & Analytics\", \"status\": \"🔧 Configured\", \"description\": \"Search and log analytics\"},\n  {\"name\": \"PostgreSQL\", \"type\": \"Database\", \"status\": \"🔧 Configured\", \"description\": \"Relational database\"},\n  {\"name\": \"MQTT\", \"type\": \"IoT Messaging\", \"status\": \"🔧 Configured\", \"description\": \"IoT device communication\"}\n]",
+          "format": "table",
+          "refId": "A",
+          "type": "json"
+        }
+      ],
+      "title": "🔗 External Integrations",
+      "type": "table"
+    },
+    {
+      "datasource": "Infinity",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 3,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "columns": [
+            {
+              "selector": "capability",
+              "text": "Capability",
+              "type": "string"
+            },
+            {
+              "selector": "description",
+              "text": "Description",
+              "type": "string"
+            },
+            {
+              "selector": "status",
+              "text": "Status",
+              "type": "string"
+            },
+            {
+              "selector": "components",
+              "text": "Components",
+              "type": "string"
+            }
+          ],
+          "data": "[\n  {\"capability\": \"🤖 AI Processing\", \"description\": \"Advanced AI algorithms and machine learning\", \"status\": \"✅ Active\", \"components\": \"omni-singularity, quantum-backend\"},\n  {\"capability\": \"🔄 Blue/Green Deployment\", \"description\": \"Zero-downtime deployments with traffic switching\", \"status\": \"✅ Active\", \"components\": \"omni-api-blue, omni-api-green, nginx\"},\n  {\"capability\": \"📊 Real-time Monitoring\", \"description\": \"Comprehensive monitoring with metrics, logs, traces\", \"status\": \"✅ Active\", \"components\": \"Prometheus, Loki, Tempo, Grafana\"},\n  {\"capability\": \"🔐 Security & Rate Limiting\", \"description\": \"Request rate limiting and security headers\", \"status\": \"✅ Active\", \"components\": \"Nginx proxy, security headers\"},\n  {\"capability\": \"📧 Communication Hub\", \"description\": \"Multi-channel communication (Email, Slack, etc.)\", \"status\": \"✅ Active\", \"components\": \"Mailhog, Mock-Slack, RabbitMQ\"},\n  {\"capability\": \"🗄️ Data Management\", \"description\": \"Multi-database support with caching\", \"status\": \"✅ Active\", \"components\": \"MongoDB, PostgreSQL, Redis\"},\n  {\"capability\": \"🌐 API Gateway\", \"description\": \"Centralized API management and routing\", \"status\": \"✅ Active\", \"components\": \"omni-api-gateway, nginx routing\"},\n  {\"capability\": \"📈 Analytics & Reporting\", \"description\": \"Business intelligence and reporting\", \"status\": \"🔧 Configured\", \"components\": \"Grafana dashboards, Infinity datasource\"},\n  {\"capability\": \"🔗 Third-party Integrations\", \"description\": \"Seamless integration with external services\", \"status\": \"🔧 Configured\", \"components\": \"Jira, ServiceNow, Cloud providers\"},\n  {\"capability\": \"🚀 Scalable Architecture\", \"description\": \"Microservices with container orchestration\", \"status\": \"✅ Active\", \"components\": \"Docker Compose, service mesh\"}\n]",
+          "format": "table",
+          "refId": "A",
+          "type": "json"
+        }
+      ],
+      "title": "🎯 OMNI Platform Capabilities",
+      "type": "table"
+    },
+    {
+      "datasource": "PROM",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rabbitmq_queue_messages{queue=~\"omni.*\"}",
+          "interval": "",
+          "legendFormat": "{{queue}} - Messages",
+          "refId": "A"
+        }
+      ],
+      "title": "📬 RabbitMQ Message Queues",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "PROM",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "expr": "mongodb_connections{state=\"current\"}",
+          "interval": "",
+          "legendFormat": "MongoDB - Active Connections",
+          "refId": "A"
+        },
+        {
+          "expr": "redis_connected_clients",
+          "interval": "",
+          "legendFormat": "Redis - Connected Clients",
+          "refId": "B"
+        }
+      ],
+      "title": "🗄️ Database Connections",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [
+    "omni",
+    "capabilities",
+    "architecture"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "🎯 OMNI Platform - Capabilities Overview",
+  "uid": "omni-capabilities-overview",
+  "version": 1
+}

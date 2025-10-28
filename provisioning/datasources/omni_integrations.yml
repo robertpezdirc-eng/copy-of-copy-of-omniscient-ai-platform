@@ -1,0 +1,410 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://omni-prometheus:9090
+    isDefault: false
+    editable: true
+    uid: PROM
+
+  - name: Mimir
+    type: prometheus
+    access: proxy
+    url: http://omni-mimir:9009
+    isDefault: false
+    editable: true
+    uid: MIMIR
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://omni-loki:3100
+    isDefault: false
+    editable: true
+    uid: LOKI
+
+  - name: Tempo
+    type: tempo
+    access: proxy
+    url: http://omni-tempo:3200
+    isDefault: false
+    editable: true
+    uid: TEMPO
+    jsonData:
+      tracesToLogsV2:
+        datasourceUid: LOKI
+        spanStartTimeShift: '-5m'
+        spanEndTimeShift: '5m'
+        tags: ['traceid']
+        mappedTags: [{ key: 'service.name', value: 'service' }]
+        filterByTraceID: true
+        filterBySpanID: false
+      serviceMap:
+        datasourceUid: PROM
+
+  - name: Alertmanager
+    type: camptocamp-prometheus-alertmanager-datasource
+    access: proxy
+    url: http://omni-alertmanager:9093
+    isDefault: false
+    editable: true
+    uid: ALERTM
+    jsonData:
+      severity_critical: critical
+      severity_high: error
+      severity_warning: warning
+      severity_info: information
+
+  - name: Zabbix
+    type: alexanderzobnin-zabbix-datasource
+    access: proxy
+    url: http://zabbix-web:8080/api_jsonrpc.php
+    isDefault: false
+    editable: true
+    uid: ZBX
+    jsonData:
+      username: "${ZABBIX_USER}"
+    secureJsonData:
+      password: "${ZABBIX_PASSWORD}"
+
+  - name: Jira
+    type: grafana-jira-datasource
+    access: proxy
+    url: ${JIRA_BASE_URL}
+    isDefault: false
+    editable: true
+    uid: JIRA
+    jsonData:
+      authType: basic
+      email: "${JIRA_EMAIL}"
+    secureJsonData:
+      apiToken: "${JIRA_API_TOKEN}"
+
+  - name: ServiceNow
+    type: grafana-servicenow-datasource
+    access: proxy
+    url: ${SNOW_BASE_URL}
+    isDefault: false
+    editable: true
+    uid: SNOW
+    jsonData:
+      table: incident
+      username: "${SNOW_USER}"
+    secureJsonData:
+      password: "${SNOW_PASSWORD}"
+
+  - name: CloudWatch
+    type: cloudwatch
+    access: proxy
+    isDefault: false
+    editable: true
+    uid: CW
+    jsonData:
+      authType: keys
+      defaultRegion: "${AWS_DEFAULT_REGION}"
+    secureJsonData:
+      accessKey: "${AWS_ACCESS_KEY_ID}"
+      secretKey: "${AWS_SECRET_ACCESS_KEY}"
+
+  # GitHub Integration
+  - name: GitHub
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    url: https://api.github.com
+    isDefault: false
+    editable: true
+    uid: GITHUB
+    jsonData:
+      auth_method: bearer_token
+      allowed_hosts: ["api.github.com"]
+    secureJsonData:
+      bearerToken: "${GITHUB_TOKEN}"
+
+  # Google Cloud Run Metrics
+  - name: Google Cloud Monitoring
+    type: grafana-google-cloud-monitoring-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    uid: GCM
+    jsonData:
+      authenticationType: jwt
+      defaultProject: "${GCP_PROJECT_ID}"
+      clientEmail: "${GCP_CLIENT_EMAIL}"
+    secureJsonData:
+      privateKey: "${GCP_PRIVATE_KEY}"
+
+  # OMNI Platform Custom API
+  - name: OMNI Platform API
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    url: http://localhost:8004
+    isDefault: false
+    editable: true
+    uid: OMNI_API
+    jsonData:
+      auth_method: none
+      allowed_hosts: ["localhost:8004", "localhost:8080", "localhost:8093"]
+
+  # OMNI Hybrid AI API
+  - name: OMNI Hybrid AI
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    url: http://localhost:8080
+    isDefault: false
+    editable: true
+    uid: OMNI_HYBRID
+    jsonData:
+      auth_method: none
+      allowed_hosts: ["localhost:8080"]
+
+  # OMNI Search/Director API
+  - name: OMNI Director
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    url: http://localhost:3001
+    isDefault: false
+    editable: true
+    uid: OMNI_DIRECTOR
+    jsonData:
+      auth_method: none
+      allowed_hosts: ["localhost:3001"]
+
+  # MongoDB for OMNI Platform
+  - name: MongoDB
+    type: grafana-mongodb-datasource
+    access: proxy
+    url: mongodb://localhost:27017
+    isDefault: false
+    editable: true
+    uid: MONGO
+    jsonData:
+      database: omni_platform
+      username: "${MONGO_USER}"
+    secureJsonData:
+      password: "${MONGO_PASSWORD}"
+
+  # Redis for OMNI Platform
+  - name: Redis
+    type: redis-datasource
+    access: proxy
+    url: redis://localhost:6379
+    isDefault: false
+    editable: true
+    uid: REDIS
+    jsonData:
+      client: standalone
+    secureJsonData:
+      password: "${REDIS_PASSWORD}"
+    url: http://localhost
+    isDefault: false
+    editable: true
+    uid: CLOUD
+    jsonData:
+      authType: keys
+      defaultRegion: us-east-1
+    secureJsonData:
+      accessKey: "${AWS_ACCESS_KEY_ID}"
+      secretKey: "${AWS_SECRET_ACCESS_KEY}"
+
+  - name: Azure Monitor
+    type: grafana-azure-monitor-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    uid: AZMON
+    jsonData:
+      azureLogAnalyticsTenantId: "${AZURE_TENANT_ID}"
+      subscriptionId: "${AZURE_SUBSCRIPTION_ID}"
+      cloudName: azure
+    secureJsonData:
+      azureLogAnalyticsClientSecret: "${AZURE_CLIENT_SECRET}"
+
+  - name: Google Cloud Monitoring
+    type: grafana-google-cloud-monitoring-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    uid: GCM
+    jsonData:
+      authenticationType: jwt
+      tokenUri: https://oauth2.googleapis.com/token
+      projectName: ${GCP_PROJECT_ID}
+    secureJsonData:
+      jwt: "${GCP_SERVICE_ACCOUNT_JSON}"
+
+  - name: Elasticsearch
+    type: elasticsearch
+    access: proxy
+    url: http://omni-elasticsearch:9200
+    isDefault: false
+    editable: true
+    uid: ES
+    jsonData:
+      timeField: '@timestamp'
+      esVersion: 8
+      interval: Daily
+
+  - name: PostgreSQL
+    type: postgres
+    access: proxy
+    url: omni-postgres:5432
+    isDefault: false
+    editable: true
+    uid: PG
+    user: ${POSTGRES_USER}
+    secureJsonData:
+      password: "${POSTGRES_PASSWORD}"
+    jsonData:
+      sslmode: disable
+      database: ${POSTGRES_DB}
+
+  - name: MSSQL
+    type: mssql
+    access: proxy
+    url: omni-mssql:1433
+    isDefault: false
+    editable: true
+    uid: MSSQL
+    user: ${MSSQL_USER}
+    secureJsonData:
+      password: "${MSSQL_PASSWORD}"
+    jsonData:
+      database: ${MSSQL_DB}
+
+  - name: MongoDB
+    type: grafana-mongodb-datasource
+    access: proxy
+    url: mongodb://omni-mongo:27017
+    isDefault: false
+    editable: true
+    uid: MONGO
+    jsonData:
+      database: ${MONGO_DB}
+    secureJsonData:
+      username: "${MONGO_USER}"
+      password: "${MONGO_PASSWORD}"
+
+  - name: Cassandra
+    type: hadesarchitect-cassandra-datasource
+    access: proxy
+    url: omni-cassandra:9042
+    isDefault: false
+    editable: true
+    uid: CASS
+    jsonData:
+      keyspace: ${CASSANDRA_KEYSPACE}
+      username: "${CASSANDRA_USER}"
+    secureJsonData:
+      password: "${CASSANDRA_PASSWORD}"
+
+  - name: MQTT
+    type: grafana-mqtt-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    uid: MQTT
+    jsonData:
+      uri: ws://omni-mqtt:9001
+      username: "${MQTT_USER}"
+    secureJsonData:
+      password: "${MQTT_PASSWORD}"
+
+  - name: Google Sheets
+    type: grafana-googlesheets-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    uid: SHEETS
+    jsonData:
+      authenticationType: jwt
+    secureJsonData:
+      jwt: "${GOOGLE_SERVICE_ACCOUNT_JSON}"
+
+  - name: JSON API
+    type: marcusolsson-json-datasource
+    access: proxy
+    url: ${JSON_BASE_URL}
+    isDefault: false
+    editable: true
+    uid: JSONAPI
+    basicAuth: true
+    basicAuthUser: ${JSON_API_USER}
+    secureJsonData:
+      basicAuthPassword: "${JSON_API_PASSWORD}"
+
+  - name: CSV
+    type: marcusolsson-csv-datasource
+    access: direct
+    url: file:///var/lib/grafana/csv
+    isDefault: false
+    editable: true
+    uid: CSV
+
+  - name: Infinity
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    uid: INF
+    basicAuth: true
+    basicAuthUser: ${GRAPHQL_USER}
+    jsonData:
+      global_queries: []
+    secureJsonData:
+      basicAuthPassword: "${GRAPHQL_PASSWORD}"
+
+  - name: Infinity-Jira
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    uid: INF_JIRA
+    basicAuth: true
+    basicAuthUser: ${JIRA_EMAIL}
+    jsonData:
+      global_queries: []
+    secureJsonData:
+      basicAuthPassword: "${JIRA_API_TOKEN}"
+
+  - name: Infinity-ServiceNow
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    uid: INF_SNOW
+    basicAuth: true
+    basicAuthUser: ${SNOW_USER}
+    jsonData:
+      global_queries: []
+    secureJsonData:
+      basicAuthPassword: "${SNOW_PASSWORD}"
+
+  - name: Pyroscope
+    type: grafana-pyroscope-datasource
+    access: proxy
+    url: http://omni-pyroscope:4040
+    isDefault: false
+    editable: true
+    uid: PROFILES
+    jsonData:
+      minStep: '15s'
+      tracesToProfiles:
+        datasourceUid: TEMPO
+        profileTypeId: "process_cpu:cpu:nanoseconds:sum"
+
+  - name: MySQL
+    type: mysql
+    access: proxy
+    url: omni-mysql:3306
+    isDefault: false
+    editable: true
+    uid: MYSQL
+    user: ${MYSQL_USER}
+    secureJsonData:
+      password: "${MYSQL_PASSWORD}"
+    jsonData:
+      database: ${MYSQL_DB}
+      sslmode: disable

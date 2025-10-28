@@ -1,0 +1,78 @@
+prometheus.scrape "omni_backend" {
+  targets = [
+    {
+      __address__ = "omni-backend:8080"
+    },
+  ]
+  scrape_interval = "15s"
+  metrics_path    = "/metrics"
+}
+
+prometheus.scrape "node_exporter" {
+  targets = [
+    {
+      __address__ = "omni-node-exporter:9100"
+    },
+  ]
+  scrape_interval = "15s"
+}
+
+prometheus.scrape "cadvisor" {
+  targets = [
+    {
+      __address__ = "omni-cadvisor:8080"
+    },
+  ]
+  scrape_interval = "15s"
+  metrics_path    = "/metrics"
+}
+
+prometheus.scrape "agents" {
+  targets = [
+    { __address__ = "agent-agentic-ai:8000" },
+    { __address__ = "agent-finops:8000" },
+    { __address__ = "agent-rl-core:8000" },
+    { __address__ = "agent-devops-router:8000" },
+    { __address__ = "agent-premortem:8000" },
+    { __address__ = "agent-code-optimizer:8000" },
+    { __address__ = "omni-elevator:8000" },
+    { __address__ = "omni-rica:8000" },
+    { __address__ = "omni-forensics:8000" },
+    { __address__ = "omni-resource-guard:8000" },
+    { __address__ = "omni-adapt:8000" },
+    { __address__ = "omni-value:8000" },
+    { __address__ = "omni-docgen:8000" },
+    { __address__ = "omni-tasks:8000" },
+    { __address__ = "omni-marketing:8000" },
+    { __address__ = "omni-feedback:8000" },
+    { __address__ = "omni-minctx:8000" },
+    { __address__ = "omni-pov:8000" },
+    { __address__ = "omni-arbitrage:8000" },
+    { __address__ = "omni-burnout:8000" },
+    { __address__ = "omni-uncertainty:8000" },
+    { __address__ = "omni-twin:8000" },
+    { __address__ = "omni-governance:8000" },
+    { __address__ = "omni-autolearn:8000" },
+    { __address__ = "omni-revenue:8000" },
+    { __address__ = "omni-knowledge:8000" },
+    { __address__ = "omni-gcp:8000" },
+    { __address__ = "omni-proliferate:8000" },
+  ]
+  scrape_interval = "15s"
+  metrics_path    = "/metrics"
+}
+prometheus.remote_write "to_grafana_cloud" {
+  endpoint {
+    url = env("GRAFANA_CLOUD_PROM_URL")
+    basic_auth {
+      username = env("GRAFANA_CLOUD_USER")
+      password = env("GRAFANA_CLOUD_API_KEY")
+    }
+  }
+}
+
+# Wire all scraped metrics into remote_write
+prometheus.remote_write.to_grafana_cloud.input = prometheus.scrape.omni_backend.output
+prometheus.remote_write.to_grafana_cloud.input = prometheus.scrape.node_exporter.output
+prometheus.remote_write.to_grafana_cloud.input = prometheus.scrape.cadvisor.output
+prometheus.remote_write.to_grafana_cloud.input = prometheus.scrape.agents.output

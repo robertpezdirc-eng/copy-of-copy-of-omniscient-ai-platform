@@ -1,0 +1,187 @@
+{
+  "id": null,
+  "uid": "omni-jira-pro",
+  "title": "Omni Jira Professional (KAN)",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-90d", "to": "now" },
+  "templating": {
+    "list": [
+      { "type": "textbox", "name": "JIRA_BASE_URL", "label": "Jira Base URL", "query": "https://robertpezdirc.atlassian.net", "current": { "text": "https://robertpezdirc.atlassian.net", "value": "https://robertpezdirc.atlassian.net" } },
+      { "type": "textbox", "name": "JIRA_PROJECT", "label": "Jira Project Key", "query": "KAN", "current": { "text": "KAN", "value": "KAN" } }
+    ]
+  },
+  "panels": [
+    {
+      "type": "row",
+      "title": "Executive Overview",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 }
+    },
+    {
+      "type": "stat",
+      "title": "Open Issues (KAN)",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "gridPos": { "x": 0, "y": 1, "w": 6, "h": 5 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "" }, "orientation": "horizontal" },
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+          "format": "table",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project=$JIRA_PROJECT%20AND%20statusCategory%20!=%20Done&maxResults=0",
+          "parser": "uql",
+          "uql": "parse-json | project total | extend value = toNumber(total) | project value"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "New This Week",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "gridPos": { "x": 6, "y": 1, "w": 6, "h": 5 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "" }, "orientation": "horizontal" },
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+          "format": "table",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project=$JIRA_PROJECT%20AND%20created%20>=%20startOfWeek()&maxResults=0",
+          "parser": "uql",
+          "uql": "parse-json | project total | extend value = toNumber(total) | project value"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Resolved This Week",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "gridPos": { "x": 12, "y": 1, "w": 6, "h": 5 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "" }, "orientation": "horizontal" },
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+          "format": "table",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project=$JIRA_PROJECT%20AND%20resolved%20>=%20startOfWeek()&maxResults=0",
+          "parser": "uql",
+          "uql": "parse-json | project total | extend value = toNumber(total) | project value"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "P1/P2 Open Breaches (age > 72h)",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "gridPos": { "x": 18, "y": 1, "w": 6, "h": 5 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "" }, "orientation": "horizontal" },
+      "targets": [
+        {
+          "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+          "format": "table",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project=$JIRA_PROJECT%20AND%20statusCategory%20!=%20Done%20AND%20priority%20in%20(P1,P2)&fields=created&maxResults=1000",
+          "parser": "uql",
+          "uql": "parse-json | mv-expand issues | project created = toDate(issues.fields.created) | extend age_hours = diff(now(), created, 'hours') | where age_hours > 72 | summarize value = count()"
+        }
+      ]
+    },
+
+    {
+      "type": "row",
+      "title": "Backlog Health",
+      "gridPos": { "x": 0, "y": 6, "w": 24, "h": 1 }
+    },
+    {
+      "type": "barchart",
+      "title": "Backlog by Priority",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "gridPos": { "x": 0, "y": 7, "w": 12, "h": 9 },
+      "options": { "legend": { "displayMode": "list" } },
+      "targets": [
+        {
+          "format": "table",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project=$JIRA_PROJECT%20AND%20statusCategory%20!=%20Done&fields=priority&maxResults=1000",
+          "parser": "uql",
+          "uql": "parse-json | mv-expand issues | project priority = issues.fields.priority.name | summarize count() by priority | order by count desc"
+        }
+      ]
+    },
+    {
+      "type": "piechart",
+      "title": "Backlog by Status",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "gridPos": { "x": 12, "y": 7, "w": 12, "h": 9 },
+      "options": { "legend": { "displayMode": "list" } },
+      "targets": [
+        {
+          "format": "table",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project=$JIRA_PROJECT%20AND%20statusCategory%20!=%20Done&fields=status&maxResults=1000",
+          "parser": "uql",
+          "uql": "parse-json | mv-expand issues | project status = issues.fields.status.name | summarize count() by status | order by count desc"
+        }
+      ]
+    },
+
+    {
+      "type": "row",
+      "title": "Flow & Velocity",
+      "gridPos": { "x": 0, "y": 16, "w": 24, "h": 1 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Throughput (Resolved per Week)",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "gridPos": { "x": 0, "y": 17, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "format": "table",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project=$JIRA_PROJECT%20AND%20resolved%20>=%20startOfWeek(-12)&fields=resolutiondate&maxResults=1000",
+          "parser": "uql",
+          "uql": "parse-json | mv-expand issues | project resolved = toDate(issues.fields.resolutiondate) | where resolved != null | extend week = formatDateTime(resolved, 'yyyy-ww') | summarize count() by week | order by week"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Lead Time (Avg / P95 days)",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "gridPos": { "x": 12, "y": 17, "w": 12, "h": 8 },
+      "options": { "textMode": "value_and_name", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "" } },
+      "targets": [
+        {
+          "format": "table",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project=$JIRA_PROJECT%20AND%20resolved%20>=%20startOfWeek(-12)&fields=created,resolutiondate&maxResults=1000",
+          "parser": "uql",
+          "uql": "parse-json | mv-expand issues | project created = toDate(issues.fields.created), resolved = toDate(issues.fields.resolutiondate) | where resolved != null | extend lead_days = diff(resolved, created, 'days') | summarize avg_lead = round(avg(lead_days), 1), p95_lead = round(percentile(lead_days,95), 1) | project avg_lead, p95_lead"
+        }
+      ]
+    },
+
+    {
+      "type": "row",
+      "title": "Workload",
+      "gridPos": { "x": 0, "y": 25, "w": 24, "h": 1 }
+    },
+    {
+      "type": "barchart",
+      "title": "Top Assignees (Open)",
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF_JIRA" },
+      "gridPos": { "x": 0, "y": 26, "w": 24, "h": 9 },
+      "targets": [
+        {
+          "format": "table",
+          "source": "url",
+          "url": "$JIRA_BASE_URL/rest/api/3/search?jql=project=$JIRA_PROJECT%20AND%20statusCategory%20!=%20Done&fields=assignee&maxResults=1000",
+          "parser": "uql",
+          "uql": "parse-json | mv-expand issues | project assignee = coalesce(issues.fields.assignee.displayName, 'Unassigned') | summarize count() by assignee | order by count desc | take 15"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+groups:
+  - name: service.rules
+    rules:
+      - alert: CriticalCoreServiceDown
+        expr: up{job=~"prometheus|omni-alertmanager|system|cadvisor|omni-backend|omni-loki|omni-tempo"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: "CRITICAL: {{ $labels.job }} down on {{ $labels.instance }}"
+          description: |
+            Core monitoring/service target is unreachable for >2m.
+            Job: {{ $labels.job }} | Instance: {{ $labels.instance }}
+
+      - alert: ServiceDownWarning
+        expr: up{job!~"prometheus|omni-alertmanager|system|cadvisor|omni-backend|omni-loki|omni-tempo"} == 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Service down: {{ $labels.job }} @ {{ $labels.instance }}"
+          description: |
+            Non-core target has been down for >10m.
+            Job: {{ $labels.job }} | Instance: {{ $labels.instance }}

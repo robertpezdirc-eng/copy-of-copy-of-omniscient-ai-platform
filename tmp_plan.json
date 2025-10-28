@@ -1,0 +1,1 @@
+{ base_service:omni-pov,replicas:2,expose_ports:true,host_port_start:8210}

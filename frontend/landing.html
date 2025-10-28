@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omni Platform - AI-Powered Business Solutions</title>
+    <meta name="description" content="OMNI Platform — Multi‑AI orchestration with one API, advanced analytics and enterprise features.">
+    <link rel="canonical" href="http://localhost:8000/landing.html">
+    <meta property="og:title" content="OMNI Platform — Multi‑AI Orchestration">
+    <meta property="og:description" content="Uporabi GPT‑4, Gemini, Claude in druge modele prek enotnega API‑ja.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://localhost:8000/landing.html">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=OMNI+Platform">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Analytics (replace G-XXXXXXXXXX with your Measurement ID) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);} 
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX', {
+            page_title: 'OMNI Platform Landing',
+            page_location: window.location.href
+        });
+
+        // Track email signup
+        function trackSignup() {
+            gtag('event', 'signup', {
+                event_category: 'engagement',
+                event_label: 'waitlist_join'
+            });
+        }
+
+        // Track CTA clicks
+        function trackCTA(ctaName) {
+            gtag('event', 'click', {
+                event_category: 'cta',
+                event_label: ctaName
+            });
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+        
+        .cta-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .cta-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: #667eea;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            padding: 1rem 2rem;
+            border: 2px solid white;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .pricing-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .pricing-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+        }
+        
+        .pricing-card.featured {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.featured .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+        
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .plan-period {
+            opacity: 0.7;
+            margin-bottom: 2rem;
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .plan-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .pricing-card.featured .plan-features li {
+            border-bottom-color: rgba(255,255,255,0.2);
+        }
+        
+        /* Agents Section */
+        .agents {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .agent-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .agent-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">🚀 Omni Platform</div>
+            <ul class="nav-links">
+                <li><a href="#features">Funkcionalnosti</a></li>
+                <li><a href="#pricing">Cenik</a></li>
+                <li><a href="#white-label">White Label</a></li>
+                <li><a href="#enterprise">Enterprise</a></li>
+                <li><a href="#agents">AI Agenti</a></li>
+                <li><a href="#monetization">Monetizacija</a></li>
+                <li><a href="#tech">Tehnologija</a></li>
+                <li><a href="#sales">Prodaja</a></li>
+                <li><a href="#marketing">Marketing</a></li>
+                <li><a href="#waitlist">Prijava</a></li>
+                <li><a href="#contact-form">Kontakt</a></li>
+            </ul>
+            <a href="index.html" class="cta-btn">Začni Zdaj</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>AI-Powered Business Platform</h1>
+            <p>Revolucionarna platforma za podjetja z naprednimi AI agenti, kvantnim računalništvom in popolno integracijo</p>
+            <div class="hero-buttons">
+                <a href="#pricing" class="btn-primary" onclick="trackCTA('izberi_paket')">Izberi Paket</a>
+                <a href="index.html" class="btn-secondary" onclick="trackCTA('preizkusi_brezplacno')">Preizkusi Brezplačno</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Waitlist / Email Capture (Tally) -->
+    <section class="features" id="waitlist">
+        <div class="container">
+            <h2 class="section-title">Prijava na email listo</h2>
+            <div class="feature-card" style="max-width:720px; margin:0 auto; text-align:left;">
+                <!-- Tally embed: replace your-form-id with actual form ID -->
+                <iframe data-tally-src="https://tally.so/r/your-form-id?hideTitle=1" loading="lazy" width="100%" height="320" frameborder="0" marginheight="0" marginwidth="0" title="Email lista"></iframe>
+                <script>
+                    (function(d,t){
+                        var s=d.createElement(t);
+                        s.src='https://tally.so/widgets/embed.js';
+                        s.async=true;
+                        s.onload=function(){ if (window.Tally) { window.Tally.loadEmbeds(); } };
+                        (d.head||d.body).appendChild(s);
+                    })(document,'script');
+                </script>
+                <p style="margin-top:0.75rem; font-size:0.9rem; color:#666;">
+                    Nimam ID-ja obrazca? <a href="https://tally.so" target="_blank" rel="noopener">Ustvari Tally obrazec</a> in zamenjaj <code>your-form-id</code> zgoraj.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Napredne Funkcionalnosti</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                    <h3>Specializirani AI Agenti</h3>
+                    <p>Marketing, Finance, Healthcare, Legal in Sales agenti za vse vaše potrebe</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-atom"></i></div>
+                    <h3>Kvantno Računalništvo</h3>
+                    <p>Edinstven dostop do kvantnih algoritmov za kompleksne probleme</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Napredna Analitika</h3>
+                    <p>Realno-časovni dashboardi in KPI monitoring z Prometheus</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-plug"></i></div>
+                    <h3>API Integracije</h3>
+                    <p>Google Ads, Stripe, AWS, Azure in več kot 100+ drugih storitev</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Enterprise Varnost</h3>
+                    <p>SOC2, GDPR compliance in napredne varnostne funkcionalnosti</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-cloud"></i></div>
+                    <h3>Cloud Skalabilnost</h3>
+                    <p>Docker, Kubernetes in microservices arhitektura</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Izberi Svoj Paket</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="plan-name">Freemium</div>
+                    <div class="plan-price">€0</div>
+                    <div class="plan-period">na mesec</div>
+                    <ul class="plan-features">
+                        <li>1.000 API klicev</li>
+                        <li>Osnovni AI chat</li>
+                        <li>Email podpora</li>
+                        <li>Osnovna analitika</li>
+                    </ul>
+                    <a href="#" class="btn-primary" onclick="selectPlan('freemium')">Začni Brezplačno</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="plan-name">Basic</div>
+                    <div class="plan-price">€29</div>
+                    <div class="plan-period">na mesec</div>
+                    <ul class="plan-features">
+                        <li>10.000 API klicev</li>
+                        <li>Vsi AI agenti</li>
+                        <li>Chat podpora</li>
+                        <li>Napredna analitika</li>
+                        <li>Google Ads integracija</li>
+                    </ul>
+                    <a href="#" class="btn-primary" onclick="selectPlan('basic')">Izberi Basic</a>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="plan-name">Pro</div>
+                    <div class="plan-price">€99</div>
+                    <div class="plan-period">na mesec</div>
+                    <ul class="plan-features">
+                        <li>100.000 API klicev</li>
+                        <li>Kvantno računalništvo</li>
+                        <li>White-label možnosti</li>
+                        <li>24/7 podpora</li>
+                        <li>Custom integracije</li>
+                        <li>SLA garancije</li>
+                    </ul>
+                    <a href="#" class="btn-primary" onclick="selectPlan('pro')">Izberi Pro</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="plan-name">Enterprise</div>
+                    <div class="plan-price">€299</div>
+                    <div class="plan-period">na mesec</div>
+                    <ul class="plan-features">
+                        <li>Neomejeni API klici</li>
+                        <li>Dedicated infrastruktura</li>
+                        <li>Custom razvoj</li>
+                        <li>Osebni account manager</li>
+                        <li>On-premise možnosti</li>
+                        <li>Enterprise SLA</li>
+                    </ul>
+                    <a href="#" class="btn-primary" onclick="selectPlan('enterprise')">Kontaktirali Nas</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Agents Section -->
+    <section class="agents" id="agents">
+        <div class="container">
+            <h2 class="section-title">Specializirani AI Agenti</h2>
+            <div class="agents-grid">
+                <div class="agent-card">
+                    <div class="agent-icon">📈</div>
+                    <h3>Marketing Agent</h3>
+                    <p>Kampanje, SEO, content marketing</p>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-icon">💰</div>
+                    <h3>Finance Agent</h3>
+                    <p>Finančne analize, napovedovanje</p>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-icon">🏥</div>
+                    <h3>Healthcare Agent</h3>
+                    <p>Medicinska podpora, diagnostika</p>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-icon">⚖️</div>
+                    <h3>Legal Agent</h3>
+                    <p>Pravni dokumenti, compliance</p>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-icon">🤝</div>
+                    <h3>Sales Agent</h3>
+                    <p>Lead generation, CRM integracija</p>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-icon">🔧</div>
+                    <h3>Custom Agent</h3>
+                    <p>Prilagojen vaši industriji</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Monetization Section -->
+    <section class="features" id="monetization">
+        <div class="container">
+            <h2 class="section-title">Monetizacijski Modeli</h2>
+            <div class="features-grid">
+                <div class="feature-card"><h3>SaaS Subscription</h3><p>Freemium, tiered pricing (Starter €29, Pro €99, Enterprise €299+), usage-based zaračunavanje.</p></div>
+                <div class="feature-card"><h3>Licenciranje</h3><p>White-label kot storitev, licenca izvorne kode, API marketplace z provizijami.</p></div>
+                <div class="feature-card"><h3>Dodaten Prihodek</h3><p>Add-ons, premium integracije, profesionalne storitve, SLA.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Advantages Section -->
+    <section class="pricing" id="tech">
+        <div class="container">
+            <h2 class="section-title">Tehnološke Prednosti</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card"><div class="plan-name">AI + Quantum</div><p>Edinstvena kombinacija AI agentov in kvantnih algoritmov.</p></div>
+                <div class="pricing-card"><div class="plan-name">Microservices</div><p>Modularna arhitektura, enostavno skaliranje in izolacija storitev.</p></div>
+                <div class="pricing-card"><div class="plan-name">Multi-tenant</div><p>Vgrajena podpora za več najemnikov, konfigurabilni limiti.</p></div>
+                <div class="pricing-card"><div class="plan-name">Real-time Monitoring</div><p>Dashboardi, opozorila, Prometheus + Grafana observability.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sales Strategy Section -->
+    <section class="features" id="sales">
+        <div class="container">
+            <h2 class="section-title">Prodajne Strategije</h2>
+            <div class="features-grid">
+                <div class="feature-card"><h3>Target Markets</h3><p>Developers (API), Startups (rast), Enterprises (celovite rešitve), Research (quantum).</p></div>
+                <div class="feature-card"><h3>Sales Channels</h3><p>Direct sales, channel partners, AWS/GCP marketplace, affiliate program.</p></div>
+                <div class="feature-card"><h3>Custom Development</h3><p>Prilagojene rešitve, integracije po meri, SLA.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marketing Strategy Section -->
+    <section class="pricing" id="marketing">
+        <div class="container">
+            <h2 class="section-title">Marketinške Strategije</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card"><div class="plan-name">Brand Building</div><p>Thought leadership, blog, webinarji, case studies, demo okolje.</p></div>
+                <div class="pricing-card"><div class="plan-name">Community</div><p>Forum, Discord, meetupi in aktivna skupnost.</p></div>
+                <div class="pricing-card"><div class="plan-name">Digital Marketing</div><p>SEO (AI platform, quantum), content, LinkedIn/Twitter, Google/LinkedIn Ads.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ready to Get Started / Simple Waitlist Form -->
+    <section class="features" id="get-started">
+        <div class="container" style="text-align:center;">
+            <h2 class="section-title">Pripravljeni za začetek?</h2>
+            <p style="margin-bottom:1rem; color:#555;">Pridruži se waitlisti in pridobi zgodnji dostop</p>
+            <form id="waitlist-form" onsubmit="handleSubmit(event)" class="form-inline" style="margin-top:0.5rem;">
+                <input type="email" placeholder="Vnesi svoj email" required class="input-email">
+                <button type="submit" class="btn-primary" onclick="trackCTA('join_waitlist')">Join Waitlist - It's Free</button>
+            </form>
+            <div id="waitlist-status" class="status-text" aria-live="polite" style="display:none;">Hvala! Dodali smo te na listo 🎉</div>
+            <div style="margin-top:1rem; color:#666;">
+                <div>✅ No credit card required</div>
+                <div>✅ Free tier forever</div>
+                <div>✅ Cancel anytime</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+     <section class="features" id="contact-form">
+         <div class="container">
+             <h2 class="section-title">Kontakt</h2>
+             <div class="feature-card" style="max-width:720px; margin:0 auto; text-align:left;">
+                 <form id="contactForm" onsubmit="submitContact(event)">
+                     <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                         <div class="form-group">
+                             <label>Ime</label>
+                             <input type="text" id="contactName" required minlength="2" maxlength="100" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                         </div>
+                         <div class="form-group">
+                             <label>Email</label>
+                             <input type="email" id="contactEmailAddr" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" maxlength="120" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                             <small id="errorEmail" style="color:#e53e3e; display:none;">Prosimo vnesite veljaven email.</small>
+                         </div>
+                     </div>
+                     <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.5rem;">
+                         <div class="form-group">
+                             <label>Tema</label>
+                             <select id="contactTopic" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                                 <option value="sales">Prodaja</option>
+                                 <option value="support">Podpora</option>
+                                 <option value="billing">Billing</option>
+                                 <option value="white_label">White Label</option>
+                                 <option value="enterprise">Enterprise</option>
+                             </select>
+                         </div>
+                         <div class="form-group">
+                             <label>Plan</label>
+                             <select id="contactPlan" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                                 <option value="freemium">Freemium</option>
+                                 <option value="basic">Basic</option>
+                                 <option value="pro">Pro</option>
+                                 <option value="white_label">White Label</option>
+                                 <option value="enterprise">Enterprise</option>
+                             </select>
+                         </div>
+                     </div>
+                     <div class="form-group" style="margin-top:0.5rem;">
+                         <label>Sporočilo</label>
+                         <textarea id="contactMessage" required minlength="20" maxlength="1000" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; min-height:100px;"></textarea>
+                         <small id="errorMessage" style="color:#e53e3e; display:none;">Sporočilo naj bo dolžine vsaj 20 znakov.</small>
+                     </div>
+                     <div style="display:flex; gap:10px; align-items:center;">
+                         <button type="submit" class="btn-primary" id="contactSubmit">Pošlji</button>
+                         <span id="contactStatus" style="display:none; color:#667eea;">Pošiljanje...</span>
+                     </div>
+                 </form>
+                 <pre id="contactResult" style="margin-top:1rem; background:#fff; padding:1rem; border-radius:8px; overflow:auto; max-height:240px;"></pre>
+             </div>
+         </div>
+     </section>
+
+     <!-- Footer -->
+     <footer class="footer" id="contact">
+        <div class="container">
+            <div style="margin-bottom:1rem;">
+                <p>&copy; 2025 OMNI Platform | <a href="#" style="color:#ccc;">Privacy Policy</a> | <a href="#" style="color:#ccc;">Terms</a></p>
+            </div>
+            <div style="display:flex; gap:12px; justify-content:center;">
+                <a href="https://twitter.com/OMNIPlatform" target="_blank" rel="noopener" style="color:#ccc;"><i class="fab fa-twitter"></i> Twitter</a>
+                <a href="https://www.linkedin.com/company/omni-platform" target="_blank" rel="noopener" style="color:#ccc;"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="https://github.com/omni-platform" target="_blank" rel="noopener" style="color:#ccc;"><i class="fab fa-github"></i> GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Plan selection functionality
+        function selectPlan(planType) {
+            // Store selected plan
+            localStorage.setItem('selectedPlan', planType);
+            // Track plan selection
+            if (typeof trackCTA === 'function') { trackCTA('plan_' + planType); }
+            
+            // Redirect to dashboard or signup
+            if (planType === 'freemium') {
+                window.location.href = 'index.html';
+            } else if (planType === 'enterprise') {
+                // Open contact form or redirect to contact page
+                alert('Kontaktirali vas bomo v 24 urah za Enterprise paket!');
+            } else {
+                // Redirect to payment/signup page
+                window.location.href = `signup.html?plan=${planType}`;
+            }
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(102, 126, 234, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                header.style.backdropFilter = 'none';
+            }
+        });
+
+        // Support contact submit
+        async function submitContact(e) {
+            e.preventDefault();
+            const btn = document.getElementById('contactSubmit');
+            const status = document.getElementById('contactStatus');
+            const nameEl = document.getElementById('contactName');
+            const emailEl = document.getElementById('contactEmailAddr');
+            const msgEl = document.getElementById('contactMessage');
+            const topicEl = document.getElementById('contactTopic');
+            const planEl = document.getElementById('contactPlan');
+
+            // Basic validations
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            let valid = true;
+            document.getElementById('errorEmail').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            [nameEl, emailEl, msgEl].forEach(el => el.style.borderColor = '#ddd');
+            if (nameEl.value.trim().length < 2) { nameEl.style.borderColor = '#e53e3e'; valid = false; }
+            if (!emailRegex.test(emailEl.value.trim())) { emailEl.style.borderColor = '#e53e3e'; document.getElementById('errorEmail').style.display = 'block'; valid = false; }
+            if (msgEl.value.trim().length < 20) { msgEl.style.borderColor = '#e53e3e'; document.getElementById('errorMessage').style.display = 'block'; valid = false; }
+            if (!valid) { return; }
+
+            btn.disabled = true; status.style.display = 'inline';
+            const payload = {
+                name: nameEl.value.trim(),
+                email: emailEl.value.trim(),
+                message: msgEl.value.trim(),
+                topic: topicEl.value,
+                plan: planEl.value,
+            };
+            try {
+                const res = await fetch('/api/v1/support/contact', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+                });
+                if (!res.ok) { throw new Error('API ni dosegljiv ali je vrnil napako'); }
+                const data = await res.json();
+                document.getElementById('contactResult').textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                // mailto fallback
+                const subject = `Kontakt: ${payload.topic} / ${payload.plan}`;
+                const body = `Ime: ${payload.name}\nEmail: ${payload.email}\nTema: ${payload.topic}\nPlan: ${payload.plan}\nSporočilo: ${payload.message}`;
+                const mailto = `mailto:support@omni-platform.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.location.href = mailto;
+                document.getElementById('contactResult').textContent = 'API ni dosegljiv, preusmerjeno na email odjemalca.';
+            } finally {
+                btn.disabled = false; status.style.display = 'none';
+            }
+        }
+    </script>
+
+    <script>
+        // Waitlist submit handler
+        function handleSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const emailInput = form.querySelector('input[type="email"]');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const statusEl = document.getElementById('waitlist-status');
+            const email = emailInput.value;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Pošiljanje…';
+            // Send to backend (replace with real endpoint)
+            fetch('https://your-backend.com/api/waitlist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            }).catch(() => {})
+            .finally(() => {
+                // Track in analytics
+                if (typeof trackSignup === 'function') { trackSignup(); }
+                // Success UI
+                statusEl.style.display = 'block';
+                form.reset();
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Join Waitlist - It\'s Free';
+            });
+        }
+    </script>
+
+    <style>
+        .form-inline { display:inline-flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; }
+        .input-email { padding:12px; font-size:16px; border-radius:8px; border:2px solid #ddd; width:300px; }
+        .status-text { margin-top:10px; color:#2f855a; font-weight:600; }
+    </style>
+</body>
+</html>

@@ -1,0 +1,6 @@
+﻿{
+    "Ok":  false,
+    "Error":  "The remote server returned an error: (502) Bad Gateway.",
+    "StatusCode":  502,
+    "ResponseBody":  ""
+}

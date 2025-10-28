@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-10-28T16:24:12.189794+00:00",
+  "revenue": 0.0,
+  "active_users": 0,
+  "conversion_rate": 0.0,
+  "sources": {
+    "db": {
+      "revenue_db": 0.0,
+      "active_users_db": 0
+    },
+    "stripe": {
+      "revenue_stripe": 0.0
+    },
+    "analytics": {
+      "conversion_rate": null
+    }
+  }
+}

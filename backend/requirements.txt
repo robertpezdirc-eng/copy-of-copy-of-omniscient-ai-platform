@@ -1,5 +1,13 @@
 fastapi
 uvicorn[standard]
 requests
+prometheus-client
+stripe
 google-cloud-aiplatform
 openai
+prometheus-client
+langchain>=0.3.0
+langchain-community>=0.3.0
+langchain-openai>=0.2.0
+langchain-google-genai>=2.0.0
+langchain-google-vertexai>=1.0.0

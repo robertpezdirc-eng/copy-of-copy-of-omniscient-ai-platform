@@ -1,0 +1,10 @@
+apiVersion: 1
+providers:
+  - name: omni
+    folder: OMNI
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      # Load dashboards from the 'json' subfolder we mount
+      path: /etc/grafana/provisioning/dashboards/json

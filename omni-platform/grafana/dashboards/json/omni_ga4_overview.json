@@ -1,0 +1,18 @@
+{
+  "id": null,
+  "uid": "omni-ga4-overview",
+  "title": "OMNI GA4 Overview",
+  "tags": ["omni", "ga4"],
+  "timezone": "browser",
+  "version": 1,
+  "schemaVersion": 38,
+  "panels": [
+    {"id":1,"type":"text","title":"Obiski Strani (Total Visitors)","gridPos":{"h":6,"w":12,"x":0,"y":0},"options":{"mode":"markdown","content":"- Metric: `totalUsers` (all time)\n- Alternative: `activeUsers` (last 7 days)\n\nDatasource: **Google Analytics 4**. Configure Property ID and auth in Grafana UI."}},
+    {"id":2,"type":"text","title":"Dnevno Aktivni (Daily Active)","gridPos":{"h":6,"w":12,"x":12,"y":0},"options":{"mode":"markdown","content":"- Metric: `activeUsers`\n- Dimension: `date`\n- Range: last 30 days\n\nDatasource: **Google Analytics 4**."}},
+    {"id":3,"type":"text","title":"Trend Obiskov (30 dni)","gridPos":{"h":8,"w":24,"x":0,"y":6},"options":{"mode":"markdown","content":"Timeseries of `activeUsers` over last 30 days.\n\nDatasource: **Google Analytics 4**."}},
+    {"id":4,"type":"text","title":"Viri Obiskov (Traffic Sources)","gridPos":{"h":8,"w":24,"x":0,"y":14},"options":{"mode":"markdown","content":"- Metric: `activeUsers`\n- Dimensions: `sessionSource`, `sessionMedium`\n- Group by: source/medium\n\nDatasource: **Google Analytics 4**."}},
+    {"id":5,"type":"text","title":"BigQuery Poizvedba (GA4 export)","gridPos":{"h":12,"w":24,"x":0,"y":22},"options":{"mode":"markdown","content":"Uporabite BigQuery datasource in surovo poizvedbo:\n\n```sql\nSELECT\n  event_date,\n  COUNT(DISTINCT user_pseudo_id) AS daily_visitors,\n  SUM(IF(event_name = 'sign_up', 1, 0)) AS signups\nFROM `your-project.analytics_XXXXXXXXX.events_*`\nWHERE _TABLE_SUFFIX BETWEEN\n  FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY))\n  AND FORMAT_DATE('%Y%m%d', CURRENT_DATE())\nGROUP BY event_date\nORDER BY event_date\n```\n\nDatasource: **BigQuery** (JWT). Nastavite dnevni izvoz GA4 → BigQuery."}} 
+  ],
+  "templating": {"list": []},
+  "time": {"from": "now-30d", "to": "now"}
+}

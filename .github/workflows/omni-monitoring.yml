@@ -1,0 +1,82 @@
+name: Omni Monitoring Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    # Use a self-hosted runner on your monitoring host for immutable deployments
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: powershell
+        working-directory: .
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Create .env from CI/CD secrets
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        run: |
+          $lines = @(
+            "GOOGLE_CLIENT_ID=$env:GOOGLE_CLIENT_ID",
+            "GOOGLE_CLIENT_SECRET=$env:GOOGLE_CLIENT_SECRET"
+          )
+          $lines | Set-Content -Path ".env" -Encoding ASCII
+
+      - name: Docker Compose pull images
+        run: |
+          docker compose pull
+
+      - name: Docker Compose up (immutable recreate)
+        run: |
+          docker compose up -d --force-recreate omni-grafana omni-prometheus omni-alertmanager omni-loki omni-tempo omni-promtail omni-pyroscope
+
+      - name: Verify status
+        run: |
+          docker compose ps
+
+      - name: Optional cleanup orphan containers
+        if: ${{ always() }}
+        run: |
+          docker compose up -d --remove-orphans
+
+      - name: Wait for Grafana to be ready
+        env:
+          GRAFANA_ADMIN_PASSWORD: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
+        run: |
+          $max=30
+          for ($i=0; $i -lt $max; $i++) {
+            try {
+              Invoke-WebRequest -Uri "http://localhost:3000/api/health" -UseBasicParsing | Out-Null
+              Write-Host "Grafana is ready"
+              break
+            } catch {
+              Start-Sleep -Seconds 2
+            }
+          }
+
+      - name: Set Grafana home dashboard to omni-unified-all
+        env:
+          GRAFANA_ADMIN_PASSWORD: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
+        run: |
+          $pwd = $env:GRAFANA_ADMIN_PASSWORD
+          if ([string]::IsNullOrEmpty($pwd)) { $pwd = "admin" }
+          $token = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("admin:$pwd"))
+          $headers = @{ Authorization = "Basic $token"; "Content-Type" = "application/json" }
+          $res = Invoke-RestMethod -Uri "http://localhost:3000/api/dashboards/uid/omni-unified-all" -Headers $headers -Method GET
+          $id = $res.dashboard.id
+          $body = @{ homeDashboardId = $id } | ConvertTo-Json
+          Invoke-RestMethod -Uri "http://localhost:3000/api/org/preferences" -Headers $headers -Method PUT -Body $body
+          Write-Host "Home dashboard set to omni-unified-all (id=$id)"
+
+      - name: Health checks (Grafana, Tempo, Prometheus, Alertmanager)
+        run: |
+          Write-Host "Grafana health:"; Invoke-WebRequest -Uri "http://localhost:3000/api/health" -UseBasicParsing | Select-Object -Expand Content
+          Write-Host "Tempo status:"; Invoke-WebRequest -Uri "http://localhost:3200/status" -UseBasicParsing | Select-Object -Expand Content
+          Write-Host "Prometheus rules:"; Invoke-WebRequest -Uri "http://localhost:9090/api/v1/rules" -UseBasicParsing | Select-Object -Expand Content | Out-String | Write-Host
+          Write-Host "Alertmanager alerts:"; Invoke-WebRequest -Uri "http://localhost:9093/api/v2/alerts" -UseBasicParsing | Select-Object -Expand Content | Out-String | Write-Host

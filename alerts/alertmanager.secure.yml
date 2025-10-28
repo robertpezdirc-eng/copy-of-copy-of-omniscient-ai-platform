@@ -1,0 +1,61 @@
+route:
+  receiver: "slack-default"
+  group_by: ["alertname", "severity", "service"]
+  group_wait: 15s
+  group_interval: 2m
+  repeat_interval: 4h
+  routes:
+    - matchers:
+        - severity="critical"
+      receiver: "slack-critical"
+      continue: true
+    - matchers:
+        - severity="warning"
+      receiver: "slack-warning"
+
+receivers:
+  - name: "slack-default"
+    slack_configs:
+      - send_resolved: true
+        api_url_file: /run/secrets/slack_webhook_url
+        channel: "#alerts"
+        title: |
+          [${{ .Status | toUpper }}] ${{ .CommonLabels.alertname }}
+        text: |
+          *Status:* ${{ .Status }}
+          *Severity:* ${{ .CommonLabels.severity | default "unknown" }}
+          *Service:* ${{ .CommonLabels.service | default "n/a" }}
+          *Summary:* ${{ .CommonAnnotations.summary | default "" }}
+          *Description:* ${{ .CommonAnnotations.description | default "" }}
+          *Runbook:* ${{ .CommonAnnotations.runbook_url | default "" }}
+
+  - name: "slack-warning"
+    slack_configs:
+      - send_resolved: true
+        api_url_file: /run/secrets/slack_webhook_url
+        channel: "#alerts"
+        title: "[WARNING] ${{ .CommonLabels.alertname }}"
+        text: "${{ .CommonAnnotations.summary | default .CommonLabels.alertname }}"
+
+  - name: "slack-critical"
+    slack_configs:
+      - send_resolved: true
+        api_url_file: /run/secrets/slack_webhook_url
+        channel: "#alerts-critical"
+        title: "[CRITICAL] ${{ .CommonLabels.alertname }}"
+        text: |
+          ${{ .CommonAnnotations.description | default .CommonAnnotations.summary }}
+
+  - name: "email-default"
+    email_configs:
+      - to: ${ALERT_EMAIL_TO}
+        from: ${ALERT_EMAIL_FROM}
+        smarthost: ${SMTP_SMARTHOST}
+        auth_username: ${SMTP_USER}
+        auth_password_file: /run/secrets/smtp_password
+        send_resolved: true
+
+inhibit_rules:
+  - source_matchers: [ 'severity="critical"' ]
+    target_matchers: [ 'severity="warning"' ]
+    equal: ["alertname", "service"]

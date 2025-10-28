@@ -1,0 +1,102 @@
+{
+  "id": null,
+  "uid": "omni-local-api-json",
+  "title": "Lokalni API — JSON API Demo",
+  "tags": ["OMNI", "JSON API", "Local"],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "text",
+      "title": "Navodila",
+      "id": 1,
+      "gridPos": {"h": 6, "w": 24, "x": 0, "y": 0},
+      "options": {
+        "mode": "markdown",
+        "content": "Ta dashboard uporablja datasource ‘JSON API (Custom)’ z osnovnim URL-jem iz `.env` (`CUSTOM_JSON_API_URL`).\n\nPrimeri panelov spodaj kličejo relativne poti: `/api/health`, `/api/v1/policy/revenue/history`, `/api/v1/billing/catalog`.\n\nZa timeseries graf uporabite v panelu JSONPath:\n- Čas: `$.history[*].created_at`\n- Vrednost: `$.history[*].rollout`"
+      }
+    },
+    {
+      "type": "table",
+      "title": "Health check",
+      "id": 2,
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 6},
+      "datasource": {"type": "marcusolsson-json-datasource", "uid": "json_api"},
+      "targets": [
+        {
+          "refId": "A",
+          "urlPath": "/api/health",
+          "query": "",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Prihodki skozi čas (raw)",
+      "id": 3,
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 6},
+      "datasource": {"type": "marcusolsson-json-datasource", "uid": "json_api"},
+      "targets": [
+        {
+          "refId": "A",
+          "urlPath": "/api/v1/policy/revenue/history",
+          "query": "",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Katalog artiklov (raw)",
+      "id": 4,
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 6},
+      "datasource": {"type": "marcusolsson-json-datasource", "uid": "json_api"},
+      "targets": [
+        {
+          "refId": "A",
+          "urlPath": "/api/v1/billing/catalog",
+          "query": "",
+          "format": "table"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Prihodki (rollout čez čas)",
+      "id": 5,
+      "gridPos": {"h": 9, "w": 24, "x": 0, "y": 14},
+      "datasource": {"type": "marcusolsson-json-datasource", "uid": "json_api"},
+      "targets": [
+        {
+          "refId": "A",
+          "urlPath": "/api/v1/policy/revenue/history",
+          "query": "",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "none"}, "overrides": []}
+    },
+    {
+      "type": "stat",
+      "title": "Health Status",
+      "id": 6,
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 23},
+      "datasource": {"type": "marcusolsson-json-datasource", "uid": "json_api"},
+      "targets": [
+        {
+          "refId": "A",
+          "urlPath": "/api/health",
+          "query": "",
+          "format": "table"
+        }
+      ],
+      "options": {
+        "textMode": "value_and_name",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": ""}
+      }
+    }
+  ]
+}

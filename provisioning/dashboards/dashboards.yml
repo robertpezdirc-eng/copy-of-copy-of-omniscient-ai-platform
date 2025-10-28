@@ -1,0 +1,21 @@
+apiVersion: 1
+
+providers:
+  - name: 'omni-dashboards'
+    orgId: 1
+    folder: 'OMNI Platform'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+  - name: 'omni-local-dashboards'
+    orgId: 1
+    folder: 'Local Development'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards

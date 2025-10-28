@@ -1,0 +1,184 @@
+{
+  "uid": "omni-business-overview",
+  "title": "OMNI Business Overview",
+  "tags": ["OMNI", "business", "kpi"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 2,
+  "editable": true,
+  "refresh": "10s",
+  "time": {"from": "now-24h", "to": "now"},
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Requests (5m avg)",
+      "id": 1,
+      "gridPos": {"h": 5, "w": 6, "x": 0, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {"expr": "sum(rate(omni_sse_streams_started{job=~\"$job\"}[5m]))", "refId": "A"}
+      ],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "values": false}, "colorMode": "value", "graphMode": "none"},
+      "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []}
+    },
+    {
+      "type": "stat",
+      "title": "Success Rate (5m)",
+      "id": 2,
+      "gridPos": {"h": 5, "w": 6, "x": 6, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {
+          "expr": "100 * (sum(rate(omni_sse_streams_done{job=~\"$job\"}[5m])) / clamp_min(sum(rate(omni_sse_streams_started{job=~\"$job\"}[5m])), 0.0001))",
+          "refId": "A"
+        }
+      ],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "values": false}},
+      "fieldConfig": {"defaults": {"unit": "percent", "thresholds": {"mode": "absolute", "steps": [{"color": "red"}, {"color": "orange", "value": 80}, {"color": "green", "value": 95}]}}}
+    },
+    {
+      "type": "stat",
+      "title": "Error Rate (5m)",
+      "id": 3,
+      "gridPos": {"h": 5, "w": 6, "x": 12, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {
+          "expr": "100 * (sum(rate(omni_sse_streams_errors{job=~\"$job\"}[5m])) / clamp_min(sum(rate(omni_sse_streams_started{job=~\"$job\"}[5m])), 0.0001))",
+          "refId": "A"
+        }
+      ],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "values": false}},
+      "fieldConfig": {"defaults": {"unit": "percent", "thresholds": {"mode": "absolute", "steps": [{"color": "green"}, {"color": "orange", "value": 2}, {"color": "red", "value": 5}]}}}
+    },
+    {
+      "type": "stat",
+      "title": "Fallback Rate (5m)",
+      "id": 4,
+      "gridPos": {"h": 5, "w": 6, "x": 18, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {
+          "expr": "100 * (sum(rate(omni_sse_streams_fallback{job=~\"$job\"}[5m])) / clamp_min(sum(rate(omni_sse_streams_started{job=~\"$job\"}[5m])), 0.0001))",
+          "refId": "A"
+        }
+      ],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "values": false}},
+      "fieldConfig": {"defaults": {"unit": "percent", "thresholds": {"mode": "absolute", "steps": [{"color": "green"}, {"color": "orange", "value": 1}, {"color": "red", "value": 3}]}}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Requests per second",
+      "id": 5,
+      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 5},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {"expr": "sum(rate(omni_sse_streams_started{job=~\"$job\"}[5m]))", "legendFormat": "started/s", "refId": "A"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "reqps"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Outcomes (5m rates)",
+      "id": 6,
+      "gridPos": {"h": 9, "w": 12, "x": 12, "y": 5},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {"expr": "sum(rate(omni_sse_streams_done{job=~\"$job\"}[5m]))", "legendFormat": "done/s", "refId": "A"},
+        {"expr": "sum(rate(omni_sse_streams_errors{job=~\"$job\"}[5m]))", "legendFormat": "errors/s", "refId": "B"},
+        {"expr": "sum(rate(omni_sse_streams_fallback{job=~\"$job\"}[5m]))", "legendFormat": "fallback/s", "refId": "C"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "reqps"}}
+    },
+    {
+      "type": "stat",
+      "title": "Requests Today",
+      "id": 7,
+      "gridPos": {"h": 5, "w": 6, "x": 0, "y": 14},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {"expr": "increase(omni_sse_streams_started{job=~\"$job\"}[1d])", "refId": "A"}
+      ],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "values": false}},
+      "fieldConfig": {"defaults": {"unit": "short"}}
+    },
+    {
+      "type": "stat",
+      "title": "Errors Today",
+      "id": 8,
+      "gridPos": {"h": 5, "w": 6, "x": 6, "y": 14},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {"expr": "increase(omni_sse_streams_errors{job=~\"$job\"}[1d])", "refId": "A"}
+      ],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "values": false}},
+      "fieldConfig": {"defaults": {"unit": "short", "thresholds": {"mode": "absolute", "steps": [{"color": "green"}, {"color": "orange", "value": 10}, {"color": "red", "value": 50}]}}}
+    },
+    {
+      "type": "stat",
+      "title": "Fallbacks Today",
+      "id": 9,
+      "gridPos": {"h": 5, "w": 6, "x": 12, "y": 14},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {"expr": "increase(omni_sse_streams_fallback{job=~\"$job\"}[1d])", "refId": "A"}
+      ],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "values": false}}
+    },
+    {
+      "type": "stat",
+      "title": "Success Today",
+      "id": 10,
+      "gridPos": {"h": 5, "w": 6, "x": 18, "y": 14},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {"expr": "increase(omni_sse_streams_done{job=~\"$job\"}[1d])", "refId": "A"}
+      ],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"], "values": false}}
+    },
+    {
+      "type": "bargauge",
+      "title": "Targets UP by job",
+      "id": 11,
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 19},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {"expr": "sum by(job) (up{job=~\"$job\"})", "refId": "A"}
+      ],
+      "options": {"displayMode": "gradient"}
+    },
+    {
+      "type": "table",
+      "title": "Targets Health",
+      "id": 12,
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 19},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {"expr": "up{job=~\"$job\", instance=~\"$instance\"}", "refId": "A"}
+      ],
+      "transformations": [{"id": "labelsToFields"}],
+      "options": {"showHeader": true}
+    },
+    {
+      "type": "bargauge",
+      "title": "Top Error Rate by Job (5m)",
+      "id": 13,
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 27},
+      "datasource": {"type": "prometheus", "uid": "PROM"},
+      "targets": [
+        {
+          "expr": "topk(5, 100 * (sum by(job) (rate(omni_sse_streams_errors{job=~\"$job\"}[5m])) / clamp_min(sum by(job) (rate(omni_sse_streams_started{job=~\"$job\"}[5m])), 0.0001)))",
+          "refId": "A"
+        }
+      ],
+      "options": {"displayMode": "gradient"}
+    }
+  ],
+  "templating": {
+    "list": [
+      {"type": "datasource", "name": "DS_PROMETHEUS", "query": "prometheus", "current": {"text": "Prometheus", "value": "PROM"}},
+      {"type": "query", "name": "job", "datasource": {"type": "prometheus", "uid": "PROM"}, "definition": "label_values(up, job)", "query": "label_values(up, job)", "includeAll": true, "multi": true, "refresh": 2},
+      {"type": "query", "name": "instance", "datasource": {"type": "prometheus", "uid": "PROM"}, "definition": "label_values(up{job=~\"$job\"}, instance)", "query": "label_values(up{job=~\"$job\"}, instance)", "includeAll": true, "multi": true, "refresh": 2}
+    ]
+  }
+}

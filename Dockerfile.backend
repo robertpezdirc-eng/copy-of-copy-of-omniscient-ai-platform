@@ -9,4 +9,4 @@ COPY backend/ .
 
 ENV PORT=8080
 
-CMD ["uvicorn", "omni_hybrid_ai:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]

@@ -1,0 +1,11 @@
+apiVersion: 1
+datasources:
+  - name: Google Analytics 4
+    type: grafana-google-analytics-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    jsonData:
+      propertyId: ""  # GA4 Property ID (npr. 123456789)
+      useQuota: true
+    secureJsonData: {}

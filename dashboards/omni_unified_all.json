@@ -1,0 +1,113 @@
+{
+  "uid": "omni-unified-all",
+  "title": "Omni Unified - Metrics, Logs & Traces",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 2,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "HTTP p95 Latency (omni-backend)",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "PROM" },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"omni-backend\"}[5m])) by (le))",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "HTTP Error Rate (5xx %)",
+      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "PROM" },
+      "transformations": [
+        { "id": "reduce", "options": { "reducers": ["lastNotNull"] } },
+        { "id": "calculateField", "options": { "mode": "binary", "binary": { "left": "A", "operator": "divide", "right": "B" } } }
+      ],
+      "targets": [
+        { "expr": "sum(rate(http_requests_total{job=\"omni-backend\",status=~\"5..\"}[5m]))", "refId": "A" },
+        { "expr": "sum(rate(http_requests_total{job=\"omni-backend\"}[5m]))", "refId": "B" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "SSE Events Rate by Stream",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "PROM" },
+      "targets": [
+        { "expr": "sum by (stream)(rate(omni_sse_events_total[5m]))", "refId": "A" }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Omni Logs (errors)",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "datasource": { "type": "loki", "uid": "LOKI" },
+      "targets": [
+        { "refId": "A", "expr": "{job=\"omni-backend\"} | level=~\"error|warn\"" }
+      ],
+      "options": { "showLabels": true, "enableLogDetails": true }
+    },
+    {
+      "type": "traces",
+      "title": "Recent Traces (omni-backend)",
+      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 10 },
+      "datasource": { "type": "tempo", "uid": "TEMPO" },
+      "targets": [
+        { "query": "{service.name=\"omni-backend\"}" }
+      ]
+    },
+    {
+      "type": "nodeGraph",
+      "title": "Service Map",
+      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 10 },
+      "datasource": { "type": "tempo", "uid": "TEMPO" },
+      "targets": [ { "query": "serviceMap" } ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Real-time Sales (PostgreSQL)",
+      "gridPos": { "x": 0, "y": 26, "w": 12, "h": 8 },
+      "datasource": { "type": "postgres", "uid": "PG" },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "time_series",
+          "rawSql": "SELECT $__timeGroupAlias(created_at, '1m'), SUM(amount) AS sales FROM orders WHERE $__timeFilter(created_at) GROUP BY 1 ORDER BY 1"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "New Users (current range)",
+      "gridPos": { "x": 12, "y": 26, "w": 12, "h": 8 },
+      "datasource": { "type": "postgres", "uid": "PG" },
+      "targets": [
+        { "refId": "A", "format": "table", "rawSql": "SELECT COUNT(*) AS value FROM users WHERE $__timeFilter(created_at)" }
+      ],
+      "transformations": [ { "id": "reduce", "options": { "reducers": ["lastNotNull"] } } ]
+    },
+    {
+      "type": "table",
+      "title": "Inventory Levels",
+      "gridPos": { "x": 0, "y": 34, "w": 12, "h": 9 },
+      "datasource": { "type": "postgres", "uid": "PG" },
+      "targets": [
+        { "refId": "A", "format": "table", "rawSql": "SELECT product_name, quantity_available FROM inventory ORDER BY quantity_available ASC LIMIT 50" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "EUR→USD (live)",
+      "gridPos": { "x": 12, "y": 34, "w": 12, "h": 9 },
+      "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF" },
+      "targets": [
+        { "refId": "A", "queryType": "uql", "source": "url", "url": "https://api.exchangerate.host/latest?base=EUR&symbols=USD", "uql": "parse-json | project value=rates.USD | records" }
+      ],
+      "transformations": [ { "id": "reduce", "options": { "reducers": ["lastNotNull"] } } ]
+    }
+  ]
+}

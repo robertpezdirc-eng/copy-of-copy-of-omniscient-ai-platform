@@ -1,0 +1,6 @@
+﻿{
+    "Ok":  false,
+    "Error":  "The remote server returned an error: (400) Bad Request.",
+    "StatusCode":  400,
+    "ResponseBody":  ""
+}

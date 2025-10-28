@@ -1,0 +1,169 @@
+{
+  "id": null,
+  "uid": "omni-backend-api",
+  "title": "Omni Backend API (Infinity Backend)",
+  "tags": ["omni", "infinity", "backend"],
+  "timezone": "browser",
+  "version": 1,
+  "schemaVersion": 38,
+  "refresh": "10s",
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Health Status",
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0},
+      "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "OMNI_API"},
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "source": "url",
+          "type": "json",
+          "url": "${BASE_URL}/api/health",
+          "parser": "jq",
+          "jq": "[ { status: .status } ]"
+        }
+      ],
+      "options": {"textMode": "value_and_name", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "status"}}
+    },
+
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Tunnel OK",
+      "gridPos": {"h": 6, "w": 6, "x": 6, "y": 0},
+      "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "OMNI_API"},
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "source": "url",
+          "type": "json",
+          "url": "${BASE_URL}/api/health",
+          "parser": "jq",
+          "jq": "[ { ok: (.status == \"ok\") } ]"
+        }
+      ],
+      "options": {"textMode": "value_and_name", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "ok"}}
+    },
+
+    {
+      "id": 3,
+      "type": "table",
+      "title": "Revenue History",
+      "gridPos": {"h": 10, "w": 24, "x": 0, "y": 6},
+      "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "OMNI_API"},
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "source": "url",
+          "type": "json",
+          "url": "${BASE_URL}/api/v1/policy/revenue/history",
+          "parser": "jq",
+          "jq": ".history | map({ id, tenant_id, feature_name, rollout, enabled, created_at, notes })"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {"align": "auto", "displayMode": "auto"}
+        },
+        "overrides": [
+          {
+            "matcher": {"id": "byName", "options": "created_at"},
+            "properties": [{"id": "unit", "value": "timestampms"}]
+          }
+        ]
+      },
+      "options": {"showHeader": true}
+    },
+
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Revenue Count",
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 16},
+      "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "OMNI_API"},
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "source": "url",
+          "type": "json",
+          "url": "${BASE_URL}/api/v1/policy/revenue/history",
+          "parser": "jq",
+          "jq": "[ { count: (.history | length) } ]"
+        }
+      ],
+      "options": {"textMode": "value_and_name", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "count"}}
+    },
+
+    {
+      "id": 5,
+      "type": "table",
+      "title": "Billing Catalog",
+      "gridPos": {"h": 10, "w": 24, "x": 0, "y": 22},
+      "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "OMNI_API"},
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "source": "url",
+          "type": "json",
+          "url": "${BASE_URL}/api/v1/billing/catalog",
+          "parser": "jq",
+          "jq": ".items | map({ id, name, version, price_per_call, currency, path, tenant_id, description, created_at })"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {"align": "auto", "displayMode": "auto"}
+        },
+        "overrides": [
+          {
+            "matcher": {"id": "byName", "options": "created_at"},
+            "properties": [{"id": "unit", "value": "timestampms"}]
+          },
+          {
+            "matcher": {"id": "byName", "options": "price_per_call"},
+            "properties": [{"id": "unit", "value": "currencyUSD"}]
+          }
+        ]
+      },
+      "options": {"showHeader": true}
+    },
+
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "Catalog Count",
+      "gridPos": {"h": 6, "w": 6, "x": 6, "y": 16},
+      "datasource": {"type": "yesoreyeram-infinity-datasource", "uid": "OMNI_API"},
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "source": "url",
+          "type": "json",
+          "url": "${BASE_URL}/api/v1/billing/catalog",
+          "parser": "jq",
+          "jq": "[ { count: (.items | length) } ]"
+        }
+      ],
+      "options": {"textMode": "value_and_name", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "count"}}
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "type": "constant",
+        "name": "BASE_URL",
+        "label": "API Base URL",
+        "query": "https://6b057762283e82.lhr.life",
+        "current": {"text": "https://6b057762283e82.lhr.life", "value": "https://6b057762283e82.lhr.life"},
+        "hide": 2
+      }
+    ]
+  }
+}

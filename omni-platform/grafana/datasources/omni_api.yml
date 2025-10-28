@@ -1,0 +1,18 @@
+apiVersion: 1
+datasources:
+  - name: Omni Platform API
+    uid: OMNI_API
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    jsonData:
+      httpHeaderName1: Content-Type
+      httpHeaderName2: x-api-key
+      httpHeaderName3: tenant_id
+      httpHeaderName4: User-Agent
+    secureJsonData:
+      httpHeaderValue1: "application/json"
+      httpHeaderValue2: "088a04ce03734a39b07ef5c0191c5ba5"
+      httpHeaderValue3: "demo-tenant"
+      httpHeaderValue4: "Grafana-Infinity/omni"

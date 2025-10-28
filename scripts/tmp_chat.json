@@ -1,0 +1,7 @@
+{
+  "model": "qwen3-coder:30b",
+  "stream": false,
+  "messages": [
+    { "role": "user", "content": "Zapiši eno kratko slovensko poved." }
+  ]
+}

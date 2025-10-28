@@ -1,0 +1,226 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": ["observability", "overview"],
+  "templating": {
+    "list": [
+      {
+        "name": "job",
+        "type": "query",
+        "label": "Job",
+        "hide": 0,
+        "datasource": null,
+        "query": {
+          "queryType": "randomWalk",
+          "refId": "Prometheus-job",
+          "editorMode": "code",
+          "expr": "label_values(up, job)"
+        },
+        "refresh": 2,
+        "includeAll": true,
+        "multi": true,
+        "options": [],
+        "current": {},
+        "skipUrlSync": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Observability Overview",
+  "version": 1,
+  "weekStart": "",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Targets UP (total)",
+      "id": 1,
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0},
+      "datasource": null,
+      "targets": [
+        {
+          "refId": "A",
+          "editorMode": "code",
+          "expr": "sum(up)",
+          "legendFormat": ""
+        }
+      ],
+      "options": {
+        "reduceOptions": {"fields": "", "values": false, "calcs": ["lastNotNull"]},
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "red", "value": null},
+              {"color": "green", "value": 1}
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Firing Alerts",
+      "id": 2,
+      "gridPos": {"h": 6, "w": 6, "x": 6, "y": 0},
+      "datasource": null,
+      "targets": [
+        {
+          "refId": "A",
+          "editorMode": "code",
+          "expr": "count(ALERTS{alertstate=\"firing\"})"
+        }
+      ],
+      "options": {
+        "reduceOptions": {"fields": "", "values": false, "calcs": ["lastNotNull"]},
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "red", "value": 1}
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "type": "table",
+      "title": "Targets by Job",
+      "id": 3,
+      "gridPos": {"h": 10, "w": 12, "x": 12, "y": 0},
+      "datasource": null,
+      "targets": [
+        {
+          "refId": "A",
+          "editorMode": "code",
+          "expr": "sum by (job) (up)",
+          "legendFormat": "{{job}}"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+      "options": {
+        "showHeader": true
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Loki: Lines Ingested (rate)",
+      "id": 4,
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 6},
+      "datasource": null,
+      "targets": [
+        {
+          "refId": "A",
+          "editorMode": "code",
+          "expr": "sum(rate(loki_distributor_lines_received_total[5m]))",
+          "legendFormat": "lines/s"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "options": {
+        "legend": {"displayMode": "list", "placement": "bottom"},
+        "tooltip": {"mode": "single"}
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Tempo: Spans Ingested (rate)",
+      "id": 5,
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 6},
+      "datasource": null,
+      "targets": [
+        {
+          "refId": "A",
+          "editorMode": "code",
+          "expr": "sum(rate(tempo_distributor_spans_received_total[5m]))",
+          "legendFormat": "spans/s"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "options": {
+        "legend": {"displayMode": "list", "placement": "bottom"},
+        "tooltip": {"mode": "single"}
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Promtail: Dropped Entries (rate)",
+      "id": 6,
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 6},
+      "datasource": null,
+      "targets": [
+        {
+          "refId": "A",
+          "editorMode": "code",
+          "expr": "sum(rate(promtail_dropped_entries_total[5m]))",
+          "legendFormat": "drops/s"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "options": {
+        "legend": {"displayMode": "list", "placement": "bottom"},
+        "tooltip": {"mode": "single"}
+      }
+    },
+    {
+      "type": "table",
+      "title": "Firing Alerts (Prometheus ALERTS)",
+      "id": 7,
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 14},
+      "datasource": null,
+      "targets": [
+        {
+          "refId": "A",
+          "editorMode": "code",
+          "expr": "ALERTS{alertstate=\"firing\"}"
+        }
+      ],
+      "transformations": [
+        {"id": "labelsToFields", "options": {"mode": "columns"}},
+        {"id": "organize", "options": {"indexByName": {}}}
+      ],
+      "options": {"showHeader": true}
+    }
+  ]
+}

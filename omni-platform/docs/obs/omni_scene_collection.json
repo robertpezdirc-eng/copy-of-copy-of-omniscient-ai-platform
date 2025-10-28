@@ -1,0 +1,52 @@
+{
+  "name": "Omni Demo",
+  "sources": [
+    {"name": "Intro", "type": "scene", "id": "scene", "settings": {"items": [{"name": "Title Card"}] }},
+    {"name": "Title Card", "type": "browser_source", "id": "browser_source", "settings": {"url": "http://localhost:8009/omni-platform/docs/overlays/title.html", "width": 1920, "height": 1080}},
+
+    {"name": "Demo", "type": "scene", "id": "scene", "settings": {"items": [{"name": "Frontend UI"}, {"name": "Lower Third"}] }},
+    {"name": "Frontend UI", "type": "browser_source", "id": "browser_source", "settings": {"url": "http://localhost:5175/", "width": 1920, "height": 1080}},
+    {"name": "Lower Third", "type": "browser_source", "id": "browser_source", "settings": {"url": "http://localhost:8009/omni-platform/docs/overlays/lower-third.html", "width": 1920, "height": 200}},
+
+    {"name": "Health", "type": "scene", "id": "scene", "settings": {"items": [{"name": "Backend Health"}] }},
+    {"name": "Backend Health", "type": "browser_source", "id": "browser_source", "settings": {"url": "http://localhost:8004/api/health", "width": 1920, "height": 1080}},
+
+    {"name": "Brief", "type": "scene", "id": "scene", "settings": {"items": [{"name": "Investor Brief"}] }},
+    {"name": "Investor Brief", "type": "browser_source", "id": "browser_source", "settings": {"url": "http://localhost:8009/omni-platform/docs/investor_brief.pdf", "width": 1920, "height": 1080}},
+
+    {"name": "Outro", "type": "scene", "id": "scene", "settings": {"items": [{"name": "Outro Card"}] }},
+    {"name": "Outro Card", "type": "browser_source", "id": "browser_source", "settings": {"url": "http://localhost:8009/omni-platform/docs/overlays/outro.html", "width": 1920, "height": 1080}}
+  ],
+  "scene_order": [
+    {"name": "Intro"},
+    {"name": "Demo"},
+    {"name": "Health"},
+    {"name": "Brief"},
+    {"name": "Outro"}
+  ],
+  "hotkeys": [
+    {"key": "OBS_KEY_F1", "action": "OBS_FRONTEND_HOTKEY_SCENE_SWITCH", "scene": "Intro"},
+    {"key": "OBS_KEY_F2", "action": "OBS_FRONTEND_HOTKEY_SCENE_SWITCH", "scene": "Demo"},
+    {"key": "OBS_KEY_F3", "action": "OBS_FRONTEND_HOTKEY_SCENE_SWITCH", "scene": "Health"},
+    {"key": "OBS_KEY_F4", "action": "OBS_FRONTEND_HOTKEY_SCENE_SWITCH", "scene": "Brief"},
+    {"key": "OBS_KEY_F5", "action": "OBS_FRONTEND_HOTKEY_SCENE_SWITCH", "scene": "Outro"},
+    {"key": "OBS_KEY_SPACE", "action": "OBS_FRONTEND_HOTKEY_START_RECORDING"},
+    {"key": "OBS_KEY_ESCAPE", "action": "OBS_FRONTEND_HOTKEY_STOP_RECORDING"}
+  ],
+  "transitions": {
+    "default": {
+      "name": "Fade",
+      "type": "fade_transition",
+      "duration": 500
+    },
+    "cut": {
+      "name": "Cut",
+      "type": "cut_transition",
+      "duration": 0
+    }
+  },
+  "global_settings": {
+    "transition_duration": 500,
+    "transition_type": "fade_transition"
+  }
+}

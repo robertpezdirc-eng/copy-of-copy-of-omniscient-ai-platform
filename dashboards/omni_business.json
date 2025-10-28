@@ -1,0 +1,18 @@
+{
+  "uid": "omni-business",
+  "title": "Omni Business KPIs",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    { "type": "stat", "title": "Conversions (today)", "gridPos": { "x": 0, "y": 0, "w": 6, "h": 6 }, "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF" }, "targets": [ { "refId": "A", "queryType": "uql", "source": "inline", "data": "{\"value\":128}", "uql": "parse-json | project value=value | records" } ], "transformations": [ { "id": "reduce", "options": { "reducers": ["lastNotNull"] } } ] },
+    { "type": "stat", "title": "Avg LTV", "gridPos": { "x": 6, "y": 0, "w": 6, "h": 6 }, "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF" }, "targets": [ { "refId": "A", "queryType": "uql", "source": "inline", "data": "{\"value\":356.42}", "uql": "parse-json | project value=value | records" } ], "transformations": [ { "id": "reduce", "options": { "reducers": ["lastNotNull"] } } ] },
+    { "type": "stat", "title": "Retention 30d (%)", "gridPos": { "x": 12, "y": 0, "w": 6, "h": 6 }, "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF" }, "targets": [ { "refId": "A", "queryType": "uql", "source": "inline", "data": "{\"value\":62.3}", "uql": "parse-json | project value=value | records" } ], "transformations": [ { "id": "reduce", "options": { "reducers": ["lastNotNull"] } } ] },
+    { "type": "stat", "title": "Backlog Orders", "gridPos": { "x": 18, "y": 0, "w": 6, "h": 6 }, "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF" }, "targets": [ { "refId": "A", "queryType": "uql", "source": "inline", "data": "{\"value\":47}", "uql": "parse-json | project value=value | records" } ], "transformations": [ { "id": "reduce", "options": { "reducers": ["lastNotNull"] } } ] },
+    { "type": "bargauge", "title": "Budget vs Actual", "gridPos": { "x": 0, "y": 6, "w": 12, "h": 7 }, "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF" }, "targets": [ { "refId": "A", "queryType": "uql", "source": "inline", "data": "[{\"metric\":\"Budget\",\"value\":100000},{\"metric\":\"Actual\",\"value\":85400}]", "uql": "parse-json | project metric,value | records" } ] },
+    { "type": "table", "title": "Top SKUs by Margin", "gridPos": { "x": 12, "y": 6, "w": 12, "h": 7 }, "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF" }, "targets": [ { "refId": "A", "queryType": "uql", "source": "inline", "data": "[{\"sku\":\"SKU-001\",\"name\":\"Product A\",\"margin\":45.2},{\"sku\":\"SKU-002\",\"name\":\"Product B\",\"margin\":38.1},{\"sku\":\"SKU-003\",\"name\":\"Product C\",\"margin\":33.7}]", "uql": "parse-json | project sku,name,margin | records" } ] },
+    { "type": "stat", "title": "Jira SLA Breaches (GraphQL demo)", "gridPos": { "x": 0, "y": 13, "w": 6, "h": 6 }, "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF" }, "targets": [ { "refId": "A", "queryType": "graphql", "source": "url", "url": "https://graphqlzero.almansi.me/api", "uql": "graphql { post(id: 1) { id } } | project value=id | records" } ], "transformations": [ { "id": "reduce", "options": { "reducers": ["lastNotNull"] } } ] },
+    { "type": "stat", "title": "Pipeline Health (JSON)", "gridPos": { "x": 6, "y": 13, "w": 6, "h": 6 }, "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "INF" }, "targets": [ { "refId": "A", "queryType": "uql", "source": "url", "url": "https://dummyjson.com/carts/1", "uql": "parse-json | project value=total | records" } ], "transformations": [ { "id": "reduce", "options": { "reducers": ["lastNotNull"] } } ] }
+  ]
+}

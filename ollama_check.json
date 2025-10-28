@@ -1,0 +1,15 @@
+﻿{
+    "OllamaInstalled":  true,
+    "OllamaVersion":  "ollama version is 0.12.6",
+    "ApiReachable":  true,
+    "ApiVersion":  {
+                       "version":  "0.12.6"
+                   },
+    "ModelsApi":  [
+                      "qwen3-coder:30b"
+                  ],
+    "ModelsCli":  [
+                      "qwen3-coder:30b"
+                  ],
+    "GwenCandidates":  "qwen3-coder:30b"
+}

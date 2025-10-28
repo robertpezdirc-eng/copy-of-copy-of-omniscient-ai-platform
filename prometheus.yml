@@ -5,11 +5,16 @@ global:
 rule_files:
   - "alerts/omni_sse_rules.yml"
   - "alerts/system_rules.yml"
+  - "alerts/revenue.rules.yml"
+  - "alerts/availability.rules.yml"
+  - "alerts/service.rules.yml"
+  - "alerts/observability.rules.yml"
+  - "alerts/reliability.rules.yml"
 
 alerting:
   alertmanagers:
     - static_configs:
-        - targets: ['alertmanager:9093']
+        - targets: ['omni-alertmanager:9093']
 
 scrape_configs:
   - job_name: 'omni-dashboard'
@@ -24,6 +29,29 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
+  - job_name: 'alertmanager'
+    static_configs:
+      - targets: ['omni-alertmanager:9093']
+    scrape_interval: 15s
+
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['omni-loki:3100']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  - job_name: 'tempo'
+    static_configs:
+      - targets: ['omni-tempo:3200']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  - job_name: 'promtail'
+    static_configs:
+      - targets: ['omni-promtail:9080']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
   - job_name: 'nginx'
     static_configs:
       - targets: ['nginx-proxy:80']
@@ -31,7 +59,13 @@ scrape_configs:
 
   - job_name: 'system'
     static_configs:
-      - targets: ['node-exporter:9100']
+      - targets: ['omni-node-exporter:9100']
+
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['omni-cadvisor:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
 
   - job_name: 'omni-unified'
     metrics_path: '/metrics'
@@ -42,3 +76,53 @@ scrape_configs:
         # - 'omni-unified:8082'          # Docker Compose service name
         - 'host.docker.internal:8082'    # Prometheus in Docker scraping host app
         # - 'localhost:8082'             # Prometheus on host scraping local app
+  - job_name: 'omni-backend'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+        - 'omni-backend:8080'
+  - job_name: 'omni-agents'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+        - 'agent-agentic-ai:8000'
+        - 'agent-finops:8000'
+        - 'agent-rl-core:8000'
+        - 'agent-devops-router:8000'
+        - 'agent-premortem:8000'
+        - 'agent-code-optimizer:8000'
+        - 'omni-elevator:8000'
+        - 'omni-rica:8000'
+        - 'omni-forensics:8000'
+        - 'omni-resource-guard:8000'
+        - 'omni-adapt:8000'
+        - 'omni-value:8000'
+        - 'omni-docgen:8000'
+        - 'omni-tasks:8000'
+        - 'omni-marketing:8000'
+        - 'omni-feedback:8000'
+        - 'omni-minctx:8000'
+        - 'omni-pov:8000'
+  - job_name: 'business-kpi'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+        - 'host.docker.internal:9101'
+  - job_name: 'omni-agents-ext'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+        - 'omni-arbitrage:8000'
+        - 'omni-burnout:8000'
+        - 'omni-uncertainty:8000'
+        - 'omni-twin:8000'
+        - 'omni-governance:8000'
+        - 'omni-autolearn:8000'
+        - 'omni-revenue:8000'
+        - 'omni-knowledge:8000'
+        - 'omni-gcp:8000'
+        - 'omni-proliferate:8000'

@@ -3,6 +3,8 @@ import brand from './config/brand_config.json'
 import logoUrl from '../public/logo.svg?url'
 import OmniChatDashboard from './components/OmniChatDashboard'
 import AdminDashboard from './components/AdminDashboard'
+import Checkout from './components/Checkout'
+import WhiteLabelSignup from './components/WhiteLabelSignup'
 
 const backendBase = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_BACKEND_URL || ''
 
@@ -46,6 +48,16 @@ export default function App() {
           <h3>API Health (JSON)</h3>
           <pre style={{whiteSpace: 'pre-wrap'}}>{healthJson ? JSON.stringify(healthJson, null, 2) : 'Loading...'}</pre>
           {error && <p style={{color: 'red'}}>{error}</p>}
+        </section>
+
+        <section className="card">
+          <h3>SaaS Checkout (Mock)</h3>
+          <Checkout />
+        </section>
+
+        <section className="card">
+          <h3>White‑label Signup</h3>
+          <WhiteLabelSignup />
         </section>
       </main>
 

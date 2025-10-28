@@ -1,0 +1,212 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: 'localhost:587'
+  smtp_from: 'alertmanager@omni-platform.com'
+  slack_api_url: 'https://hooks.slack.com/services/YOUR_SLACK_WEBHOOK_URL'
+
+route:
+  group_by: ['alertname', 'alert_type', 'team']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 2h
+  receiver: 'default'
+  routes:
+    # Release Quality Gate Alerts - Critical Priority
+    - match:
+        alert_type: 'release_quality'
+      receiver: 'release-quality-gate'
+      group_wait: 10s
+      repeat_interval: 30m
+      continue: true
+    
+    # Error Budget Alerts - High Priority
+    - match:
+        alert_type: 'error_budget'
+      receiver: 'error-budget-alerts'
+      group_wait: 15s
+      repeat_interval: 1h
+      continue: true
+    
+    # Business KPI Alerts - Business Team
+    - match:
+        alert_type: 'kpi'
+      receiver: 'business-kpi-alerts'
+      group_wait: 5m
+      repeat_interval: 4h
+      continue: true
+    
+    # Critical alerts to all channels
+    - match:
+        severity: 'critical'
+      receiver: 'critical-alerts'
+      group_wait: 10s
+      repeat_interval: 30m
+      continue: true
+    
+    # Warning alerts to default
+    - match:
+        severity: 'warning'
+      receiver: 'default'
+    
+    # Service-specific alerts
+    - match:
+        service: 'omni-unified'
+      receiver: 'omni-notifications'
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'instance', 'job']
+  
+  # Inhibit error budget alerts when release quality gate is failing
+  - source_match:
+      alert_type: 'release_quality'
+    target_match:
+      alert_type: 'error_budget'
+    equal: ['team']
+
+receivers:
+  - name: 'default'
+    email_configs:
+      - to: 'ops@omni-platform.com'
+        from: 'alertmanager@omni-platform.com'
+        subject: '[OMNI] {{ .GroupLabels.alertname }} - {{ .CommonLabels.severity }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Labels: {{ range .Labels.SortedPairs }}{{ .Name }}={{ .Value }} {{ end }}
+          {{ end }}
+
+  - name: 'critical-alerts'
+    slack_configs:
+      - api_url: '{{ .ExternalURL }}/slack/critical'
+        channel: '#critical-alerts'
+        send_resolved: true
+        title: '🚨 CRITICAL: {{ .CommonLabels.alertname }}'
+        text: |
+          *Alert:* {{ .CommonAnnotations.summary }}
+          *Description:* {{ .CommonAnnotations.description }}
+          *Team:* {{ .CommonLabels.team }}
+          *Severity:* {{ .CommonLabels.severity }}
+          *Status:* {{ .Status }}
+          {{ if .CommonAnnotations.runbook_url }}*Runbook:* {{ .CommonAnnotations.runbook_url }}{{ end }}
+        color: 'danger'
+    email_configs:
+      - to: 'critical@omni-platform.com, oncall@omni-platform.com'
+        subject: '🚨 CRITICAL ALERT: {{ .CommonLabels.alertname }}'
+        body: |
+          CRITICAL ALERT TRIGGERED
+          
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Team: {{ .Labels.team }}
+          Severity: {{ .Labels.severity }}
+          {{ if .Annotations.runbook_url }}Runbook: {{ .Annotations.runbook_url }}{{ end }}
+          
+          Labels: {{ range .Labels.SortedPairs }}{{ .Name }}={{ .Value }} {{ end }}
+          {{ end }}
+
+  - name: 'release-quality-gate'
+    slack_configs:
+      - api_url: '{{ .ExternalURL }}/slack/release'
+        channel: '#release-engineering'
+        send_resolved: true
+        title: '🛑 RELEASE BLOCKED: {{ .CommonLabels.alertname }}'
+        text: |
+          *🛑 RELEASE DEPLOYMENT BLOCKED 🛑*
+          
+          *Alert:* {{ .CommonAnnotations.summary }}
+          *Description:* {{ .CommonAnnotations.description }}
+          *Impact:* Release deployment should be halted immediately
+          *Status:* {{ .Status }}
+          {{ if .CommonAnnotations.runbook_url }}*Runbook:* {{ .CommonAnnotations.runbook_url }}{{ end }}
+          
+          @channel - Immediate action required!
+        color: 'danger'
+    email_configs:
+      - to: 'release-team@omni-platform.com, engineering-leads@omni-platform.com'
+        subject: '🛑 RELEASE BLOCKED: {{ .CommonLabels.alertname }}'
+        body: |
+          RELEASE QUALITY GATE FAILURE
+          
+          This alert indicates that the current system state does not meet
+          the quality requirements for production deployment.
+          
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          {{ if .Annotations.runbook_url }}Runbook: {{ .Annotations.runbook_url }}{{ end }}
+          {{ end }}
+          
+          ACTION REQUIRED: Halt any pending deployments and investigate immediately.
+
+  - name: 'error-budget-alerts'
+    slack_configs:
+      - api_url: '{{ .ExternalURL }}/slack/slo'
+        channel: '#slo-monitoring'
+        send_resolved: true
+        title: '📊 SLO Alert: {{ .CommonLabels.alertname }}'
+        text: |
+          *📊 Error Budget Alert*
+          
+          *Alert:* {{ .CommonAnnotations.summary }}
+          *Description:* {{ .CommonAnnotations.description }}
+          *Burn Rate:* {{ .CommonLabels.burn_rate }}
+          *Status:* {{ .Status }}
+          {{ if .CommonAnnotations.runbook_url }}*Runbook:* {{ .CommonAnnotations.runbook_url }}{{ end }}
+        color: '{{ if eq .Status "firing" }}warning{{ else }}good{{ end }}'
+    email_configs:
+      - to: 'sre-team@omni-platform.com, platform-team@omni-platform.com'
+        subject: '📊 SLO Alert: {{ .CommonLabels.alertname }}'
+        body: |
+          ERROR BUDGET ALERT
+          
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Burn Rate: {{ .Labels.burn_rate }}
+          {{ if .Annotations.runbook_url }}Runbook: {{ .Annotations.runbook_url }}{{ end }}
+          {{ end }}
+
+  - name: 'business-kpi-alerts'
+    slack_configs:
+      - api_url: '{{ .ExternalURL }}/slack/business'
+        channel: '#business-metrics'
+        send_resolved: true
+        title: '💰 Business Alert: {{ .CommonLabels.alertname }}'
+        text: |
+          *💰 Business KPI Alert*
+          
+          *Alert:* {{ .CommonAnnotations.summary }}
+          *Description:* {{ .CommonAnnotations.description }}
+          *Status:* {{ .Status }}
+          {{ if .CommonAnnotations.runbook_url }}*Runbook:* {{ .CommonAnnotations.runbook_url }}{{ end }}
+        color: '{{ if eq .Status "firing" }}warning{{ else }}good{{ end }}'
+    email_configs:
+      - to: 'business-team@omni-platform.com, product-managers@omni-platform.com'
+        subject: '💰 Business KPI Alert: {{ .CommonLabels.alertname }}'
+        body: |
+          BUSINESS KPI ALERT
+          
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          {{ if .Annotations.runbook_url }}Runbook: {{ .Annotations.runbook_url }}{{ end }}
+          {{ end }}
+
+  - name: 'omni-notifications'
+    slack_configs:
+      - api_url: 'http://mock-slack:9001/webhook'
+        channel: '#omni-notifications'
+        send_resolved: true
+        title: '{{ .CommonLabels.alertname }} ({{ .CommonLabels.severity }})'
+        text: |
+          *Alert:* {{ .CommonAnnotations.summary }}
+          *Description:* {{ .CommonAnnotations.description }}
+          *Service:* {{ .CommonLabels.service }}
+          *Status:* {{ .Status }}
+          *Labels:* {{ .CommonLabels }}

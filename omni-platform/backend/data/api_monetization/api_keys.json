@@ -1,0 +1,25 @@
+[
+  {
+    "key_id": "key_1",
+    "user_id": "user_system",
+    "api_key": "ATATT3xFfGF0k4wTCtBpNeaKIFjvZZ8V2S8wh0aBUxVgencgZOTRar1R86EtJJEKtD643MOoPjhNGLFjCJO_q2htdG4q_QRflBO0yQUDTZZ5fCSiSMv957mWrcDWTd5_3KCjBFrJ-qk8EoXo_6m1wtIbvsk_kg0lSNcDQHGXmCWWgx_6-idrmZI=DFDC724F",
+    "tier": "pro",
+    "name": "Primary API token",
+    "created_at": "2025-10-27 00:00:00+00:00",
+    "last_used": "2025-10-27 07:16:12.243112",
+    "is_active": true,
+    "monthly_quota": -1,
+    "current_usage": 1,
+    "allowed_services": [
+      "monitoring",
+      "analytics",
+      "advertising",
+      "ai_agent"
+    ],
+    "rate_limit_per_minute": 200,
+    "rate_limit_per_hour": 5000,
+    "metadata": {
+      "note": "Zamenjava starega API tokena (E-442-TED-XQT-ATG)"
+    }
+  }
+]

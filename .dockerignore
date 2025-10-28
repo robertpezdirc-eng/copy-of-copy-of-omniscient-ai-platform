@@ -146,6 +146,8 @@ venv.bak/
 !requirements.txt
 !Dockerfile.quantum-platform
 !omni_*.py
+!agents/
+!agents/**
 
 # Pyre type checker
 .pyre/

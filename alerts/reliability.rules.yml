@@ -1,0 +1,35 @@
+groups:
+  - name: reliability.rules
+    rules:
+      - alert: PrometheusConfigReloadFailed
+        expr: prometheus_config_last_reload_successful == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus config reload failed"
+          description: |
+            Prometheus last config reload was unsuccessful for over 2 minutes.
+            Check prometheus.yml syntax and rule files.
+
+      - alert: PrometheusRuleEvaluationFailures
+        expr: increase(prometheus_rule_evaluation_failures_total[5m]) > 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Prometheus rule evaluation failures detected"
+          description: |
+            Rule evaluation failures occurred in the last 5 minutes.
+            Review rules and target health.
+
+      - alert: AlertmanagerConfigReloadFailed
+        expr: alertmanager_config_last_reload_successful == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Alertmanager config reload failed"
+          description: |
+            Alertmanager last config reload was unsuccessful for over 2 minutes.
+            Validate alertmanager configuration and secrets.

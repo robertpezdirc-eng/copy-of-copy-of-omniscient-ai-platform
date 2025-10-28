@@ -1,0 +1,15 @@
+apiVersion: 1
+datasources:
+  - name: Infinity Public APIs
+    uid: infinity_public
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    jsonData:
+      # For public APIs that don't require authentication
+      httpHeaderName1: Content-Type
+      httpHeaderName2: User-Agent
+    secureJsonData:
+      httpHeaderValue1: "application/json"
+      httpHeaderValue2: "Grafana-Dashboard/1.0"

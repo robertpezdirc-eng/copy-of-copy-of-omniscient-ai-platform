@@ -1,0 +1,18 @@
+datasources:
+  - name: Infinity General
+    uid: infinity_general
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    jsonData:
+      # General REST API datasource - configure headers per query
+      url: "https://YOUR_NGROK_URL.ngrok.io/api/v1/analytics"
+      httpHeaderName1: Authorization
+      httpHeaderName2: Content-Type
+      httpHeaderName3: User-Agent
+    secureJsonData:
+      # Use environment variables for API keys
+      httpHeaderValue1: "Bearer ${API_KEY}"
+      httpHeaderValue2: "application/json"
+      httpHeaderValue3: "Grafana-Infinity/1.0"

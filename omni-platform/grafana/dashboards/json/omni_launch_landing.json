@@ -1,0 +1,14 @@
+{
+  "id": null,
+  "uid": "omni-launch",
+  "title": "OMNI Launch Landing",
+  "tags": ["omni", "landing"],
+  "timezone": "browser",
+  "version": 1,
+  "schemaVersion": 38,
+  "panels": [
+    {"id":1,"type":"text","title":"OMNI Landing","gridPos":{"h":20,"w":24,"x":0,"y":0},"options":{"mode":"html","content":"<div style=\"text-align: center;\">\n  <h1>OMNI Platform Launch</h1>\n  <p>Join our waitlist to be the first to try OMNI.</p>\n\n  <!-- Waitlist form posts to backend which records GA4 event server-side -->\n  <form action=\"http://localhost:8003/api/v1/waitlist\" method=\"post\" style=\"margin:20px auto; max-width: 480px;\">\n    <input type=\"email\" name=\"email\" placeholder=\"Your email\" required style=\"width: 70%; padding: 10px;\"/>\n    <button type=\"submit\" style=\"padding: 10px 16px; margin-left: 8px;\">Join Waitlist</button>\n  </form>\n\n  <!-- CTA that records GA event via backend redirect (no JS required) -->\n  <a href=\"http://localhost:8003/api/v1/analytics/track-redirect?event_name=watch_demo&event_label=landing_cta&redirect=https%3A%2F%2Fyoutu.be%2FdQw4w9WgXcQ\" target=\"_blank\" style=\"display:inline-block; margin-top: 12px;\">\n    ▶ Watch Demo\n  </a>\n\n  <!-- Optional GA4 script for client-side tracking. REPLACE G-XXXXXXXXXX with your Measurement ID. -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n    gtag('config', 'G-XXXXXXXXXX', { 'send_page_view': true });\n    gtag('set', 'user_properties', { 'platform': 'OMNI' });\n    function trackSignup(plan){ gtag('event','sign_up',{ 'method': plan, 'event_category':'engagement' }); }\n    function trackConversion(userId, planType){ gtag('event','purchase',{ 'transaction_id': userId,'value':0,'currency':'EUR','items':[{'item_name':planType,'item_category':'subscription'}] }); }\n    function trackFeatureUse(featureName){ gtag('event','feature_used',{ 'event_category':'engagement','event_label':featureName }); }\n  </script>\n\n  <p style=\"margin-top: 24px; color: gray; font-size: 12px;\">Server-side GA4 events are active; client-side GA4 above is optional. Replace measurement ID.</p>\n</div>"}}
+  ],
+  "templating": {"list": []},
+  "time": {"from": "now-7d", "to": "now"}
+}

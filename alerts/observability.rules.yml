@@ -1,0 +1,38 @@
+groups:
+  - name: observability.rules
+    rules:
+      - alert: AlertmanagerFailedNotifications
+        expr: rate(alertmanager_notifications_failed_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Alertmanager failed notifications detected"
+          description: "Alertmanager reports failed notifications over the last 5 minutes. Check receivers and credentials."
+
+      - alert: LokiNoLogsIngestion
+        expr: rate(loki_distributor_lines_received_total[10m]) == 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "No logs ingested by Loki"
+          description: "Loki received zero log lines in the last 15 minutes. Verify promtail and log sources."
+
+      - alert: TempoNoSpansIngestion
+        expr: rate(tempo_distributor_spans_received_total[10m]) == 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "No spans ingested by Tempo"
+          description: "Tempo received zero spans in the last 15 minutes. Verify trace generators or application exporters."
+
+      - alert: PromtailDroppedEntries
+        expr: rate(promtail_dropped_entries_total[5m]) > 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Promtail is dropping log entries"
+          description: "Promtail has been dropping entries for 10 minutes. Investigate backpressure or label cardinality."

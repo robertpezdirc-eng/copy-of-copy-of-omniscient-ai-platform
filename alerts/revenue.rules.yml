@@ -1,0 +1,23 @@
+groups:
+  - name: revenue_kpi
+    rules:
+      - alert: RevenueDropDetected
+        expr: |
+          (avg_over_time(omni_revenue_eur[24h]) - omni_revenue_eur) / clamp_min(avg_over_time(omni_revenue_eur[24h]), 1) > 0.3
+        for: 30m
+        labels:
+          severity: critical
+          team: business
+        annotations:
+          summary: "Revenue drop >30% vs 24h average"
+          description: "Revenue fell more than 30% compared to 24h average. Current={{ $value }}"
+
+      - alert: RevenueFlatline
+        expr: increase(omni_revenue_eur[1h]) <= 0
+        for: 1h
+        labels:
+          severity: warning
+          team: business
+        annotations:
+          summary: "Revenue flatline (no increase in last 1h)"
+          description: "No revenue growth detected in the last hour."

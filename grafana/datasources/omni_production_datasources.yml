@@ -1,0 +1,230 @@
+apiVersion: 1
+
+datasources:
+  # Core Monitoring Stack
+  - name: PROM
+    type: prometheus
+    access: proxy
+    url: http://omni-prometheus:9090
+    uid: PROM
+    isDefault: true
+    editable: false
+    jsonData:
+      httpMethod: POST
+      manageAlerts: true
+      prometheusType: Prometheus
+      prometheusVersion: 2.40.0
+      cacheLevel: 'High'
+      disableRecordingRules: false
+      incrementalQueryOverlapWindow: 10m
+
+  - name: LOKI
+    type: loki
+    access: proxy
+    url: http://omni-loki:3100
+    uid: LOKI
+    editable: false
+    jsonData:
+      maxLines: 1000
+      derivedFields:
+        - datasourceUid: TEMPO
+          matcherRegex: "traceID=(\\w+)"
+          name: TraceID
+          url: "$${__value.raw}"
+
+  - name: TEMPO
+    type: tempo
+    access: proxy
+    url: http://omni-tempo:3200
+    uid: TEMPO
+    editable: false
+    jsonData:
+      httpMethod: GET
+      tracesToLogs:
+        datasourceUid: LOKI
+        tags: ['job', 'instance', 'pod', 'namespace']
+        mappedTags: [{ key: 'service.name', value: 'job' }]
+        mapTagNamesEnabled: false
+        spanStartTimeShift: '1h'
+        spanEndTimeShift: '1h'
+        filterByTraceID: false
+        filterBySpanID: false
+      tracesToMetrics:
+        datasourceUid: PROM
+        tags: [{ key: 'service.name', value: 'job' }, { key: 'job' }]
+        queries:
+          - name: 'Sample query'
+            query: 'sum(rate(tempo_spanmetrics_latency_bucket{$$__tags}[5m]))'
+      serviceMap:
+        datasourceUid: PROM
+      nodeGraph:
+        enabled: true
+      search:
+        hide: false
+      lokiSearch:
+        datasourceUid: LOKI
+
+  # OMNI Platform Specific Datasources
+  - name: OMNI_MONGODB
+    type: mongodb
+    access: proxy
+    url: mongodb://omni-mongodb:27017
+    uid: OMNI_MONGODB
+    database: omni_platform
+    editable: false
+    secureJsonData:
+      username: ${MONGODB_USERNAME}
+      password: ${MONGODB_PASSWORD}
+
+  - name: OMNI_REDIS
+    type: redis-datasource
+    access: proxy
+    url: redis://omni-redis:6379
+    uid: OMNI_REDIS
+    editable: false
+    secureJsonData:
+      password: ${REDIS_PASSWORD}
+
+  - name: OMNI_RABBITMQ
+    type: rabbitmq-datasource
+    access: proxy
+    url: http://omni-rabbitmq:15672
+    uid: OMNI_RABBITMQ
+    editable: false
+    secureJsonData:
+      username: ${RABBITMQ_USERNAME}
+      password: ${RABBITMQ_PASSWORD}
+
+  # External Integrations
+  - name: JIRA_API
+    type: infinity
+    access: proxy
+    url: https://robertpezdirc.atlassian.net
+    uid: JIRA_API
+    editable: false
+    jsonData:
+      auth_method: basic_auth
+      allowed_hosts: ["robertpezdirc.atlassian.net"]
+      oauth2_settings:
+        enabled: false
+    secureJsonData:
+      basicAuthUser: ${JIRA_EMAIL}
+      basicAuthPassword: ${JIRA_API_TOKEN}
+
+  - name: SERVICENOW_API
+    type: infinity
+    access: proxy
+    url: ${SERVICENOW_INSTANCE_URL}
+    uid: SERVICENOW_API
+    editable: false
+    jsonData:
+      auth_method: basic_auth
+      allowed_hosts: ["${SERVICENOW_INSTANCE_URL}"]
+    secureJsonData:
+      basicAuthUser: ${SERVICENOW_USERNAME}
+      basicAuthPassword: ${SERVICENOW_PASSWORD}
+
+  # Cloud Monitoring
+  - name: AWS_CLOUDWATCH
+    type: cloudwatch
+    access: proxy
+    uid: AWS_CLOUDWATCH
+    editable: false
+    jsonData:
+      authType: keys
+      defaultRegion: ${AWS_DEFAULT_REGION}
+    secureJsonData:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+
+  - name: AZURE_MONITOR
+    type: grafana-azure-monitor-datasource
+    access: proxy
+    uid: AZURE_MONITOR
+    editable: false
+    jsonData:
+      azureAuthType: msi
+      subscriptionId: ${AZURE_SUBSCRIPTION_ID}
+
+  - name: GCP_MONITORING
+    type: stackdriver
+    access: proxy
+    uid: GCP_MONITORING
+    editable: false
+    jsonData:
+      authenticationType: gce
+      defaultProject: ${GOOGLE_CLOUD_PROJECT}
+
+  # Additional Data Sources
+  - name: ELASTICSEARCH
+    type: elasticsearch
+    access: proxy
+    url: http://omni-elasticsearch:9200
+    uid: ELASTICSEARCH
+    database: "omni-logs-*"
+    editable: false
+    jsonData:
+      interval: Daily
+      timeField: "@timestamp"
+      esVersion: "7.10.0"
+      maxConcurrentShardRequests: 5
+      logMessageField: message
+      logLevelField: level
+
+  - name: POSTGRESQL
+    type: postgres
+    access: proxy
+    url: omni-postgres:5432
+    uid: POSTGRESQL
+    database: omni_platform
+    editable: false
+    secureJsonData:
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+    jsonData:
+      sslmode: disable
+      maxOpenConns: 100
+      maxIdleConns: 100
+      maxIdleConnsAuto: true
+      connMaxLifetime: 14400
+      postgresVersion: 1300
+      timescaledb: false
+
+  # IoT and Real-time Data
+  - name: MQTT_BROKER
+    type: mqtt-datasource
+    access: proxy
+    url: tcp://omni-mqtt:1883
+    uid: MQTT_BROKER
+    editable: false
+    jsonData:
+      clientId: grafana-omni
+      keepAlive: 60
+      cleanSession: true
+    secureJsonData:
+      username: ${MQTT_USERNAME}
+      password: ${MQTT_PASSWORD}
+
+  # Generic APIs and External Data
+  - name: OMNI_API_METRICS
+    type: infinity
+    access: proxy
+    url: http://omni-api-gateway:8000
+    uid: OMNI_API_METRICS
+    editable: false
+    jsonData:
+      auth_method: bearer_token
+      allowed_hosts: ["omni-api-gateway:8000", "host.docker.internal:3001", "host.docker.internal:3002"]
+    secureJsonData:
+      bearerToken: ${OMNI_API_TOKEN}
+
+  - name: EXTERNAL_APIS
+    type: infinity
+    access: proxy
+    uid: EXTERNAL_APIS
+    editable: false
+    jsonData:
+      auth_method: none
+      allowed_hosts: ["*"]
+      oauth2_settings:
+        enabled: false

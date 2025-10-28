@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  backend:
+    image: python:3.11-slim
+    working_dir: /app
+    environment:
+      PORT: "8080"
+      DASHBOARD_URL: "http://localhost:8003/"
+      API_BASE_URL: "http://localhost:8003/api/v1"
+      GA4_MEASUREMENT_ID: ${GA4_MEASUREMENT_ID}
+      GA4_API_SECRET: ${GA4_API_SECRET}
+      SMTP_FROM: ${SMTP_FROM}
+      MAIL_MODE: ${MAIL_MODE}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_TLS: ${SMTP_TLS}
+      RECAPTCHA_VERIFY: ${RECAPTCHA_VERIFY}
+      RECAPTCHA_SECRET: ${RECAPTCHA_SECRET}
+      RECAPTCHA_THRESHOLD: ${RECAPTCHA_THRESHOLD}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL}
+    command: bash -lc "python -m pip install --no-cache-dir -r /app/requirements.txt && python -m uvicorn main:app --host 0.0.0.0 --port 8080"
+    volumes:
+      - ./omni-platform/backend:/app
+      - ./omni-platform/frontend/dist:/app/frontend/dist:ro
+    ports:
+      - "8003:8080"
+    depends_on:
+      - prometheus
+      - grafana
+      - mailhog
+
+  prometheus:
+    image: prom/prometheus:latest
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: "admin"
+      GF_SECURITY_ADMIN_USER: "admin"
+      GF_SERVER_ROOT_URL: "http://localhost:3000"
+      GF_SERVER_SERVE_FROM_SUB_PATH: "false"
+      GF_SECURITY_CONTENT_SECURITY_POLICY: "true"
+      GF_SECURITY_CONTENT_SECURITY_POLICY_TEMPLATE: "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: https://www.google-analytics.com https://analytics.google.com; frame-src 'self' https://tally.so;"
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1026:1025"  # SMTP (host 1026 -> container 1025)
+      - "8026:8025"  # Web UI (host 8026 -> container 8025)
+
+  backend-dev:
+    build:
+      context: ./omni-platform/backend
+      dockerfile: Dockerfile.dev
+    working_dir: /app
+    environment:
+      PORT: "8084"
+      DASHBOARD_URL: "http://localhost:5173/"  # dev frontend
+      API_BASE_URL: "http://localhost:8004/api/v1"
+      GA4_MEASUREMENT_ID: ${GA4_MEASUREMENT_ID}
+      GA4_API_SECRET: ${GA4_API_SECRET}
+      SMTP_FROM: ${SMTP_FROM}
+      MAIL_MODE: ${MAIL_MODE}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_TLS: ${SMTP_TLS}
+      RECAPTCHA_VERIFY: ${RECAPTCHA_VERIFY}
+      RECAPTCHA_SECRET: ${RECAPTCHA_SECRET}
+      RECAPTCHA_THRESHOLD: ${RECAPTCHA_THRESHOLD}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL}
+      GOOGLE_ADS_REFRESH_TOKEN: "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"
+    volumes:
+      - ./omni-platform/backend:/app
+      - ./omni-platform/frontend/dist:/app/frontend/dist:ro
+    ports:
+      - "8004:8084"
+    depends_on:
+      - prometheus
+      - grafana
+      - mailhog
+
+  frontend-dev:
+    image: node:18-alpine
+    working_dir: /app
+    command: sh -lc "npm install && npm run dev -- --host"
+    volumes:
+      - ./omni-platform/frontend:/app
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend

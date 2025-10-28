@@ -1,0 +1,17 @@
+apiVersion: 1
+datasources:
+  - name: BigQuery
+    type: grafana-bigquery-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    jsonData:
+      authenticationType: jwt
+      defaultProject: ${GOOGLE_CLOUD_PROJECT}
+      processingLocation: US
+    secureJsonData:
+      # Po dodani datoteki ključa JSON v UI se tu hranijo vrednosti
+      # privateKey: |
+      #   -----BEGIN PRIVATE KEY-----
+      #   ...
+      #   -----END PRIVATE KEY-----

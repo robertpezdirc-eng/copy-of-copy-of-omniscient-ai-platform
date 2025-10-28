@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: omni-backend
+    env: docker
+    autoDeploy: true
+    plan: starter
+    dockerfilePath: omni-platform/Dockerfile.backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: "8080"
