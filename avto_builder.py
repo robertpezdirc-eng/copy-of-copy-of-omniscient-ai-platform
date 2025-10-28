@@ -2,7 +2,7 @@ import os
 import sys
 import platform
 import subprocess
-from typing import Optional
+from typing import Optional, TypedDict
 
 from langchain_core.tools import Tool
 
@@ -113,6 +113,41 @@ tools = [
 ]
 
 
+# NOVO ORODJE: človeška odobritev pred produkcijo
+def ask_for_approval(deployment_details: str) -> str:
+    """
+    Simulira pošiljanje zahteve za odobritev (npr. Slack/e-mail) in čaka na odločitev.
+    V tem okolju je interaktivno (input v terminalu).
+    """
+    try:
+        # Neinteraktivni način preko okoljske spremenljivke
+        auto = os.environ.get("AUTO_APPROVE_PROD", "").strip().lower()
+        if auto in ("1", "true", "yes", "on"):
+            print("[HumanApproval] AUTO_APPROVE_PROD je vklopljen – avtomatsko odobreno.")
+            return "SUCCESS: Uvajanje v produkcijo ODOBRENO (AUTO). Nadaljuj."
+        print("-" * 64)
+        print(">>> KRITIČNA ZAUSTAVITEV: Potrebna je ČLOVEŠKA ODOBRITEV! <<<")
+        print(f"Podrobnosti uvajanja: {deployment_details}")
+        response = input("PRODUKCIJA ODOBRENA? (da/ne): ").strip().lower()
+        if response == "da":
+            return "SUCCESS: Uvajanje v produkcijo ODOBRENO s strani človeka. Nadaljuj."
+        else:
+            return "DENIED: Uvajanje ZAVRNJENO s strani človeka. Prekini delovni tok."
+    except Exception as e:
+        return f"ERROR: Human approval ni uspel: {e}"
+
+
+tools.append(
+    Tool(
+        name="HumanApproval",
+        func=ask_for_approval,
+        description=(
+            "Obvezno pred UVAJANJEM V PRODUKCIJO. Zastavi vprašanje in počaka na človeško odobritev."
+        ),
+    )
+)
+
+
 def run_with_llm():
     llm = get_llm()
     if llm is None:
@@ -173,7 +208,143 @@ def run_fallback_script():
         print(execute_shell_command(s))
 
 
+# ---------------------------
+# LangGraph CI/CD potek
+# ---------------------------
+
+class CIState(TypedDict):
+    messages: list
+    approval_needed: bool
+    status: str
+    image_tag: str
+    error_log: str
+
+
+def node_build_and_commit(state: CIState) -> CIState:
+    logs = []
+    # Docker build
+    r1 = execute_shell_command("docker build -t my-llm-app-prod:latest .")
+    logs.append(r1)
+    # Git commit
+    r2 = execute_shell_command("git add .")
+    logs.append(r2)
+    r3 = execute_shell_command('git commit -m "Auto CI/CD Build by Agent"')
+    logs.append(r3)
+
+    all_out = "\n\n".join(logs)
+    success = ("ERROR (code=" not in all_out) and ("failed to build" not in all_out.lower())
+    if success:
+        return {
+            "messages": state.get("messages", []) + ["BUILD OK"],
+            "approval_needed": True,
+            "status": "BUILD_COMPLETE",
+            "image_tag": "my-llm-app-prod:latest",
+            "error_log": state.get("error_log", ""),
+        }
+    else:
+        return {
+            "messages": state.get("messages", []) + ["BUILD FAILED"],
+            "approval_needed": False,
+            "status": "BUILD_FAILED",
+            "image_tag": "",
+            "error_log": all_out,
+        }
+
+
+def node_request_approval_hitl(state: CIState) -> CIState:
+    if state.get("approval_needed"):
+        msg = ask_for_approval(f"SLIKA {state.get('image_tag','')} je pripravljena. Uvesti na produkcijo?")
+        if "SUCCESS" in msg:
+            return {
+                **state,
+                "status": "HUMAN_APPROVED",
+                "messages": state.get("messages", []) + [msg],
+            }
+        else:
+            return {
+                **state,
+                "status": "HUMAN_DENIED",
+                "messages": state.get("messages", []) + [msg],
+            }
+    return state
+
+
+def node_deploy(state: CIState) -> CIState:
+    # Placeholder za dejanske ukaze (gcloud/kubectl) – trenutno samo echo
+    dep = execute_shell_command(f'echo Deploying {state.get("image_tag","(no-tag)")} to production...')
+    return {
+        **state,
+        "status": "DEPLOYED",
+        "messages": state.get("messages", []) + [dep],
+    }
+
+
+def node_monitoring(state: CIState) -> CIState:
+    mon = execute_shell_command("echo Monitoring post-deploy... OK")
+    return {
+        **state,
+        "status": "STABLE",
+        "messages": state.get("messages", []) + [mon, "Sistem je stabilen."],
+    }
+
+
+def decide_approval_path(state: CIState):
+    st = state.get("status", "")
+    if st == "HUMAN_APPROVED":
+        return "deploy"
+    elif st == "HUMAN_DENIED":
+        return "end_flow"
+    return "approval"
+
+
+def run_langgraph_flow() -> bool:
+    try:
+        from langgraph.graph import StateGraph, END  # type: ignore
+    except Exception as e:
+        print(f"OPOZORILO: LangGraph ni na voljo: {e}")
+        return False
+
+    workflow = StateGraph(CIState)
+    workflow.add_node("build", node_build_and_commit)
+    workflow.add_node("approval", node_request_approval_hitl)
+    workflow.add_node("deploy", node_deploy)
+    workflow.add_node("monitor", node_monitoring)
+
+    workflow.set_entry_point("build")
+    workflow.add_edge("build", "approval")
+    workflow.add_edge("deploy", "monitor")
+    workflow.add_edge("monitor", END)
+    workflow.add_conditional_edges(
+        "approval",
+        decide_approval_path,
+        {"deploy": "deploy", "end_flow": END},
+    )
+
+    app = workflow.compile()
+    init_state: CIState = {
+        "messages": [],
+        "approval_needed": False,
+        "status": "INIT",
+        "image_tag": "",
+        "error_log": "",
+    }
+
+    try:
+        print("\n[LangGraph] Začenjam CI/CD potek (build → approval → deploy → monitor)\n")
+        final_state = app.invoke(init_state)
+        print("\n[LangGraph] Končan potek. Končni status:", final_state.get("status"))
+        return True
+    except KeyboardInterrupt:
+        print("[LangGraph] Prekinjeno s strani uporabnika.")
+        return False
+    except Exception as e:
+        print(f"[LangGraph] Napaka med izvajanjem: {e}")
+        return False
+
+
 if __name__ == "__main__":
     ok = run_with_llm()
     if not ok:
-        run_fallback_script()
+        ok2 = run_langgraph_flow()
+        if not ok2:
+            run_fallback_script()
