@@ -3,6 +3,9 @@ from typing import Optional, Dict, Any
 
 
 def get_openai_llm(model: str, temperature: Optional[float] = None, max_tokens: Optional[int] = None):
+    key = os.getenv("OPENAI_API_KEY")
+    if key and hasattr(key, "isascii") and not key.isascii():
+        raise ValueError("OPENAI_API_KEY contains non-ASCII characters; please provide a valid ASCII key.")
     from langchain_openai import ChatOpenAI
     params: Dict[str, Any] = {"model": model}
     if temperature is not None:
@@ -14,6 +17,9 @@ def get_openai_llm(model: str, temperature: Optional[float] = None, max_tokens: 
 
 def get_gemini_studio_llm(model: str, temperature: Optional[float] = None, max_tokens: Optional[int] = None):
     # Uses Google AI Studio (Generative Language API)
+    key = os.getenv("GOOGLE_API_KEY")
+    if key and hasattr(key, "isascii") and not key.isascii():
+        raise ValueError("GOOGLE_API_KEY contains non-ASCII characters; please provide a valid ASCII key.")
     from langchain_google_genai import ChatGoogleGenerativeAI
     params: Dict[str, Any] = {"model": model}
     if temperature is not None:

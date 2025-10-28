@@ -301,6 +301,9 @@ def langchain_generate(body: LCGenerateBody):
             "model": body.model,
             "response": text,
         })
+    except ValueError as e:
+        # Input validation errors (e.g., invalid API key encoding)
+        return JSONResponse({"error": str(e)}, status_code=400)
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=502)
 

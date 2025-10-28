@@ -45,6 +45,9 @@ def normalize_command(cmd: str) -> str:
             c = c.replace("ls -a", "dir /a", 1)
         elif c == "ls":
             c = "dir"
+        # 'cat file' -> 'type file'
+        if c.startswith("cat "):
+            c = c.replace("cat ", "type ", 1)
         # 'pwd' -> 'cd'
         if c == "pwd":
             c = "cd"
@@ -56,7 +59,8 @@ DENY_PREFIXES = (
 )
 
 ALLOW_PREFIXES = (
-    "git ", "docker ", "ls", "dir", "echo ", "type ", "python ", "pip ", "npm ", "node ", "cd", "pwd",
+    "git ", "docker ", "ls", "dir", "echo ", "type ", "cat ", "mkdir ",
+    "python ", "pip ", "npm ", "node ", "cd", "pwd",
 )
 
 
@@ -157,6 +161,8 @@ def run_fallback_script():
     print("OPOZORILO: Ni konfiguriranega LLM ponudnika. Zaganjam fallback korake brez LLM.")
     steps = [
         "ls -a",
+        "cat Dockerfile",
+        "cat README.md",
         "docker build -t my-llm-app-prod:latest .",
         "git add .",
         "git commit -m \"Auto CI/CD Build by Agent\"",
