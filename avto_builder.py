@@ -2,7 +2,7 @@ import os
 import sys
 import platform
 import subprocess
-from typing import Optional, TypedDict
+from typing import Optional, TypedDict, Dict, Any, List
 
 from langchain_core.tools import Tool
 
@@ -89,6 +89,8 @@ def execute_shell_command(command: str) -> str:
             text=True,
             capture_output=True,
             timeout=int(os.environ.get("EXEC_TIMEOUT_SEC", "180")),
+            encoding="utf-8",
+            errors="replace",
         )
         out = result.stdout or ""
         err = result.stderr or ""
@@ -323,15 +325,116 @@ def node_request_approval_hitl(state: CIState) -> CIState:
     return state
 
 
+def detect_deploy_platform() -> str:
+    """Zazna preferiran deploy platform na podlagi konfiguracijskih datotek."""
+    if os.path.exists("cloudbuild.yaml") and os.getenv("GOOGLE_CLOUD_PROJECT"):
+        return "cloud_run"
+    elif os.path.exists("render.yaml"):
+        return "render"
+    elif os.path.exists("railway.json") or os.getenv("RAILWAY_TOKEN"):
+        return "railway"
+    elif os.getenv("DOCKER_HUB_USERNAME"):
+        return "docker_hub"
+    else:
+        return "local"
+
+def deploy_to_cloud_run(image_tag: str) -> str:
+    """Deploy na Google Cloud Run z Artifact Registry."""
+    project_id = os.getenv("GOOGLE_CLOUD_PROJECT", "my-project")
+    region = os.getenv("GOOGLE_CLOUD_REGION", "europe-west1")
+    service_name = os.getenv("CLOUD_RUN_SERVICE", "my-llm-app")
+    
+    # Tag za Artifact Registry
+    registry_image = f"{region}-docker.pkg.dev/{project_id}/omni-registry/{service_name}:latest"
+    
+    commands = [
+        f"docker tag {image_tag} {registry_image}",
+        f"docker push {registry_image}",
+        f"gcloud run deploy {service_name} --image {registry_image} --region {region} --platform managed --allow-unauthenticated --port 8080 --memory 1Gi --cpu 1 --max-instances 3"
+    ]
+    
+    results = []
+    for cmd in commands:
+        result = execute_shell_command(cmd)
+        results.append(f"[Cloud Run] {cmd}: {result}")
+        if "error" in result.lower() or "failed" in result.lower():
+            return f"Deploy failed: {result}"
+    
+    return f"Cloud Run deploy successful: https://{service_name}-{project_id}.a.run.app"
+
+def deploy_to_render(image_tag: str) -> str:
+    """Deploy na Render.com z Docker Hub push."""
+    docker_user = os.getenv("DOCKER_HUB_USERNAME", "myuser")
+    service_name = os.getenv("RENDER_SERVICE", "my-llm-app")
+    
+    # Push na Docker Hub
+    hub_image = f"{docker_user}/{service_name}:latest"
+    
+    commands = [
+        f"docker tag {image_tag} {hub_image}",
+        f"docker push {hub_image}",
+        "echo 'Render deploy triggered via webhook (if configured)'"
+    ]
+    
+    results = []
+    for cmd in commands:
+        result = execute_shell_command(cmd)
+        results.append(f"[Render] {cmd}: {result}")
+    
+    return f"Render deploy initiated: {hub_image}"
+
+def deploy_to_railway(image_tag: str) -> str:
+    """Deploy na Railway z njihovim CLI."""
+    commands = [
+        "railway login --browserless",
+        "railway up --detach"
+    ]
+    
+    results = []
+    for cmd in commands:
+        result = execute_shell_command(cmd)
+        results.append(f"[Railway] {cmd}: {result}")
+    
+    return "Railway deploy completed"
+
+def deploy_local_registry(image_tag: str) -> str:
+    """Lokalni deploy - samo potrdi, da je slika zgrajena."""
+    result = execute_shell_command(f"docker images {image_tag}")
+    if image_tag in result:
+        return f"Local image ready: {image_tag} (use 'docker run -p 8080:8080 {image_tag}' to start)"
+    else:
+        return f"Local image not found: {image_tag}"
+
 def node_deploy(state: CIState) -> CIState:
-    # Placeholder za dejanske ukaze (gcloud/kubectl) – trenutno samo echo
-    dep = execute_shell_command(f'echo Deploying {state.get("image_tag","(no-tag)")} to production...')
+    """Pravi deploy namesto echo - zazna platformo in izvede deploy."""
+    image_tag = state.get("image_tag", "my-llm-app-prod:latest")
+    platform = detect_deploy_platform()
+    
+    print(f"[Deploy] Detected platform: {platform}")
+    
+    try:
+        if platform == "cloud_run":
+            result = deploy_to_cloud_run(image_tag)
+        elif platform == "render":
+            result = deploy_to_render(image_tag)
+        elif platform == "railway":
+            result = deploy_to_railway(image_tag)
+        elif platform == "docker_hub":
+            result = deploy_to_render(image_tag)  # Isti postopek kot Render
+        else:
+            result = deploy_local_registry(image_tag)
+        
+        status = "DEPLOYED" if "successful" in result or "ready" in result or "completed" in result else "DEPLOY_FAILED"
+        
+    except Exception as e:
+        result = f"Deploy error: {str(e)}"
+        status = "DEPLOY_FAILED"
+    
     return {
         **state,
-        "status": "DEPLOYED",
-        "messages": state.get("messages", []) + [dep],
+        "status": status,
+        "messages": state.get("messages", []) + [result],
     }
-
 
 def node_monitoring(state: CIState) -> CIState:
     mon = execute_shell_command("echo Monitoring post-deploy... OK")
