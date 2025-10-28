@@ -163,6 +163,7 @@ def run_fallback_script():
         "ls -a",
         "cat Dockerfile",
         "cat README.md",
+        "docker info",
         "docker build -t my-llm-app-prod:latest .",
         "git add .",
         "git commit -m \"Auto CI/CD Build by Agent\"",

@@ -171,6 +171,9 @@ OMNIBOT13*
 OMNIBOT12/
 OMNIBOT12/**
 OMNIBOT12*
+# Izključimo tudi občutljive ali zaklenjene asset mape
+**/assets/nova/
+**/assets/nova/**
 Omni-AllInOne/
 OmniSingularity/
 OmniStarter/
