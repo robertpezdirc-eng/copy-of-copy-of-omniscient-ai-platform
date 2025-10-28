@@ -113,6 +113,40 @@ tools = [
 ]
 
 
+# Minimalni Docker build kontekst (zaobide težave z dovoljenji v korenu repoja)
+def prepare_minimal_build_context() -> str:
+    """
+    Ustvari mapo 'build_context' z nujnimi viri za backend kontejner:
+    - skopira 'backend/' v 'build_context/backend'
+    - skopira 'Dockerfile.backend' kot 'build_context/Dockerfile'
+
+    Vrne relativno pot do 'build_context'.
+    """
+    import shutil
+    from pathlib import Path
+
+    base = Path(__file__).resolve().parent
+    ctx = base / "build_context"
+
+    # Počisti staro vsebino, če obstaja
+    if ctx.exists():
+        try:
+            shutil.rmtree(ctx)
+        except Exception as e:
+            print(f"OPOZORILO: Brisanje obstoječega build_context ni uspelo: {e}")
+
+    try:
+        ctx.mkdir(parents=True, exist_ok=True)
+        # Kopiraj backend kodo
+        shutil.copytree(base / "backend", ctx / "backend")
+        # Kopiraj Dockerfile.backend kot Dockerfile v kontekstu
+        shutil.copy2(base / "Dockerfile.backend", ctx / "Dockerfile")
+    except Exception as e:
+        raise RuntimeError(f"Priprava minimalnega build konteksta ni uspela: {e}")
+
+    return str(ctx)
+
+
 # NOVO ORODJE: človeška odobritev pred produkcijo
 def ask_for_approval(deployment_details: str) -> str:
     """
@@ -194,12 +228,18 @@ def run_with_llm():
 
 def run_fallback_script():
     print("OPOZORILO: Ni konfiguriranega LLM ponudnika. Zaganjam fallback korake brez LLM.")
+    # Pripravi minimalni build kontekst za zanesljivo gradnjo na Windows
+    try:
+        ctx = prepare_minimal_build_context()
+        print(f"INFO: Fallback bo gradil iz minimalnega konteksta: {ctx}")
+    except Exception as e:
+        print(f"NAPAKA: Priprava build konteksta ni uspela: {e}")
+        return
+
     steps = [
         "ls -a",
-        "cat Dockerfile",
-        "cat README.md",
         "docker info",
-        "docker build -t my-llm-app-prod:latest .",
+        "docker build -t my-llm-app-prod:latest build_context",
         "git add .",
         "git commit -m \"Auto CI/CD Build by Agent\"",
     ]
@@ -222,8 +262,22 @@ class CIState(TypedDict):
 
 def node_build_and_commit(state: CIState) -> CIState:
     logs = []
-    # Docker build
-    r1 = execute_shell_command("docker build -t my-llm-app-prod:latest .")
+    # Docker build z minimalnim kontekstom, da se izognemo 'Access is denied' težavam
+    try:
+        ctx = prepare_minimal_build_context()
+        logs.append(f"INFO: Pripravljen minimalni build kontekst: {ctx}")
+    except Exception as e:
+        err = f"Napaka pri pripravi build konteksta: {e}"
+        logs.append(err)
+        return {
+            "messages": state.get("messages", []) + ["BUILD FAILED"],
+            "approval_needed": False,
+            "status": "BUILD_FAILED",
+            "image_tag": "",
+            "error_log": "\n\n".join(logs),
+        }
+
+    r1 = execute_shell_command("docker build -t my-llm-app-prod:latest build_context")
     logs.append(r1)
     # Git commit
     r2 = execute_shell_command("git add .")
