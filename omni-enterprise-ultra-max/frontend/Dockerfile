@@ -17,13 +17,15 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM nginxinc/nginx-unprivileged:stable-alpine
+FROM node:18-alpine AS runner
 
-# Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
+
+# Install a simple static file server
+RUN npm i -g serve@14
 
 # Copy built application
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist ./dist
 
 # Expose port
 EXPOSE 8080
@@ -32,5 +34,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD wget --quiet --tries=1 --spider http://localhost:8080/ || exit 1
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start static server
+CMD ["serve", "-s", "dist", "-l", "8080"]
