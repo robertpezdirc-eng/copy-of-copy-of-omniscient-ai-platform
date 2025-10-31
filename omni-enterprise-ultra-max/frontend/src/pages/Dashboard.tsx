@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { api } from '@/lib/api'
 
 const Dashboard = () => {
   const { user } = useAuth()

@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react'
-import { api } from '@/lib/api'
-import AdminAlertsPanel from '@/components/AdminAlertsPanel'
+// Admin alerts panel omitted for now to simplify initial build
 
 const AdminPanel = () => {
   return (
@@ -9,7 +7,7 @@ const AdminPanel = () => {
         Admin Panel
       </h1>
 
-      <AdminAlertsPanel />
+  {/* Alerts panel could be added here in future */}
 
       <div style={styles.grid}>
         <div className="card">

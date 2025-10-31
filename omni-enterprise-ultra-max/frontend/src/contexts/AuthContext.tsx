@@ -76,7 +76,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (email: string, password: string, fullName: string) => {
     try {
-      const response = await api.post('/api/v1/auth/register', {
+      await api.post('/api/v1/auth/register', {
         email,
         password,
         full_name: fullName,
