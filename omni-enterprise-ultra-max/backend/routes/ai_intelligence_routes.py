@@ -1,122 +1,118 @@
-""""""
+"""
+AI Intelligence Routes - Advanced Predictive Analytics
+AI Intelligence Module - Predictive Analytics & Personalization
 
-AI Intelligence Routes - Advanced Predictive AnalyticsAI Intelligence Module - Predictive Analytics & Personalization
-
-"""10 Years Ahead Technology: Advanced ML, Predictive Models, Real-time Recommendations
-
+10 Years Ahead Technology: Advanced ML, Predictive Models, Real-time Recommendations
 """
 
-from fastapi import APIRouter
-
-from datetime import datetime, timezonefrom fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
-
-import randomfrom pydantic import BaseModel, Field
-
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
+from datetime import datetime, timezone, timedelta
+import random
+from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Any
-
-ai_intelligence_router = APIRouter()from datetime import datetime, timedelta
-
 import logging
-
 from enum import Enum
 
-@ai_intelligence_router.get("/predictions/revenue")
+logger = logging.getLogger(__name__)
 
-async def get_revenue_predictions():logger = logging.getLogger(__name__)
+# === MODELS ===
 
-    """Get AI revenue predictions"""
-
-    ai_intelligence_router = APIRouter()
-
-    return {
-
-        "current_mrr": round(random.uniform(50000, 150000), 2),
-
-        "predicted_mrr_30d": round(random.uniform(60000, 180000), 2),# === MODELS ===
-
-        "predicted_mrr_90d": round(random.uniform(70000, 200000), 2),
-
-        "growth_rate": round(random.uniform(5, 25), 2),class UserBehavior(BaseModel):
-
-        "confidence": 0.89,    user_id: str
-
-        "generated_at": datetime.now(timezone.utc).isoformat()    action_type: str
-
-    }    timestamp: datetime
-
+class UserBehavior(BaseModel):
+    user_id: str
+    action_type: str
+    timestamp: datetime
     metadata: Dict[str, Any] = {}
 
 
+class PredictionRequest(BaseModel):
+    user_id: str
+    context: Dict[str, Any] = {}
 
-@ai_intelligence_router.get("/insights/business")
 
-async def get_business_insights():class PredictionRequest(BaseModel):
+class ChurnRiskLevel(str, Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
 
-    """Get AI-powered business insights"""    user_id: str
 
-        context: Dict[str, Any] = {}
-
-    insights = [
-
-        {
-
-            "id": f"insight_{i}",class ChurnRiskLevel(str, Enum):
-
-            "title": f"Insight {i}",    LOW = "low"
-
-            "description": "AI-detected business opportunity",    MEDIUM = "medium"
-
-            "impact": random.choice(["high", "medium", "low"]),    HIGH = "high"
-
-            "confidence": round(random.uniform(0.7, 0.95), 2)    CRITICAL = "critical"
-
-        }
-
-        for i in range(1, 6)
-
-    ]class UserInsight(BaseModel):
-
-        user_id: str
-
-    return {"insights": insights, "total": len(insights)}    churn_risk: ChurnRiskLevel
-
+class UserInsight(BaseModel):
+    user_id: str
+    churn_risk: ChurnRiskLevel
     churn_probability: float
-
     lifetime_value_prediction: float
+    recommended_actions: List[str]
+    next_likely_purchase: Optional[str]
+    engagement_score: float
+    sentiment_score: float
 
-@ai_intelligence_router.get("/anomaly-detection")    recommended_actions: List[str]
 
-async def detect_anomalies():    next_likely_purchase: Optional[str]
+class RecommendationResponse(BaseModel):
+    recommendations: List[Dict[str, Any]]
+    confidence_scores: List[float]
+    reasoning: List[str]
 
-    """Detect anomalies in platform metrics"""    engagement_score: float
 
-        sentiment_score: float
-
-    return {
-
-        "anomalies_detected": random.randint(0, 5),
-
-        "anomalies": [class RecommendationResponse(BaseModel):
-
-            {    recommendations: List[Dict[str, Any]]
-
-                "metric": "api_response_time",    confidence_scores: List[float]
-
-                "severity": "medium",    reasoning: List[str]
-
-                "detected_at": datetime.now(timezone.utc).isoformat()
-
-            }
-
-        ]class AnomalyAlert(BaseModel):
-
-    }    alert_id: str
-
+class AnomalyAlert(BaseModel):
+    alert_id: str
     severity: str
     description: str
     detected_at: datetime
     affected_entities: List[str]
     recommended_action: str
+
+
+# === ROUTES ===
+
+ai_intelligence_router = APIRouter()
+
+
+@ai_intelligence_router.get("/predictions/revenue")
+async def get_revenue_predictions():
+    """Get AI revenue predictions"""
+    
+    return {
+        "current_mrr": round(random.uniform(50000, 150000), 2),
+        "predicted_mrr_30d": round(random.uniform(60000, 180000), 2),
+        "predicted_mrr_90d": round(random.uniform(70000, 200000), 2),
+        "growth_rate": round(random.uniform(5, 25), 2),
+        "confidence": 0.89,
+        "generated_at": datetime.now(timezone.utc).isoformat()
+    }
+
+
+@ai_intelligence_router.get("/insights/business")
+async def get_business_insights():
+    """Get AI-powered business insights"""
+    
+    insights = [
+        {
+            "id": f"insight_{i}",
+            "title": f"Insight {i}",
+            "description": "AI-detected business opportunity",
+            "impact": random.choice(["high", "medium", "low"]),
+            "confidence": round(random.uniform(0.7, 0.95), 2)
+        }
+        for i in range(1, 6)
+    ]
+    
+    return {"insights": insights, "total": len(insights)}
+
+
+@ai_intelligence_router.get("/anomaly-detection")
+async def detect_anomalies():
+    """Detect anomalies in platform metrics"""
+    
+    return {
+        "anomalies_detected": random.randint(0, 5),
+        "anomalies": [
+            {
+                "metric": "api_response_time",
+                "severity": "medium",
+                "detected_at": datetime.now(timezone.utc).isoformat()
+            }
+        ]
+    }
 
 
 # === AI-POWERED PREDICTIVE ANALYTICS ===
