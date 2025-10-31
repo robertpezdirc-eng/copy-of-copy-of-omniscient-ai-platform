@@ -1,0 +1,66 @@
+name: Frontend Build & Deploy
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-deploy.yml'
+      - 'cloudbuild-frontend-simple.yaml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    env:
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      GCP_REGION: europe-west1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Configure Docker auth
+        run: |
+          gcloud auth configure-docker gcr.io --quiet
+
+      - name: Build (staging)
+        run: |
+          gcloud builds submit \
+            --config=cloudbuild-frontend-simple.yaml \
+            --project=${{ env.GCP_PROJECT_ID }} \
+            --substitutions=_VITE_API_URL=${{ secrets.VITE_API_URL_STAGING }} \
+            --timeout=30m
+
+      - name: Deploy (staging)
+        run: |
+          gcloud run services update omni-frontend-staging \
+            --region ${{ env.GCP_REGION }} \
+            --set-env-vars VITE_API_URL=${{ secrets.VITE_API_URL_STAGING }}
+
+      - name: Build (prod)
+        if: github.ref == 'refs/heads/master'
+        run: |
+          gcloud builds submit \
+            --config=cloudbuild-frontend-simple.yaml \
+            --project=${{ env.GCP_PROJECT_ID }} \
+            --substitutions=_VITE_API_URL=${{ secrets.VITE_API_URL_PROD }} \
+            --timeout=30m
+
+      - name: Deploy (prod)
+        if: github.ref == 'refs/heads/master'
+        run: |
+          gcloud run services update omni-frontend-prod \
+            --region ${{ env.GCP_REGION }} \
+            --set-env-vars VITE_API_URL=${{ secrets.VITE_API_URL_PROD }}
