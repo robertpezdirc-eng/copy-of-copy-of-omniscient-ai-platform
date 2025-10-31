@@ -9,6 +9,7 @@ import Pricing from './pages/Pricing'
 import Profile from './pages/Profile'
 import AffiliateDashboard from './pages/AffiliateDashboard'
 import AdminPanel from './pages/AdminPanel'
+import Health from './pages/Health'
 import PrivateRoute from './components/PrivateRoute'
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/health" element={<Health />} />
           
           {/* Protected routes */}
           <Route element={<PrivateRoute><Layout /></PrivateRoute>}>
