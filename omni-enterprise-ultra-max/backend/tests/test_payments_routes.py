@@ -7,8 +7,8 @@ from unittest.mock import MagicMock, patch
 
 from main import app
 
-# TestClient with explicit app parameter for compatibility
-client = TestClient(app=app)
+# Positional argument for TestClient
+client = TestClient(app)
 
 
 def test_authorize_route():
