@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from payment_gateways import AcmePayGateway
 
-router = APIRouter(prefix="/api/payments", tags=["payments"])
+router = APIRouter(tags=["payments"])
 
 
 class AuthorizeRequest(BaseModel):
