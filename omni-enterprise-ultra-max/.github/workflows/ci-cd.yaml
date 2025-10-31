@@ -1,0 +1,434 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+env:
+  REGISTRY: gcr.io
+  PROJECT_ID: refined-graph-471712-n9
+  REGION: europe-west1
+  GKE_CLUSTER: omni-cluster
+  GKE_ZONE: europe-west1-b
+
+jobs:
+  # ==========================================
+  # CODE QUALITY & SECURITY
+  # ==========================================
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+          pip install pylint black flake8 mypy bandit safety
+
+      - name: Run Black (formatter check)
+        run: |
+          cd backend
+          black --check .
+
+      - name: Run Flake8 (linter)
+        run: |
+          cd backend
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Run Pylint
+        run: |
+          cd backend
+          pylint **/*.py --exit-zero
+
+      - name: Run MyPy (type checking)
+        run: |
+          cd backend
+          mypy . --ignore-missing-imports || true
+
+      - name: Run Bandit (security)
+        run: |
+          cd backend
+          bandit -r . -f json -o bandit-report.json || true
+
+      - name: Check dependencies for vulnerabilities
+        run: |
+          cd backend
+          safety check --json || true
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=omni-enterprise-ultra-max
+            -Dsonar.organization=omni-platform
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: backend
+          name: codecov-omni-backend
+
+  # ==========================================
+  # FRONTEND BUILD & TEST
+  # ==========================================
+  frontend-build:
+    name: Frontend Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Run ESLint
+        run: |
+          cd frontend
+          npm run lint || true
+
+      - name: Run tests
+        run: |
+          cd frontend
+          npm run test -- --coverage || true
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            http://localhost:3000
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+  # ==========================================
+  # BACKEND BUILD & TEST
+  # ==========================================
+  backend-test:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: test123
+          MYSQL_DATABASE: omni_test
+        ports:
+          - 3306:3306
+      redis:
+        image: redis:7.2-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio httpx
+
+      - name: Run unit tests
+        run: |
+          cd backend
+          pytest tests/ --cov=. --cov-report=xml --cov-report=html
+        env:
+          MONGODB_URL: mongodb://localhost:27017/omni_test
+          MYSQL_URL: mysql://root:test123@localhost:3306/omni_test
+          REDIS_URL: redis://localhost:6379
+
+      - name: Run integration tests
+        run: |
+          cd backend
+          pytest tests/integration/ -v
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./backend/coverage.xml
+          flags: backend-tests
+
+  # ==========================================
+  # DOCKER BUILD & PUSH
+  # ==========================================
+  build-and-push:
+    name: Build & Push Docker Images
+    needs: [code-quality, frontend-build, backend-test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker gcr.io
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.backend
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-backend:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-backend:latest
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-backend:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-backend:buildcache,mode=max
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.frontend
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-frontend:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-frontend:latest
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-frontend:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-frontend:buildcache,mode=max
+
+      - name: Build and push agents
+        run: |
+          for agent in governance autolearn revenue; do
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 \
+              --file agents/$agent/Dockerfile \
+              --tag ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-agent-$agent:${{ github.sha }} \
+              --tag ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-agent-$agent:latest \
+              --push \
+              agents/$agent/
+          done
+
+      - name: Scan images for vulnerabilities
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-backend:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # ==========================================
+  # DEPLOY TO STAGING
+  # ==========================================
+  deploy-staging:
+    name: Deploy to Staging
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.omni-platform.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Deploy backend to Cloud Run (staging)
+        run: |
+          gcloud run deploy omni-ultra-backend-staging \
+            --image ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-backend:${{ github.sha }} \
+            --platform managed \
+            --region ${{ env.REGION }} \
+            --allow-unauthenticated \
+            --port 8080 \
+            --memory 2Gi \
+            --cpu 2 \
+            --max-instances 10 \
+            --set-env-vars "ENV=staging" \
+            --project ${{ env.PROJECT_ID }}
+
+      - name: Deploy frontend to Cloud Run (staging)
+        run: |
+          gcloud run deploy omni-ultra-frontend-staging \
+            --image ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-frontend:${{ github.sha }} \
+            --platform managed \
+            --region ${{ env.REGION }} \
+            --allow-unauthenticated \
+            --port 80 \
+            --memory 1Gi \
+            --cpu 1 \
+            --max-instances 10 \
+            --set-env-vars "ENV=staging,BACKEND_URL=https://omni-ultra-backend-staging-661612368188.europe-west1.run.app" \
+            --project ${{ env.PROJECT_ID }}
+
+      - name: Wait for services to be ready
+        run: |
+          gcloud run services describe omni-ultra-backend-staging --region ${{ env.REGION }} --format 'value(status.url)'
+          gcloud run services describe omni-ultra-frontend-staging --region ${{ env.REGION }} --format 'value(status.url)'
+
+      - name: Run smoke tests
+        run: |
+          BACKEND_URL=$(gcloud run services describe omni-ultra-backend-staging --region ${{ env.REGION }} --format 'value(status.url)')
+          curl -f $BACKEND_URL/api/health || exit 1
+
+  # ==========================================
+  # DEPLOY TO PRODUCTION
+  # ==========================================
+  deploy-production:
+    name: Deploy to Production
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Deploy backend to Cloud Run (production)
+        run: |
+          gcloud run deploy omni-ultra-backend \
+            --image ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-backend:${{ github.sha }} \
+            --platform managed \
+            --region ${{ env.REGION }} \
+            --allow-unauthenticated \
+            --port 8080 \
+            --memory 4Gi \
+            --cpu 4 \
+            --min-instances 1 \
+            --max-instances 50 \
+            --concurrency 80 \
+            --timeout 300 \
+            --set-env-vars "ENV=production" \
+            --set-secrets "OPENAI_API_KEY=OPENAI_API_KEY:latest,STRIPE_SECRET_KEY=STRIPE_SECRET_KEY:latest,PAYPAL_CLIENT_SECRET=PAYPAL_CLIENT_SECRET:latest" \
+            --project ${{ env.PROJECT_ID }}
+
+      - name: Deploy frontend to Cloud Run (production)
+        run: |
+          BACKEND_URL=$(gcloud run services describe omni-ultra-backend --region ${{ env.REGION }} --format 'value(status.url)')
+          gcloud run deploy omni-ultra-frontend \
+            --image ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/omni-ultra-frontend:${{ github.sha }} \
+            --platform managed \
+            --region ${{ env.REGION }} \
+            --allow-unauthenticated \
+            --port 80 \
+            --memory 2Gi \
+            --cpu 2 \
+            --min-instances 1 \
+            --max-instances 30 \
+            --concurrency 80 \
+            --timeout 60 \
+            --set-env-vars "ENV=production,BACKEND_URL=$BACKEND_URL" \
+            --project ${{ env.PROJECT_ID }}
+
+      - name: Wait for services to be ready
+        run: |
+          sleep 30
+          BACKEND_URL=$(gcloud run services describe omni-ultra-backend --region ${{ env.REGION }} --format 'value(status.url)')
+          FRONTEND_URL=$(gcloud run services describe omni-ultra-frontend --region ${{ env.REGION }} --format 'value(status.url)')
+          echo "Backend URL: $BACKEND_URL"
+          echo "Frontend URL: $FRONTEND_URL"
+
+      - name: Run production health checks
+        run: |
+          BACKEND_URL=$(gcloud run services describe omni-ultra-backend --region ${{ env.REGION }} --format 'value(status.url)')
+          for i in {1..10}; do
+            echo "Health check attempt $i..."
+            curl -f $BACKEND_URL/api/health && break || sleep 30
+          done
+
+      - name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'Production deployment completed!'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
+
+  # ==========================================
+  # CONTINUOUS BACKUP TO GOOGLE CLOUD STORAGE
+  # ==========================================
+  continuous-backup:
+    name: Continuous Backup to GCS
+    needs: deploy-production
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: refined-graph-471712-n9
+      
+      - name: Make backup script executable
+        run: chmod +x scripts/gcs-backup.sh
+      
+      - name: Run GCS backup
+        run: ./scripts/gcs-backup.sh
+      
+      - name: Backup summary
+        run: |
+          echo "✅ Continuous backup completed"
+          echo "📦 Bucket: gs://omni-unified-backups/omni-unified-platform/"
+          echo "⏰ Frequency: Every push to main + Cloud Scheduler (30 minutes)"

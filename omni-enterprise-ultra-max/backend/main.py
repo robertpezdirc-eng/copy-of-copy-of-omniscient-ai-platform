@@ -35,6 +35,9 @@ from routes.analytics_usage_routes import router as analytics_usage_router
 from routes.websocket_routes import router as websocket_router
 from routes.capacity_routes import router as capacity_router
 from routes.security_routes import router as security_audit_router
+from routes.adapters_routes import adapters_router
+from routes.learning_routes import learning_router
+from routes.ingestion_routes import ingestion_router
 
 # Import middleware components
 from middleware.rate_limiter import RateLimiter
@@ -146,6 +149,11 @@ app.include_router(analytics_usage_router, prefix="/api/v1/analytics", tags=["Us
 app.include_router(websocket_router, prefix="/api/v1/iot/ws", tags=["Real-time WebSocket Telemetry"])
 app.include_router(capacity_router, tags=["Capacity Planning & Cost Optimization"])
 app.include_router(security_audit_router, prefix="/api/v1/security/audit", tags=["Security Audit"])
+
+# New routes from omni-platform merge
+app.include_router(adapters_router, prefix="/api/v1/adapters", tags=["External Adapters - Unified Platform"])
+app.include_router(learning_router, prefix="/api/v1/learning", tags=["Machine Learning & Training - Unified Platform"])
+app.include_router(ingestion_router, prefix="/api/v1/ingestion", tags=["Data Ingestion Pipeline - Unified Platform"])
 
 # Global exception handler
 @app.exception_handler(Exception)
