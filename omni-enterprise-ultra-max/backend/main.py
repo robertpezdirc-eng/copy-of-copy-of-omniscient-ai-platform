@@ -38,6 +38,7 @@ from routes.security_routes import router as security_audit_router
 from routes.adapters_routes import adapters_router
 from routes.learning_routes import learning_router
 from routes.ingestion_routes import ingestion_router
+from routes.payments import router as payments_router
 
 # Import middleware components
 from middleware.rate_limiter import RateLimiter
@@ -154,6 +155,7 @@ app.include_router(security_audit_router, prefix="/api/v1/security/audit", tags=
 app.include_router(adapters_router, prefix="/api/v1/adapters", tags=["External Adapters - Unified Platform"])
 app.include_router(learning_router, prefix="/api/v1/learning", tags=["Machine Learning & Training - Unified Platform"])
 app.include_router(ingestion_router, prefix="/api/v1/ingestion", tags=["Data Ingestion Pipeline - Unified Platform"])
+app.include_router(payments_router, prefix="/api/payments", tags=["Payments"])
 
 # Global exception handler
 @app.exception_handler(Exception)
