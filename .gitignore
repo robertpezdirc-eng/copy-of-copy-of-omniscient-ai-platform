@@ -1,11 +1,44 @@
-.env
+﻿.env
 openai key.txt
 *.log
 logs/
 node_modules/
 .DS_Store
 Thumbs.db
-# Sensitive alert configs and secrets
 alerts/alertmanager.generated.yml
 alerts/smtp_password.txt
 build_context/
+
+# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.venv
+venv/
+ENV/
+
+# Large binaries (GitHub >100MB limit)
+*.exe
+*.bin
+*.dll
+cloudflared.exe
+omni_desktop_from_E/dist-electron/
+omni_desktop_from_E/dist/
+OMNIBOT13/OMNIBOT12/BOG/assets/nova/
+
+# Testing
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Credentials
+*.pem
+*.key
+*.crt
+service-account-key.json
