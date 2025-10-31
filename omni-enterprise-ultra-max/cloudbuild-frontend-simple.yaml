@@ -1,0 +1,31 @@
+steps:
+  # Build frontend Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/refined-graph-471712-n9/omni-frontend:latest'
+      - '-t'
+      - 'gcr.io/refined-graph-471712-n9/omni-frontend:v1.0.0'
+      - '-f'
+      - 'frontend/Dockerfile'
+      - './frontend'
+    timeout: 1200s
+
+  # Push latest tag
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/refined-graph-471712-n9/omni-frontend:latest']
+  
+  # Push version tag
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/refined-graph-471712-n9/omni-frontend:v1.0.0']
+
+images:
+  - 'gcr.io/refined-graph-471712-n9/omni-frontend:latest'
+  - 'gcr.io/refined-graph-471712-n9/omni-frontend:v1.0.0'
+
+options:
+  machineType: 'E2_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+
+timeout: 1800s
