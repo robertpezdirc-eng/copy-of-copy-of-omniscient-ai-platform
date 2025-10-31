@@ -6,9 +6,13 @@ Unified backend integrating all enterprise features
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from contextlib import asynccontextmanager
 import os
 from datetime import datetime, timezone
 import logging
+
+# Database initialization
+from database import init_databases, close_databases
 
 # Import all route modules
 from routes.stripe_routes import stripe_router
@@ -49,13 +53,33 @@ from middleware.performance_monitor import PerformanceMonitor
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize FastAPI app
+
+# Lifespan context manager for startup/shutdown events
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize and cleanup resources"""
+    logger.info("🚀 Starting OMNI Enterprise Ultra Max API...")
+    
+    # Startup: Initialize databases
+    await init_databases()
+    logger.info("✅ All systems operational")
+    
+    yield
+    
+    # Shutdown: Close databases
+    logger.info("🔄 Shutting down gracefully...")
+    await close_databases()
+    logger.info("✅ Shutdown complete")
+
+
+# Initialize FastAPI app with lifespan
 app = FastAPI(
     title="Omni Enterprise Ultra Max API",
     description="Revolutionary Enterprise Platform API - 10 Years Ahead",
     version="2.0.0",
     docs_url="/api/docs",
-    redoc_url="/api/redoc"
+    redoc_url="/api/redoc",
+    lifespan=lifespan
 )
 
 # Add middleware (order matters: first added = outermost layer)
