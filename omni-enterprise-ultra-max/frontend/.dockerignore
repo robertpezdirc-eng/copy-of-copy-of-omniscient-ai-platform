@@ -1,0 +1,26 @@
+# Frontend
+node_modules/
+dist/
+build/
+.vite/
+*.log
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output/
+
+# Production
+*.tgz
