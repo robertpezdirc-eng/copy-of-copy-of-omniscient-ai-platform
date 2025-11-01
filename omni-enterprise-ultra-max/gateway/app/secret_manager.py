@@ -155,10 +155,10 @@ class SecretManagerClient:
         api_key = self.get_secret("openai-api-key")
         
         if api_key:
-            logger.info("OpenAI API key loaded from Secret Manager")
+            logger.debug("OpenAI API key retrieved from Secret Manager")
             return api_key
         else:
-            logger.info("OpenAI API key not found in Secret Manager, using env var")
+            logger.debug("OpenAI API key not found in Secret Manager, using environment variable")
             return settings.openai_api_key
 
 
