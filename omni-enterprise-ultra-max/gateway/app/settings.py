@@ -16,6 +16,9 @@ class Settings(BaseSettings):
 
     # Security
     api_keys: str = ""  # Comma-separated string; env var API_KEYS
+    
+    # OpenAI API Key (for AI services)
+    openai_api_key: Optional[str] = None  # OpenAI API key; env var OPENAI_API_KEY
 
     # Redis (for rate limiting and caching)
     redis_url: Optional[str] = None  # redis://host:port/db or redis://host:port

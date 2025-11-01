@@ -17,6 +17,7 @@ steps:
       - --allow-unauthenticated
       - --port=8080
       - --set-env-vars=UPSTREAM_URL=${_UPSTREAM_URL},API_KEYS=${_API_KEYS}
+      - --set-secrets=OPENAI_API_KEY=openai-api-key:latest
 images:
   - gcr.io/${_PROJECT_ID}/${_IMAGE}:$SHORT_SHA
 

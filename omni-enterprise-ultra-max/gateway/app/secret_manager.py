@@ -139,6 +139,27 @@ class SecretManagerClient:
             return dsn
         else:
             return settings.sentry_dsn
+    
+    def get_openai_api_key(self) -> Optional[str]:
+        """
+        Get OpenAI API key from Secret Manager.
+        
+        Secret name: "openai-api-key"
+        
+        Returns:
+            OpenAI API key or None
+        """
+        if not self.enabled:
+            return settings.openai_api_key
+        
+        api_key = self.get_secret("openai-api-key")
+        
+        if api_key:
+            logger.info("OpenAI API key loaded from Secret Manager")
+            return api_key
+        else:
+            logger.info("OpenAI API key not found in Secret Manager, using env var")
+            return settings.openai_api_key
 
 
 # Global instance
@@ -171,5 +192,10 @@ def load_secrets_from_manager():
     sentry_dsn = secret_manager.get_sentry_dsn()
     if sentry_dsn:
         settings.sentry_dsn = sentry_dsn
+    
+    # Load OpenAI API key
+    openai_api_key = secret_manager.get_openai_api_key()
+    if openai_api_key:
+        settings.openai_api_key = openai_api_key
     
     logger.info("Secrets loaded successfully")

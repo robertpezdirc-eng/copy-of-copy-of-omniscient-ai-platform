@@ -93,5 +93,6 @@ async def root():
             "rate_limiting": redis_client is not None,
             "tracing": settings.enable_tracing,
             "secret_manager": settings.secret_manager_enabled,
+            "openai_configured": settings.openai_api_key is not None,
         }
     }

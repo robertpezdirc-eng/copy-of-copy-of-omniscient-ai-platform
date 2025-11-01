@@ -6,9 +6,12 @@ A lightweight FastAPI gateway that fronts the heavy ML worker. It handles auth, 
 
 - UPSTREAM_URL: Base URL of the ML worker (e.g., http://ml-worker.default.svc.cluster.local:8080)
 - API_KEYS: Comma-separated list of API keys; if unset/empty, the gateway accepts requests without a key (dev only)
+- OPENAI_API_KEY: OpenAI API key for AI services (optional, can be loaded from GCP Secret Manager)
 - SENTRY_DSN: Optional Sentry DSN
 - SERVICE_NAME: Name of the service (defaults to ai-gateway)
 - ENVIRONMENT: Environment label (dev/stage/prod)
+- GCP_PROJECT_ID: GCP project ID for Secret Manager integration
+- SECRET_MANAGER_ENABLED: Enable GCP Secret Manager for secrets (true/false)
 
 Notes:
 - Gateway route `/api/{path}` forwards to upstream `/api/{path}` (matches backend route structure)
@@ -38,6 +41,8 @@ docker build -t ai-gateway -f gateway/Dockerfile .
 ```
 
 ## Deploy to Cloud Run via Cloud Build
+
+**Note:** The gateway will automatically load the OpenAI API key from GCP Secret Manager (secret name: `openai-api-key`) if `SECRET_MANAGER_ENABLED=true` and `GCP_PROJECT_ID` are set. Make sure the secret exists in your GCP project before deploying.
 
 1. Create a Cloud Build trigger or run:
 
