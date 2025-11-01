@@ -93,5 +93,17 @@ async def root():
             "rate_limiting": redis_client is not None,
             "tracing": settings.enable_tracing,
             "secret_manager": settings.secret_manager_enabled,
-        }
+        },
+        "endpoints": {
+            "public": [
+                "/",
+                "/health",
+                "/readyz",
+                "/livez"
+            ],
+            "protected": [
+                "/api/*"
+            ]
+        },
+        "docs": "/docs"
     }

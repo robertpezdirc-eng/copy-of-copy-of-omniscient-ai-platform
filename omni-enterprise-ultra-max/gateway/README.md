@@ -2,6 +2,19 @@
 
 A lightweight FastAPI gateway that fronts the heavy ML worker. It handles auth, metrics, logging, and proxies requests to the upstream ML worker.
 
+## Public Endpoints (No Authentication Required)
+
+- `/` - Service information and available endpoints
+- `/health` - Health check with upstream status
+- `/readyz` - Kubernetes readiness probe
+- `/livez` - Kubernetes liveness probe
+- `/metrics` - Prometheus metrics (if enabled)
+- `/docs` - OpenAPI documentation
+
+## Protected Endpoints (Require API Key)
+
+- `/api/*` - All API routes (proxied to upstream ML worker)
+
 ## Environment Variables
 
 - UPSTREAM_URL: Base URL of the ML worker (e.g., http://ml-worker.default.svc.cluster.local:8080)
@@ -27,9 +40,13 @@ uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
 ```
 
 Visit:
-- http://localhost:8080/health
-- http://localhost:8080/metrics
-- Proxy: http://localhost:8080/api/<path> (forwards to `${UPSTREAM_URL}/<path>`)
+- http://localhost:8080/ - Service info
+- http://localhost:8080/health - Health check
+- http://localhost:8080/readyz - Readiness probe
+- http://localhost:8080/livez - Liveness probe
+- http://localhost:8080/metrics - Prometheus metrics
+- http://localhost:8080/docs - API documentation
+- Proxy: http://localhost:8080/api/<path> (forwards to `${UPSTREAM_URL}/<path>`, requires API key)
 
 ## Docker build
 

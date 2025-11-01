@@ -81,7 +81,7 @@ async def proxy_any(req: Request, full_path: str):
     return await _forward(req, req.method, f"/api/{full_path}", body)
 
 
-@router.get("/health", dependencies=[Depends(verify_api_key)])
+@router.get("/health")
 async def health(req: Request):
     # Check upstream health quickly
     async with _client() as client:
@@ -92,3 +92,15 @@ async def health(req: Request):
         except Exception:
             ok = False
     return {"ok": True, "upstream_ok": ok, "service": settings.service_name}
+
+
+@router.get("/readyz")
+async def readyz():
+    """Kubernetes readiness probe endpoint - no auth required."""
+    return {"status": "ready", "service": settings.service_name}
+
+
+@router.get("/livez")
+async def livez():
+    """Kubernetes liveness probe endpoint - no auth required."""
+    return {"status": "alive", "service": settings.service_name}
