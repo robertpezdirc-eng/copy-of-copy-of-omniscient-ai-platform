@@ -53,10 +53,10 @@
 ### 🚀 Deployment Information
 
 **Cloud Run Service:**
-- Name: `omni-unified-backend`
+- Name: `omni-unified-platform`
 - Region: `europe-west1`
 - Project: `refined-graph-471712-n9`
-- URL: `https://omni-unified-backend-661612368188.europe-west1.run.app`
+- URL: `https://omni-unified-platform-661612368188.europe-west1.run.app`
 
 **Resources:**
 - Memory: 4GB
@@ -133,29 +133,29 @@
 
 **API Documentation:**
 ```
-https://omni-unified-backend-661612368188.europe-west1.run.app/api/docs
+https://omni-unified-platform-661612368188.europe-west1.run.app/api/docs
 ```
 
 **Health Check:**
 ```bash
-curl https://omni-unified-backend-661612368188.europe-west1.run.app/api/health
+curl https://omni-unified-platform-661612368188.europe-west1.run.app/api/health
 ```
 
 **System Summary:**
 ```bash
-curl https://omni-unified-backend-661612368188.europe-west1.run.app/api/v1/omni/summary
+curl https://omni-unified-platform-661612368188.europe-west1.run.app/api/v1/omni/summary
 ```
 
 **Test New Routes:**
 ```bash
 # Adapters
-curl https://omni-unified-backend-661612368188.europe-west1.run.app/api/v1/adapters/list
+curl https://omni-unified-platform-661612368188.europe-west1.run.app/api/v1/adapters/list
 
 # Machine Learning
-curl https://omni-unified-backend-661612368188.europe-west1.run.app/api/v1/learning/models
+curl https://omni-unified-platform-661612368188.europe-west1.run.app/api/v1/learning/models
 
 # Data Ingestion
-curl https://omni-unified-backend-661612368188.europe-west1.run.app/api/v1/ingestion/jobs
+curl https://omni-unified-platform-661612368188.europe-west1.run.app/api/v1/ingestion/jobs
 ```
 
 ### 📈 Statistics
@@ -177,7 +177,7 @@ curl https://omni-unified-backend-661612368188.europe-west1.run.app/api/v1/inges
    gcloud scheduler jobs create http omni-backup-trigger \
      --location=europe-west1 \
      --schedule="*/30 * * * *" \
-     --uri="https://omni-unified-backend-661612368188.europe-west1.run.app/api/v1/admin/trigger-backup" \
+     --uri="https://omni-unified-platform-661612368188.europe-west1.run.app/api/v1/admin/trigger-backup" \
      --http-method=POST \
      --project=refined-graph-471712-n9
    ```

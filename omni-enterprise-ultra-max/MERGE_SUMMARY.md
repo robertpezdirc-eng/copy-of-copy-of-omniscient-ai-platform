@@ -147,7 +147,7 @@ Access:
 
 ### Cloud Run Production
 ```bash
-gcloud run deploy omni-unified-backend \
+gcloud run deploy omni-unified-platform \
   --source . \
   --platform managed \
   --region europe-west1 \

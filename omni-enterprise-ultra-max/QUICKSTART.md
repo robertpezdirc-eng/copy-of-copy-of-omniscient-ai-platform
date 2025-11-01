@@ -61,7 +61,7 @@ gcloud scheduler jobs create http omni-backup-trigger \
 ## 🏗️ Deploy to Cloud Run
 
 ```bash
-gcloud run deploy omni-unified-backend \
+gcloud run deploy omni-unified-platform \
   --source . \
   --platform managed \
   --region europe-west1 \
@@ -77,7 +77,7 @@ gcloud run deploy omni-unified-backend \
 
 ```bash
 # Get service URL
-gcloud run services describe omni-unified-backend \
+gcloud run services describe omni-unified-platform \
   --region europe-west1 \
   --format 'value(status.url)'
 

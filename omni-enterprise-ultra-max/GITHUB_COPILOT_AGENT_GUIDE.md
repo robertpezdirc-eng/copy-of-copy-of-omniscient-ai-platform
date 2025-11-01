@@ -261,17 +261,17 @@ feature/*       → Pull requests only
 
 ```bash
 # 1. Build locally
-docker build -t omni-unified-backend -f Dockerfile .
+docker build -t omni-unified-platform -f Dockerfile .
 
 # 2. Tag for GCR
-docker tag omni-unified-backend gcr.io/refined-graph-471712-n9/omni-unified-backend:latest
+docker tag omni-unified-platform gcr.io/refined-graph-471712-n9/omni-unified-platform:latest
 
 # 3. Push to GCR
-docker push gcr.io/refined-graph-471712-n9/omni-unified-backend:latest
+docker push gcr.io/refined-graph-471712-n9/omni-unified-platform:latest
 
 # 4. Deploy to Cloud Run
-gcloud run deploy omni-unified-backend \
-  --image gcr.io/refined-graph-471712-n9/omni-unified-backend:latest \
+gcloud run deploy omni-unified-platform \
+  --image gcr.io/refined-graph-471712-n9/omni-unified-platform:latest \
   --platform managed \
   --region europe-west1 \
   --project refined-graph-471712-n9
