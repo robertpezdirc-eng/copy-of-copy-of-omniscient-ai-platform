@@ -183,23 +183,56 @@ async def get_module_data(module_id: str):
 
 @router.post("/api/ai-assistant")
 async def ai_assistant(query: AIQuery):
-    """AI Personal Assistant endpoint"""
+    """AI Personal Assistant endpoint with AI Gateway integration"""
+    import requests
+    
+    # Try to use AI Gateway first, fallback to rule-based
+    ai_gateway_url = os.getenv("AI_GATEWAY_URL", "https://ai-gateway-661612368188.europe-west1.run.app")
+    
+    try:
+        # Prepare context about available modules
+        modules_context = f"Available modules: {', '.join([m['name'] + ' (€' + str(m['price']) + ')' for m in MODULES[:5]])}..."
+        
+        # Try AI Gateway
+        response = requests.post(
+            f"{ai_gateway_url}/api/chat",
+            json={
+                "message": query.message,
+                "context": query.context or modules_context,
+                "system_prompt": "You are Omni, a helpful AI assistant for the Omni Intelligence Platform. Help users understand modules, pricing, and platform features. Respond in Slovenian language."
+            },
+            timeout=10
+        )
+        
+        if response.ok:
+            ai_response = response.json()
+            return {
+                "response": ai_response.get("response", ai_response.get("text", "")),
+                "source": "ai_gateway",
+                "model": ai_response.get("model", "unknown")
+            }
+    except Exception as e:
+        # Fallback to rule-based responses
+        print(f"AI Gateway error: {e}, falling back to rule-based responses")
+    
+    # Rule-based fallback responses
     message = query.message.lower()
     
-    # Simple rule-based responses (can be enhanced with real AI)
     if "modul" in message or "module" in message:
         if "priporoč" in message or "suggest" in message:
             return {
                 "response": "Na podlagi vaše uporabe priporočam: BI Analytics Pro za napredne analize, "
                            "AI Forecast za napovedovanje in Marketing modul za optimizacijo kampanj.",
                 "suggested_modules": ["bi_analytics", "ai_forecast", "marketing"],
-                "confidence": 0.85
+                "confidence": 0.85,
+                "source": "rule_based"
             }
         else:
             return {
                 "response": "Trenutno imate na voljo več kot 20 specializiranih modulov. "
                            "Kateri vas zanima? (npr. Prodaja, Marketing, Finance)",
-                "modules_count": len(MODULES)
+                "modules_count": len(MODULES),
+                "source": "rule_based"
             }
     elif "cena" in message or "price" in message or "kolik" in message:
         return {
@@ -209,7 +242,8 @@ async def ai_assistant(query: AIQuery):
             "price_range": {
                 "min": min(m["price"] for m in MODULES),
                 "max": max(m["price"] for m in MODULES)
-            }
+            },
+            "source": "rule_based"
         }
     elif "pomoč" in message or "help" in message:
         return {
@@ -219,7 +253,8 @@ async def ai_assistant(query: AIQuery):
                 "Kateri modul je najboljši za moje poslovanje?",
                 "Kako aktiviram modul?",
                 "Pokaži mi cene"
-            ]
+            ],
+            "source": "rule_based"
         }
     else:
         return {
@@ -230,7 +265,8 @@ async def ai_assistant(query: AIQuery):
                 "Priporoči mi module",
                 "Koliko stane?",
                 "Kako začnem?"
-            ]
+            ],
+            "source": "rule_based"
         }
 
 

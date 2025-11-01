@@ -95,11 +95,17 @@ GET  /api/dashboard/overview         # Main dashboard KPIs
 GET  /api/marketplace/categories     # Module categories
 
 # AI Assistant
-POST /api/ai-assistant               # AI chat interface
+POST /api/ai-assistant               # AI chat interface with AI Gateway integration
 
 # Health Check
 GET  /health                         # Service health status
 ```
+
+**AI Assistant Integration**:
+- Integrates with AI Gateway at `https://ai-gateway-661612368188.europe-west1.run.app`
+- Automatically falls back to rule-based responses if gateway is unavailable
+- Configurable via `AI_GATEWAY_URL` environment variable
+- Provides contextual responses about modules, pricing, and platform features
 
 ### ✅ 8. Professional API Integration Architecture
 
@@ -220,12 +226,14 @@ curl http://localhost:8080/api/modules/sales/data
 - CORS middleware
 - Modular router architecture
 - Demo data generation
+- AI Gateway integration with fallback
 
 ### Integration
 - RESTful API design
 - JSON data format
 - Environment-based configuration
 - Health check endpoints
+- AI Gateway for enhanced responses
 
 ## 📝 Configuration
 
@@ -236,7 +244,15 @@ window.OMNI_API_BASE = "http://localhost:8080";
 ```
 
 ### Backend Configuration
-Environment variables can be set in `.env` file (see `.env.example`)
+Set environment variables (or create `.env` file from `.env.example`):
+```bash
+# AI Gateway for enhanced AI assistant (optional)
+AI_GATEWAY_URL=https://ai-gateway-661612368188.europe-west1.run.app
+
+# Other configurations...
+```
+
+If `AI_GATEWAY_URL` is not set, the system automatically falls back to rule-based responses.
 
 ## 🎯 Key Features Delivered
 
