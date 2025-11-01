@@ -96,11 +96,30 @@ async def health(req: Request):
 
 @router.get("/readyz")
 async def readyz():
-    """Kubernetes readiness probe endpoint - no auth required."""
+    """Kubernetes readiness probe endpoint - checks if service can accept traffic."""
+    # Check if we can reach upstream service
+    try:
+        async with _client() as client:
+            r = await client.get("/api/health", timeout=2.0)
+            if r.status_code != 200:
+                return Response(
+                    content='{"status": "not_ready", "reason": "upstream_unhealthy"}',
+                    status_code=503,
+                    media_type="application/json"
+                )
+    except Exception as e:
+        return Response(
+            content=f'{{"status": "not_ready", "reason": "upstream_unreachable", "error": "{str(e)}"}}',
+            status_code=503,
+            media_type="application/json"
+        )
+    
     return {"status": "ready", "service": settings.service_name}
 
 
 @router.get("/livez")
 async def livez():
-    """Kubernetes liveness probe endpoint - no auth required."""
+    """Kubernetes liveness probe endpoint - checks if service is alive and responding."""
+    # Simple check that the service is running and can respond
+    # If this endpoint returns, the service is alive
     return {"status": "alive", "service": settings.service_name}
