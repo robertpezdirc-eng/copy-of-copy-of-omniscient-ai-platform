@@ -37,15 +37,22 @@ app.add_middleware(
 )
 
 
+def _health_check():
+    """Shared health check logic"""
+    return JSONResponse({"status": "ok"})
+
+
 @app.get("/health")
 def health_root():
     """Health check endpoint for Docker/Cloud Run healthchecks"""
-    return JSONResponse({"status": "ok"})
+    return _health_check()
 
 
 @app.get("/api/health")
 def health():
-    return JSONResponse({"status": "ok"})
+    """Health check endpoint for API consumers"""
+    return _health_check()
+
 
 
 @app.get("/api/v1/omni/summary")

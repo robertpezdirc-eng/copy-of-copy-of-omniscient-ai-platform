@@ -15,8 +15,17 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'backend'))
 
 def main():
     """Main entry point for the OMNI Unified Platform."""
-    import uvicorn
-    from main import app
+    try:
+        import uvicorn
+        from main import app
+    except ImportError as e:
+        print(f"ERROR: Failed to import required modules: {e}")
+        print(f"Current working directory: {os.getcwd()}")
+        print(f"Python path: {sys.path}")
+        print(f"Backend directory exists: {os.path.exists('backend')}")
+        if os.path.exists('backend'):
+            print(f"Backend contents: {os.listdir('backend')}")
+        sys.exit(1)
     
     # Get port from environment variable (Cloud Run sets PORT=8080)
     port = int(os.environ.get("PORT", "8080"))
