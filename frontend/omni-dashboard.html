@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omni Intelligence Platform - Main Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+        
+        .top-nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        
+        .nav-items {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .hero-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .ai-search {
+            max-width: 700px;
+            margin: 2rem auto;
+            position: relative;
+        }
+        
+        .ai-search input {
+            width: 100%;
+            padding: 1.2rem 3rem 1.2rem 1.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .ai-search input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .ai-search button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .kpi-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .kpi-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .kpi-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .module-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .module-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .module-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .module-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            min-height: 40px;
+        }
+        
+        .module-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .module-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .module-actions button {
+            flex: 1;
+            padding: 0.6rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-activate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-demo {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-demo:hover {
+            background: #e0e0e0;
+        }
+        
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.6rem 1.5rem;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .ai-assistant {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 400px;
+            max-height: 600px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        .ai-assistant.minimized {
+            max-height: 60px;
+            width: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .ai-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .ai-chat {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        
+        .ai-message {
+            background: #f0f0f0;
+            padding: 0.8rem;
+            border-radius: 12px;
+            margin-bottom: 0.8rem;
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: right;
+        }
+        
+        .ai-input {
+            padding: 1rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .ai-input input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+        }
+        
+        .ai-input button {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-assistant {
+                width: calc(100% - 2rem);
+                right: 1rem;
+                bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo">🚀 Omni Intelligence Platform</div>
+        <div class="nav-items">
+            <a href="#overview" class="nav-link">📊 Pregled</a>
+            <a href="#modules" class="nav-link">⚙️ Moduli</a>
+            <a href="#marketplace" class="nav-link">🛒 Marketplace</a>
+            <a href="landing.html#pricing" class="nav-link">💰 Cenik</a>
+            <a href="dashboard.html" class="nav-link">👤 Profil</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1>Vse tvoje podatke spremeni v inteligenco</h1>
+            <p style="font-size: 1.2rem; color: #666; margin-bottom: 1rem;">
+                Pametni AI dashboard za poslovno analitiko, raziskovanje in rast
+            </p>
+            
+            <div class="ai-search">
+                <input type="text" id="heroSearchInput" placeholder="Vprašaj AI: Kako poslujemo ta mesec?">
+                <button onclick="askAI()"><i class="fas fa-search"></i> Vprašaj</button>
+            </div>
+            
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="window.location.href='landing.html#pricing'">
+                    🟢 Začni brezplačno
+                </button>
+                <button class="btn btn-secondary" onclick="scrollToModules()">
+                    ⚙️ Raziskuj module
+                </button>
+                <button class="btn btn-secondary" onclick="toggleAIAssistant()">
+                    💬 Pogovor z AI
+                </button>
+            </div>
+        </section>
+
+        <!-- KPI Overview Section -->
+        <section id="overview">
+            <h2 class="section-title">🧭 Omni Overview</h2>
+            <div class="kpi-grid" id="kpiGrid">
+                <!-- KPIs will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Trends Section -->
+        <section>
+            <h2 class="section-title">📈 Trendi in napovedi</h2>
+            <div class="chart-container">
+                <canvas id="trendsChart" width="400" height="150"></canvas>
+            </div>
+        </section>
+
+        <!-- Module Marketplace -->
+        <section id="modules">
+            <h2 class="section-title">
+                ⚙️ Moduli
+                <span style="font-size: 1rem; color: #666;">20+ specializiranih dashboardov</span>
+            </h2>
+            
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterModules('all')">Vse</button>
+                <button class="filter-btn" onclick="filterModules('business')">Poslovanje</button>
+                <button class="filter-btn" onclick="filterModules('ai')">AI</button>
+                <button class="filter-btn" onclick="filterModules('finance')">Finance</button>
+                <button class="filter-btn" onclick="filterModules('marketing')">Marketing</button>
+                <button class="filter-btn" onclick="filterModules('analytics')">Analitika</button>
+                <button class="filter-btn" onclick="filterModules('operations')">Operacije</button>
+                <button class="filter-btn" onclick="filterModules('tech')">Tehnologija</button>
+                <button class="filter-btn" onclick="filterModules('security')">Varnost</button>
+            </div>
+            
+            <div class="modules-grid" id="modulesGrid">
+                <!-- Modules will be loaded here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- AI Assistant -->
+    <div class="ai-assistant" id="aiAssistant">
+        <div class="ai-header" onclick="toggleAIAssistant()">
+            <div>
+                <strong>🤖 Omni AI Assistant</strong>
+                <div style="font-size: 0.8rem; opacity: 0.9;">Vedno tukaj za pomoč</div>
+            </div>
+            <i class="fas fa-minus" id="assistantToggle"></i>
+        </div>
+        <div class="ai-chat" id="aiChat">
+            <div class="ai-message">
+                Živjo, sem Omni! 👋<br><br>
+                Želiš, da ti povem, kateri modul prinaša največ koristi?<br><br>
+                <small>Lahko te pomagam z:</small><br>
+                • Izbiro ustreznih modulov<br>
+                • Razlago funkcionalnosti<br>
+                • Priporočili za nadgradnjo<br>
+                • Nastavitvijo platforme
+            </div>
+        </div>
+        <div class="ai-input">
+            <input type="text" id="aiInput" placeholder="Vprašaj karkoli...">
+            <button onclick="sendAIMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script src="/env.js"></script>
+    <script>
+        const API_BASE = window.OMNI_API_BASE || 'http://localhost:8080';
+        let allModules = [];
+        let assistantMinimized = false;
+
+        // Initialize dashboard
+        async function initDashboard() {
+            await loadKPIs();
+            await loadModules();
+            createTrendsChart();
+        }
+
+        // Load KPIs
+        async function loadKPIs() {
+            try {
+                const response = await fetch(`${API_BASE}/api/dashboard/overview`);
+                const data = await response.json();
+                
+                const kpiGrid = document.getElementById('kpiGrid');
+                const kpis = [
+                    { icon: '💰', label: 'Prihodki', value: `€${data.kpis.revenue.toLocaleString()}`, trend: '+' + data.kpis.growth + '%' },
+                    { icon: '⚡', label: 'Uptime', value: data.kpis.uptime + '%', trend: 'Excellent' },
+                    { icon: '👥', label: 'Aktivni uporabniki', value: data.kpis.active_users.toLocaleString(), trend: '+12%' },
+                    { icon: '📊', label: 'Zahteve', value: data.kpis.requests.toLocaleString(), trend: 'Stable' },
+                    { icon: '🧠', label: 'AI Score', value: data.ai_score.toFixed(1), trend: 'Optimalno' },
+                ];
+                
+                kpiGrid.innerHTML = kpis.map(kpi => `
+                    <div class="kpi-card">
+                        <div class="kpi-icon">${kpi.icon}</div>
+                        <div class="kpi-value">${kpi.value}</div>
+                        <div class="kpi-label">${kpi.label}</div>
+                        <div style="color: #10b981; font-size: 0.85rem; margin-top: 0.5rem;">${kpi.trend}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading KPIs:', error);
+            }
+        }
+
+        // Load modules
+        async function loadModules() {
+            try {
+                const response = await fetch(`${API_BASE}/api/modules`);
+                const data = await response.json();
+                allModules = data.modules;
+                displayModules(allModules);
+            } catch (error) {
+                console.error('Error loading modules:', error);
+            }
+        }
+
+        // Display modules
+        function displayModules(modules) {
+            const grid = document.getElementById('modulesGrid');
+            grid.innerHTML = modules.map(module => `
+                <div class="module-card" data-category="${module.category}">
+                    <div class="module-icon">${module.icon}</div>
+                    <div class="module-name">${module.name}</div>
+                    <div class="module-description">${module.description}</div>
+                    <div class="module-price">
+                        ${module.price === 0 ? 'Brezplačno' : '€' + module.price + '/mesec'}
+                    </div>
+                    <div class="module-actions">
+                        <button class="btn-activate" onclick="activateModule('${module.id}')">
+                            <i class="fas fa-plus"></i> Aktiviraj
+                        </button>
+                        <button class="btn-demo" onclick="openDemo('${module.id}')">
+                            <i class="fas fa-eye"></i> Demo
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter modules
+        function filterModules(category) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter and display
+            if (category === 'all') {
+                displayModules(allModules);
+            } else {
+                const filtered = allModules.filter(m => m.category === category);
+                displayModules(filtered);
+            }
+        }
+
+        // Activate module
+        async function activateModule(moduleId) {
+            try {
+                const response = await fetch(`${API_BASE}/api/modules/${moduleId}/activate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ module_id: moduleId, active: true })
+                });
+                
+                if (response.ok) {
+                    alert('Modul uspešno aktiviran! 🎉');
+                    // Could redirect to module dashboard or update UI
+                } else {
+                    alert('Napaka pri aktivaciji modula. Preverite vaš paket.');
+                }
+            } catch (error) {
+                console.error('Error activating module:', error);
+                alert('Napaka pri povezavi s strežnikom.');
+            }
+        }
+
+        // Open module demo
+        function openDemo(moduleId) {
+            // Could open modal or redirect to demo page
+            window.open(`module-demo.html?id=${moduleId}`, '_blank');
+        }
+
+        // Create trends chart
+        function createTrendsChart() {
+            const ctx = document.getElementById('trendsChart').getContext('2d');
+            const labels = ['Pon', 'Tor', 'Sre', 'Čet', 'Pet', 'Sob', 'Ned'];
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Prihodki (€)',
+                        data: [18500, 22000, 19800, 24500, 23200, 26800, 25400],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Uporabniki',
+                        data: [145, 162, 158, 178, 185, 192, 188],
+                        borderColor: '#764ba2',
+                        backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // AI Assistant functions
+        function toggleAIAssistant() {
+            const assistant = document.getElementById('aiAssistant');
+            const toggle = document.getElementById('assistantToggle');
+            assistantMinimized = !assistantMinimized;
+            
+            if (assistantMinimized) {
+                assistant.classList.add('minimized');
+                toggle.className = 'fas fa-plus';
+            } else {
+                assistant.classList.remove('minimized');
+                toggle.className = 'fas fa-minus';
+            }
+        }
+
+        async function sendAIMessage() {
+            const input = document.getElementById('aiInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            // Add user message to chat
+            const chat = document.getElementById('aiChat');
+            chat.innerHTML += `<div class="ai-message user-message">${message}</div>`;
+            input.value = '';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/ai-assistant`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await response.json();
+                chat.innerHTML += `<div class="ai-message">${data.response}</div>`;
+                chat.scrollTop = chat.scrollHeight;
+            } catch (error) {
+                console.error('Error sending AI message:', error);
+                chat.innerHTML += `<div class="ai-message">Oprostite, trenutno ne morem odgovoriti. Poskusite kasneje.</div>`;
+            }
+        }
+
+        async function askAI() {
+            const input = document.getElementById('heroSearchInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            // Open AI assistant if closed
+            if (assistantMinimized) {
+                toggleAIAssistant();
+            }
+            
+            // Send message
+            document.getElementById('aiInput').value = message;
+            await sendAIMessage();
+            input.value = '';
+        }
+
+        function scrollToModules() {
+            document.getElementById('modules').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Enter key support for AI input
+        document.getElementById('aiInput')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendAIMessage();
+        });
+
+        document.getElementById('heroSearchInput')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') askAI();
+        });
+
+        // Initialize on load
+        window.addEventListener('load', initDashboard);
+    </script>
+</body>
+</html>

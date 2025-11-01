@@ -16,7 +16,7 @@ from pydantic import BaseModel
 
 try:
     # Optional: LangChain providers
-    from .llm_langchain import invoke_llm
+    from llm_langchain import invoke_llm
 except Exception:
     invoke_llm = None
 
@@ -24,6 +24,12 @@ try:
     import stripe as _stripe  # optional
 except Exception:
     _stripe = None
+
+try:
+    from modules_api import router as modules_router
+except Exception as e:
+    print(f"Warning: Could not import modules_api: {e}")
+    modules_router = None
 
 
 app = FastAPI(title="Omni Cloud Backend", version="1.0.0")
@@ -35,6 +41,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include modules router if available
+if modules_router:
+    app.include_router(modules_router)
 
 
 @app.get("/api/health")

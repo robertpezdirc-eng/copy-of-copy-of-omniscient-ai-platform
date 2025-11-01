@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module Demo - Omni Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+        
+        .top-nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .demo-header {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .module-icon-large {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .module-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-badge {
+            display: inline-block;
+            background: #fbbf24;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="omni-dashboard.html" class="nav-link"><i class="fas fa-arrow-left"></i> Nazaj na Dashboard</a>
+        <a href="landing.html#pricing" class="nav-link">💰 Oglej si Cene</a>
+    </nav>
+
+    <div class="container">
+        <div class="demo-header">
+            <div class="demo-badge">🎯 DEMO MODE</div>
+            <div class="module-icon-large" id="moduleIcon">📊</div>
+            <h1 class="module-title" id="moduleTitle">Loading...</h1>
+            <p id="moduleDescription" style="font-size: 1.2rem; color: #666;">Loading module data...</p>
+            <p style="margin-top: 1rem; font-size: 1.3rem; font-weight: 600; color: #667eea;" id="modulePrice">€0/mesec</p>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+            <!-- Stats will be loaded here -->
+        </div>
+
+        <div class="chart-container">
+            <h3 style="margin-bottom: 1rem;">📈 Trendi in Statistika</h3>
+            <canvas id="moduleChart" width="400" height="150"></canvas>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="activateModule()">
+                <i class="fas fa-check"></i> Aktiviraj Ta Modul
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.href='omni-dashboard.html#modules'">
+                <i class="fas fa-th"></i> Razišči Druge Module
+            </button>
+        </div>
+    </div>
+
+    <script src="/env.js"></script>
+    <script>
+        const API_BASE = window.OMNI_API_BASE || 'http://localhost:8080';
+        let currentModule = null;
+
+        // Get module ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const moduleId = urlParams.get('id') || 'sales';
+
+        async function loadModuleDemo() {
+            try {
+                // Load module info
+                const moduleResponse = await fetch(`${API_BASE}/api/modules/${moduleId}`);
+                const module = await moduleResponse.json();
+                currentModule = module;
+                
+                document.getElementById('moduleIcon').textContent = module.icon;
+                document.getElementById('moduleTitle').textContent = module.name;
+                document.getElementById('moduleDescription').textContent = module.description;
+                document.getElementById('modulePrice').textContent = 
+                    module.price === 0 ? 'Brezplačno' : `€${module.price}/mesec`;
+                
+                // Load module data
+                const dataResponse = await fetch(`${API_BASE}/api/modules/${moduleId}/data`);
+                const data = await dataResponse.json();
+                
+                displayStats(data);
+                createChart(data);
+                
+            } catch (error) {
+                console.error('Error loading module demo:', error);
+                document.getElementById('moduleTitle').textContent = 'Napaka pri nalaganju';
+                document.getElementById('moduleDescription').textContent = 'Prosimo, poskusite kasneje.';
+            }
+        }
+
+        function displayStats(data) {
+            const statsGrid = document.getElementById('statsGrid');
+            let statsHTML = '';
+            
+            if (moduleId === 'sales') {
+                statsHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">€${data.revenue.toLocaleString()}</div>
+                        <div class="stat-label">Prihodki</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.growth > 0 ? '+' : ''}${data.growth}%</div>
+                        <div class="stat-label">Rast</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.transactions}</div>
+                        <div class="stat-label">Transakcije</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">€${data.avg_value.toFixed(2)}</div>
+                        <div class="stat-label">Povprečna Vrednost</div>
+                    </div>
+                `;
+            } else if (moduleId === 'customers') {
+                statsHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">${data.total.toLocaleString()}</div>
+                        <div class="stat-label">Skupaj Strank</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.active.toLocaleString()}</div>
+                        <div class="stat-label">Aktivne</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.new_this_month}</div>
+                        <div class="stat-label">Nove Ta Mesec</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.satisfaction}/10</div>
+                        <div class="stat-label">Zadovoljstvo</div>
+                    </div>
+                `;
+            } else if (moduleId === 'finance') {
+                statsHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">€${data.revenue.toLocaleString()}</div>
+                        <div class="stat-label">Prihodki</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">€${data.expenses.toLocaleString()}</div>
+                        <div class="stat-label">Stroški</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">€${data.profit.toLocaleString()}</div>
+                        <div class="stat-label">Dobiček</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.profit_margin}%</div>
+                        <div class="stat-label">Marža</div>
+                    </div>
+                `;
+            } else if (moduleId === 'marketing') {
+                statsHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">${data.campaigns}</div>
+                        <div class="stat-label">Kampanje</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.impressions.toLocaleString()}</div>
+                        <div class="stat-label">Prikazi</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.ctr}%</div>
+                        <div class="stat-label">CTR</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.roi}%</div>
+                        <div class="stat-label">ROI</div>
+                    </div>
+                `;
+            } else {
+                // Generic stats
+                statsHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">${data.metrics?.value_1?.toFixed(0) || 'N/A'}</div>
+                        <div class="stat-label">Metrika 1</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.metrics?.value_2 || 'N/A'}</div>
+                        <div class="stat-label">Metrika 2</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.metrics?.value_3?.toFixed(1) || 'N/A'}</div>
+                        <div class="stat-label">Metrika 3</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${data.status || 'Active'}</div>
+                        <div class="stat-label">Status</div>
+                    </div>
+                `;
+            }
+            
+            statsGrid.innerHTML = statsHTML;
+        }
+
+        function createChart(data) {
+            const ctx = document.getElementById('moduleChart').getContext('2d');
+            let chartData = [];
+            let labels = [];
+            
+            if (data.forecast) {
+                chartData = data.forecast;
+                labels = ['Dan 1', 'Dan 2', 'Dan 3', 'Dan 4', 'Dan 5', 'Dan 6', 'Dan 7'];
+            } else if (data.cash_flow) {
+                chartData = data.cash_flow;
+                labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Avg', 'Sep', 'Okt', 'Nov', 'Dec'];
+            } else {
+                // Generic data
+                chartData = Array.from({length: 7}, () => Math.random() * 1000);
+                labels = ['Pon', 'Tor', 'Sre', 'Čet', 'Pet', 'Sob', 'Ned'];
+            }
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: currentModule?.name || 'Data',
+                        data: chartData,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        async function activateModule() {
+            if (!currentModule) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/modules/${moduleId}/activate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ module_id: moduleId, active: true })
+                });
+                
+                if (response.ok) {
+                    alert(`Modul "${currentModule.name}" uspešno aktiviran! 🎉\n\nPreusmerjam na dashboard...`);
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    alert('Za aktivacijo tega modula morate nadgraditi svoj paket.\n\nPreusmerjam na cene...');
+                    setTimeout(() => {
+                        window.location.href = 'landing.html#pricing';
+                    }, 1500);
+                }
+            } catch (error) {
+                console.error('Error activating module:', error);
+                alert('Napaka pri aktivaciji. Poskusite kasneje.');
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('load', loadModuleDemo);
+    </script>
+</body>
+</html>
