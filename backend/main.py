@@ -37,6 +37,12 @@ app.add_middleware(
 )
 
 
+@app.get("/health")
+def health_root():
+    """Health check endpoint for Docker/Cloud Run healthchecks"""
+    return JSONResponse({"status": "ok"})
+
+
 @app.get("/api/health")
 def health():
     return JSONResponse({"status": "ok"})
