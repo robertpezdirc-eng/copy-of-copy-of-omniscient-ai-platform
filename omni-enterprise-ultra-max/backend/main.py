@@ -14,35 +14,8 @@ import logging
 # Database initialization
 from database import init_databases, close_databases
 
-# Import all route modules
-from routes.stripe_routes import stripe_router
-from routes.paypal_routes import paypal_router
-from routes.crypto_routes import crypto_router
-from routes.affiliate_routes import affiliate_router
-from routes.marketplace_routes import marketplace_router
+# Import only critical routes eagerly; defer optional routes to runtime to avoid startup failures
 from routes.ai_routes import ai_router
-from routes.analytics_routes import analytics_router
-from routes.ai_intelligence_routes import ai_intelligence_router
-from routes.growth_engine_routes import growth_router
-from routes.security_compliance_routes import security_router as security_compliance_router
-from routes.global_scaling_routes import global_router
-from routes.developer_ecosystem_routes import router as developer_router
-from routes.support_community_routes import router as support_router
-from routes.performance_routes import router as performance_router
-from routes.billing_routes import router as billing_router
-from routes.feedback_routes import router as feedback_router
-from routes.auth_routes import router as auth_router
-from routes.tenant_routes import router as tenant_router
-from routes.iot_routes import router as iot_router
-from routes.monetization_routes import router as monetization_router
-from routes.analytics_usage_routes import router as analytics_usage_router
-from routes.websocket_routes import router as websocket_router
-from routes.capacity_routes import router as capacity_router
-from routes.security_routes import router as security_audit_router
-from routes.adapters_routes import adapters_router
-from routes.learning_routes import learning_router
-from routes.ingestion_routes import ingestion_router
-from routes.payments import router as payments_router
 
 # Import middleware components
 from middleware.rate_limiter import RateLimiter
@@ -60,13 +33,13 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Initialize and cleanup resources"""
     logger.info("🚀 Starting OMNI Enterprise Ultra Max API...")
-    
+
     # Startup: Initialize databases
     await init_databases()
     logger.info("✅ All systems operational")
-    
+
     yield
-    
+
     # Shutdown: Close databases
     logger.info("🔄 Shutting down gracefully...")
     await close_databases()
@@ -171,37 +144,54 @@ async def get_system_summary():
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
 
-# Register all route modules with proper prefixes
-app.include_router(auth_router, prefix="/api/v1/auth", tags=["Authentication & Users"])
-app.include_router(tenant_router, prefix="/api/v1", tags=["Tenants & RBAC"])
-app.include_router(stripe_router, prefix="/api/v1/stripe", tags=["Stripe Payments"])
-app.include_router(paypal_router, prefix="/api/v1/paypal", tags=["PayPal Payments"])
-app.include_router(crypto_router, prefix="/api/v1/crypto", tags=["Cryptocurrency"])
-app.include_router(affiliate_router, prefix="/api/v1/affiliate", tags=["Affiliate System"])
-app.include_router(marketplace_router, prefix="/api/v1/marketplace", tags=["API Marketplace"])
-app.include_router(ai_router, prefix="/api/v1/ai", tags=["AI Services"])
-app.include_router(analytics_router, prefix="/api/v1/analytics", tags=["Analytics"])
-app.include_router(ai_intelligence_router, prefix="/api/v1/intelligence", tags=["AI Intelligence - 10 Years Ahead"])
-app.include_router(growth_router, prefix="/api/v1/growth", tags=["Growth Engine - Viral Marketing"])
-app.include_router(security_compliance_router, prefix="/api/v1/security", tags=["Enterprise Security & Compliance"])
-app.include_router(global_router, prefix="/api/v1/global", tags=["Global Scaling & Localization"])
-app.include_router(developer_router, prefix="/api/v1/developer", tags=["Developer Ecosystem & Marketplace"])
-app.include_router(support_router, prefix="/api/v1/support", tags=["Advanced Support & Community"])
-app.include_router(performance_router, prefix="/api/v1/performance", tags=["Performance & Reliability"])
-app.include_router(billing_router, prefix="/api/v1/billing", tags=["Automated Billing & Invoicing"])
-app.include_router(feedback_router, prefix="/api/v1/feedback", tags=["Continuous Feedback & Improvement"])
-app.include_router(iot_router, prefix="/api/v1/iot", tags=["IoT & Telemetry"])
-app.include_router(monetization_router, prefix="/api/v1/monetization", tags=["Monetization & Plans"])
-app.include_router(analytics_usage_router, prefix="/api/v1/analytics", tags=["Usage Analytics & Export"])
-app.include_router(websocket_router, prefix="/api/v1/iot/ws", tags=["Real-time WebSocket Telemetry"])
-app.include_router(capacity_router, tags=["Capacity Planning & Cost Optimization"])
-app.include_router(security_audit_router, prefix="/api/v1/security/audit", tags=["Security Audit"])
+def _register_routers(app: FastAPI) -> None:
+    """Register routers, tolerating missing dependencies.
+    Only AI routes are required; others are best-effort.
+    """
+    # Always include AI routes
+    app.include_router(ai_router, prefix="/api/v1/ai", tags=["AI Services"])
 
-# New routes from omni-platform merge
-app.include_router(adapters_router, prefix="/api/v1/adapters", tags=["External Adapters - Unified Platform"])
-app.include_router(learning_router, prefix="/api/v1/learning", tags=["Machine Learning & Training - Unified Platform"])
-app.include_router(ingestion_router, prefix="/api/v1/ingestion", tags=["Data Ingestion Pipeline - Unified Platform"])
-app.include_router(payments_router, prefix="/api/payments", tags=["Payments"])
+    def _try(import_path: str, router_name: str, prefix: str, tags: list[str]) -> None:
+        try:
+            module = __import__(import_path, fromlist=[router_name])
+            router = getattr(module, router_name)
+            app.include_router(router, prefix=prefix, tags=tags)
+        except Exception as e:
+            logger.warning(f"Skipping router {import_path}.{router_name}: {e}")
+
+    _try("routes.auth_routes", "router", "/api/v1/auth", ["Authentication & Users"])
+    _try("routes.tenant_routes", "router", "/api/v1", ["Tenants & RBAC"])
+    _try("routes.stripe_routes", "stripe_router", "/api/v1/stripe", ["Stripe Payments"])
+    _try("routes.paypal_routes", "paypal_router", "/api/v1/paypal", ["PayPal Payments"])
+    _try("routes.crypto_routes", "crypto_router", "/api/v1/crypto", ["Cryptocurrency"])
+    _try("routes.affiliate_routes", "affiliate_router", "/api/v1/affiliate", ["Affiliate System"])
+    _try("routes.marketplace_routes", "marketplace_router", "/api/v1/marketplace", ["API Marketplace"])
+    _try("routes.analytics_routes", "analytics_router", "/api/v1/analytics", ["Analytics"])
+    _try("routes.ai_intelligence_routes", "ai_intelligence_router", "/api/v1/intelligence", ["AI Intelligence - 10 Years Ahead"])
+    _try("routes.growth_engine_routes", "growth_router", "/api/v1/growth", ["Growth Engine - Viral Marketing"])
+    _try("routes.security_compliance_routes", "security_router", "/api/v1/security", ["Enterprise Security & Compliance"])
+    _try("routes.global_scaling_routes", "global_router", "/api/v1/global", ["Global Scaling & Localization"])
+    _try("routes.developer_ecosystem_routes", "router", "/api/v1/developer", ["Developer Ecosystem & Marketplace"])
+    _try("routes.support_community_routes", "router", "/api/v1/support", ["Advanced Support & Community"])
+    _try("routes.performance_routes", "router", "/api/v1/performance", ["Performance & Reliability"])
+    _try("routes.billing_routes", "router", "/api/v1/billing", ["Automated Billing & Invoicing"])
+    _try("routes.feedback_routes", "router", "/api/v1/feedback", ["Continuous Feedback & Improvement"])
+    _try("routes.iot_routes", "router", "/api/v1/iot", ["IoT & Telemetry"])
+    _try("routes.monetization_routes", "router", "/api/v1/monetization", ["Monetization & Plans"])
+    _try("routes.analytics_usage_routes", "router", "/api/v1/analytics", ["Usage Analytics & Export"])
+    _try("routes.websocket_routes", "router", "/api/v1/iot/ws", ["Real-time WebSocket Telemetry"])
+    _try("routes.capacity_routes", "router", "", ["Capacity Planning & Cost Optimization"])
+    _try("routes.security_routes", "router", "/api/v1/security/audit", ["Security Audit"])
+    _try("routes.advanced_ai_routes", "router", "/api/v1/advanced-ai", ["Advanced AI Platform"])
+    # Unified platform merges (best-effort)
+    _try("routes.adapters_routes", "adapters_router", "/api/v1/adapters", ["External Adapters - Unified Platform"])
+    _try("routes.learning_routes", "learning_router", "/api/v1/learning", ["Machine Learning & Training - Unified Platform"])
+    _try("routes.ingestion_routes", "ingestion_router", "/api/v1/ingestion", ["Data Ingestion Pipeline - Unified Platform"])
+    _try("routes.payments", "router", "/api/payments", ["Payments"])
+
+
+# Register routers
+_register_routers(app)
 
 # Global exception handler
 @app.exception_handler(Exception)
@@ -230,10 +220,13 @@ async def root():
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8080))
+    # Disable auto-reload in production/container environments to avoid
+    # spawning a watcher process that can break Cloud Run startup.
+    _reload = os.getenv("UVICORN_RELOAD", "0").lower() in ("1", "true", "yes")
     uvicorn.run(
-        "main:app",
+        app,
         host="0.0.0.0",
         port=port,
-        reload=True,
+        reload=_reload,
         log_level="info"
     )

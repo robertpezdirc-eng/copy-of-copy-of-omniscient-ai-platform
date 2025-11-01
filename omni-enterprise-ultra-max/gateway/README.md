@@ -9,10 +9,19 @@ A lightweight FastAPI gateway that fronts the heavy ML worker. It handles auth, 
 - SENTRY_DSN: Optional Sentry DSN
 - SERVICE_NAME: Name of the service (defaults to ai-gateway)
 - ENVIRONMENT: Environment label (dev/stage/prod)
+ - RESPONSE_CACHE_TTL_SECONDS: Default TTL for response cache (seconds, default 60)
+ - REDIS_URL: Enable Redis-powered features (rate limiting + response cache backend) when set
+ - RATE_LIMITING_ENABLED: Explicitly enable/disable rate limiting (defaults to enabled when REDIS_URL is set)
+ - RATE_LIMIT_WINDOW_SECONDS: Rate limit window in seconds (default 60)
+ - RATE_LIMIT_FREE_PER_MIN: Requests allowed per window for free tier (default 10)
+ - RATE_LIMIT_BASIC_PER_MIN: Requests allowed per window for basic tier (default 100)
+ - RATE_LIMIT_PREMIUM_PER_MIN: Requests allowed per window for premium tier (default 1000)
+ - RATE_LIMIT_MASTER_UNLIMITED: If true, master tier is unlimited (default true)
 
 Notes:
 - Gateway route `/api/{path}` forwards to upstream `/api/{path}` (matches backend route structure)
 - Backend can run with `RUN_AS_INTERNAL=1` so the same routes are also available under `/internal/...` if needed
+ - OpenAI-compatible endpoint available at `POST /v1/chat/completions` (non-streaming) with caching and upstream fallbacks
 
 ## Run locally
 

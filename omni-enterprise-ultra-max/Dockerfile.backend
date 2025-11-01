@@ -12,13 +12,14 @@ RUN apt-get update && apt-get install -y \
 COPY backend/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY backend/ ./backend/
+COPY backend/ ./
 
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
+ENV PYTHONPATH=/app
 EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8080/api/health || exit 1
 
-CMD ["python", "backend/main.py"]
+CMD ["python", "main.py"]

@@ -1,5 +1,9 @@
 # 🚀 Omni Enterprise Ultra Max Platform
 
+[![Gateway Smoke Test](https://github.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform/actions/workflows/smoke-gateway.yml/badge.svg?branch=master)](https://github.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform/actions/workflows/smoke-gateway.yml)
+[![Deploy Minimal Backend](https://github.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform/actions/workflows/deploy-minimal-backend.yml/badge.svg?branch=master)](https://github.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform/actions/workflows/deploy-minimal-backend.yml)
+[![Deploy Gateway](https://github.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform/actions/workflows/deploy-gateway.yml/badge.svg?branch=master)](https://github.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform/actions/workflows/deploy-gateway.yml)
+
 **Revolutionary Enterprise AI Platform - Split Architecture Implementation**
 
 ## 🎯 Current Status: PRODUCTION READY

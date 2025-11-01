@@ -24,13 +24,19 @@ MYSQL_URL = os.getenv("MYSQL_URL", "mysql://user:pass@localhost:3306/omni")
 MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
 
-# PostgreSQL Engine
+# PostgreSQL Engine with optimized pooling
 postgres_engine = create_engine(
     POSTGRES_URL,
-    pool_pre_ping=True,
-    pool_size=10,
-    max_overflow=20,
-    echo=os.getenv("SQL_ECHO", "false").lower() == "true"
+    pool_pre_ping=True,  # Verify connections before using
+    pool_size=int(os.getenv("DB_POOL_SIZE", "20")),  # Increased default for Cloud Run
+    max_overflow=int(os.getenv("DB_MAX_OVERFLOW", "40")),  # More overflow capacity
+    pool_recycle=int(os.getenv("DB_POOL_RECYCLE", "3600")),  # Recycle connections hourly
+    pool_timeout=30,  # Wait up to 30s for connection from pool
+    echo=os.getenv("SQL_ECHO", "false").lower() == "true",
+    connect_args={
+        "connect_timeout": 10,  # 10s connection timeout
+        "options": "-c statement_timeout=30000"  # 30s query timeout
+    }
 )
 
 # Session Factory
@@ -80,16 +86,16 @@ def get_firestore():
 async def init_databases():
     """Initialize all database connections"""
     global mongodb_client, mongodb_db, redis_client, firestore_client
-    
+
     logger.info("Initializing database connections...")
-    
+
     # PostgreSQL
     try:
         Base.metadata.create_all(bind=postgres_engine)
         logger.info("✅ PostgreSQL connected")
     except Exception as e:
         logger.error(f"❌ PostgreSQL connection failed: {e}")
-    
+
     # MongoDB
     try:
         mongodb_client = AsyncIOMotorClient(MONGODB_URL)
@@ -98,7 +104,7 @@ async def init_databases():
         logger.info("✅ MongoDB connected")
     except Exception as e:
         logger.error(f"❌ MongoDB connection failed: {e}")
-    
+
     # Redis
     try:
         redis_client = await aioredis.from_url(
@@ -110,7 +116,7 @@ async def init_databases():
         logger.info("✅ Redis connected")
     except Exception as e:
         logger.error(f"❌ Redis connection failed: {e}")
-    
+
     # Firestore
     try:
         project_id = os.getenv("GCP_PROJECT_ID")
@@ -121,31 +127,38 @@ async def init_databases():
             logger.warning("⚠️ GCP_PROJECT_ID not set, Firestore not initialized")
     except Exception as e:
         logger.error(f"❌ Firestore connection failed: {e}")
-    
+
     logger.info("Database initialization complete")
 
 
 async def close_databases():
     """Close all database connections"""
     global mongodb_client, redis_client
-    
+
     logger.info("Closing database connections...")
-    
+
+    # Close PostgreSQL engine
+    try:
+        postgres_engine.dispose()
+        logger.info("✅ PostgreSQL connection pool disposed")
+    except Exception as e:
+        logger.error(f"❌ PostgreSQL dispose error: {e}")
+
     if mongodb_client:
         mongodb_client.close()
         logger.info("✅ MongoDB closed")
-    
+
     if redis_client:
         await redis_client.close()
         logger.info("✅ Redis closed")
-    
+
     logger.info("Database shutdown complete")
 
 
 # Cache utilities
 class CacheManager:
     """Redis cache manager"""
-    
+
     @staticmethod
     async def get(key: str) -> Optional[str]:
         """Get value from cache"""
@@ -156,7 +169,7 @@ class CacheManager:
         except Exception as e:
             logger.error(f"Cache get error: {e}")
             return None
-    
+
     @staticmethod
     async def set(key: str, value: str, ttl: int = 300) -> bool:
         """Set value in cache with TTL"""
@@ -168,7 +181,7 @@ class CacheManager:
         except Exception as e:
             logger.error(f"Cache set error: {e}")
             return False
-    
+
     @staticmethod
     async def delete(key: str) -> bool:
         """Delete key from cache"""
@@ -180,7 +193,7 @@ class CacheManager:
         except Exception as e:
             logger.error(f"Cache delete error: {e}")
             return False
-    
+
     @staticmethod
     async def clear_pattern(pattern: str) -> int:
         """Clear all keys matching pattern"""

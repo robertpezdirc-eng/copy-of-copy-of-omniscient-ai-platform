@@ -1,0 +1,41 @@
+# Reduce Cloud Build context size; keep only files needed for minimal backend build
+# Cloud Build uses .gcloudignore; if absent, it falls back to .gitignore.
+
+# Exclude VCS
+.git/
+.gitignore
+
+# Python caches
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/*.egg-info/
+
+# Node and frontend artifacts
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Large or non-essential project areas for minimal backend image
+ai-worker/**
+backup-service/**
+dashboards/**
+frontend/**
+gateway/**
+grafana/**
+ingestion/**
+learning/**
+scripts/**
+tests/**
+
+# Keep only backend adapters and minimal entrypoint, build files
+!backend/
+!backend/adapters/**
+!backend/main_minimal.py
+!Dockerfile.backend.minimal
+!cloudbuild-minimal.yaml
+
+# Allow required project metadata files
+!README.md
+!QUICKSTART.md

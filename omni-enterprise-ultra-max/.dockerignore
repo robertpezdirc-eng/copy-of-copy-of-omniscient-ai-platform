@@ -1,3 +1,25 @@
+# Reduce Docker build context size for minimal backend image
+
+.git/
+.gitignore
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/*.egg-info/
+
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Exclude everything by default, then re-include what we need
+**
+
+# Include only required files for minimal backend image
+!backend/
+!backend/adapters/**
+!backend/main_minimal.py
+!Dockerfile.backend.minimal
 # Python
 __pycache__/
 *.py[cod]

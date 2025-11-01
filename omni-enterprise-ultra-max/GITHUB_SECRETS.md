@@ -1,6 +1,6 @@
 # GitHub Actions Secrets Configuration
 
-To enable the frontend CI/CD pipeline (`.github/workflows/frontend-deploy.yml`), add these secrets to your GitHub repository:
+This repo includes GitHub Actions workflows for frontend deploys, gateway smoke tests, and Cloud Run backend deploys. Configure the secrets below in your repository.
 
 ## Required Secrets
 
@@ -48,7 +48,55 @@ gcloud iam service-accounts keys create github-actions-key.json \
 
 **Value:** Paste the entire JSON key file content.
 
-### 3. `VITE_API_URL_STAGING`
+### 3. `GCP_REGION`
+Google Cloud region for Cloud Run.
+
+**Value:**
+```
+europe-west1
+```
+
+### 4. `CLOUD_RUN_SERVICE_BACKEND`
+Cloud Run service name for the backend (used by deploy workflow).
+
+**Value:**
+```
+omni-ultra-backend
+```
+
+### 5. `GATEWAY_URL`
+Gateway base URL used by the smoke test workflow.
+
+**Value:**
+```
+https://ai-gateway-661612368188.europe-west1.run.app
+```
+
+### 6. `GATEWAY_TOKEN`
+Bearer token for the gateway (must match API_KEYS configured on the gateway service).
+
+**Value:**
+```
+prod-key-omni-2025
+```
+
+### 7. `CLOUD_RUN_SERVICE_GATEWAY`
+Cloud Run service name for the gateway.
+
+**Value:**
+```
+ai-gateway
+```
+
+### 8. `GATEWAY_UPSTREAM_URL`
+Backend URL used when deploying gateway (for UPSTREAM_URL env).
+
+**Value:**
+```
+https://omni-ultra-backend-661612368188.europe-west1.run.app
+```
+
+### 9. `VITE_API_URL_STAGING`
 Backend API URL for the staging environment.
 
 **Value:**
@@ -56,7 +104,7 @@ Backend API URL for the staging environment.
 https://omni-ultra-backend-staging-guzjyv6gfa-ew.a.run.app
 ```
 
-### 4. `VITE_API_URL_PROD`
+### 10. `VITE_API_URL_PROD`
 Backend API URL for the production environment.
 
 **Value:**
@@ -73,9 +121,23 @@ https://omni-ultra-backend-prod-guzjyv6gfa-ew.a.run.app
 
 ## Verification
 
-After adding secrets, the workflow will automatically trigger on the next push to `master` that modifies:
+### Frontend Deploy Workflow
+Triggers on push to `master` that modifies:
 - `frontend/**`
 - `.github/workflows/frontend-deploy.yml`
 - `cloudbuild-frontend-simple.yaml`
 
-You can also manually trigger it from the Actions tab.
+### Gateway Smoke Workflow
+- Workflow file: `.github/workflows/smoke-gateway.yml`
+- Triggers hourly and on manual dispatch.
+- Produces an artifact named `smoke-openai-gateway-report`.
+
+### Minimal Backend Deploy Workflow
+- Workflow file: `.github/workflows/deploy-minimal-backend.yml`
+- Trigger manually from the Actions tab.
+- Builds via Cloud Build and deploys to Cloud Run using the configured secrets.
+
+### Gateway Deploy Workflow
+- Workflow file: `.github/workflows/deploy-gateway.yml`
+- Triggers on push to `gateway/**` and on manual dispatch.
+- Performs Cloud Run source deploy of the gateway with env vars.
