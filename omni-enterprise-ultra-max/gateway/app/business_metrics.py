@@ -5,7 +5,7 @@ Track revenue, model performance, user engagement.
 from __future__ import annotations
 
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from prometheus_client import Counter, Gauge, Histogram
 
@@ -87,35 +87,35 @@ compute_cost_estimate = Gauge(
 
 class BusinessMetricsCollector:
     """Helper class for collecting business metrics."""
-    
+
     @staticmethod
     def track_revenue(amount_cents: int, tier: str, feature: str):
         """Track revenue from API usage."""
         revenue_total.labels(tier=tier, feature=feature).inc(amount_cents)
-    
+
     @staticmethod
     def update_active_users(count: int, tier: str):
         """Update active user count for a tier."""
         active_users_gauge.labels(tier=tier).set(count)
-    
+
     @staticmethod
     def track_model_inference(
-        model_name: str, 
-        status: str, 
+        model_name: str,
+        status: str,
         duration: float,
-        accuracy: float = None
+        accuracy: Optional[float] = None,
     ):
         """Track model inference metrics."""
         model_inference_total.labels(model_name=model_name, status=status).inc()
         model_prediction_latency.labels(model_name=model_name).observe(duration)
-        
+
         if accuracy is not None:
             # Assume version from environment or config
             model_accuracy_gauge.labels(
-                model_name=model_name, 
+                model_name=model_name,
                 model_version="v1"
             ).set(accuracy * 100)
-    
+
     @staticmethod
     def track_api_call(tenant_id: str, endpoint: str, tier: str, bytes_in: int, bytes_out: int):
         """Track API call metrics."""
@@ -124,17 +124,17 @@ class BusinessMetricsCollector:
             endpoint=endpoint,
             tier=tier
         ).inc()
-        
+
         api_data_processed_bytes.labels(
             direction="inbound",
             endpoint=endpoint
         ).inc(bytes_in)
-        
+
         api_data_processed_bytes.labels(
             direction="outbound",
             endpoint=endpoint
         ).inc(bytes_out)
-    
+
     @staticmethod
     def track_feature_usage(feature_name: str, tier: str):
         """Track feature usage."""
@@ -142,7 +142,7 @@ class BusinessMetricsCollector:
             feature_name=feature_name,
             tier=tier
         ).inc()
-    
+
     @staticmethod
     def track_business_error(error_type: str, severity: str):
         """Track business logic errors."""
@@ -150,7 +150,7 @@ class BusinessMetricsCollector:
             error_type=error_type,
             severity=severity
         ).inc()
-    
+
     @staticmethod
     def update_cost_estimate(resource_type: str, cost_usd_hour: float):
         """Update infrastructure cost estimate."""

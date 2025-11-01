@@ -35,7 +35,7 @@ python-telegram-bot==20.7
 
 # Utilities
 requests==2.31.0
-httpx==0.24.1
+httpx==0.25.2
 email-validator>=2.0.0
 pillow==10.1.0
 python-magic==0.4.27

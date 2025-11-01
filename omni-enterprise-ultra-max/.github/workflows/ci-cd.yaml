@@ -207,7 +207,6 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ env.PROJECT_ID }}
 
       - name: Configure Docker for GCR
         run: gcloud auth configure-docker gcr.io
@@ -282,7 +281,6 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ env.PROJECT_ID }}
 
       - name: Deploy backend to Cloud Run (staging)
         run: |
@@ -329,7 +327,9 @@ jobs:
     name: Deploy to Production
     needs: deploy-staging
     runs-on: ubuntu-latest
-    environment: production
+    environment:
+      name: production
+      url: https://omni-platform.com
     if: github.ref == 'refs/heads/main'
 
     steps:
@@ -410,23 +410,23 @@ jobs:
     needs: deploy-production
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: refined-graph-471712-n9
-      
+
       - name: Make backup script executable
         run: chmod +x scripts/gcs-backup.sh
-      
+
       - name: Run GCS backup
         run: ./scripts/gcs-backup.sh
-      
+
       - name: Backup summary
         run: |
           echo "✅ Continuous backup completed"

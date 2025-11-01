@@ -31,7 +31,7 @@ async def _forward(req: Request, method: str, path: str, body: Optional[bytes] =
     # Remove any hop-by-hop headers
     for h in ["host", "content-length"]:
         headers.pop(h, None)
-    
+
     # Add distributed tracing context
     add_trace_context_to_headers(headers)
 
@@ -41,28 +41,27 @@ async def _forward(req: Request, method: str, path: str, body: Optional[bytes] =
     async with _client() as client:
         try:
             upstream_resp = await client.request(method, url, content=body, headers=headers)
-            
+
             # Track business metrics
             tenant_id = getattr(req.state, "tenant_id", "unknown")
-            business_metrics.api_calls_by_tenant.labels(
+            tier = getattr(req.state, "tier", "free")
+            bytes_in = len(body) if body else 0
+            bytes_out = len(upstream_resp.content or b"")
+
+            business_metrics.track_api_call(
                 tenant_id=tenant_id,
                 endpoint=path,
-                method=method
-            ).inc()
-            
-            # Track data processed (estimate from content length)
-            if body:
-                business_metrics.model_inference_requests.labels(model="gateway_proxy").inc()
-                business_metrics.model_inference_data_processed_bytes.labels(
-                    model="gateway_proxy"
-                ).observe(len(body))
-            
+                tier=tier,
+                bytes_in=bytes_in,
+                bytes_out=bytes_out,
+            )
+
         except httpx.HTTPError as e:
             logger.exception("Upstream error: %s", e)
-            business_metrics.business_errors.labels(
+            business_metrics.track_business_error(
                 error_type="upstream_unavailable",
-                endpoint=path
-            ).inc()
+                severity="high",
+            )
             raise HTTPException(status_code=502, detail="Bad Gateway: upstream unavailable")
 
     # Map response back

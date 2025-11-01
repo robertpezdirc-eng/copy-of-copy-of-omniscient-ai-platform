@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .logging_utils import setup_json_logging
 from .metrics import MetricsMiddleware, metrics_asgi_app
 from .proxy import router as proxy_router
+from .openai_compat import router as openai_router
 from .rate_limiter import RedisRateLimiter, get_redis_client
 from .secret_manager import load_secrets_from_manager
 from .sentry_integration import init_sentry, sentry_middleware
@@ -78,6 +79,9 @@ if settings.enable_metrics:
 
 # Proxy routes
 app.include_router(proxy_router)
+
+# OpenAI-compatible shim (local usage)
+app.include_router(openai_router)
 
 # Wrap with Sentry (no-op if DSN missing)
 app = sentry_middleware(app)

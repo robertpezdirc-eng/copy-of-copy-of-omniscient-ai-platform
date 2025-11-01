@@ -25,10 +25,17 @@ class TextAnalysisRequest(BaseModel):
     analysis_type: str = "sentiment"
 
 
+class ChatRequest(BaseModel):
+    prompt: str
+    model: Optional[str] = None
+    provider: Optional[str] = None  # "openai", "gemini", or "auto"
+    temperature: Optional[float] = 0.7
+
+
 @ai_router.post("/predict")
 async def ai_prediction(request: PredictionRequest):
     """AI prediction endpoint"""
-    
+
     return {
         "prediction": 0.87,
         "confidence": 0.92,
@@ -60,10 +67,38 @@ async def analyze_text(request: TextAnalysisRequest):
 @ai_router.post("/generate/text")
 async def generate_text(prompt: str):
     """AI text generation"""
-    
+
     return {
         "prompt": prompt,
         "generated_text": "This is AI-generated content based on your prompt.",
         "tokens_used": 150,
         "model": "gpt-4"
     }
+
+
+# Real LLM chat via OmniBrainAdapter (OpenAI or Gemini depending on env)
+try:
+    from adapters.omni_brain_adapter import OmniBrainAdapter  # type: ignore
+    _brain = OmniBrainAdapter()
+except Exception as _e:
+    _brain = None
+
+
+@ai_router.post("/chat")
+async def chat(request: ChatRequest):
+    if not _brain:
+        return {
+            "reply": "",
+            "error": "Brain adapter unavailable. Ensure dependencies and API keys are set.",
+            "provider": request.provider or "auto",
+            "model": request.model,
+        }
+
+    payload = {
+        "prompt": request.prompt,
+        "model": request.model,
+        "provider": request.provider,
+        "temperature": request.temperature,
+    }
+    result = await _brain.invoke(payload)
+    return result

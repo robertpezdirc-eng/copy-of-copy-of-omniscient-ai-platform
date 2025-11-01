@@ -1,6 +1,6 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: 
+    args:
       - 'build'
       - '-t'
       - 'europe-west1-docker.pkg.dev/${_PROJECT_ID}/omni/omni-ultra-backend:${_TAG}'
@@ -22,3 +22,7 @@ options:
   diskSizeGb: 100
 
 timeout: 3600s
+
+substitutions:
+  _PROJECT_ID: refined-graph-471712-n9
+  _TAG: latest
