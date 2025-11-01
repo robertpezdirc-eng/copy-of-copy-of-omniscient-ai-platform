@@ -9,6 +9,11 @@ from datetime import datetime, timezone
 
 ai_router = APIRouter()
 
+try:
+    from services.ai.sentiment_analysis import get_sentiment_service
+    _sentiment = get_sentiment_service()
+except Exception as _e:
+    _sentiment = None
 
 class PredictionRequest(BaseModel):
     data: List[float]
@@ -35,7 +40,13 @@ async def ai_prediction(request: PredictionRequest):
 @ai_router.post("/analyze/text")
 async def analyze_text(request: TextAnalysisRequest):
     """Text analysis (sentiment, entities, etc.)"""
-    
+    if _sentiment and request.analysis_type == "sentiment":
+        result = await _sentiment.analyze(request.text)
+        return {
+            **result,
+            "analysis_type": request.analysis_type
+        }
+    # Fallback
     return {
         "text": request.text,
         "analysis_type": request.analysis_type,

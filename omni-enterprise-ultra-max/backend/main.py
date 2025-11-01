@@ -48,6 +48,7 @@ from routes.payments import router as payments_router
 from middleware.rate_limiter import RateLimiter
 from middleware.usage_tracker import UsageTracker
 from middleware.performance_monitor import PerformanceMonitor
+from middleware.metrics import MetricsMiddleware
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -85,12 +86,26 @@ app = FastAPI(
 # Add middleware (order matters: first added = outermost layer)
 # Performance monitor should wrap the full stack to capture end-to-end timings
 import os as _os
+from middleware.internal_prefix import InternalPrefixStripper
+
+_run_as_internal = _os.getenv("RUN_AS_INTERNAL", "0").lower() in ("1", "true", "yes")
 _slow_threshold = float(_os.getenv("PERF_SLOW_THRESHOLD_SEC", "1.0"))
+
+# If running behind gateway, first strip /internal prefix so routes match
+if _run_as_internal:
+    app.add_middleware(InternalPrefixStripper, prefix="/internal")
+
+# Metrics should be near-outermost to capture full latency and status
+app.add_middleware(MetricsMiddleware)
+
 app.add_middleware(PerformanceMonitor, slow_request_threshold=_slow_threshold)
 
-# Track usage and then apply rate limiting
-app.add_middleware(UsageTracker)  # Track all requests
-app.add_middleware(RateLimiter)   # Rate limit after tracking
+if not _run_as_internal:
+    # Track usage and then apply rate limiting
+    app.add_middleware(UsageTracker)  # Track all requests
+    app.add_middleware(RateLimiter)   # Rate limit after tracking
+else:
+    logger.info("Running in INTERNAL mode: RateLimiter and UsageTracker disabled; '/internal' prefix supported")
 
 # CORS Configuration
 app.add_middleware(
@@ -106,6 +121,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Optional Prometheus metrics at /metrics (works under /internal/metrics when RUN_AS_INTERNAL=1)
+try:
+    from prometheus_client import make_asgi_app as _make_asgi_app  # type: ignore
+    app.mount("/metrics", _make_asgi_app())
+except Exception:
+    logger.info("Prometheus client not installed; /metrics not exposed")
 
 # Health check endpoint
 @app.get("/api/health")

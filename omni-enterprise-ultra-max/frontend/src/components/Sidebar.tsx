@@ -5,6 +5,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { path: '/dashboard', icon: '📊', label: 'Dashboard' },
+    { path: '/bi-dashboard', icon: '📈', label: 'BI Analytics' },
     { path: '/profile', icon: '👤', label: 'Profile' },
     { path: '/affiliate', icon: '🤝', label: 'Affiliate' },
     { path: '/pricing', icon: '💎', label: 'Pricing' },

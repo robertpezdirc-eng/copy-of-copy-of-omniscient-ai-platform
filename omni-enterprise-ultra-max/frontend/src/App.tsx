@@ -10,6 +10,7 @@ import Profile from './pages/Profile'
 import AffiliateDashboard from './pages/AffiliateDashboard'
 import AdminPanel from './pages/AdminPanel'
 import Health from './pages/Health'
+import { BIDashboard } from './pages/BIDashboard'
 import PrivateRoute from './components/PrivateRoute'
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
           <Route element={<PrivateRoute><Layout /></PrivateRoute>}>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/bi-dashboard" element={<BIDashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/affiliate" element={<AffiliateDashboard />} />
             <Route path="/admin" element={<AdminPanel />} />
