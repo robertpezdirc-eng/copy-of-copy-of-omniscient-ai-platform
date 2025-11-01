@@ -378,6 +378,17 @@
                 bottom: 1rem;
             }
         }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -565,7 +576,9 @@
         function filterModules(category) {
             // Update active button
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if (window.event && window.event.target) {
+                window.event.target.classList.add('active');
+            }
             
             // Filter and display
             if (category === 'all') {
@@ -578,6 +591,9 @@
 
         // Activate module
         async function activateModule(moduleId) {
+            const statusMsg = document.createElement('div');
+            statusMsg.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:1rem 2rem;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);z-index:9999;animation:slideIn 0.3s ease;';
+            
             try {
                 const response = await fetch(`${API_BASE}/api/modules/${moduleId}/activate`, {
                     method: 'POST',
@@ -586,15 +602,20 @@
                 });
                 
                 if (response.ok) {
-                    alert('Modul uspešno aktiviran! 🎉');
-                    // Could redirect to module dashboard or update UI
+                    statusMsg.textContent = '✓ Modul uspešno aktiviran!';
+                    statusMsg.style.background = '#10b981';
                 } else {
-                    alert('Napaka pri aktivaciji modula. Preverite vaš paket.');
+                    statusMsg.textContent = '⚠ Napaka pri aktivaciji. Preverite vaš paket.';
+                    statusMsg.style.background = '#f59e0b';
                 }
             } catch (error) {
                 console.error('Error activating module:', error);
-                alert('Napaka pri povezavi s strežnikom.');
+                statusMsg.textContent = '✗ Napaka pri povezavi s strežnikom.';
+                statusMsg.style.background = '#ef4444';
             }
+            
+            document.body.appendChild(statusMsg);
+            setTimeout(() => statusMsg.remove(), 3000);
         }
 
         // Open module demo
