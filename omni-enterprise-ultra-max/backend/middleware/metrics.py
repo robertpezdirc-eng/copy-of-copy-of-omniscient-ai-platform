@@ -130,39 +130,52 @@ logger = logging.getLogger(__name__)
 
 
 if Counter and Histogram:
-    HTTP_REQUESTS_TOTAL = Counter(
-        "http_requests_total",
-        "Total HTTP requests",
-        labelnames=("method", "path", "status"),
-    )
+    try:
+        HTTP_REQUESTS_TOTAL = Counter(
+            "http_requests_total",
+            "Total HTTP requests",
+            labelnames=("method", "path", "status"),
+        )
+    except ValueError:
+        logger.warning("Prometheus metric http_requests_total already registered; skipping")
+        HTTP_REQUESTS_TOTAL = None  # type: ignore
 
-    HTTP_REQUEST_DURATION = Histogram(
-        "http_request_duration_seconds",
-        "HTTP request latency in seconds",
-        labelnames=("method", "path", "status"),
-        buckets=(
-            0.005,
-            0.01,
-            0.025,
-            0.05,
-            0.1,
-            0.25,
-            0.5,
-            1.0,
-            2.5,
-            5.0,
-            10.0,
-        ),
-    )
+    try:
+        HTTP_REQUEST_DURATION = Histogram(
+            "http_request_duration_seconds",
+            "HTTP request latency in seconds",
+            labelnames=("method", "path", "status"),
+            buckets=(
+                0.005,
+                0.01,
+                0.025,
+                0.05,
+                0.1,
+                0.25,
+                0.5,
+                1.0,
+                2.5,
+                5.0,
+                10.0,
+            ),
+        )
+    except ValueError:
+        logger.warning("Prometheus metric http_request_duration_seconds already registered; skipping")
+        HTTP_REQUEST_DURATION = None  # type: ignore
 
-    HTTP_ERRORS_TOTAL = Counter(
-        "http_errors_total",
-        "Total HTTP requests that resulted in unhandled exceptions",
-        labelnames=("method", "path"),
-    )
+    try:
+        HTTP_ERRORS_TOTAL = Counter(
+            "http_errors_total",
+            "Total HTTP requests that resulted in unhandled exceptions",
+            labelnames=("method", "path"),
+        )
+    except ValueError:
+        logger.warning("Prometheus metric http_errors_total already registered; skipping")
+        HTTP_ERRORS_TOTAL = None  # type: ignore
 else:
     HTTP_REQUESTS_TOTAL = None  # type: ignore
     HTTP_REQUEST_DURATION = None  # type: ignore
+    HTTP_ERRORS_TOTAL = None  # type: ignore
     HTTP_ERRORS_TOTAL = None  # type: ignore
 
 
