@@ -25,8 +25,47 @@
 - ✅ Performance Monitoring
 - ✅ Security & Compliance
 - 🆕 **Dashboard Builder** (Ollama-powered, 20 dashboard types)
+- 🆕 **Grafana Monitoring** (Cache, API, Business metrics + Alerts)
 
 **API Documentation:** [https://omni-ultra-backend-prod-661612368188.europe-west1.run.app/api/docs](https://omni-ultra-backend-prod-661612368188.europe-west1.run.app/api/docs)
+
+---
+
+## 📊 Grafana Monitoring (NEW!)
+
+**Comprehensive monitoring solution with Prometheus + Grafana**
+
+### Features
+
+✅ **Cache Monitoring** - Redis hit rates, memory usage, connection status  
+✅ **FastAPI Metrics** - Latency, request rates, error rates by endpoint  
+✅ **Business KPIs** - Revenue, users, ML model performance  
+✅ **Automated Alerts** - 20+ alert rules for proactive monitoring  
+
+### Quick Start
+
+```bash
+# Start full monitoring stack
+docker-compose -f docker-compose.monitoring.yml up -d
+
+# Access services
+# Grafana: http://localhost:3000 (admin/admin)
+# Prometheus: http://localhost:9090
+# Metrics: http://localhost:8081/metrics
+```
+
+### Dashboards
+
+- 📊 **Cache Monitoring** - Hit rates, Redis metrics, latency comparison
+- 📊 **API Performance** - Request rates, errors, top slowest endpoints
+- 📊 **Business Metrics** - Revenue, user engagement, ML predictions
+
+### Documentation
+
+- 🇸🇮 **[Slovenian Quick Start](GRAFANA_QUICK_START_SL.md)** - Hitra navodila v Slovenščini
+- 🇬🇧 **[Complete Guide](dashboards/README-GRAFANA.md)** - Full setup and configuration
+
+📚 **Includes:** Dashboards, Alert Rules, Prometheus Config, Alertmanager Setup
 
 ---
 
