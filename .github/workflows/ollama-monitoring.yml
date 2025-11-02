@@ -1,0 +1,71 @@
+name: Ollama Integration - Continuous Monitoring
+
+on:
+  schedule:
+    # Run every 4 hours
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'backend/**'
+      - 'tests/test_ollama_integration.py'
+      - '.github/workflows/ollama-monitoring.yml'
+
+jobs:
+  test-ollama-integration:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install pytest httpx fastapi uvicorn requests prometheus-client
+      
+      - name: Run Ollama integration tests
+        run: |
+          cd /home/runner/work/copy-of-copy-of-omniscient-ai-platform/copy-of-copy-of-omniscient-ai-platform
+          python -m pytest tests/test_ollama_integration.py -v --tb=short
+      
+      - name: Test backend imports
+        run: |
+          cd backend
+          python -c "from main import app, USE_OLLAMA, OLLAMA_URL; print('✅ Backend imports OK')"
+      
+      - name: Validate Ollama endpoints
+        run: |
+          cd backend
+          python3 << 'PYEOF'
+          import sys
+          sys.path.insert(0, '.')
+          from main import app
+          from fastapi.testclient import TestClient
+          
+          client = TestClient(app)
+          
+          # Test AI status endpoint
+          response = client.get('/api/ai/status')
+          assert response.status_code == 200, f'Status check failed: {response.status_code}'
+          print('✅ /api/ai/status endpoint OK')
+          
+          # Test health endpoint
+          response = client.get('/api/health')
+          assert response.status_code == 200, f'Health check failed: {response.status_code}'
+          print('✅ /api/health endpoint OK')
+          
+          print('✅ All Ollama endpoints validated')
+          PYEOF
+      
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::warning::Ollama integration tests failed - automatic failover to LangChain should be working"

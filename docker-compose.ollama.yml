@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-service
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+
+  ollama-health-monitor:
+    image: curlimages/curl:latest
+    container_name: ollama-health-monitor
+    depends_on:
+      - ollama
+    command: >
+      sh -c "
+      while true; do
+        sleep 300;
+        if ! curl -f http://ollama:11434/api/tags > /dev/null 2>&1; then
+          echo 'Ollama health check failed at $(date)';
+        else
+          echo 'Ollama healthy at $(date)';
+        fi;
+      done
+      "
+    restart: unless-stopped
+
+volumes:
+  ollama-data:
+    driver: local
