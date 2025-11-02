@@ -77,7 +77,7 @@ jobs:
             -f omni-enterprise-ultra-max/Dockerfile.backend \
             -t europe-west1-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/omni/omni-ultra-backend:${{ github.sha }} \
             -t europe-west1-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/omni/omni-ultra-backend:latest \
-            .
+            omni-enterprise-ultra-max/
 
       - name: Push Backend Image
         run: |
@@ -144,7 +144,7 @@ jobs:
             -f omni-enterprise-ultra-max/gateway/Dockerfile \
             -t europe-west1-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/omni/ai-gateway:${{ github.sha }} \
             -t europe-west1-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/omni/ai-gateway:latest \
-            gateway/
+            omni-enterprise-ultra-max/gateway/
 
       - name: Push Gateway Image
         run: |
@@ -213,7 +213,7 @@ jobs:
             --build-arg VITE_WS_URL=$(echo "${{ steps.backend-url.outputs.url }}" | sed 's/https/wss/') \
             -t europe-west1-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/omni/omni-frontend:${{ github.sha }} \
             -t europe-west1-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/omni/omni-frontend:latest \
-            frontend/
+            omni-enterprise-ultra-max/frontend/
 
       - name: Push Frontend Image
         run: |
@@ -348,5 +348,6 @@ jobs:
             echo "- Gateway: ${{ steps.urls.outputs.gateway || 'Not deployed' }}" >> $GITHUB_STEP_SUMMARY
             echo "- Frontend: ${{ steps.urls.outputs.frontend || 'Not deployed' }}" >> $GITHUB_STEP_SUMMARY
           fi
+
 
 
