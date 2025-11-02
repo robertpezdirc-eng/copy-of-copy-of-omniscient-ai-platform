@@ -95,9 +95,9 @@ jobs:
             --cpu 2 \
             --timeout 300 \
             --max-instances 10 \
-            --min-instances 0 \
+            --min-instances 1 \
             --set-env-vars RUN_AS_INTERNAL=0 \
-            --set-env-vars USE_OLLAMA=false
+            --set-env-vars USE_OLLAMA=true,OLLAMA_URL=https://ollama-661612368188.europe-west1.run.app,OLLAMA_MODEL=llama3.2,OLLAMA_TIMEOUT=60
 
       - name: Get Backend Service URL
         id: backend-url
@@ -162,7 +162,7 @@ jobs:
             --cpu 1 \
             --timeout 60 \
             --max-instances 10 \
-            --min-instances 0 \
+            --min-instances 1 \
             --set-env-vars UPSTREAM_URL=${{ steps.backend-url.outputs.url }} \
             --set-env-vars API_KEYS=${{ secrets.GATEWAY_API_KEYS }}
 
@@ -348,4 +348,5 @@ jobs:
             echo "- Gateway: ${{ steps.urls.outputs.gateway || 'Not deployed' }}" >> $GITHUB_STEP_SUMMARY
             echo "- Frontend: ${{ steps.urls.outputs.frontend || 'Not deployed' }}" >> $GITHUB_STEP_SUMMARY
           fi
+
 

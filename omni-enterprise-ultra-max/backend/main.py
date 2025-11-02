@@ -179,6 +179,17 @@ def _register_routers(app: FastAPI) -> None:
 
     _try_ollama()
 
+    # Include Dashboard Builder routes (uses Ollama)
+    def _try_dashboard_builder():
+        try:
+            from routes.dashboard_builder_routes import router as dashboard_builder_router
+            app.include_router(dashboard_builder_router, tags=["Dashboard Builder"])
+            logger.info("✅ Dashboard Builder routes registered")
+        except Exception as e:
+            logger.warning(f"Skipping Dashboard Builder routes: {e}")
+
+    _try_dashboard_builder()
+
     # In minimal mode, skip optional routers to reduce startup time and risk
     if OMNI_MINIMAL:
         logger.info("OMNI_MINIMAL=1 active: skipping optional routers for fast, reliable startup")

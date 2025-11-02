@@ -120,8 +120,8 @@ class RedisRateLimiter(BaseHTTPMiddleware):
         Returns:
             (allowed, remaining, reset_time)
         """
-    now = int(time.time())
-    window = self.window  # configurable window seconds
+        now = int(time.time())
+        window = self.window  # configurable window seconds
         key = f"ratelimit:{tier}:{identifier}"
 
         try:

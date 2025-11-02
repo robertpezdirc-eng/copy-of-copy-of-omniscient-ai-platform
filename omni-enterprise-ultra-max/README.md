@@ -24,8 +24,61 @@
 - ✅ IoT & Real-time WebSocket
 - ✅ Performance Monitoring
 - ✅ Security & Compliance
+- 🆕 **Dashboard Builder** (Ollama-powered, 20 dashboard types)
 
 **API Documentation:** [https://omni-ultra-backend-prod-661612368188.europe-west1.run.app/api/docs](https://omni-ultra-backend-prod-661612368188.europe-west1.run.app/api/docs)
+
+---
+
+## 🎨 Dashboard Builder (NEW!)
+
+**AI-Powered Dashboard Generation using Ollama**
+
+Generate 20 production-ready React TypeScript dashboards automatically:
+
+### Quick Start
+
+```powershell
+# Check builder status
+.\build-dashboards.ps1 -Action status
+
+# Build high-priority dashboards (6 dashboards)
+.\build-dashboards.ps1 -Action build-priority -Priority 1
+
+# Build all 20 dashboards
+.\build-dashboards.ps1 -Action build-all
+```
+
+### Available Dashboards
+
+**High Priority (⭐⭐⭐):**
+- Revenue Analytics 💰
+- User Analytics & Engagement 👥
+- AI Performance & Model Insights 🤖
+- Subscription Metrics 💳
+- System Health Monitoring 🏥
+- Security & Authentication 🔒
+
+**Medium Priority (⭐⭐):**
+- Affiliate Tracking, Marketplace, Churn Prediction
+- Forecast, Sentiment Analysis, Anomaly Detection
+- Payment Gateway, API Usage, Growth Engine
+
+**Low Priority (⭐):**
+- Gamification, Recommendations, Neo4j Graph
+- Swarm Intelligence, AGI Dashboard
+
+### Features
+
+✅ **AI-Generated** - Ollama creates React components with Recharts  
+✅ **Real-time Data** - WebSocket support for live updates  
+✅ **Responsive Design** - Mobile & desktop ready with Tailwind CSS  
+✅ **Export Ready** - PDF/CSV export functionality  
+✅ **Production-Grade** - Error handling, loading states, TypeScript  
+
+📚 **Full Documentation:** [DASHBOARD_BUILDER_README.md](DASHBOARD_BUILDER_README.md)  
+🚀 **Deployment Guide:** [DEPLOYMENT_PLAN.md](DEPLOYMENT_PLAN.md)  
+🧪 **Testing Guide:** [QUICK_TEST_GUIDE.md](QUICK_TEST_GUIDE.md)
 
 ---
 

@@ -1,0 +1,24 @@
+{
+  "task": "full_build_and_deploy",
+  "github_repo": "https://github.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform",
+  "cloud_region": "europe-west1",
+  "project_id": "refined-graph-471712-n9",
+  "services": ["backend", "frontend", "gateway", "ollama"],
+  "build": {
+    "use_cloud_build": true,
+    "triggers": "on_push"
+  },
+  "deploy": {
+    "platform": "cloud_run",
+    "memory": "4Gi",
+    "cpu": 2,
+    "keep_alive": "5m"
+  },
+  "verify": {
+    "check_health_endpoints": true
+  },
+  "credentials": {
+    "github_token": "GITHUB_PAT",
+    "gcp_service_account": "gcp-key.json"
+  }
+}

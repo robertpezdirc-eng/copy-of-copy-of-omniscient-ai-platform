@@ -100,6 +100,7 @@ async def startup_event():
 # Shutdown event
 @app.on_event("shutdown")
 async def shutdown_event():
+    logger.info("AI Worker shutting down")
 
 
 def _load_services_background():
@@ -110,15 +111,6 @@ def _load_services_background():
     logger.info("Loading heavy AI services (background thread)...")
     
     try:
-
-
-def _ensure_services_loaded():
-    """Check if services are ready, wait if necessary"""
-    if not _services_ready:
-        raise HTTPException(
-            status_code=503,
-            detail="AI services are still initializing. Please try again in a moment."
-        )
         # Local services (copied or minimal versions)
         from services.ai.predictive_analytics import PredictiveAnalyticsService
         from services.ai.recommendation_engine import RecommendationEngine
@@ -162,7 +154,16 @@ def _ensure_services_loaded():
     except Exception as e:
         # Log but don't crash - allow health checks to pass
         logger.error("Service initialization failed", error=e)
-    logger.info("AI Worker shutting down")
+
+
+def _ensure_services_loaded():
+    """Check if services are ready, wait if necessary"""
+    if not _services_ready:
+        raise HTTPException(
+            status_code=503,
+            detail="AI services are still initializing. Please try again in a moment."
+        )
+
 
 class PredictionRequest(BaseModel):
     user_id: str
@@ -242,8 +243,8 @@ async def predict_revenue(payload: RevenueForecastRequest):
 
 
 @app.post("/predict/churn")
-    _ensure_services_loaded()
 async def predict_churn(payload: PredictionRequest):
+    _ensure_services_loaded()
     return await _predictive.predict_churn(
         tenant_id=str(payload.context.get("tenant_id", "default")),
         user_id=payload.user_id,
@@ -252,8 +253,8 @@ async def predict_churn(payload: PredictionRequest):
 
 
 @app.post("/recommend/products")
-    _ensure_services_loaded()
 async def recommend_products(payload: PredictionRequest):
+    _ensure_services_loaded()
     recs = await _reco.recommend_products(
         tenant_id=str(payload.context.get("tenant_id", "default")),
         user_id=payload.user_id,
@@ -263,9 +264,8 @@ async def recommend_products(payload: PredictionRequest):
 
 
 @app.post("/recommend/features")
-    _ensure_services_loaded()
-    _ensure_services_loaded()
 async def recommend_features(payload: PredictionRequest):
+    _ensure_services_loaded()
     feats = await _reco.recommend_features(
         tenant_id=str(payload.context.get("tenant_id", "default")),
         user_id=payload.user_id,
@@ -276,6 +276,7 @@ async def recommend_features(payload: PredictionRequest):
 
 @app.get("/anomaly/detect")
 async def anomaly_detect():
+    _ensure_services_loaded()
     now = datetime.now(timezone.utc)
     metrics = [
         {"metric": "api_response_time_ms", "value": 120 + (i % 10) * 3, "timestamp": (now).isoformat()}
@@ -286,20 +287,20 @@ async def anomaly_detect():
 
 
 @app.post("/sentiment/analyze")
-    _ensure_services_loaded()
 async def sentiment_analyze(text: str = Body(..., embed=True)):
+    _ensure_services_loaded()
     return await _sentiment.analyze(text)
 
 
 @app.post("/swarm/coordinate")
-    _ensure_services_loaded()
 async def swarm_coordinate(task: SwarmTask):
+    _ensure_services_loaded()
     return await _swarm.coordinate({"goal": task.goal, "context": task.context})
 
 
 @app.post("/faiss/upsert")
-    _ensure_services_loaded()
 async def faiss_upsert(req: UpsertItemsRequest):
+    _ensure_services_loaded()
     idx = _faiss_cache.get(req.tenant_id)
     if not idx:
         idx = TenantVectorIndex(req.tenant_id)
@@ -309,8 +310,8 @@ async def faiss_upsert(req: UpsertItemsRequest):
 
 
 @app.post("/faiss/query")
-    _ensure_services_loaded()
 async def faiss_query(req: VectorQueryRequest):
+    _ensure_services_loaded()
     idx = _faiss_cache.get(req.tenant_id)
     if not idx:
         idx = TenantVectorIndex(req.tenant_id)
@@ -329,9 +330,9 @@ class LSTMForecastRequest(BaseModel):
 
 
 @app.post("/predict/revenue-lstm")
-    _ensure_services_loaded()
 @limiter.limit("100/minute")
 async def predict_revenue_lstm(request: Request, payload: LSTMForecastRequest):
+    _ensure_services_loaded()
     """
     LSTM-based time series forecasting
     Alternative to Prophet with attention mechanism
@@ -441,8 +442,8 @@ class IsolationForestRequest(BaseModel):
 
 
 @app.post("/anomaly/isolation-forest")
-    _ensure_services_loaded()
 async def anomaly_isolation_forest(payload: IsolationForestRequest):
+    _ensure_services_loaded()
     """
     Advanced anomaly detection using Isolation Forest
     Unsupervised outlier detection with contamination tuning
@@ -465,8 +466,8 @@ class AgentObservationRequest(BaseModel):
 
 
 @app.post("/agents/observe")
-    _ensure_services_loaded()
 async def agents_observe(payload: AgentObservationRequest):
+    _ensure_services_loaded()
     """
     Process observation with autonomous agents
     Agents reason, plan, and execute actions
@@ -481,8 +482,8 @@ async def agents_observe(payload: AgentObservationRequest):
 
 
 @app.get("/agents/status")
-    _ensure_services_loaded()
 async def agents_status():
+    _ensure_services_loaded()
     """Get status of all registered agents"""
     agents_info = []
     for agent_id, agent in _agent_coordinator.agents.items():
@@ -503,12 +504,12 @@ async def agents_status():
 
 
 @app.post("/agents/register")
-    _ensure_services_loaded()
 async def agents_register(
     agent_id: str = Body(...),
     role: str = Body(...),
     capabilities: List[str] = Body(...)
 ):
+    _ensure_services_loaded()
     """Register a new autonomous agent"""
     agent_role = AgentRole(role)
     agent = AutonomousAgent(agent_id, agent_role, capabilities)
@@ -577,8 +578,8 @@ async def agi_process(payload: AGIProcessRequest):
 
 
 @app.get("/agi/reasoning/history")
-    _ensure_services_loaded()
 async def agi_reasoning_history(limit: int = 10):
+    _ensure_services_loaded()
     """Get AGI reasoning history"""
     history = _agi_framework.reasoning.reasoning_history[-limit:]
     return {

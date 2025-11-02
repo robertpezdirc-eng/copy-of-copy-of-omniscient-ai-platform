@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:18-bullseye AS builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY package*.json ./
 
 # Install all dependencies (including dev) for build
 # Dev dependencies like TypeScript and Vite are required to build the app
-RUN npm ci
+RUN npm install --legacy-peer-deps
 
 # Copy source code
 COPY . .
@@ -31,22 +31,23 @@ RUN set -ex \
 # Build application
 RUN npm run build
 
-# Production stage using Nginx to serve static files
-FROM nginx:1.27-alpine AS runner
+# Production stage using a minimal Node HTTP static server
+FROM node:18-alpine AS runner
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# Copy built app to Nginx html directory
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Copy built app
+COPY --from=builder /app/dist /app/dist
+
+# Install lightweight static file server
+RUN npm install -g serve
+
+# Cloud Run sets PORT env var
+ENV PORT=8080
 
 # Expose port
 EXPOSE 8080
 
-# Healthcheck for Cloud Run
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget -qO- http://localhost:8080/health || exit 1
-
-# Default Nginx entrypoint serves the app
-CMD ["nginx", "-g", "daemon off;"]
+# Start static server binding to all interfaces and Cloud Run port
+CMD ["serve", "-s", "dist", "-l", "tcp://0.0.0.0:8080"]
 

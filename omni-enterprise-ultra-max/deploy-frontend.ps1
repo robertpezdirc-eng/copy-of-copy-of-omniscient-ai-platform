@@ -1,24 +1,32 @@
-# Quick Frontend Deployment Script for PowerShell
-# Run from repo root
+<#
+------------------------------------------
+ DEPLOY FRONTEND TO CLOUD RUN
+------------------------------------------
+ This script submits the frontend Cloud Build with properly quoted substitutions.
+ Run from the repo root.
+#>
 
-$Project = "refined-graph-471712-n9"
-$Region = "europe-west1"
-$Repo = "omni-ultra"
-$Image = "omni-frontend"
-$Tag = "v1.0.0"
-$API = "https://omni-ultra-backend-prod-661612368188.europe-west1.run.app"
-$WS = "wss://omni-ultra-backend-prod-661612368188.europe-west1.run.app"
+param(
+  [string]$PROJECT_ID = "refined-graph-471712-n9",
+  [string]$REGION = "europe-west1"
+)
 
-Write-Host "Building & deploying frontend to Cloud Run..." -ForegroundColor Cyan
+$SERVICE_NAME = "omni-frontend"
 
-# Submit Cloud Build from repo root using frontend/cloudbuild.yaml
-# This builds the Docker image and deploys it to Cloud Run
+Write-Host "🚀 Začenjam deploy frontend-a v $REGION ..." -ForegroundColor Cyan
 
+# Use the frontend-specific Cloud Build; only pass the needed substitutions
 gcloud builds submit `
-  --config=frontend/cloudbuild.yaml `
-  --project=$Project `
-  --substitutions=_PROJECT_ID=$Project,_REGION=$Region,_REPO=$Repo,_IMAGE=$Image,_TAG=$Tag,_VITE_API_URL=$API,_VITE_WS_URL=$WS
+  --config "frontend/cloudbuild.yaml" `
+  --project "$PROJECT_ID" `
+  --substitutions "_PROJECT_ID=$PROJECT_ID,_REGION=$REGION"
 
-Write-Host "Fetching service URL..." -ForegroundColor Yellow
-$FRONTEND_URL = gcloud run services describe omni-frontend --region=$Region --project=$Project --format="value(status.url)"
-Write-Host "Frontend URL: $FRONTEND_URL" -ForegroundColor Green
+Write-Host "✅ Deploy ukaz poslan za $SERVICE_NAME" -ForegroundColor Green
+
+Write-Host "🔎 Pridobivam URL storitve ..." -ForegroundColor Yellow
+$FRONTEND_URL = gcloud run services describe $SERVICE_NAME --region "$REGION" --project "$PROJECT_ID" --format "value(status.url)"
+if ($LASTEXITCODE -eq 0 -and $FRONTEND_URL) {
+  Write-Host "🌐 Frontend URL: $FRONTEND_URL" -ForegroundColor Green
+} else {
+  Write-Host "ℹ️  Deploy poslan. URL bo na voljo po zaključku gradnje v Cloud Build logih." -ForegroundColor Yellow
+}
