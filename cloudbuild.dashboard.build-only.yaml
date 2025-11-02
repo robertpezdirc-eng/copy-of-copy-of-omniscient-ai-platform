@@ -1,0 +1,38 @@
+# Cloud Build configuration for OMNI Dashboard - BUILD ONLY (NO DEPLOYMENT)
+# Use this during development to avoid Cloud Run costs entirely
+#
+# This config only builds and pushes the Docker image without deploying to Cloud Run
+# COST: Only Cloud Build costs (~$0.04-0.08 per build), NO Cloud Run costs
+#
+# To use: gcloud builds submit --config=cloudbuild.dashboard.build-only.yaml
+
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.dashboard'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/omni-dashboard:${_TAG}'
+      - '.'
+
+  # Push the Docker image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/${PROJECT_ID}/omni-dashboard:${_TAG}'
+
+  # Note: NO deployment step = NO Cloud Run costs
+  # When ready to deploy, use cloudbuild.dashboard.yaml instead
+
+# Default substitution values
+substitutions:
+  _TAG: 'dev-${SHORT_SHA}'
+
+# Options - minimum cost build machine
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'N1_HIGHCPU_2'
+
+# (metadata removed)

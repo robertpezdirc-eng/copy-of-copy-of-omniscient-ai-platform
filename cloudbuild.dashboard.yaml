@@ -1,5 +1,17 @@
 # Cloud Build configuration for OMNI Dashboard
 # This file automates the build and deployment of the OMNI dashboard to Cloud Run
+#
+# COST OPTIMIZATION FOR DEVELOPMENT:
+# To skip deployment and only build (0 cost for Cloud Run):
+# Comment out the "Deploy to Cloud Run" step (lines 21-64) when just building/testing
+# Run with: gcloud builds submit --config=cloudbuild.dashboard.yaml
+#
+# Current config optimized for MINIMAL costs:
+# - Memory: 256Mi (minimum)
+# - Min instances: 0 (scales to zero, no cost when idle)
+# - Max instances: 1 (single instance only)
+# - Concurrency: 10 (minimal concurrent requests)
+# - Build machine: N1_HIGHCPU_2 (smallest)
 
 steps:
   # Build the Docker image
@@ -35,13 +47,15 @@ steps:
       - '--port'
       - '8080'
       - '--memory'
-      - '512Mi'
+      - '256Mi'
       - '--cpu'
       - '1'
       - '--min-instances'
       - '0'
       - '--max-instances'
       - '1'
+      - '--concurrency'
+      - '10'
       - '--timeout'
       - '60'
       - '--set-env-vars'
@@ -71,6 +85,6 @@ substitutions:
 # Options
 options:
   logging: CLOUD_LOGGING_ONLY
-  machineType: 'N1_HIGHCPU_4'
+  machineType: 'N1_HIGHCPU_2'
 
 # (metadata removed)
