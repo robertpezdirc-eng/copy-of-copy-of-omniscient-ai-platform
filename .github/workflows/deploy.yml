@@ -49,7 +49,7 @@ jobs:
     name: Build & Deploy Backend
     runs-on: ubuntu-latest
     needs: test
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
+    if: (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')) || github.event_name == 'workflow_dispatch'
     permissions:
       contents: read
       id-token: write
@@ -312,19 +312,19 @@ jobs:
     
     steps:
       - name: Authenticate to Google Cloud
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
+        if: (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')) || github.event_name == 'workflow_dispatch'
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Set up Cloud SDK
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
+        if: (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')) || github.event_name == 'workflow_dispatch'
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: Get Service URLs
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
+        if: (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')) || github.event_name == 'workflow_dispatch'
         id: urls
         run: |
           echo "backend=$(gcloud run services describe ${{ env.BACKEND_SERVICE }} --region ${{ env.GCP_REGION }} --format 'value(status.url)')" >> $GITHUB_OUTPUT
@@ -348,6 +348,7 @@ jobs:
             echo "- Gateway: ${{ steps.urls.outputs.gateway || 'Not deployed' }}" >> $GITHUB_STEP_SUMMARY
             echo "- Frontend: ${{ steps.urls.outputs.frontend || 'Not deployed' }}" >> $GITHUB_STEP_SUMMARY
           fi
+
 
 
 
