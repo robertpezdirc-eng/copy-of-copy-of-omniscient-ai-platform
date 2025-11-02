@@ -1,0 +1,47 @@
+{
+  "name": "@omni/client",
+  "version": "1.0.0",
+  "description": "Official JavaScript/TypeScript SDK for Omni Enterprise Ultra Max Platform",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "omni",
+    "ai",
+    "ml",
+    "analytics",
+    "sdk"
+  ],
+  "author": "Omni Team <support@omni-platform.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "rollup": "^4.0.0",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omni-platform/omni-js-sdk.git"
+  },
+  "homepage": "https://omni-platform.com",
+  "bugs": {
+    "url": "https://github.com/omni-platform/omni-js-sdk/issues"
+  }
+}
