@@ -1,0 +1,64 @@
+# Prometheus configuration for scraping local metrics and forwarding to Grafana Cloud
+#
+# This configuration file can be used with a local Prometheus instance to:
+# 1. Scrape metrics from your backend application
+# 2. Forward metrics to Grafana Cloud via remote_write
+#
+# Usage:
+# 1. Install Prometheus locally or use Docker
+# 2. Update the remote_write section with your Grafana Cloud credentials
+# 3. Run: prometheus --config.file=prometheus.yml
+
+global:
+  scrape_interval: 15s # How frequently to scrape targets
+  evaluation_interval: 15s # How frequently to evaluate rules
+
+# Scrape configuration for your backend application
+scrape_configs:
+  - job_name: 'omni-backend'
+    # If running locally:
+    static_configs:
+      - targets: ['localhost:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    
+  # Add gateway if you have it running separately:
+  # - job_name: 'omni-gateway'
+  #   static_configs:
+  #     - targets: ['localhost:8081']
+  #   metrics_path: '/metrics'
+
+# Remote write configuration for Grafana Cloud
+# IMPORTANT: Replace the values below with your actual Grafana Cloud credentials
+remote_write:
+  - url: https://prometheus-prod-REGION.grafana.net/api/prom/push
+    # Replace REGION with your region (e.g., us-central1, eu-west-0)
+    
+    basic_auth:
+      username: YOUR_GRAFANA_CLOUD_INSTANCE_ID
+      # This is your Instance ID from Grafana Cloud (e.g., 123456)
+      
+      password: YOUR_GRAFANA_CLOUD_API_KEY
+      # Generate this from: Grafana Cloud Portal > Security > API Keys
+      # Needs "MetricsPublisher" role
+    
+    # Optional: Add metadata for better organization
+    write_relabel_configs:
+      - source_labels: [__name__]
+        target_label: cluster
+        replacement: 'omni-platform'
+      
+      - source_labels: [__name__]
+        target_label: environment
+        replacement: 'production'
+        # Change to 'staging' or 'development' as needed
+    
+    # Queue configuration for reliability
+    queue_config:
+      capacity: 10000
+      max_shards: 10
+      min_shards: 1
+      max_samples_per_send: 5000
+      batch_send_deadline: 5s
+      min_backoff: 30ms
+      max_backoff: 100ms
