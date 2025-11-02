@@ -1,0 +1,17 @@
+# IIoT Ollama Service - Requirements
+# Python dependencies for the IIoT data processing service with Ollama integration
+
+# FastAPI and server
+fastapi==0.109.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+
+# HTTP client for Ollama
+httpx==0.25.1
+
+# Google Cloud dependencies
+google-cloud-pubsub==2.18.4
+google-cloud-logging==3.8.0
+
+# JSON and data handling (standard library, but listed for clarity)
+# json, base64, datetime are built-in
