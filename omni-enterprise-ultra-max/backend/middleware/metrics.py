@@ -15,18 +15,24 @@ logger = logging.getLogger(__name__)
 
 
 if Counter and Histogram:
-    HTTP_REQUESTS_TOTAL = Counter(
-        "http_requests_total",
-        "Total HTTP requests",
-        labelnames=("method", "path", "status"),
-    )
+    try:
+        HTTP_REQUESTS_TOTAL = Counter(
+            "http_requests_total",
+            "Total HTTP requests",
+            labelnames=("method", "path", "status"),
+        )
+    except ValueError:
+        # Already registered; retrieve from registry
+        from prometheus_client import REGISTRY
+        HTTP_REQUESTS_TOTAL = [c for c in REGISTRY._collector_to_names if hasattr(c, '_name') and c._name == 'http_requests_total'][0]
 
-    HTTP_REQUEST_DURATION = Histogram(
-        "http_request_duration_seconds",
-        "HTTP request latency in seconds",
-        labelnames=("method", "path", "status"),
-        buckets=(
-            0.005,
+    try:
+        HTTP_REQUEST_DURATION = Histogram(
+            "http_request_duration_seconds",
+            "HTTP request latency in seconds",
+            labelnames=("method", "path", "status"),
+            buckets=(
+                0.005,
             0.01,
             0.025,
             0.05,
@@ -35,10 +41,15 @@ if Counter and Histogram:
             0.5,
             1.0,
             2.5,
-            5.0,
-            10.0,
-        ),
-    )
+                2.5,
+                5.0,
+                10.0,
+            ),
+        )
+    except ValueError:
+        # Already registered
+        from prometheus_client import REGISTRY
+        HTTP_REQUEST_DURATION = [c for c in REGISTRY._collector_to_names if hasattr(c, '_name') and c._name == 'http_request_duration_seconds'][0]
 
     HTTP_ERRORS_TOTAL = Counter(
         "http_errors_total",
