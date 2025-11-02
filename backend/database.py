@@ -101,6 +101,12 @@ async def init_databases():
 
     # PostgreSQL
     try:
+        # Ensure models are imported before create_all so tables are registered
+        try:
+            from models import gdpr as _gdpr_models  # noqa: F401
+        except Exception as _model_err:
+            logger.warning(f"Model import warning (tables may be missing): {_model_err}")
+
         Base.metadata.create_all(bind=postgres_engine)
         logger.info("✅ PostgreSQL connected")
     except Exception as e:

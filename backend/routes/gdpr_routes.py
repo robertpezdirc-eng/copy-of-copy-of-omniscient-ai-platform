@@ -17,6 +17,14 @@ from services.compliance.gdpr_service import (
     ConsentType,
 )
 
+# Import health monitoring
+try:
+    from services.compliance.gdpr_health import check_database_health
+    _health_monitoring_available = True
+except ImportError:
+    _health_monitoring_available = False
+    logger.warning("GDPR health monitoring not available")
+
 router = APIRouter(prefix="/api/v1/gdpr", tags=["GDPR"])
 logger = logging.getLogger(__name__)
 
@@ -57,7 +65,22 @@ class PortabilityRequest(BaseModel):
 
 @router.get("/health")
 async def health():
-    return {"status": "healthy", "service": "gdpr"}
+    """
+    GDPR service health check with database persistence monitoring
+    """
+    if not _health_monitoring_available:
+        return {"status": "healthy", "service": "gdpr", "monitoring": "unavailable"}
+    
+    health_report = check_database_health()
+    
+    return {
+        "status": health_report["status"],
+        "service": "gdpr",
+        "repository_type": health_report["repository_type"],
+        "metrics": health_report["metrics"],
+        "recommendations": health_report["recommendations"],
+        "timestamp": health_report["timestamp"],
+    }
 
 
 @router.post("/consent")
@@ -153,15 +176,35 @@ async def right_to_portability(payload: PortabilityRequest):
 
 @router.get("/status")
 async def gdpr_status():
+    """
+    GDPR service status with real-time repository counts
+    """
     try:
         gdpr = get_gdpr_service()
+        
+        # Query repository for accurate counts
+        try:
+            consent_users = gdpr.repo.count_unique_consent_users()
+            audit_events = gdpr.repo.count_audit_events()
+            processing_activities = gdpr.repo.count_processing_activities()
+            repository_type = type(gdpr.repo).__name__
+        except Exception as repo_err:
+            logger.warning(f"Repository count failed, using in-memory fallback: {repo_err}")
+            # Fallback to in-memory mirrors
+            consent_users = len(gdpr.consent_records)
+            audit_events = len(gdpr.audit_log)
+            processing_activities = len(gdpr.processing_activities)
+            repository_type = "InMemory (fallback)"
+
         return {
             "dpo_email": gdpr.dpo_email,
-            "consent_users": len(gdpr.consent_records),
-            "processing_activities": len(gdpr.processing_activities),
-            "audit_events": len(gdpr.audit_log),
+            "consent_users": consent_users,
+            "processing_activities": processing_activities,
+            "audit_events": audit_events,
             "retention_days": gdpr.retention_period.days,
+            "repository_type": repository_type,
+            "status": "operational"
         }
     except Exception as e:
         logger.error(f"GDPR status failed: {e}")
-        return {"error": str(e)}
+        return {"error": str(e), "status": "degraded"}
