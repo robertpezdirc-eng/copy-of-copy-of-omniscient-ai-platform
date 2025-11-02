@@ -189,6 +189,17 @@ def _register_routers(app: FastAPI) -> None:
             logger.warning(f"Skipping Dashboard Builder routes: {e}")
 
     _try_dashboard_builder()
+    # Include RAG routes
+    def _try_rag():
+        try:
+            from routes.rag_routes import router as rag_router
+            app.include_router(rag_router, tags=["RAG"])
+            logger.info("✅ RAG routes registered")
+        except Exception as e:
+            logger.warning(f"Skipping RAG routes: {e}")
+
+    _try_rag()
+
 
     # In minimal mode, skip optional routers to reduce startup time and risk
     if OMNI_MINIMAL:
