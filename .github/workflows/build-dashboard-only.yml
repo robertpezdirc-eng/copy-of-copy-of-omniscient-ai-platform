@@ -1,0 +1,57 @@
+name: Build Dashboard (No Deploy)
+
+# This workflow ONLY builds the Docker image for the dashboard
+# NO deployment to Cloud Run = NO Cloud Run costs
+# Use this during development to test builds without incurring costs
+
+on:
+  push:
+    branches: [ "main", "develop", "copilot/*" ]
+    paths:
+      - 'Dockerfile.dashboard'
+      - 'omni_dashboard_professional.py'
+      - 'omni_web_dashboard.py'
+      - 'omni_platform_api_client.py'
+      - 'requirements-dashboard.txt'
+      - 'omni_platform/**'
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+concurrency:
+  group: build-dashboard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-only:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Dashboard Docker image (NO PUSH, NO DEPLOY)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.dashboard
+          push: false
+          tags: |
+            omni-dashboard:${{ github.sha }}
+            omni-dashboard:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build Summary
+        run: |
+          echo "✅ Dashboard Docker image built successfully!"
+          echo "📦 Image: omni-dashboard:${{ github.sha }}"
+          echo "💰 Cost: $0 (no deployment, no push to registry)"
+          echo ""
+          echo "ℹ️  This workflow only builds the image locally for testing."
+          echo "ℹ️  No deployment to Cloud Run = No ongoing costs."
