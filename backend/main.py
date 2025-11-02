@@ -106,6 +106,28 @@ try:
 except Exception as e:
     logger.info(f"EnhancedMetricsMiddleware not added: {e}")
 
+# Add multi-tenancy middleware (optional - enable with ENABLE_MULTI_TENANCY=true)
+if _os.getenv("ENABLE_MULTI_TENANCY", "false").lower() in ("1", "true", "yes"):
+    try:
+        from middleware.tenant_context import TenantContextMiddleware, init_demo_api_keys
+        from middleware.quota_enforcement import QuotaEnforcementMiddleware
+        
+        # Add tenant context extraction
+        require_tenant = _os.getenv("REQUIRE_TENANT", "false").lower() in ("1", "true", "yes")
+        app.add_middleware(TenantContextMiddleware, require_tenant=require_tenant)
+        
+        # Add quota enforcement
+        app.add_middleware(QuotaEnforcementMiddleware, enabled=True)
+        
+        # Initialize demo API keys for testing
+        init_demo_api_keys()
+        
+        logger.info("✅ Multi-tenancy enabled (tenant context + quota enforcement)")
+    except Exception as e:
+        logger.warning(f"Multi-tenancy middleware not added: {e}")
+else:
+    logger.info("Multi-tenancy disabled (set ENABLE_MULTI_TENANCY=true to enable)")
+
 # If running behind gateway, first strip /internal prefix so routes match
 if _run_as_internal:
     app.add_middleware(InternalPrefixStripper, prefix="/internal")
@@ -159,6 +181,30 @@ async def cache_stats():
             "status": "unavailable",
             "error": str(e),
             "message": "Redis cache not configured or unavailable"
+        }
+
+# Tenant usage endpoint (multi-tenancy)
+@app.get("/api/v1/tenant/usage")
+async def tenant_usage(request: Request):
+    """Get current tenant usage and quotas"""
+    try:
+        from middleware.tenant_context import get_tenant_id
+        from middleware.quota_enforcement import get_tenant_usage
+        
+        tenant_id = get_tenant_id(request)
+        if not tenant_id:
+            return {
+                "status": "no_tenant",
+                "message": "Multi-tenancy not enabled or tenant not identified"
+            }
+        
+        usage = get_tenant_usage(tenant_id)
+        return usage
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "message": "Multi-tenancy not configured"
         }
 
 # Health check endpoint
