@@ -6,9 +6,9 @@ FROM ollama/ollama:latest
 # Change "llama3" to the model you want to use (e.g., "gemma:2b")
 ENV OLLAMA_MODELS=llama3
 
-# Install the model during build so it's included in the image
-# This reduces startup time in Cloud Run
-RUN ollama pull ${OLLAMA_MODELS}
+# Pre-download the model during build to reduce startup time
+# Start Ollama server in background, pull model, then stop
+RUN ollama serve & sleep 5 && ollama pull ${OLLAMA_MODELS} && pkill ollama
 
 # Ollama runs on port 11434 by default
 # Cloud Run will handle exposing this port
