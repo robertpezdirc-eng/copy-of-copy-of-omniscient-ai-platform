@@ -9,6 +9,9 @@ import logging
 
 from services.ai.dashboard_builder_service import get_dashboard_builder
 
+# Import caching utility
+from utils.cache import cache_response
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/dashboards", tags=["Dashboard Builder"])
@@ -30,9 +33,10 @@ class BuildResponse(BaseModel):
 
 
 @router.get("/types")
+@cache_response(ttl=3600)  # Cache for 1 hour
 async def list_dashboard_types():
     """
-    List all available dashboard types that can be built.
+    List all available dashboard types that can be built - cached for 1 hour
     
     Returns:
         List of dashboard types with descriptions and priorities

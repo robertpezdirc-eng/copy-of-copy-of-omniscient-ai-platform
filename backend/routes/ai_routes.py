@@ -9,6 +9,9 @@ from datetime import datetime, timezone
 import time
 import os
 
+# Import caching utility
+from utils.cache import cache_response
+
 ai_router = APIRouter()
 
 # Ollama integration flag
@@ -62,8 +65,9 @@ async def ai_prediction(request: PredictionRequest):
 
 
 @ai_router.post("/analyze/text")
+@cache_response(ttl=1800)  # Cache for 30 minutes
 async def analyze_text(request: TextAnalysisRequest):
-    """Text analysis (sentiment, entities, etc.)"""
+    """Text analysis (sentiment, entities, etc.) - cached for 30 min"""
     if _sentiment and request.analysis_type == "sentiment":
         result = await _sentiment.analyze(request.text)
         return {

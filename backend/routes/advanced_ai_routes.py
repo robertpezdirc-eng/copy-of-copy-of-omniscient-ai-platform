@@ -9,6 +9,9 @@ import logging
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field, validator
 
+# Import caching utility
+from utils.cache import cache_response
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
@@ -106,7 +109,9 @@ class MultiModalPayload(BaseModel):
 
 
 @router.get("/models", tags=["Advanced AI"])
+@cache_response(ttl=600)  # Cache for 10 minutes
 async def list_models() -> Dict[str, Any]:
+    """List all models - cached for 10 min"""
     registry = _require(_model_registry, "Model registry")
     try:
         return await registry.list_models()
@@ -116,7 +121,9 @@ async def list_models() -> Dict[str, Any]:
 
 
 @router.get("/models/{model_name}", tags=["Advanced AI"])
+@cache_response(ttl=600)  # Cache for 10 minutes
 async def get_model(model_name: str) -> Dict[str, Any]:
+    """Get model details - cached for 10 min"""
     registry = _require(_model_registry, "Model registry")
     try:
         return await registry.get_model(model_name)

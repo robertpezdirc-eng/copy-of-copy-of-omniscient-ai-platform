@@ -6,14 +6,18 @@ from fastapi import APIRouter, Query
 from datetime import datetime, timezone, timedelta
 import random
 
+# Import caching utility
+from utils.cache import cache_response
+
 analytics_router = APIRouter()
 
 
 @analytics_router.get("/dashboard")
+@cache_response(ttl=300)  # Cache for 5 minutes
 async def get_analytics_dashboard(
     period: str = Query("30d", description="Period: 7d, 30d, 90d")
 ):
-    """Get analytics dashboard data"""
+    """Get analytics dashboard data - cached for 5 min"""
     
     return {
         "period": period,
@@ -30,8 +34,9 @@ async def get_analytics_dashboard(
 
 
 @analytics_router.get("/metrics")
+@cache_response(ttl=60)  # Cache for 1 minute
 async def get_metrics():
-    """Get real-time metrics"""
+    """Get real-time metrics - cached for 1 min"""
     
     return {
         "timestamp": datetime.now(timezone.utc).isoformat(),
