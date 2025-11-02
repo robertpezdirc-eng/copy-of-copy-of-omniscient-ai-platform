@@ -38,11 +38,22 @@ echo ""
 # Test 1: Health check
 echo "Test 1: Health Check"
 echo "--------------------"
-curl -s "${IIOT_URL}/health" \
-  -H "Authorization: Bearer $(gcloud auth print-identity-token)" | jq .
+HEALTH_RESPONSE=$(curl -s -w "\n%{http_code}" "${IIOT_URL}/health" \
+  -H "Authorization: Bearer $(gcloud auth print-identity-token)")
 
-echo ""
-echo "✓ Health check passed"
+HEALTH_HTTP_CODE=$(echo "$HEALTH_RESPONSE" | tail -n1)
+HEALTH_BODY=$(echo "$HEALTH_RESPONSE" | head -n-1)
+
+if [ "$HEALTH_HTTP_CODE" = "200" ]; then
+    echo "$HEALTH_BODY" | jq .
+    echo ""
+    echo "✓ Health check passed"
+else
+    echo "❌ Health check failed with code: $HEALTH_HTTP_CODE"
+    echo "$HEALTH_BODY"
+    exit 1
+fi
+
 echo ""
 
 # Test 2: Direct analysis endpoint

@@ -2,6 +2,17 @@
 # Builds and deploys the IIoT data processing service to Cloud Run
 
 steps:
+  # Get the Ollama service URL
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud run services describe ollama-ai-inference \
+          --region=${_REGION} \
+          --format='value(status.url)' > /workspace/ollama_url.txt || echo "http://localhost:11434" > /workspace/ollama_url.txt
+    id: 'get-ollama-url'
+
   # Build the IIoT Ollama service Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args:
@@ -25,27 +36,28 @@ steps:
 
   # Deploy IIoT service to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
     args:
-      - 'run'
-      - 'deploy'
-      - 'iiot-ollama-processor'
-      - '--image=gcr.io/${PROJECT_ID}/iiot-ollama-service:${SHORT_SHA}'
-      - '--platform=managed'
-      - '--region=${_REGION}'
-      - '--cpu=2'
-      - '--memory=4Gi'
-      - '--no-allow-unauthenticated'
-      - '--max-instances=10'
-      - '--min-instances=0'
-      - '--ingress=all'
-      - '--port=8080'
-      - '--set-env-vars=OLLAMA_URL=${_OLLAMA_URL},OLLAMA_MODEL=llama3,GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+      - '-c'
+      - |
+        OLLAMA_URL=$(cat /workspace/ollama_url.txt)
+        gcloud run deploy iiot-ollama-processor \
+          --image=gcr.io/${PROJECT_ID}/iiot-ollama-service:${SHORT_SHA} \
+          --platform=managed \
+          --region=${_REGION} \
+          --cpu=2 \
+          --memory=4Gi \
+          --no-allow-unauthenticated \
+          --max-instances=10 \
+          --min-instances=0 \
+          --ingress=all \
+          --port=8080 \
+          --set-env-vars="OLLAMA_URL=$${OLLAMA_URL},OLLAMA_MODEL=llama3,GOOGLE_CLOUD_PROJECT=${PROJECT_ID}"
     id: 'deploy-iiot-service'
-    waitFor: ['push-iiot-service']
+    waitFor: ['push-iiot-service', 'get-ollama-url']
 
 substitutions:
   _REGION: 'europe-west1'
-  _OLLAMA_URL: 'http://ollama-ai-inference:11434'
 
 options:
   machineType: 'E2_HIGHCPU_8'

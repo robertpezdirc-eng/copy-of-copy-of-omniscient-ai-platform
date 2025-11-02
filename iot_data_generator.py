@@ -10,6 +10,11 @@ import argparse
 from datetime import datetime
 from google.cloud import pubsub_v1
 
+# Status distribution weights for mixed mode
+STATUS_DISTRIBUTION_NORMAL = 0.6   # 60% of messages are normal
+STATUS_DISTRIBUTION_WARNING = 0.25  # 25% of messages are warnings
+STATUS_DISTRIBUTION_CRITICAL = 0.15 # 15% of messages are critical
+
 # Device configurations
 DEVICES = {
     "vibration_sensor_001": {
@@ -108,7 +113,11 @@ def main():
                 # 60% normal, 25% warning, 15% critical
                 status = random.choices(
                     ['normal', 'warning', 'critical'],
-                    weights=[0.6, 0.25, 0.15]
+                    weights=[
+                        STATUS_DISTRIBUTION_NORMAL,
+                        STATUS_DISTRIBUTION_WARNING,
+                        STATUS_DISTRIBUTION_CRITICAL
+                    ]
                 )[0]
             else:
                 status = args.status

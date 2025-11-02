@@ -73,26 +73,34 @@ fi
 echo ""
 echo "Granting IAM roles..."
 
+# Function to add IAM binding if it doesn't exist
+add_iam_binding_if_needed() {
+    local member=$1
+    local role=$2
+    
+    if gcloud projects get-iam-policy ${PROJECT_ID} \
+        --flatten="bindings[].members" \
+        --filter="bindings.role:${role} AND bindings.members:${member}" \
+        --format="value(bindings.members)" 2>/dev/null | grep -q "${member}"; then
+        echo "  ✓ ${role} already granted"
+    else
+        gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+            --member="${member}" \
+            --role="${role}" \
+            --condition=None \
+            --quiet
+        echo "  ✓ Granted ${role}"
+    fi
+}
+
 # Allow service account to invoke Cloud Run
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-    --member="serviceAccount:${SERVICE_ACCOUNT_EMAIL}" \
-    --role="roles/run.invoker" \
-    --condition=None \
-    || echo "Note: IAM binding may already exist"
+add_iam_binding_if_needed "serviceAccount:${SERVICE_ACCOUNT_EMAIL}" "roles/run.invoker"
 
 # Allow service account to publish to Pub/Sub
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-    --member="serviceAccount:${SERVICE_ACCOUNT_EMAIL}" \
-    --role="roles/pubsub.publisher" \
-    --condition=None \
-    || echo "Note: IAM binding may already exist"
+add_iam_binding_if_needed "serviceAccount:${SERVICE_ACCOUNT_EMAIL}" "roles/pubsub.publisher"
 
 # Allow service account to subscribe to Pub/Sub
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-    --member="serviceAccount:${SERVICE_ACCOUNT_EMAIL}" \
-    --role="roles/pubsub.subscriber" \
-    --condition=None \
-    || echo "Note: IAM binding may already exist"
+add_iam_binding_if_needed "serviceAccount:${SERVICE_ACCOUNT_EMAIL}" "roles/pubsub.subscriber"
 
 echo "✓ IAM roles configured"
 

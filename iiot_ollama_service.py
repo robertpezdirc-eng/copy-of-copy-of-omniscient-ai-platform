@@ -34,7 +34,9 @@ OLLAMA_TIMEOUT = float(os.getenv("OLLAMA_TIMEOUT", "120"))
 
 # Google Cloud configuration
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "refined-graph-471712-n9")
-PUBSUB_OUTPUT_TOPIC = os.getenv("PUBSUB_OUTPUT_TOPIC", "iot-analysis-results")
+# Note: PUBSUB_OUTPUT_TOPIC can be used for publishing analysis results to another topic
+# Currently analysis results are returned in the HTTP response
+# PUBSUB_OUTPUT_TOPIC = os.getenv("PUBSUB_OUTPUT_TOPIC", "iot-analysis-results")
 
 
 class OllamaClient:
