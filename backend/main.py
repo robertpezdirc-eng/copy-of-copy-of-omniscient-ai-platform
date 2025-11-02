@@ -48,6 +48,13 @@ async def lifespan(app: FastAPI):
     """Initialize and cleanup resources"""
     logger.info("🚀 Starting OMNI Enterprise Ultra Max API...")
 
+    # Setup observability (telemetry and tracing)
+    try:
+        from middleware.telemetry import setup_telemetry
+        setup_telemetry("omni-backend")
+    except Exception as e:
+        logger.info(f"Telemetry setup skipped: {e}")
+
     # Startup: Initialize databases
     await init_databases()
     logger.info("✅ All systems operational")
@@ -70,6 +77,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Instrument FastAPI with OpenTelemetry tracing
+try:
+    from middleware.telemetry import instrument_fastapi
+    instrument_fastapi(app)
+except Exception as e:
+    logger.info(f"FastAPI instrumentation skipped: {e}")
+
 # Add middleware (order matters: first added = outermost layer)
 # Performance monitor should wrap the full stack to capture end-to-end timings
 import os as _os
@@ -77,6 +91,20 @@ from middleware.internal_prefix import InternalPrefixStripper
 
 _run_as_internal = _os.getenv("RUN_AS_INTERNAL", "0").lower() in ("1", "true", "yes")
 _slow_threshold = float(_os.getenv("PERF_SLOW_THRESHOLD_SEC", "1.0"))
+
+# Add telemetry middleware for distributed tracing
+try:
+    from middleware.telemetry import TelemetryMiddleware
+    app.add_middleware(TelemetryMiddleware)
+except Exception as e:
+    logger.info(f"TelemetryMiddleware not added: {e}")
+
+# Add enhanced metrics middleware for business tracking
+try:
+    from middleware.metrics_enhanced import EnhancedMetricsMiddleware
+    app.add_middleware(EnhancedMetricsMiddleware)
+except Exception as e:
+    logger.info(f"EnhancedMetricsMiddleware not added: {e}")
 
 # If running behind gateway, first strip /internal prefix so routes match
 if _run_as_internal:
@@ -118,6 +146,20 @@ try:
     app.mount("/metrics", _make_asgi_app())
 except Exception:
     logger.info("Prometheus client not installed; /metrics not exposed")
+
+# Cache statistics endpoint
+@app.get("/api/v1/cache/stats")
+async def cache_stats():
+    """Get Redis cache statistics and hit rate"""
+    try:
+        from utils.cache import get_cache_stats
+        return get_cache_stats()
+    except Exception as e:
+        return {
+            "status": "unavailable",
+            "error": str(e),
+            "message": "Redis cache not configured or unavailable"
+        }
 
 # Health check endpoint
 @app.get("/api/health")

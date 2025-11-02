@@ -15,6 +15,9 @@ from enum import Enum
 import os
 import httpx
 
+# Import caching utility
+from utils.cache import cache_response
+
 logger = logging.getLogger(__name__)
 
 # === MODELS ===
@@ -95,8 +98,9 @@ _ai_http: httpx.AsyncClient | None = httpx.AsyncClient(timeout=20) if AI_WORKER_
 
 
 @ai_intelligence_router.get("/predictions/revenue")
+@cache_response(ttl=1800)  # Cache for 30 minutes
 async def get_revenue_predictions():
-    """Get AI revenue predictions"""
+    """Get AI revenue predictions (cached for 30 min)"""
     
     return {
         "current_mrr": round(random.uniform(50000, 150000), 2),
@@ -109,8 +113,9 @@ async def get_revenue_predictions():
 
 
 @ai_intelligence_router.get("/insights/business")
+@cache_response(ttl=900)  # Cache for 15 minutes
 async def get_business_insights():
-    """Get AI-powered business insights"""
+    """Get AI-powered business insights (cached for 15 min)"""
     
     insights = [
         {
@@ -127,8 +132,9 @@ async def get_business_insights():
 
 
 @ai_intelligence_router.get("/anomaly-detection")
+@cache_response(ttl=300)  # Cache for 5 minutes
 async def detect_anomalies_summary():
-    """Quick anomaly summary for dashboards"""
+    """Quick anomaly summary for dashboards (cached for 5 min)"""
     return {
         "anomalies_detected": random.randint(0, 5),
         "anomalies": [
@@ -149,6 +155,9 @@ async def predict_churn_risk(request: PredictionRequest):
     Predict user churn risk using advanced ML models
     Analyzes: usage patterns, payment history, engagement, support tickets
     """
+    import time
+    start_time = time.time()
+    
     try:
         user_id = request.user_id
         # If real predictive service available, use it
@@ -171,6 +180,16 @@ async def predict_churn_risk(request: PredictionRequest):
             ltv_prediction = 4580.50
             engagement_score = 0.78
             sentiment_score = 0.82
+        
+        # Track ML prediction metrics
+        try:
+            from middleware.metrics_enhanced import track_ml_prediction, track_revenue_event
+            duration = time.time() - start_time
+            tenant_id = request.context.get("tenant_id", "default") if request.context else "default"
+            track_ml_prediction("churn_prediction", str(tenant_id), duration)
+            track_revenue_event(str(tenant_id), "ml_inference")
+        except Exception:
+            pass  # Metrics tracking is optional
         
         # Determine risk level
         if churn_probability < 0.2:
