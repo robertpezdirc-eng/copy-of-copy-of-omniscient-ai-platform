@@ -1,0 +1,33 @@
+{
+  "timestamp": "2025-11-01T19:44:01.028373Z",
+  "target": "https://ai-gateway-661612368188.europe-west1.run.app/v1/chat/completions",
+  "status": "PASS",
+  "details": {
+    "status_code": 200,
+    "latency_ms": 1749.08,
+    "has_choices": true,
+    "model": "gpt-4o-mini",
+    "error": null
+  },
+  "sample": {
+    "id": "chatcmpl-local-1762026241",
+    "object": "chat.completion",
+    "created": 1762026241,
+    "model": "gpt-4o-mini",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Hello!"
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 11,
+      "completion_tokens": 1,
+      "total_tokens": 12
+    }
+  }
+}

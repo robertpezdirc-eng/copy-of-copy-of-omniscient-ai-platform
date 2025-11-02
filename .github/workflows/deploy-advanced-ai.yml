@@ -1,0 +1,86 @@
+name: Deploy Advanced AI (Cloud Run)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image tag (default: short SHA)"
+        required: false
+      canary_percent:
+        description: "Canary traffic percent (0-50)"
+        required: false
+        default: '0'
+      active_version:
+        description: "Active (production) model version"
+        required: false
+        default: v1
+      canary_version:
+        description: "Canary model version"
+        required: false
+        default: v1
+  push:
+    branches: [ master ]
+    paths:
+      - 'backend/services/advanced_ai/**'
+      - 'backend/routes/advanced_ai_routes.py'
+      - 'cloudbuild-advanced-ai.yaml'
+      - '.github/workflows/deploy-advanced-ai.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Print gcloud info
+        run: |
+          gcloud --version
+          gcloud config list
+
+      - name: Determine tag
+        id: vars
+        run: |
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            echo "TAG=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Cloud Build (build and deploy Advanced AI)
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          REGION: ${{ secrets.GCP_REGION }}
+          SERVICE: ${{ secrets.CLOUD_RUN_SERVICE_ADVANCED_AI }}
+          OPENAI_SECRET: ${{ secrets.OPENAI_SECRET_NAME }}
+        run: |
+          set -euo pipefail
+          REGION=${REGION:-europe-west1}
+          SERVICE=${SERVICE:-advanced-ai-service}
+          OPENAI_SECRET=${OPENAI_SECRET:-OPENAI_API_KEY:latest}
+          # Substitutions
+          SUBS="_PROJECT_ID=${PROJECT_ID},_TAG=${{ steps.vars.outputs.TAG }},_SERVICE=${SERVICE},_REGION=${REGION},_MEMORY=4Gi,_CPU=2,_MAX_INSTANCES=5,_MIN_INSTANCES=1,_CONCURRENCY=80,_ACTIVE_MODEL_VERSION=${{ github.event.inputs.active_version || 'v1' }},_CANARY_MODEL_VERSION=${{ github.event.inputs.canary_version || 'v1' }},_CANARY_TRAFFIC_PERCENT=${{ github.event.inputs.canary_percent || '0' }},_AUTOML_DATASET_BUCKET=gs://omni-automl-datasets,_MULTIMODAL_ENABLED=true,_TRACE_SAMPLING_RATE=0.1,_OPENAI_API_SECRET=${OPENAI_SECRET}"
+          gcloud builds submit \
+            --config cloudbuild-advanced-ai.yaml \
+            --substitutions "$SUBS"
+
+      - name: Output service URL
+        env:
+          REGION: ${{ secrets.GCP_REGION }}
+          SERVICE: ${{ secrets.CLOUD_RUN_SERVICE_ADVANCED_AI }}
+        run: |
+          REGION=${REGION:-europe-west1}
+          SERVICE=${SERVICE:-advanced-ai-service}
+          URL=$(gcloud run services describe "$SERVICE" --region "$REGION" --format='value(status.url)')
+          echo "Service URL: $URL"
+          echo "service_url=$URL" >> $GITHUB_OUTPUT

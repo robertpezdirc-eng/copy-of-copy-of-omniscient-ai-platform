@@ -1,0 +1,52 @@
+name: Deploy Gateway (Cloud Run)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+    paths:
+      - 'gateway/**'
+      - '.github/workflows/deploy-gateway.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Print gcloud info
+        run: |
+          gcloud --version
+          gcloud config list
+
+      - name: Deploy gateway with Cloud Run source deploy
+        working-directory: gateway
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          REGION: ${{ secrets.GCP_REGION }}
+          GATEWAY_SERVICE: ${{ secrets.CLOUD_RUN_SERVICE_GATEWAY }}
+          UPSTREAM_URL: ${{ secrets.GATEWAY_UPSTREAM_URL }}
+          API_KEYS: ${{ secrets.GATEWAY_TOKEN }}
+        run: |
+          set -euo pipefail
+          GATEWAY_SERVICE=${GATEWAY_SERVICE:-ai-gateway}
+          REGION=${REGION:-europe-west1}
+          # Cloud Run source deploy builds from this directory
+          gcloud run deploy "$GATEWAY_SERVICE" \
+            --source . \
+            --region "$REGION" \
+            --allow-unauthenticated \
+            --port 8080 \
+            --set-env-vars "UPSTREAM_URL=${UPSTREAM_URL:-https://omni-ultra-backend-661612368188.europe-west1.run.app},API_KEYS=${API_KEYS:-prod-key-omni-2025}" \
+            --max-instances 10 --min-instances 1 --memory 512Mi --cpu 1 --timeout 300

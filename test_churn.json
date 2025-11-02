@@ -1,0 +1,8 @@
+{
+  "tenant_id": "demo-tenant",
+  "historical_data": [
+    {"user_id": "user_123", "event": "login", "timestamp": "2025-10-01"},
+    {"user_id": "user_123", "event": "feature_usage", "timestamp": "2025-10-15"},
+    {"user_id": "user_123", "event": "support_ticket", "timestamp": "2025-10-20"}
+  ]
+}
