@@ -26,6 +26,14 @@ except Exception:
     _stripe = None
 
 
+# ==============================
+# AI Provider Configuration
+# ==============================
+# Support for local Ollama as AI provider
+USE_OLLAMA = os.getenv("USE_OLLAMA", "false").lower() == "true"
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
+
+
 app = FastAPI(title="Omni Cloud Backend", version="1.0.0")
 
 app.add_middleware(
@@ -306,6 +314,115 @@ def langchain_generate(body: LCGenerateBody):
         return JSONResponse({"error": str(e)}, status_code=400)
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=502)
+
+
+# ==============================
+# Unified AI endpoint with fallback
+# ==============================
+
+class AIGenerateBody(BaseModel):
+    prompt: str
+    model: str | None = None
+    temperature: float | None = None
+    max_tokens: int | None = None
+    provider: str | None = None  # Optional: force specific provider
+
+
+@app.post("/api/ai/generate")
+def ai_generate(body: AIGenerateBody):
+    """
+    Unified AI generation endpoint with automatic fallback.
+    Uses Ollama if USE_OLLAMA=true, otherwise falls back to LangChain providers.
+    """
+    # If USE_OLLAMA is enabled, try Ollama first
+    if USE_OLLAMA:
+        try:
+            base = _ollama_base_url()
+            model = body.model or _ollama_default_model()
+            
+            r = requests.post(
+                f"{base}/api/generate",
+                json={
+                    "model": model,
+                    "prompt": body.prompt,
+                    "stream": False,
+                    "options": {
+                        **({"temperature": body.temperature} if body.temperature else {}),
+                        **({"num_predict": body.max_tokens} if body.max_tokens else {}),
+                    },
+                },
+                timeout=_ollama_timeout_seconds(),
+            )
+            r.raise_for_status()
+            data = r.json()
+            
+            return JSONResponse({
+                "provider": "ollama",
+                "model": model,
+                "response": data.get("response", ""),
+                "success": True,
+            })
+        except Exception as e:
+            # Log error and fall through to LangChain providers
+            print(f"Ollama failed: {e}, falling back to LangChain")
+    
+    # Fallback to LangChain if Ollama is disabled or failed
+    if invoke_llm is None:
+        return JSONResponse({
+            "error": "No AI provider available. Enable Ollama or configure LangChain providers.",
+            "success": False,
+        }, status_code=503)
+    
+    try:
+        # Use LangChain with the specified provider or default to OpenAI
+        provider = body.provider or "openai"
+        model = body.model or "gpt-3.5-turbo"
+        
+        text = invoke_llm(
+            provider=provider,
+            model=model,
+            prompt=body.prompt,
+            temperature=body.temperature,
+            max_tokens=body.max_tokens,
+        )
+        
+        return JSONResponse({
+            "provider": provider,
+            "model": model,
+            "response": text,
+            "success": True,
+        })
+    except Exception as e:
+        return JSONResponse({
+            "error": str(e),
+            "success": False,
+        }, status_code=502)
+
+
+@app.get("/api/ai/status")
+def ai_status():
+    """Check which AI providers are available and their status."""
+    status = {
+        "ollama": {
+            "enabled": USE_OLLAMA,
+            "url": OLLAMA_URL,
+            "available": False,
+        },
+        "langchain": {
+            "available": invoke_llm is not None,
+        },
+    }
+    
+    # Check Ollama availability
+    if USE_OLLAMA:
+        try:
+            base = _ollama_base_url()
+            r = requests.get(base, timeout=5)
+            status["ollama"]["available"] = r.ok
+        except Exception:
+            pass
+    
+    return JSONResponse(status)
 
 
 if __name__ == "__main__":

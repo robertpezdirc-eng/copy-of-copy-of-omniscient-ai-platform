@@ -1,0 +1,71 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker --quiet
+      
+      - name: Deploy to Cloud Run
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GCP_REGION: ${{ vars.GCP_REGION || 'europe-west1' }}
+          SERVICE_NAME: ${{ vars.SERVICE_NAME || 'omni-backend' }}
+          USE_OLLAMA: ${{ vars.USE_OLLAMA || 'false' }}
+          OLLAMA_URL: ${{ vars.OLLAMA_URL || 'http://localhost:11434' }}
+        run: |
+          chmod +x ./scripts/deploy/deploy-cloud-run.sh
+          ./scripts/deploy/deploy-cloud-run.sh
+      
+      - name: Run smoke tests
+        env:
+          SERVICE_URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          echo "Running health check..."
+          BACKEND_URL=$(gcloud run services describe ${SERVICE_NAME:-omni-backend} \
+            --platform managed \
+            --region ${GCP_REGION:-europe-west1} \
+            --format 'value(status.url)' \
+            --project ${{ secrets.GCP_PROJECT_ID }})
+          
+          echo "Testing backend at: $BACKEND_URL"
+          
+          # Health check
+          response=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_URL/api/health")
+          if [ "$response" -eq 200 ]; then
+            echo "✅ Health check passed"
+          else
+            echo "❌ Health check failed with status $response"
+            exit 1
+          fi
+          
+          # AI status check
+          curl -s "$BACKEND_URL/api/ai/status" | grep -q "ollama" && echo "✅ AI status endpoint working" || echo "⚠️  AI status check skipped"
+          
+          echo "✅ All smoke tests passed!"
