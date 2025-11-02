@@ -6,10 +6,18 @@
 set -e
 
 # Configuration from environment or defaults
-PROJECT_ID="${GCP_PROJECT_ID:-refined-graph-471712-n9}"
+# NOTE: Set GCP_PROJECT_ID in your environment or CI/CD pipeline
+PROJECT_ID="${GCP_PROJECT_ID:-your-project-id}"
 REGION="${GCP_REGION:-europe-west1}"
 SERVICE_NAME="${SERVICE_NAME:-omni-backend}"
 IMAGE_NAME="gcr.io/${PROJECT_ID}/${SERVICE_NAME}"
+
+# Validate project ID is set
+if [ "$PROJECT_ID" = "your-project-id" ]; then
+    echo "ERROR: GCP_PROJECT_ID environment variable must be set"
+    echo "Example: export GCP_PROJECT_ID=your-gcp-project"
+    exit 1
+fi
 
 echo "🚀 Deploying to Google Cloud Run"
 echo "=================================="

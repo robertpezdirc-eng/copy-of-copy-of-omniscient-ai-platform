@@ -158,7 +158,9 @@ def metrics():
 # ==============================
 
 def _ollama_base_url() -> str:
-    return os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
+    # Use OLLAMA_URL as the primary configuration variable
+    # Also check OLLAMA_BASE_URL for backward compatibility
+    return os.getenv("OLLAMA_URL", os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")).rstrip("/")
 
 
 def _ollama_default_model() -> str:
