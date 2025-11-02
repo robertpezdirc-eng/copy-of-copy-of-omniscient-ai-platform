@@ -34,6 +34,14 @@ for handler in logging.getLogger().handlers:
     handler.addFilter(PIIRedactionFilter())
 
 
+# Determine minimal startup mode
+# In Cloud Run (K_SERVICE set), default to minimal to avoid importing heavy optional routes
+_omnimin_env = os.getenv("OMNI_MINIMAL")
+if _omnimin_env is None:
+    OMNI_MINIMAL = os.getenv("K_SERVICE") is not None
+else:
+    OMNI_MINIMAL = _omnimin_env.lower() in ("1", "true", "yes")
+
 # Lifespan context manager for startup/shutdown events
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -170,6 +178,11 @@ def _register_routers(app: FastAPI) -> None:
             logger.warning(f"Skipping Ollama health routes: {e}")
 
     _try_ollama()
+
+    # In minimal mode, skip optional routers to reduce startup time and risk
+    if OMNI_MINIMAL:
+        logger.info("OMNI_MINIMAL=1 active: skipping optional routers for fast, reliable startup")
+        return
 
     def _try(import_path: str, router_name: str, prefix: str, tags: list[str]) -> None:
         try:
