@@ -7,8 +7,12 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime, timezone
 import time
+import os
 
 ai_router = APIRouter()
+
+# Ollama integration flag
+USE_OLLAMA = os.getenv("USE_OLLAMA", "false").lower() == "true"
 
 try:
     from services.ai.sentiment_analysis import get_sentiment_service
@@ -21,6 +25,12 @@ try:
 except Exception:
     schedule_lightweight_task = None
     log_api_call = None
+
+try:
+    from services.ai.ollama_service import get_ollama_service
+    _ollama = get_ollama_service()
+except Exception as _e:
+    _ollama = None
 
 class PredictionRequest(BaseModel):
     data: List[float]
@@ -35,7 +45,7 @@ class TextAnalysisRequest(BaseModel):
 class ChatRequest(BaseModel):
     prompt: str
     model: Optional[str] = None
-    provider: Optional[str] = None  # "openai", "gemini", or "auto"
+    provider: Optional[str] = None  # "openai", "gemini", "ollama", or "auto"
     temperature: Optional[float] = 0.7
 
 
@@ -110,6 +120,44 @@ async def chat(request: ChatRequest, background_tasks: BackgroundTasks):
     """Chat endpoint with real LLM integration and background logging."""
     start_time = time.time()
 
+    # Route to Ollama if USE_OLLAMA=true or provider="ollama"
+    if USE_OLLAMA or request.provider == "ollama":
+        if not _ollama:
+            return {
+                "reply": "",
+                "error": "Ollama service unavailable. Ensure Ollama is running and USE_OLLAMA is set.",
+                "provider": "ollama",
+                "model": request.model,
+            }
+        
+        try:
+            result = await _ollama.generate(
+                prompt=request.prompt,
+                model=request.model,
+                temperature=request.temperature or 0.7,
+            )
+            
+            # Log API call in background
+            if schedule_lightweight_task and log_api_call:
+                duration_ms = (time.time() - start_time) * 1000
+                schedule_lightweight_task(
+                    background_tasks,
+                    log_api_call,
+                    "/api/v1/ai/chat",
+                    "system",
+                    duration_ms
+                )
+            
+            return result
+        except Exception as e:
+            return {
+                "reply": "",
+                "error": f"Ollama error: {str(e)}",
+                "provider": "ollama",
+                "model": request.model,
+            }
+
+    # Default: route to OmniBrainAdapter (OpenAI/Gemini)
     if not _brain:
         return {
             "reply": "",

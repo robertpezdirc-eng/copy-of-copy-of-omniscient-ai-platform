@@ -10,6 +10,7 @@ from contextlib import asynccontextmanager
 import os
 from datetime import datetime, timezone
 import logging
+from utils.logging_filters import PIIRedactionFilter
 
 # Database initialization
 from database import init_databases, close_databases
@@ -22,10 +23,15 @@ from middleware.rate_limiter import RateLimiter
 from middleware.usage_tracker import UsageTracker
 from middleware.performance_monitor import PerformanceMonitor
 from middleware.metrics import MetricsMiddleware
+from middleware.security_headers import SecurityHeadersMiddleware
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Attach simple PII redaction to root logger handlers
+for handler in logging.getLogger().handlers:
+    handler.addFilter(PIIRedactionFilter())
 
 
 # Lifespan context manager for startup/shutdown events
@@ -67,6 +73,9 @@ _slow_threshold = float(_os.getenv("PERF_SLOW_THRESHOLD_SEC", "1.0"))
 # If running behind gateway, first strip /internal prefix so routes match
 if _run_as_internal:
     app.add_middleware(InternalPrefixStripper, prefix="/internal")
+
+# Security headers should be near-outermost to apply to all responses early
+app.add_middleware(SecurityHeadersMiddleware)
 
 # Metrics should be near-outermost to capture full latency and status
 app.add_middleware(MetricsMiddleware)
@@ -150,6 +159,17 @@ def _register_routers(app: FastAPI) -> None:
     """
     # Always include AI routes
     app.include_router(ai_router, prefix="/api/v1/ai", tags=["AI Services"])
+
+    # Include Ollama health routes
+    def _try_ollama():
+        try:
+            from routes.ollama_health_routes import ollama_health_router
+            app.include_router(ollama_health_router, prefix="/api/v1/ollama", tags=["Ollama Service"])
+            logger.info("✅ Ollama health routes registered")
+        except Exception as e:
+            logger.warning(f"Skipping Ollama health routes: {e}")
+
+    _try_ollama()
 
     def _try(import_path: str, router_name: str, prefix: str, tags: list[str]) -> None:
         try:
