@@ -41,19 +41,25 @@ if PROMETHEUS_AVAILABLE:
         "Number of client connections to Redis"
     )
     
-    redis_commands_processed_total = Counter(
+    # Use Gauge for cumulative Redis stats since we get absolute values from Redis INFO
+    redis_commands_processed_total = Gauge(
         "redis_commands_processed_total",
-        "Total number of commands processed by Redis"
+        "Total number of commands processed by Redis (cumulative from server start)"
     )
     
-    redis_keyspace_hits_total = Counter(
+    redis_keyspace_hits_total = Gauge(
         "redis_keyspace_hits_total",
-        "Total number of successful key lookups"
+        "Total number of successful key lookups (cumulative from server start)"
     )
     
-    redis_keyspace_misses_total = Counter(
+    redis_keyspace_misses_total = Gauge(
         "redis_keyspace_misses_total",
-        "Total number of failed key lookups"
+        "Total number of failed key lookups (cumulative from server start)"
+    )
+    
+    redis_hit_rate = Gauge(
+        "redis_hit_rate_percent",
+        "Redis keyspace hit rate percentage"
     )
 else:
     redis_connected = None
@@ -64,6 +70,7 @@ else:
     redis_commands_processed_total = None
     redis_keyspace_hits_total = None
     redis_keyspace_misses_total = None
+    redis_hit_rate = None
 
 
 async def collect_redis_metrics(redis_client) -> None:
@@ -100,22 +107,25 @@ async def collect_redis_metrics(redis_client) -> None:
         if redis_connected_clients and "connected_clients" in info:
             redis_connected_clients.set(info["connected_clients"])
         
-        # Commands processed (cumulative counter)
+        # Commands processed (using Gauge since we get cumulative value from Redis)
         if redis_commands_processed_total and "total_commands_processed" in info:
-            # Since Prometheus counters track totals, we need to set based on Redis stats
-            # Note: This is a snapshot, not a rate
-            total_commands = info["total_commands_processed"]
-            # We can't directly set a counter, so we track the difference
-            # For now, just log it - in production, use a gauge or calculate delta
-            pass
+            redis_commands_processed_total.set(info["total_commands_processed"])
         
-        # Keyspace hits/misses
-        if "keyspace_hits" in info:
-            # Track hit rate metrics
+        # Keyspace hits/misses (using Gauge since we get cumulative values from Redis)
+        if "keyspace_hits" in info and "keyspace_misses" in info:
             hits = info.get("keyspace_hits", 0)
             misses = info.get("keyspace_misses", 0)
-            # Similar issue as above - these are cumulative from Redis
-            # For proper tracking, we'd need to calculate deltas
+            
+            if redis_keyspace_hits_total:
+                redis_keyspace_hits_total.set(hits)
+            
+            if redis_keyspace_misses_total:
+                redis_keyspace_misses_total.set(misses)
+            
+            # Calculate hit rate percentage
+            if redis_hit_rate and (hits + misses) > 0:
+                hit_rate = (hits / (hits + misses)) * 100
+                redis_hit_rate.set(hit_rate)
             
         logger.debug(f"Redis metrics collected: {len(info)} stats")
         
