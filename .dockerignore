@@ -144,8 +144,11 @@ venv.bak/
 # Ignore everything else by default, then re-include required files
 **
 !requirements.txt
+!requirements-dashboard.txt
 !Dockerfile.quantum-platform
 !omni_*.py
+!omni_platform/
+!omni_platform/**
 !agents/
 !agents/**
 

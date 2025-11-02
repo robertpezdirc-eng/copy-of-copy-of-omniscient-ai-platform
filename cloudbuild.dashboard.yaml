@@ -52,6 +52,14 @@ steps:
       - 'VERTEX_MODEL=gemini-2.5-flash'
       - '--set-env-vars'
       - 'GEMINI_MODEL=gemini-2.5-flash'
+      - '--set-env-vars'
+      - 'USE_OLLAMA=true'
+      - '--set-env-vars'
+      - 'OLLAMA_URL=https://ollama-661612368188.europe-west1.run.app'
+      - '--set-env-vars'
+      - 'OLLAMA_MODEL=llama3.2'
+      - '--set-env-vars'
+      - 'OLLAMA_TIMEOUT=60'
 
 # Default substitution values
 substitutions:
