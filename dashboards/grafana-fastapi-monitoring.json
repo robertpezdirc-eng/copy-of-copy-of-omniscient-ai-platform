@@ -1,0 +1,270 @@
+{
+  "dashboard": {
+    "title": "FastAPI Application Monitoring",
+    "description": "Comprehensive FastAPI monitoring including endpoint latency, request rates, and error tracking",
+    "tags": ["fastapi", "api", "performance", "errors"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+        "type": "stat",
+        "title": "Request Rate (req/s)",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total[5m]))",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area"
+        }
+      },
+      {
+        "id": 2,
+        "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+        "type": "stat",
+        "title": "Error Rate %",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{status=~'5..'}[5m])) / sum(rate(http_requests_total[5m])) * 100",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "value"
+        },
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            { "value": 0, "color": "green" },
+            { "value": 1, "color": "yellow" },
+            { "value": 5, "color": "red" }
+          ]
+        }
+      },
+      {
+        "id": 3,
+        "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+        "type": "stat",
+        "title": "P95 Latency",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "value"
+        },
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            { "value": 0, "color": "green" },
+            { "value": 1, "color": "yellow" },
+            { "value": 5, "color": "red" }
+          ]
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s"
+          }
+        }
+      },
+      {
+        "id": 4,
+        "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
+        "type": "stat",
+        "title": "Total Requests (24h)",
+        "targets": [
+          {
+            "expr": "sum(increase(http_requests_total[24h]))",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "value"
+        }
+      },
+      {
+        "id": 5,
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 6 },
+        "type": "graph",
+        "title": "Request Rate by Status Code",
+        "targets": [
+          {
+            "expr": "sum by (status) (rate(http_requests_total[5m]))",
+            "legendFormat": "{{status}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "reqps", "label": "Requests/sec" }
+        ],
+        "tooltip": { "shared": true },
+        "legend": { "show": true, "alignAsTable": true, "rightSide": true }
+      },
+      {
+        "id": 6,
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+        "type": "graph",
+        "title": "Request Latency Percentiles",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p99",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p95",
+            "refId": "B"
+          },
+          {
+            "expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p50",
+            "refId": "C"
+          }
+        ],
+        "yaxes": [
+          { "format": "s", "label": "Latency" }
+        ],
+        "tooltip": { "shared": true }
+      },
+      {
+        "id": 7,
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+        "type": "graph",
+        "title": "Error Rate Over Time",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{status=~'5..'}[5m])) / sum(rate(http_requests_total[5m])) * 100",
+            "legendFormat": "5xx Error Rate %",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(http_requests_total{status=~'4..'}[5m])) / sum(rate(http_requests_total[5m])) * 100",
+            "legendFormat": "4xx Error Rate %",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          { "format": "percent", "label": "Error Rate %" }
+        ],
+        "tooltip": { "shared": true }
+      },
+      {
+        "id": 8,
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 22 },
+        "type": "graph",
+        "title": "Top 10 Slowest Endpoints (P95)",
+        "targets": [
+          {
+            "expr": "topk(10, histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])))",
+            "legendFormat": "{{method}} {{path}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "s", "label": "P95 Latency" }
+        ],
+        "tooltip": { "shared": false }
+      },
+      {
+        "id": 9,
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 22 },
+        "type": "graph",
+        "title": "Request Rate by Endpoint",
+        "targets": [
+          {
+            "expr": "topk(10, sum by (path, method) (rate(http_requests_total[5m])))",
+            "legendFormat": "{{method}} {{path}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "reqps", "label": "Requests/sec" }
+        ],
+        "tooltip": { "shared": false }
+      },
+      {
+        "id": 10,
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 30 },
+        "type": "graph",
+        "title": "Request Rate by Method",
+        "targets": [
+          {
+            "expr": "sum by (method) (rate(http_requests_total[5m]))",
+            "legendFormat": "{{method}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "reqps" }
+        ]
+      },
+      {
+        "id": 11,
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 30 },
+        "type": "graph",
+        "title": "Latency Distribution Heatmap",
+        "targets": [
+          {
+            "expr": "sum(rate(http_request_duration_seconds_bucket[5m])) by (le)",
+            "legendFormat": "{{le}}",
+            "refId": "A",
+            "format": "heatmap"
+          }
+        ],
+        "yaxes": [
+          { "format": "s" }
+        ]
+      },
+      {
+        "id": 12,
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 38 },
+        "type": "table",
+        "title": "Endpoint Performance Summary",
+        "targets": [
+          {
+            "expr": "sum by (path, method) (rate(http_requests_total[5m]))",
+            "format": "table",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum by (path, method, le) (rate(http_request_duration_seconds_bucket[5m])))",
+            "format": "table",
+            "refId": "B"
+          },
+          {
+            "expr": "sum by (path, method) (rate(http_requests_total{status=~'5..'}[5m])) / sum by (path, method) (rate(http_requests_total[5m])) * 100",
+            "format": "table",
+            "refId": "C"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "merge"
+          }
+        ]
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "service",
+          "type": "query",
+          "query": "label_values(http_requests_total, service)",
+          "label": "Service",
+          "multi": false
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "refresh": "30s"
+  }
+}

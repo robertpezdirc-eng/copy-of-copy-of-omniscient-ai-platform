@@ -1,0 +1,219 @@
+groups:
+  - name: cache_alerts
+    interval: 30s
+    rules:
+      - alert: LowCacheHitRate
+        expr: |
+          (
+            rate(cache_hits_total[5m]) / 
+            (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m]))
+          ) < 0.5
+        for: 10m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "Low cache hit rate detected"
+          description: "Cache hit rate is {{ $value | humanizePercentage }} (below 50% threshold)"
+
+      - alert: CriticallyLowCacheHitRate
+        expr: |
+          (
+            rate(cache_hits_total[5m]) / 
+            (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m]))
+          ) < 0.2
+        for: 5m
+        labels:
+          severity: critical
+          component: cache
+        annotations:
+          summary: "Critically low cache hit rate"
+          description: "Cache hit rate is {{ $value | humanizePercentage }} (below 20% threshold)"
+
+      - alert: RedisDown
+        expr: redis_connected == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: redis
+        annotations:
+          summary: "Redis connection lost"
+          description: "Redis is not connected. Cache functionality may be degraded."
+
+      - alert: RedisHighMemoryUsage
+        expr: |
+          (redis_memory_used_bytes / redis_memory_peak_bytes) > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          component: redis
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Redis is using {{ $value | humanizePercentage }} of peak memory"
+
+  - name: api_alerts
+    interval: 30s
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum(rate(http_requests_total{status=~"5.."}[5m])) /
+            sum(rate(http_requests_total[5m]))
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "High API error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} (above 5% threshold)"
+
+      - alert: ElevatedErrorRate
+        expr: |
+          (
+            sum(rate(http_requests_total{status=~"5.."}[5m])) /
+            sum(rate(http_requests_total[5m]))
+          ) > 0.01
+        for: 10m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "Elevated API error rate"
+          description: "Error rate is {{ $value | humanizePercentage }} (above 1% threshold)"
+
+      - alert: HighLatency
+        expr: |
+          histogram_quantile(0.95, 
+            rate(http_request_duration_seconds_bucket[5m])
+          ) > 5
+        for: 10m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "High API latency detected"
+          description: "P95 latency is {{ $value | humanizeDuration }} (above 5s threshold)"
+
+      - alert: CriticalLatency
+        expr: |
+          histogram_quantile(0.95, 
+            rate(http_request_duration_seconds_bucket[5m])
+          ) > 10
+        for: 5m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "Critical API latency"
+          description: "P95 latency is {{ $value | humanizeDuration }} (above 10s threshold)"
+
+      - alert: HighRequestRate
+        expr: sum(rate(http_requests_total[5m])) > 1000
+        for: 10m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "High request rate detected"
+          description: "Request rate is {{ $value }} req/s (above 1000 req/s)"
+
+  - name: availability_alerts
+    interval: 30s
+    rules:
+      - alert: ServiceDown
+        expr: up{job="gateway"} == 0 or up{job="backend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: availability
+        annotations:
+          summary: "Service is down"
+          description: "{{ $labels.job }} service is not responding"
+
+      - alert: LowRequestVolume
+        expr: sum(rate(http_requests_total[5m])) < 0.1
+        for: 15m
+        labels:
+          severity: warning
+          component: availability
+        annotations:
+          summary: "Unusually low request volume"
+          description: "Request rate is {{ $value }} req/s (below 0.1 req/s). Service may be unreachable."
+
+  - name: ml_alerts
+    interval: 60s
+    rules:
+      - alert: MLModelHighLatency
+        expr: |
+          histogram_quantile(0.95,
+            rate(ml_model_prediction_seconds_bucket[5m])
+          ) > 2
+        for: 10m
+        labels:
+          severity: warning
+          component: ml
+        annotations:
+          summary: "ML model prediction latency is high"
+          description: "Model {{ $labels.model_name }} P95 latency is {{ $value | humanizeDuration }}"
+
+      - alert: MLModelLowAccuracy
+        expr: ml_model_accuracy_percent < 70
+        for: 15m
+        labels:
+          severity: warning
+          component: ml
+        annotations:
+          summary: "ML model accuracy dropped"
+          description: "Model {{ $labels.model_name }} accuracy is {{ $value }}% (below 70%)"
+
+      - alert: MLModelHighFailureRate
+        expr: |
+          (
+            sum by (model_name) (rate(ml_model_inference_total{status="error"}[5m])) /
+            sum by (model_name) (rate(ml_model_inference_total[5m]))
+          ) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+          component: ml
+        annotations:
+          summary: "High ML model failure rate"
+          description: "Model {{ $labels.model_name }} failure rate is {{ $value | humanizePercentage }}"
+
+  - name: business_alerts
+    interval: 60s
+    rules:
+      - alert: LowUserEngagement
+        expr: avg(business_user_engagement_score) < 30
+        for: 30m
+        labels:
+          severity: warning
+          component: business
+        annotations:
+          summary: "Low user engagement detected"
+          description: "Average user engagement score is {{ $value }} (below 30)"
+
+      - alert: HighBusinessErrorRate
+        expr: sum(rate(business_errors_total{severity="critical"}[5m])) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+          component: business
+        annotations:
+          summary: "High rate of critical business errors"
+          description: "Critical business error rate is {{ $value }} errors/s"
+
+      - alert: RevenueDropDetected
+        expr: |
+          (
+            sum(rate(business_revenue_total_cents[5m])) -
+            sum(rate(business_revenue_total_cents[5m] offset 1h))
+          ) / sum(rate(business_revenue_total_cents[5m] offset 1h)) < -0.3
+        for: 15m
+        labels:
+          severity: warning
+          component: business
+        annotations:
+          summary: "Significant revenue drop detected"
+          description: "Revenue has dropped by {{ $value | humanizePercentage }} compared to 1 hour ago"
