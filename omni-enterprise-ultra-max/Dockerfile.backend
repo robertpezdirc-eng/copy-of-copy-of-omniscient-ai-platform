@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 
 # Force rebuild - pymongo version fix 2025-11-02
 COPY backend/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --force-reinstall "motor==3.3.2" "pymongo>=4.0,<5.0" && pip install --no-cache-dir -r requirements.txt
 
 COPY backend/ ./
 
@@ -24,3 +24,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8080/api/health || exit 1
 
 CMD ["python", "main.py"]
+
