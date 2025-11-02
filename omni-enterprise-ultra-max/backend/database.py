@@ -8,7 +8,17 @@ from typing import Optional
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
-from motor.motor_asyncio import AsyncIOMotorClient
+
+# Make motor import optional and non-fatal
+AsyncIOMotorClient = None
+try:
+    from motor.motor_asyncio import AsyncIOMotorClient  # type: ignore
+except Exception as _mongo_import_err:
+    import logging as _logging
+    _logging.getLogger(__name__).warning(
+        f"MongoDB driver not available (motor import failed): {_mongo_import_err}. Mongo features disabled."
+    )
+
 import redis.asyncio as aioredis
 from google.cloud import firestore
 import logging
@@ -43,7 +53,7 @@ postgres_engine = create_engine(
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=postgres_engine)
 
 # MongoDB Client
-mongodb_client: Optional[AsyncIOMotorClient] = None
+mongodb_client: Optional["AsyncIOMotorClient"] = None
 mongodb_db = None
 
 # Redis Client
@@ -96,14 +106,17 @@ async def init_databases():
     except Exception as e:
         logger.error(f"❌ PostgreSQL connection failed: {e}")
 
-    # MongoDB
-    try:
-        mongodb_client = AsyncIOMotorClient(MONGODB_URL)
-        mongodb_db = mongodb_client[os.getenv("MONGODB_DB", "omni")]
-        await mongodb_client.server_info()  # Test connection
-        logger.info("✅ MongoDB connected")
-    except Exception as e:
-        logger.error(f"❌ MongoDB connection failed: {e}")
+    # MongoDB (optional)
+    if AsyncIOMotorClient is None:
+        logger.info("MongoDB driver not installed; skipping Mongo initialization")
+    else:
+        try:
+            mongodb_client = AsyncIOMotorClient(MONGODB_URL)
+            mongodb_db = mongodb_client[os.getenv("MONGODB_DB", "omni")]
+            await mongodb_client.server_info()  # Test connection
+            logger.info("✅ MongoDB connected")
+        except Exception as e:
+            logger.error(f"❌ MongoDB connection failed: {e}")
 
     # Redis
     try:
@@ -145,8 +158,11 @@ async def close_databases():
         logger.error(f"❌ PostgreSQL dispose error: {e}")
 
     if mongodb_client:
-        mongodb_client.close()
-        logger.info("✅ MongoDB closed")
+        try:
+            mongodb_client.close()
+            logger.info("✅ MongoDB closed")
+        except Exception as e:
+            logger.error(f"❌ MongoDB close error: {e}")
 
     if redis_client:
         await redis_client.close()
