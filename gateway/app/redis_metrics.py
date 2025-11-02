@@ -152,5 +152,19 @@ async def start_redis_metrics_collection(redis_client, interval_seconds: int = 3
     logger.info(f"Starting Redis metrics collection (interval={interval_seconds}s)")
     
     while True:
-        await collect_redis_metrics(redis_client)
-        await asyncio.sleep(interval_seconds)
+        try:
+            await collect_redis_metrics(redis_client)
+        except asyncio.CancelledError:
+            # Task cancelled - exit gracefully
+            logger.info("Redis metrics collection cancelled")
+            raise
+        except Exception as e:
+            # Log error but continue collecting
+            logger.error(f"Error collecting Redis metrics: {e}", exc_info=True)
+        
+        try:
+            await asyncio.sleep(interval_seconds)
+        except asyncio.CancelledError:
+            # Task cancelled during sleep - exit gracefully
+            logger.info("Redis metrics collection cancelled during sleep")
+            raise

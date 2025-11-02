@@ -87,7 +87,7 @@ services:
   gateway:
     build:
       context: ./gateway
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile  # Uses gateway/Dockerfile
     container_name: omni-gateway
     ports:
       - "8081:8081"
@@ -106,7 +106,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.backend
+      dockerfile: Dockerfile.backend  # Uses backend/Dockerfile.backend
     container_name: omni-backend
     ports:
       - "8080:8080"

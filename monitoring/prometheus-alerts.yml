@@ -8,6 +8,8 @@ groups:
             rate(cache_hits_total[5m]) / 
             (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m]))
           ) < 0.5
+          and
+          (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m])) > 0
         for: 10m
         labels:
           severity: warning
@@ -22,6 +24,8 @@ groups:
             rate(cache_hits_total[5m]) / 
             (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m]))
           ) < 0.2
+          and
+          (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m])) > 0
         for: 5m
         labels:
           severity: critical
