@@ -1,0 +1,29 @@
+# DISABLED on 2025-11-02: AI worker min-instances deployment disabled; kept for reference only.
+steps:
+  # Step 0: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/omni-ai-worker:latest', '.']
+  
+  # Step 1: Push to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/omni-ai-worker:latest']
+  
+  # Step 2: Deploy to Cloud Run with min-instances
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args:
+      - gcloud
+      - run
+      - deploy
+      - omni-ai-worker
+      - --image=gcr.io/$PROJECT_ID/omni-ai-worker:latest
+      - --platform=managed
+      - --region=europe-west1
+      - --memory=4Gi
+      - --cpu=4
+      - --timeout=300
+      - --min-instances=1
+      - --max-instances=10
+      - --set-env-vars=CUDA_VISIBLE_DEVICES=-1,TF_FORCE_CPU=1,HF_HUB_DISABLE_TELEMETRY=1,ENVIRONMENT=production
+      - --allow-unauthenticated
+
+timeout: 1800s

@@ -1,0 +1,91 @@
+# DISABLED on 2025-11-02: Cloud Build and Cloud Run deployments are disabled; kept for reference only.
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/refined-graph-471712-n9/omni-ultra-backend:v2.0.0'
+      - '-t'
+      - 'gcr.io/refined-graph-471712-n9/omni-ultra-backend:latest'
+      - '-f'
+      - 'Dockerfile.backend'
+      - '.'
+    timeout: 1200s
+
+  # Push to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/refined-graph-471712-n9/omni-ultra-backend:v2.0.0'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/refined-graph-471712-n9/omni-ultra-backend:latest'
+
+  # Deploy to Cloud Run - Staging
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'omni-ultra-backend-staging'
+      - '--image'
+      - 'gcr.io/refined-graph-471712-n9/omni-ultra-backend:v2.0.0'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '2'
+      - '--max-instances'
+      - '10'
+      - '--min-instances'
+      - '1'
+      - '--timeout'
+      - '300s'
+      - '--set-env-vars'
+      - 'ENVIRONMENT=staging'
+
+  # Deploy to Cloud Run - Production
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'omni-ultra-backend-prod'
+      - '--image'
+      - 'gcr.io/refined-graph-471712-n9/omni-ultra-backend:v2.0.0'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '2'
+      - '--max-instances'
+      - '100'
+      - '--min-instances'
+      - '2'
+      - '--timeout'
+      - '300s'
+      - '--set-env-vars'
+      - 'ENVIRONMENT=production'
+
+images:
+  - 'gcr.io/refined-graph-471712-n9/omni-ultra-backend:v2.0.0'
+  - 'gcr.io/refined-graph-471712-n9/omni-ultra-backend:latest'
+
+timeout: 2400s
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
