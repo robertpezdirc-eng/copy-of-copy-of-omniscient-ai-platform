@@ -48,14 +48,14 @@ except ImportError:
     logging.warning("Sentence Transformers not available")
 
 try:
-    import openai
+    from openai import OpenAI, AsyncOpenAI
     OPENAI_AVAILABLE = True
 except ImportError:
     OPENAI_AVAILABLE = False
 
 # LLM backends
 try:
-    from anthropic import Anthropic
+    from anthropic import Anthropic, AsyncAnthropic
     ANTHROPIC_AVAILABLE = True
 except ImportError:
     ANTHROPIC_AVAILABLE = False
@@ -170,14 +170,17 @@ class RAGService:
             if not OPENAI_AVAILABLE:
                 raise RuntimeError("OpenAI not available")
             
-            openai.api_key = os.getenv("OPENAI_API_KEY")
-            if not openai.api_key:
+            api_key = os.getenv("OPENAI_API_KEY")
+            if not api_key:
                 raise ValueError("OPENAI_API_KEY environment variable required")
             
-            # OpenAI ada-002 has 1536 dims
-            self.embedder = "text-embedding-ada-002"
+            # Initialize OpenAI client (new SDK v1.x)
+            self.openai_client = AsyncOpenAI(api_key=api_key)
+            
+            # OpenAI ada-002 has 1536 dims, text-embedding-3-small has 1536, text-embedding-3-large has 3072
+            self.embedder = "text-embedding-3-small"  # Latest model, cost-effective
             self.dimension = 1536
-            logger.info("OpenAI embeddings configured")
+            logger.info("OpenAI embeddings configured with text-embedding-3-small")
             
         elif self.embedding_model == "sentence-transformers":
             if not SENTENCE_TRANSFORMERS_AVAILABLE:
@@ -185,8 +188,9 @@ class RAGService:
                 if OPENAI_AVAILABLE and os.getenv("OPENAI_API_KEY"):
                     logger.warning("Sentence Transformers not available; falling back to OpenAI embeddings")
                     self.embedding_model = "openai"
-                    openai.api_key = os.getenv("OPENAI_API_KEY")
-                    self.embedder = "text-embedding-ada-002"
+                    api_key = os.getenv("OPENAI_API_KEY")
+                    self.openai_client = AsyncOpenAI(api_key=api_key)
+                    self.embedder = "text-embedding-3-small"
                     self.dimension = 1536
                     return
                 raise RuntimeError("Sentence Transformers not available")
@@ -232,8 +236,12 @@ class RAGService:
             if not OPENAI_AVAILABLE:
                 raise RuntimeError("OpenAI not available")
             
-            openai.api_key = os.getenv("OPENAI_API_KEY")
-            self.llm_client = openai
+            api_key = os.getenv("OPENAI_API_KEY")
+            if not api_key:
+                raise ValueError("OPENAI_API_KEY required")
+            
+            # Initialize OpenAI client (new SDK v1.x)
+            self.llm_client = AsyncOpenAI(api_key=api_key)
             logger.info("OpenAI LLM backend configured")
             
         elif self.llm_backend == "anthropic":
@@ -244,7 +252,8 @@ class RAGService:
             if not api_key:
                 raise ValueError("ANTHROPIC_API_KEY required")
             
-            self.llm_client = Anthropic(api_key=api_key)
+            # Initialize Anthropic client (new SDK with AsyncAnthropic)
+            self.llm_client = AsyncAnthropic(api_key=api_key)
             logger.info("Anthropic LLM backend configured")
             
         elif self.llm_backend == "ollama":
@@ -259,11 +268,12 @@ class RAGService:
     async def embed_text(self, text: str) -> List[float]:
         """Generate embedding for text"""
         if self.embedding_model == "openai":
-            response = await openai.Embedding.acreate(
+            # New OpenAI SDK v1.x API
+            response = await self.openai_client.embeddings.create(
                 input=text,
                 model=self.embedder
             )
-            return response['data'][0]['embedding']
+            return response.data[0].embedding
         
         elif self.embedding_model in ["sentence-transformers", "huggingface"]:
             embedding = self.embedder.encode(text, convert_to_tensor=False)
@@ -275,11 +285,12 @@ class RAGService:
     async def embed_batch(self, texts: List[str]) -> List[List[float]]:
         """Generate embeddings for multiple texts"""
         if self.embedding_model == "openai":
-            response = await openai.Embedding.acreate(
+            # New OpenAI SDK v1.x API
+            response = await self.openai_client.embeddings.create(
                 input=texts,
                 model=self.embedder
             )
-            return [item['embedding'] for item in response['data']]
+            return [item.embedding for item in response.data]
         
         elif self.embedding_model in ["sentence-transformers", "huggingface"]:
             embeddings = self.embedder.encode(texts, convert_to_tensor=False)
@@ -477,7 +488,8 @@ class RAGService:
         
         # Generate with LLM
         if self.llm_backend == "openai":
-            response = await self.llm_client.ChatCompletion.acreate(
+            # New OpenAI SDK v1.x API
+            response = await self.llm_client.chat.completions.create(
                 model=model,
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -487,10 +499,15 @@ class RAGService:
                 max_tokens=max_tokens
             )
             
-            answer = response['choices'][0]['message']['content']
-            usage = response['usage']
+            answer = response.choices[0].message.content
+            usage = {
+                "prompt_tokens": response.usage.prompt_tokens,
+                "completion_tokens": response.usage.completion_tokens,
+                "total_tokens": response.usage.total_tokens
+            }
             
         elif self.llm_backend == "anthropic":
+            # Anthropic Messages API (already compatible with new SDK)
             response = await self.llm_client.messages.create(
                 model=model,
                 max_tokens=max_tokens,
