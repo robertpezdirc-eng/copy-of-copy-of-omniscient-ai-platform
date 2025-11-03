@@ -8,6 +8,8 @@
 
 ## 🎯 Current Status: PRODUCTION READY
 
+> **⚠️ UPGRADE NOTICE:** Platform assessment completed. See [PLATFORM_UPGRADE_RECOMMENDATIONS.md](PLATFORM_UPGRADE_RECOMMENDATIONS.md) for upgrade plan and [QUICK_START_UPGRADE.md](QUICK_START_UPGRADE.md) to start upgrading today.
+
 ### ✅ What's Live Now
 
 **Backend ML Service** - Fully deployed and operational  
@@ -221,6 +223,12 @@ Invoke-WebRequest -Uri "http://localhost:8081/health" -Headers @{"x-api-key"="de
 
 ## 📚 Documentation
 
+### Platform Maintenance & Upgrades
+- **[PLATFORM_UPGRADE_RECOMMENDATIONS.md](PLATFORM_UPGRADE_RECOMMENDATIONS.md)** - 📊 Comprehensive upgrade assessment
+- **[UPGRADE_CHECKLIST.md](UPGRADE_CHECKLIST.md)** - ✅ Step-by-step upgrade tasks
+- **[QUICK_START_UPGRADE.md](QUICK_START_UPGRADE.md)** - ⚡ Start upgrading today
+
+### Architecture & Deployment
 - **[IMPLEMENTATION_COMPLETE.md](IMPLEMENTATION_COMPLETE.md)** - Full architecture & deployment
 - **[SPLIT_ARCHITECTURE_COMPLETE.md](SPLIT_ARCHITECTURE_COMPLETE.md)** - Design decisions
 - **[backend/DEPLOYMENT_GKE.md](backend/DEPLOYMENT_GKE.md)** - GKE deployment guide
