@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 from typing import Optional, List
 from pydantic import BaseModel
 
-from backend.services.ml_models_service import AIMLModelsService, ModelType, ModelStatus
+from services.ml_models_service import AIMLModelsService, ModelType, ModelStatus
 
 router = APIRouter(prefix="/api/v1/ml-models", tags=["AI/ML Models"])
 ml_service = AIMLModelsService()

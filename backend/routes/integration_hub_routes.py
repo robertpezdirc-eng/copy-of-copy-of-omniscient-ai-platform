@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 from typing import Optional, List
 from pydantic import BaseModel
 
-from backend.services.integration_service import IntegrationService, IntegrationType
+from services.integration_service import IntegrationService, IntegrationType
 
 router = APIRouter(prefix="/api/v1/integrations", tags=["Integration Hub"])
 integration_service = IntegrationService()

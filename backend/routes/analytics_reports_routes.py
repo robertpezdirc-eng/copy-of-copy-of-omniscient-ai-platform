@@ -7,7 +7,7 @@ from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel
 
-from backend.services.analytics_service import AnalyticsService, ReportType, ReportFormat
+from services.analytics_service import AnalyticsService, ReportType, ReportFormat
 
 router = APIRouter(prefix="/api/v1/analytics", tags=["Analytics & Reports"])
 analytics_service = AnalyticsService()
