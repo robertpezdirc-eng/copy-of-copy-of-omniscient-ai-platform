@@ -1414,6 +1414,196 @@ Po zaključku celotnega programa + prispevki k platformi
 
 ---
 
+## 🔄 PLATFORM UPGRADE ASSESSMENT
+
+### Obstoječa Celovita Dokumentacija za Nadgradnjo
+
+Platforma ima **že pripravljeno celovito dokumentacijo** za nadgradnjo in izboljšave (skupaj **2,383 vrstic**):
+
+#### 📋 Razpoložljivi Dokumenti za Nadgradnjo
+
+1. **[PLATFORM_UPGRADE_RECOMMENDATIONS.md](PLATFORM_UPGRADE_RECOMMENDATIONS.md)** (623 vrstic)
+   - Celovita tehnična analiza z matriko odvisnosti
+   - Ocena varnosti in prioritizacija
+   - Izboljšave infrastrukture
+   - Zmanjšanje tveganj
+   - **Analiza stroškov in koristi:** $150,000 letnega prihranka, 300% ROI
+
+2. **[UPGRADE_CHECKLIST.md](UPGRADE_CHECKLIST.md)** (598 vrstic)
+   - **52 izvedljivih nalog** v 4 fazah
+   - Skupaj **380 ur** implementacije
+   - Sledenje napredku
+   - Postopki povrnitve prejšnje različice
+
+3. **[QUICK_START_UPGRADE.md](QUICK_START_UPGRADE.md)** (523 vrstice)
+   - Takojšnje varne posodobitve
+   - Ključni vodniki za migracijo API-ja
+   - Primeri kode za vsako posodobitev
+
+4. **[UPGRADE_SUMMARY.md](UPGRADE_SUMMARY.md)** (378 vrstic)
+   - Pregled za vodstvo
+   - Finančni vpliv
+   - Razdelek za odobritev
+
+5. **[PREGLED_PLATFORM_SLO.md](PREGLED_PLATFORM_SLO.md)** (261 vrstic)
+   - Povzetek za deležnike v Sloveniji
+
+### 🔥 Ključne Ugotovitve iz Upgrade Assessment
+
+#### 24 Paketov Zahteva Posodobitve
+
+**Kritične prioritete:**
+
+1. **OpenAI SDK: 1.3.9 → 1.54.0** (50+ izdaj zadaj!)
+   - ❌ Brez dostopa do GPT-4o/GPT-4 Turbo
+   - ❌ Manjkajoče nove funkcionalnosti
+   - 🔥 **URGENT** - Posodobi takoj
+
+2. **Anthropic SDK: 0.7.8 → 0.39.0** (32 izdaj zadaj!)
+   - ❌ Brez dostopa do Claude 3.5 Sonnet
+   - ❌ Manjkajoče streaming izboljšave
+   - 🔥 **URGENT** - Posodobi takoj
+
+3. **Stripe: 7.4.0 → 11.1.1** (4 glavne različice!)
+   - ⚠️ Kritične spremembe API-ja
+   - ⚠️ Zahteva pregled kode
+   - 🔴 **MAJOR UPDATE** - Načrtuj migracijo
+
+4. **Cryptography: 41.0.7 → 44.0.0** (3 glavne različice!)
+   - 🔐 Varnostno kritično
+   - 🔐 Nove algoritme
+   - 🔴 **SECURITY** - Posodobi čim prej
+
+5. **10 dodatnih paketov** z visoko prioriteto:
+   - FastAPI: 0.104.1 → 0.121.0
+   - Pydantic: 2.5.0 → 2.10.0
+   - Transformers: 4.35.2 → 4.46.0
+   - TensorFlow: 2.15.0 → 2.17.1
+   - PyTorch: 2.1.0 → 2.5.1
+   - Sentry: Different versions → 2.18.0 (unified)
+   - ... in več
+
+### 🎯 Manjkajoče Funkcionalnosti iz Obstoječih Načrtov
+
+1. **Multimodalna AI**
+   - Vid (image understanding)
+   - Zvok (speech-to-text, text-to-speech)
+   - Ustvarjanje slik (DALL-E, Stable Diffusion)
+
+2. **Multi-LLM Router z Failover**
+   - Avtomatsko preklapljanje med OpenAI, Anthropic, Gemini
+   - Load balancing
+   - Cost optimization
+
+3. **Popolna GDPR Orodja**
+   - Avtomatizirano compliance poročanje
+   - Data retention automation
+   - Privacy impact assessments
+
+4. **MLOps Pipeline**
+   - Upravljanje različic modelov
+   - A/B testiranje modelov
+   - Zaznavanje drift-a (model degradation)
+   - Automated retraining
+
+### 📅 Izvedbeni Načrt (4 Faze, 380 Ur)
+
+#### **Faza 1: Kritična Varnost** (Teden 1-2, 80 ur) 🔥
+**Status:** ✅ **IMPLEMENTIRANO**
+
+Posodobitve za:
+- ✅ OpenAI SDK → 1.54.0
+- ✅ Anthropic SDK → 0.39.0
+- ✅ FastAPI → 0.121.0
+- ✅ Pydantic → 2.10.0
+- ✅ Cryptography → 44.0.0
+- ✅ Transformers → 4.46.0
+
+#### **Faza 2: ML Stack** (Teden 3-4, 60 ur)
+**Naloge:**
+- TensorFlow 2.15 → 2.17.1
+- PyTorch 2.1 → 2.5.1
+- Database connection pooling
+- Redis caching optimization
+- Celery queue improvements
+
+**Deliverables:**
+- Posodobljeni ML modeli
+- Izboljšana performansa
+- Zmanjšana latenca
+
+#### **Faza 3: Nove Funkcionalnosti** (Mesec 2, 160 ur)
+**Naloge:**
+- Multimodalna AI implementacija
+- Multi-LLM router z failover
+- GDPR tools dokončanje
+- MLOps pipeline setup
+
+**Deliverables:**
+- Image understanding API
+- Speech API endpoints
+- Automated model versioning
+- GDPR compliance dashboard
+
+#### **Faza 4: Opazljivost in Optimizacija** (Mesec 3, 80 ur)
+**Naloge:**
+- Grafana dashboards razširitev
+- Distributed tracing (Tempo)
+- Test coverage >80%
+- Load testing in optimization
+
+**Deliverables:**
+- Razširjen monitoring
+- Performance benchmarks
+- Comprehensive test suite
+- Production-ready system
+
+### 💰 Finančni Vpliv
+
+**Prihranjeni stroški:**
+- Izboljšana cache strategija: $50,000/leto
+- Optimizacija API klicev: $60,000/leto
+- Infrastructure optimization: $40,000/leto
+- **Skupaj:** $150,000/leto
+
+**ROI:**
+- Investicija: $50,000 (380 ur @ $130/uro)
+- Letni prihranek: $150,000
+- **ROI:** 300% v prvem letu
+
+### ⚠️ Zmanjševanje Tveganja
+
+**Stripe Upgrade** zahteva odobritev podjetja:
+- Kritične spremembe v payment API-ju
+- Potrebno testiranje payment flow-a
+- Rollback plan pripravljen
+
+**Vsi Faze vključujejo:**
+- ✅ Obsežni postopki testiranja
+- ✅ Postopno uvajanje (gradual rollout)
+- ✅ Načrti za vračanje prejšnjih različic
+- ✅ Monitoring in alerting
+- ✅ Documentation updates
+
+### 🔗 Naslednji Koraki
+
+1. **Preberi celotno upgrade dokumentacijo:**
+   - Začni z [QUICK_START_UPGRADE.md](QUICK_START_UPGRADE.md)
+   - Preglej [UPGRADE_CHECKLIST.md](UPGRADE_CHECKLIST.md)
+   - Študiraj [PLATFORM_UPGRADE_RECOMMENDATIONS.md](PLATFORM_UPGRADE_RECOMMENDATIONS.md)
+
+2. **Implementiraj Fazo 2-4:**
+   - Faza 1 je že zaključena ✅
+   - Nadaljuj s ML stack posodobitvami
+   - Planiraj nove funkcionalnosti
+
+3. **Integriraj z učnim programom:**
+   - Faze 1-10 učnega programa + Upgrade faze
+   - Kombiniraj z 10 implementation issues
+   - **Celoten program: 106-139h + 380h upgrade = 486-519h**
+
+---
+
 ## 🔧 PRIPOROČILA ZA NADALJNJI RAZVOJ
 
 ### Kratkoročno (1-3 mesece)
@@ -2063,7 +2253,22 @@ Po zaključku celotnega programa (106-139 ur) ste upravičeni do:
 3. Označi kontrolne sezname
 4. Zaključi z Fazo 10 (CI/CD)
 5. Nadaljuj z dodatnimi 10 implementation issues (45-56 ur)
-6. Pridobi certifikate: Expert → Architect → Master!
+6. **NOVO:** Implementiraj Platform Upgrade (380 ur) - Glej [PLATFORM_UPGRADE_RECOMMENDATIONS.md](PLATFORM_UPGRADE_RECOMMENDATIONS.md)
+7. Pridobi certifikate: Expert → Architect → Master!
+
+### Platform Upgrade (Dodatno)
+
+**Upgrade Documentation (2,383 vrstic) že pripravljena:**
+- ✅ 24 paketov zahteva posodobitve
+- ✅ 4 faze implementacije (380 ur)
+- ✅ Faza 1 že implementirana
+- ✅ ROI: 300% ($150,000 letni prihranek)
+- ✅ Manjkajoče funkcionalnosti planirane (Multimodal AI, MLOps, etc.)
+
+**Celoten program z upgradi:**
+- Učni program: 106-139 ur
+- Platform upgrades: 380 ur
+- **SKUPAJ: 486-519 ur** (od začetnika do enterprise master z upgradi)
 
 ### Certifikati
 
@@ -2075,7 +2280,7 @@ Po zaključku celotnega programa (106-139 ur) ste upravičeni do:
 
 **Avtor:** GitHub Copilot  
 **Datum:** 3. november 2025  
-**Verzija dokumenta:** 2.0.0 (Extended with 10 implementation issues)  
+**Verzija dokumenta:** 2.1.0 (Added Platform Upgrade Assessment section)  
 **Licenca:** MIT
 
 ---
