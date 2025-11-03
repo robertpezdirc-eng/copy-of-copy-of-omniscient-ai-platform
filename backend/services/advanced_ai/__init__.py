@@ -9,6 +9,8 @@ from .multimodal import MultiModalOrchestrator
 from .mlops_pipeline import MLOpsPipeline
 from .content_generation import ContentGenerationService
 from .iiot_ollama import IIoTOllamaService
+from .recommendation_engine_v2 import RecommendationEngine
+from .ai_insights import AIInsightsService
 
 _model_registry: ModelRegistryService | None = None
 _ab_testing: ABTestingService | None = None
@@ -17,6 +19,8 @@ _multimodal: MultiModalOrchestrator | None = None
 _mlops_pipeline: MLOpsPipeline | None = None
 _content_generation: ContentGenerationService | None = None
 _iiot_ollama: IIoTOllamaService | None = None
+_recommendation_engine: RecommendationEngine | None = None
+_ai_insights: AIInsightsService | None = None
 
 
 def get_model_registry_service() -> ModelRegistryService:
@@ -73,3 +77,19 @@ def get_iiot_ollama_service() -> IIoTOllamaService:
     if _iiot_ollama is None:
         _iiot_ollama = IIoTOllamaService()
     return _iiot_ollama
+
+
+def get_recommendation_engine() -> RecommendationEngine:
+    """Return singleton instance of the recommendation engine."""
+    global _recommendation_engine
+    if _recommendation_engine is None:
+        _recommendation_engine = RecommendationEngine()
+    return _recommendation_engine
+
+
+def get_ai_insights_service() -> AIInsightsService:
+    """Return singleton instance of the AI insights service."""
+    global _ai_insights
+    if _ai_insights is None:
+        _ai_insights = AIInsightsService()
+    return _ai_insights
