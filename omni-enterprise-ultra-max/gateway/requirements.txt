@@ -13,7 +13,7 @@ slowapi==0.1.9
 opentelemetry-api==1.28.2
 opentelemetry-sdk==1.28.2
 opentelemetry-instrumentation-fastapi==0.43b0
-# Jaeger exporter 1.22.0 not available on PyPI yet; use latest available
+# Jaeger exporter stays at 1.21.0 as newer versions are not available on PyPI
 opentelemetry-exporter-jaeger==1.21.0
 google-cloud-secret-manager==2.17.0
 cachetools==5.5.0
