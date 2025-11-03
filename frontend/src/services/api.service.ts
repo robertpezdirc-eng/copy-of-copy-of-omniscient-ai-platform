@@ -14,11 +14,18 @@ import type {
   AffiliateStats,
   AffiliateReferral,
   AffiliateCommission,
+  AffiliateLink,
   Invoice,
   SystemAlert,
   SystemMetrics,
+  SystemSettings,
   PaginatedResponse,
   Pagination,
+  UsageAnalytics,
+  AnalyticsReport,
+  PaymentMethod,
+  Subscription,
+  HealthCheckResponse,
 } from '@/types'
 
 // ============================================================================
@@ -154,16 +161,16 @@ export const analyticsService = {
     days?: number
     start_date?: string
     end_date?: string
-  }): Promise<any> {
-    const response = await api.get(API_ENDPOINTS.ANALYTICS.USAGE, { params })
+  }): Promise<UsageAnalytics> {
+    const response = await api.get<UsageAnalytics>(API_ENDPOINTS.ANALYTICS.USAGE, { params })
     return response.data
   },
 
   /**
    * Get analytics reports
    */
-  async getReports(type?: string): Promise<any> {
-    const response = await api.get(API_ENDPOINTS.ANALYTICS.REPORTS, {
+  async getReports(type?: string): Promise<AnalyticsReport[]> {
+    const response = await api.get<AnalyticsReport[]>(API_ENDPOINTS.ANALYTICS.REPORTS, {
       params: { type },
     })
     return response.data
@@ -226,32 +233,32 @@ export const billingService = {
   /**
    * Get payment methods
    */
-  async getPaymentMethods(): Promise<any[]> {
-    const response = await api.get(API_ENDPOINTS.BILLING.PAYMENT_METHODS)
+  async getPaymentMethods(): Promise<PaymentMethod[]> {
+    const response = await api.get<PaymentMethod[]>(API_ENDPOINTS.BILLING.PAYMENT_METHODS)
     return response.data
   },
 
   /**
    * Add payment method
    */
-  async addPaymentMethod(data: any): Promise<any> {
-    const response = await api.post(API_ENDPOINTS.BILLING.PAYMENT_METHODS, data)
+  async addPaymentMethod(data: Partial<PaymentMethod>): Promise<PaymentMethod> {
+    const response = await api.post<PaymentMethod>(API_ENDPOINTS.BILLING.PAYMENT_METHODS, data)
     return response.data
   },
 
   /**
    * Get current subscription
    */
-  async getSubscription(): Promise<any> {
-    const response = await api.get(API_ENDPOINTS.BILLING.SUBSCRIPTIONS)
+  async getSubscription(): Promise<Subscription> {
+    const response = await api.get<Subscription>(API_ENDPOINTS.BILLING.SUBSCRIPTIONS)
     return response.data
   },
 
   /**
    * Update subscription
    */
-  async updateSubscription(tierId: string): Promise<any> {
-    const response = await api.put(API_ENDPOINTS.BILLING.SUBSCRIPTIONS, {
+  async updateSubscription(tierId: string): Promise<Subscription> {
+    const response = await api.put<Subscription>(API_ENDPOINTS.BILLING.SUBSCRIPTIONS, {
       tier_id: tierId,
     })
     return response.data
@@ -303,16 +310,16 @@ export const affiliateService = {
   /**
    * Get affiliate links
    */
-  async getLinks(): Promise<any> {
-    const response = await api.get(API_ENDPOINTS.AFFILIATE.LINKS)
+  async getLinks(): Promise<AffiliateLink[]> {
+    const response = await api.get<AffiliateLink[]>(API_ENDPOINTS.AFFILIATE.LINKS)
     return response.data
   },
 
   /**
    * Generate new affiliate link
    */
-  async generateLink(campaign?: string): Promise<any> {
-    const response = await api.post(API_ENDPOINTS.AFFILIATE.LINKS, { campaign })
+  async generateLink(campaign?: string): Promise<AffiliateLink> {
+    const response = await api.post<AffiliateLink>(API_ENDPOINTS.AFFILIATE.LINKS, { campaign })
     return response.data
   },
 }
@@ -376,16 +383,16 @@ export const adminService = {
   /**
    * Get system settings
    */
-  async getSettings(): Promise<any> {
-    const response = await api.get(API_ENDPOINTS.ADMIN.SETTINGS)
+  async getSettings(): Promise<SystemSettings> {
+    const response = await api.get<SystemSettings>(API_ENDPOINTS.ADMIN.SETTINGS)
     return response.data
   },
 
   /**
    * Update system settings
    */
-  async updateSettings(settings: Record<string, any>): Promise<any> {
-    const response = await api.put(API_ENDPOINTS.ADMIN.SETTINGS, settings)
+  async updateSettings(settings: Partial<SystemSettings>): Promise<SystemSettings> {
+    const response = await api.put<SystemSettings>(API_ENDPOINTS.ADMIN.SETTINGS, settings)
     return response.data
   },
 }
@@ -398,16 +405,16 @@ export const healthService = {
   /**
    * Check API health
    */
-  async check(): Promise<any> {
-    const response = await api.get(API_ENDPOINTS.HEALTH)
+  async check(): Promise<HealthCheckResponse> {
+    const response = await api.get<HealthCheckResponse>(API_ENDPOINTS.HEALTH)
     return response.data
   },
 
   /**
    * Get metrics
    */
-  async getMetrics(): Promise<any> {
-    const response = await api.get(API_ENDPOINTS.METRICS)
+  async getMetrics(): Promise<Record<string, number>> {
+    const response = await api.get<Record<string, number>>(API_ENDPOINTS.METRICS)
     return response.data
   },
 }

@@ -411,3 +411,80 @@ export interface FeatureFlags {
   enableRealTimeMetrics: boolean
   enableAdvancedAnalytics: boolean
 }
+
+// ============================================================================
+// Additional Service Response Types
+// ============================================================================
+
+export interface UsageAnalytics {
+  total_requests: number
+  total_users: number
+  requests_by_endpoint: Record<string, number>
+  requests_by_method: Record<string, number>
+  average_response_time: number
+  error_rate: number
+  date_range: DateRange
+}
+
+export interface AnalyticsReport {
+  id: string
+  type: string
+  name: string
+  generated_at: string
+  data: Record<string, any>
+  summary: Record<string, number>
+}
+
+export interface PaymentMethod {
+  id: string
+  type: 'card' | 'bank_account' | 'paypal'
+  last4?: string
+  brand?: string
+  exp_month?: number
+  exp_year?: number
+  is_default: boolean
+  created_at: string
+}
+
+export interface Subscription {
+  id: string
+  user_id: string
+  plan_id: string
+  tier: SubscriptionTier
+  status: 'active' | 'cancelled' | 'past_due' | 'trialing'
+  current_period_start: string
+  current_period_end: string
+  cancel_at_period_end: boolean
+  created_at: string
+}
+
+export interface AffiliateLink {
+  id: string
+  url: string
+  code: string
+  campaign?: string
+  clicks: number
+  conversions: number
+  created_at: string
+}
+
+export interface SystemSettings {
+  maintenance_mode: boolean
+  allow_registrations: boolean
+  require_email_verification: boolean
+  max_upload_size: number
+  features: FeatureFlags
+  [key: string]: any
+}
+
+export interface HealthCheckResponse {
+  status: 'healthy' | 'degraded' | 'unhealthy'
+  version: string
+  uptime: number
+  timestamp: string
+  services: {
+    database: 'up' | 'down'
+    cache: 'up' | 'down'
+    queue: 'up' | 'down'
+  }
+}
