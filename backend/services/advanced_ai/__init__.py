@@ -8,6 +8,7 @@ from .automl import AutoMLOrchestrator
 from .multimodal import MultiModalOrchestrator
 from .mlops_pipeline import MLOpsPipeline
 from .content_generation import ContentGenerationService
+from .iiot_ollama import IIoTOllamaService
 
 _model_registry: ModelRegistryService | None = None
 _ab_testing: ABTestingService | None = None
@@ -15,6 +16,7 @@ _automl: AutoMLOrchestrator | None = None
 _multimodal: MultiModalOrchestrator | None = None
 _mlops_pipeline: MLOpsPipeline | None = None
 _content_generation: ContentGenerationService | None = None
+_iiot_ollama: IIoTOllamaService | None = None
 
 
 def get_model_registry_service() -> ModelRegistryService:
@@ -63,3 +65,11 @@ def get_content_generation_service() -> ContentGenerationService:
     if _content_generation is None:
         _content_generation = ContentGenerationService()
     return _content_generation
+
+
+def get_iiot_ollama_service() -> IIoTOllamaService:
+    """Return singleton instance of the IIoT Ollama service."""
+    global _iiot_ollama
+    if _iiot_ollama is None:
+        _iiot_ollama = IIoTOllamaService()
+    return _iiot_ollama

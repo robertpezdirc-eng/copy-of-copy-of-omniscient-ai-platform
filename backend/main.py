@@ -264,6 +264,7 @@ def _register_routers(app: FastAPI) -> None:
     _try("routes.billing_routes", "router", "/api/v1/billing", ["Automated Billing & Invoicing"])
     _try("routes.feedback_routes", "router", "/api/v1/feedback", ["Continuous Feedback & Improvement"])
     _try("routes.iot_routes", "router", "/api/v1/iot", ["IoT & Telemetry"])
+    _try("routes.iiot_ollama_routes", "router", "/api/v1/iiot", ["IIoT with Ollama AI"])
     _try("routes.monetization_routes", "router", "/api/v1/monetization", ["Monetization & Plans"])
     _try("routes.analytics_usage_routes", "router", "/api/v1/analytics", ["Usage Analytics & Export"])
     _try("routes.websocket_routes", "router", "/api/v1/iot/ws", ["Real-time WebSocket Telemetry"])
