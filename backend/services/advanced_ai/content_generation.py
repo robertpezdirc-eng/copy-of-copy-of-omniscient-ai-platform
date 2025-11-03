@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional
 import random
 import json
 import logging
+import uuid
 
 logger = logging.getLogger(__name__)
 
@@ -294,7 +295,6 @@ class ContentGenerationService:
             elif field_type == "email":
                 record[field] = f"user{index}@example.com"
             elif field_type == "uuid":
-                import uuid
                 record[field] = str(uuid.uuid4())
             elif field_type == "timestamp":
                 record[field] = datetime.now(timezone.utc).isoformat()
@@ -453,7 +453,14 @@ class ContentGenerationService:
         example += 'func main() {\n'
         example += f'    url := "https://api.example.com{endpoint}"\n'
         if params:
-            example += f'    data := map[string]interface{{{json.dumps(params)}}}\n'
+            # Generate proper Go map initialization
+            example += '    data := map[string]interface{}{\n'
+            for key, value in params.items():
+                if isinstance(value, str):
+                    example += f'        "{key}": "{value}",\n'
+                else:
+                    example += f'        "{key}": {json.dumps(value)},\n'
+            example += '    }\n'
             example += '    jsonData, _ := json.Marshal(data)\n'
             example += '    req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))\n'
         else:

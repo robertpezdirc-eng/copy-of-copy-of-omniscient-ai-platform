@@ -31,7 +31,12 @@ try:
     _content_generation = get_content_generation_service()
 except Exception as exc:  # pragma: no cover - optional dependency failures
     logger.warning("Advanced AI services unavailable: %s", exc)
-    _model_registry = _ab_testing = _automl = _multimodal = _mlops_pipeline = _content_generation = None
+    _model_registry = None
+    _ab_testing = None
+    _automl = None
+    _multimodal = None
+    _mlops_pipeline = None
+    _content_generation = None
 
 
 def _require(service: Any, name: str) -> Any:
