@@ -233,6 +233,9 @@ def _register_routers(app: FastAPI) -> None:
     # New enhanced routes
     _try("routes.ai_assistants_routes", "router", "/api/v1/ai-assistants", ["AI Domain Assistants"])
     _try("routes.cache_routes", "router", "/api/v1/redis", ["Redis Cache Management"])
+    _try("routes.integrations_routes", "router", "/api/v1", ["Third-Party Integrations"])
+    _try("routes.advanced_ai_features_routes", "router", "/api/v1", ["Advanced AI Features"])
+    _try("routes.optimization_routes", "router", "/api/v1", ["Performance Optimization"])
     
     _try("routes.crypto_routes", "crypto_router", "/api/v1/crypto", ["Cryptocurrency"])
     _try("routes.affiliate_routes", "affiliate_router", "/api/v1/affiliate", ["Affiliate System"])
