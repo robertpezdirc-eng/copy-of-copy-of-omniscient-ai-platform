@@ -240,7 +240,7 @@ async def get_automl_job(job_id: str) -> Dict[str, Any]:
         raise HTTPException(status_code=404, detail="AutoML job not found") from exc
 
 
-@router.post("/multimodal/analyze", tags=["Advanced AI"])
+@router.post("/multimodal/analyze", tags=["Advanced AI", "Multimodal"])
 async def analyze_multimodal(payload: MultiModalPayload) -> Dict[str, Any]:
     orchestrator = _require(_multimodal, "Multi-modal")
     if not any([payload.text, payload.image_url, payload.audio_url]):
@@ -255,6 +255,52 @@ async def analyze_multimodal(payload: MultiModalPayload) -> Dict[str, Any]:
     except Exception as exc:  # pragma: no cover - defensive
         logger.error("Multi-modal analysis failed: %s", exc)
         raise HTTPException(status_code=500, detail="Failed to process request") from exc
+
+
+class ImageGenerationPayload(BaseModel):
+    prompt: str = Field(..., description="Text prompt for image generation")
+    size: str = Field(default="1024x1024", description="Image size")
+    quality: str = Field(default="standard", description="Image quality")
+
+
+@router.post("/multimodal/generate-image", tags=["Advanced AI", "Multimodal"])
+async def generate_image(payload: ImageGenerationPayload) -> Dict[str, Any]:
+    """Generate images using DALL-E."""
+    orchestrator = _require(_multimodal, "Multi-modal")
+    try:
+        return await orchestrator.generate_image(
+            prompt=payload.prompt,
+            size=payload.size,
+            quality=payload.quality,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.error("Image generation failed: %s", exc)
+        raise HTTPException(status_code=500, detail="Failed to generate image") from exc
+
+
+class TextToSpeechPayload(BaseModel):
+    text: str = Field(..., description="Text to convert to speech")
+    voice: str = Field(default="alloy", description="Voice to use")
+    model: str = Field(default="tts-1", description="TTS model")
+
+
+@router.post("/multimodal/text-to-speech", tags=["Advanced AI", "Multimodal"])
+async def text_to_speech(payload: TextToSpeechPayload) -> Dict[str, Any]:
+    """Convert text to speech using OpenAI TTS."""
+    orchestrator = _require(_multimodal, "Multi-modal")
+    try:
+        return await orchestrator.text_to_speech(
+            text=payload.text,
+            voice=payload.voice,
+            model=payload.model,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.error("Text-to-speech failed: %s", exc)
+        raise HTTPException(status_code=500, detail="Failed to convert text to speech") from exc
 
 
 @router.get("/status", tags=["Advanced AI"])
