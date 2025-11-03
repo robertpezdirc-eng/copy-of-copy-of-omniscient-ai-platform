@@ -143,7 +143,7 @@ async def verify_totp_code(
 
 class MFASMSSetupRequest(BaseModel):
     """Request to setup SMS MFA"""
-    phone_number: str = Field(..., regex=r'^\+[1-9]\d{1,14}$')
+    phone_number: str = Field(..., pattern=r'^\+[1-9]\d{1,14}$')
 
 
 @router.post("/mfa/sms/setup")
