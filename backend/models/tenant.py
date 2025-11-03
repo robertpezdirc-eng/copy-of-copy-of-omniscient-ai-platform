@@ -28,7 +28,7 @@ class TenantStatus(str, Enum):
 class TenantBase(BaseModel):
     """Base tenant model"""
     name: str = Field(..., min_length=1, max_length=255)
-    slug: str = Field(..., regex="^[a-z0-9-]+$")
+    slug: str = Field(..., pattern="^[a-z0-9-]+$")
     domain: Optional[str] = None
     tier: TenantTier = TenantTier.FREE
     status: TenantStatus = TenantStatus.TRIAL

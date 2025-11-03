@@ -3,7 +3,7 @@ Notification Models
 """
 
 from datetime import datetime
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from pydantic import BaseModel, EmailStr
 from enum import Enum
 

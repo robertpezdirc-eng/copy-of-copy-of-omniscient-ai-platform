@@ -143,7 +143,7 @@ class ChangePasswordRequest(BaseModel):
 
 class MFASetupRequest(BaseModel):
     """MFA setup request"""
-    method: str = Field(..., regex="^(totp|sms|email)$")
+    method: str = Field(..., pattern="^(totp|sms|email)$")
 
 
 class MFAVerifyRequest(BaseModel):
