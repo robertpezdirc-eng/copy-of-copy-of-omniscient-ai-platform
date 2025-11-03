@@ -229,10 +229,15 @@ def _register_routers(app: FastAPI) -> None:
     _try("routes.tenant_routes", "router", "/api/v1", ["Tenants & RBAC"])
     _try("routes.stripe_routes", "stripe_router", "/api/v1/stripe", ["Stripe Payments"])
     _try("routes.paypal_routes", "paypal_router", "/api/v1/paypal", ["PayPal Payments"])
+    
+    # New enhanced routes
+    _try("routes.ai_assistants_routes", "router", "/api/v1/ai-assistants", ["AI Domain Assistants"])
+    _try("routes.cache_routes", "router", "/api/v1/redis", ["Redis Cache Management"])
+    
     _try("routes.crypto_routes", "crypto_router", "/api/v1/crypto", ["Cryptocurrency"])
     _try("routes.affiliate_routes", "affiliate_router", "/api/v1/affiliate", ["Affiliate System"])
     _try("routes.marketplace_routes", "marketplace_router", "/api/v1/marketplace", ["API Marketplace"])
-    _try("routes.analytics_routes", "analytics_router", "/api/v1/analytics", ["Analytics"])
+    _try("routes.analytics_routes", "router", "/api/v1/analytics", ["Analytics"])
     _try("routes.ai_intelligence_routes", "ai_intelligence_router", "/api/v1/intelligence", ["AI Intelligence - 10 Years Ahead"])
     _try("routes.growth_engine_routes", "growth_router", "/api/v1/growth", ["Growth Engine - Viral Marketing"])
     _try("routes.security_compliance_routes", "security_router", "/api/v1/security", ["Enterprise Security & Compliance"])

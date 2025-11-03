@@ -1,0 +1,156 @@
+{
+  "dashboard": {
+    "title": "Omni Enterprise - System Performance & SLA",
+    "tags": ["performance", "sla", "monitoring"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Request Latency (p50, p95, p99)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p50"
+          },
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p95"
+          },
+          {
+            "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p99"
+          }
+        ],
+        "gridPos": {"h": 9, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Error Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m])) * 100"
+          }
+        ],
+        "gridPos": {"h": 9, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Uptime (SLA Target: 99.9%)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "(1 - (sum(rate(http_requests_total{status=\"500\"}[30d])) / sum(rate(http_requests_total[30d])))) * 100"
+          }
+        ],
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            {"value": 0, "color": "red"},
+            {"value": 99, "color": "yellow"},
+            {"value": 99.9, "color": "green"}
+          ]
+        },
+        "gridPos": {"h": 6, "w": 8, "x": 0, "y": 9}
+      },
+      {
+        "id": 4,
+        "title": "Request Throughput",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total[1m]))"
+          }
+        ],
+        "gridPos": {"h": 6, "w": 8, "x": 8, "y": 9}
+      },
+      {
+        "id": 5,
+        "title": "Active Connections",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(active_connections)"
+          }
+        ],
+        "gridPos": {"h": 6, "w": 8, "x": 16, "y": 9}
+      },
+      {
+        "id": 6,
+        "title": "Cache Hit Rate",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "(redis_keyspace_hits_total / (redis_keyspace_hits_total + redis_keyspace_misses_total)) * 100"
+          }
+        ],
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            {"value": 0, "color": "red"},
+            {"value": 70, "color": "yellow"},
+            {"value": 85, "color": "green"}
+          ]
+        },
+        "gridPos": {"h": 6, "w": 8, "x": 0, "y": 15}
+      },
+      {
+        "id": 7,
+        "title": "CPU Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "avg(rate(container_cpu_usage_seconds_total[5m])) * 100"
+          }
+        ],
+        "gridPos": {"h": 6, "w": 8, "x": 8, "y": 15}
+      },
+      {
+        "id": 8,
+        "title": "Memory Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "(container_memory_usage_bytes / container_memory_limit_bytes) * 100"
+          }
+        ],
+        "gridPos": {"h": 6, "w": 8, "x": 16, "y": 15}
+      },
+      {
+        "id": 9,
+        "title": "Database Connection Pool",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "db_connection_pool_active",
+            "legendFormat": "Active"
+          },
+          {
+            "expr": "db_connection_pool_idle",
+            "legendFormat": "Idle"
+          },
+          {
+            "expr": "db_connection_pool_max",
+            "legendFormat": "Max"
+          }
+        ],
+        "gridPos": {"h": 6, "w": 12, "x": 0, "y": 21}
+      },
+      {
+        "id": 10,
+        "title": "Queue Depth",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "task_queue_depth"
+          }
+        ],
+        "gridPos": {"h": 6, "w": 12, "x": 12, "y": 21}
+      }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 27,
+    "version": 1
+  }
+}

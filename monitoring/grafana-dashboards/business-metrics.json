@@ -1,0 +1,89 @@
+{
+  "dashboard": {
+    "title": "Omni Enterprise - Business Metrics",
+    "tags": ["business", "revenue", "kpi"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Revenue (24h)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(payment_completed_total[5m])) * 60 * 60 * 24"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Active Users",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "count(user_session_active)"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "API Calls per Second",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total[1m]))"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "Conversion Rate",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "(sum(rate(conversion_completed_total[5m])) / sum(rate(http_requests_total[5m]))) * 100"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      },
+      {
+        "id": 5,
+        "title": "Monthly Recurring Revenue (MRR)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(subscription_mrr)"
+          }
+        ],
+        "gridPos": {"h": 6, "w": 8, "x": 0, "y": 16}
+      },
+      {
+        "id": 6,
+        "title": "Customer Lifetime Value",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "avg(customer_ltv)"
+          }
+        ],
+        "gridPos": {"h": 6, "w": 8, "x": 8, "y": 16}
+      },
+      {
+        "id": 7,
+        "title": "Churn Rate",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "(sum(rate(customer_churned_total[30d])) / sum(customer_total)) * 100"
+          }
+        ],
+        "gridPos": {"h": 6, "w": 8, "x": 16, "y": 16}
+      }
+    ],
+    "refresh": "30s",
+    "schemaVersion": 27,
+    "version": 1
+  }
+}

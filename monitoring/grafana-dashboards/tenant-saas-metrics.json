@@ -1,0 +1,124 @@
+{
+  "dashboard": {
+    "title": "Omni Enterprise - Multi-Tenant SaaS Metrics",
+    "tags": ["tenants", "saas", "usage"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Active Tenants by Tier",
+        "type": "piechart",
+        "targets": [
+          {
+            "expr": "count(tenant_active) by (tier)"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 8, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Total MRR by Tier",
+        "type": "bargauge",
+        "targets": [
+          {
+            "expr": "sum(tenant_mrr) by (tier)"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 8, "x": 8, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Tenant Growth (New vs Churned)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(tenant_created_total[1d]))",
+            "legendFormat": "New Tenants"
+          },
+          {
+            "expr": "sum(rate(tenant_churned_total[1d]))",
+            "legendFormat": "Churned Tenants"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 8, "x": 16, "y": 0}
+      },
+      {
+        "id": 4,
+        "title": "API Usage by Tenant (Top 10)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "topk(10, sum(rate(http_requests_total[5m])) by (tenant_id))"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 5,
+        "title": "Storage Usage by Tenant (Top 10)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "topk(10, sum(tenant_storage_bytes) by (tenant_id))"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      },
+      {
+        "id": 6,
+        "title": "Tenants Approaching Limits",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "tenant_usage_percentage > 80"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16}
+      },
+      {
+        "id": 7,
+        "title": "Tenant Conversion Rate (Trial to Paid)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "(sum(tenant_converted_total) / sum(tenant_trial_started_total)) * 100"
+          }
+        ],
+        "gridPos": {"h": 6, "w": 8, "x": 0, "y": 24}
+      },
+      {
+        "id": 8,
+        "title": "Average Revenue Per Tenant",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(tenant_mrr) / count(tenant_active)"
+          }
+        ],
+        "gridPos": {"h": 6, "w": 8, "x": 8, "y": 24}
+      },
+      {
+        "id": 9,
+        "title": "Tenant Churn Rate",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "(sum(rate(tenant_churned_total[30d])) / sum(tenant_active)) * 100"
+          }
+        ],
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            {"value": 0, "color": "green"},
+            {"value": 5, "color": "yellow"},
+            {"value": 10, "color": "red"}
+          ]
+        },
+        "gridPos": {"h": 6, "w": 8, "x": 16, "y": 24}
+      }
+    ],
+    "refresh": "1m",
+    "schemaVersion": 27,
+    "version": 1
+  }
+}

@@ -9,7 +9,7 @@ from pydantic import BaseModel
 import os
 import stripe
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from utils.gcp import get_firestore
 
 # Initialize Stripe
@@ -314,5 +314,185 @@ async def report_usage(request: UsageRequest):
 
         return {'status': 'success'}
 
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@stripe_router.get('/analytics/{customer_id}')
+async def get_payment_analytics(customer_id: str):
+    """Get payment analytics for a customer"""
+    try:
+        # Get customer
+        customer = stripe.Customer.retrieve(customer_id)
+        
+        # Get all invoices
+        invoices = stripe.Invoice.list(customer=customer_id, limit=100)
+        
+        # Calculate analytics
+        total_revenue = sum(inv.amount_paid for inv in invoices.data) / 100
+        total_invoices = len(invoices.data)
+        paid_invoices = sum(1 for inv in invoices.data if inv.status == 'paid')
+        failed_invoices = sum(1 for inv in invoices.data if inv.status in ['uncollectible', 'void'])
+        
+        # Get subscriptions
+        subscriptions = stripe.Subscription.list(customer=customer_id)
+        active_subscriptions = sum(1 for sub in subscriptions.data if sub.status == 'active')
+        
+        return {
+            'customer_id': customer_id,
+            'customer_email': customer.email,
+            'total_revenue': total_revenue,
+            'currency': invoices.data[0].currency if invoices.data else 'eur',
+            'total_invoices': total_invoices,
+            'paid_invoices': paid_invoices,
+            'failed_invoices': failed_invoices,
+            'active_subscriptions': active_subscriptions,
+            'lifetime_value': total_revenue,
+            'avg_invoice_value': total_revenue / total_invoices if total_invoices > 0 else 0,
+            'payment_methods': len(customer.get('invoice_settings', {}).get('default_payment_method', [])),
+            'created_at': datetime.fromtimestamp(customer.created, timezone.utc).isoformat()
+        }
+    
+    except stripe.error.StripeError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@stripe_router.get('/invoices/{customer_id}')
+async def list_invoices(customer_id: str, limit: int = 10):
+    """List all invoices for a customer"""
+    try:
+        invoices = stripe.Invoice.list(
+            customer=customer_id,
+            limit=limit
+        )
+        
+        return {
+            'invoices': [
+                {
+                    'id': inv.id,
+                    'number': inv.number,
+                    'amount_due': inv.amount_due / 100,
+                    'amount_paid': inv.amount_paid / 100,
+                    'currency': inv.currency,
+                    'status': inv.status,
+                    'created': datetime.fromtimestamp(inv.created, timezone.utc).isoformat(),
+                    'due_date': datetime.fromtimestamp(inv.due_date, timezone.utc).isoformat() if inv.due_date else None,
+                    'invoice_pdf': inv.invoice_pdf
+                }
+                for inv in invoices.data
+            ]
+        }
+    
+    except stripe.error.StripeError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@stripe_router.post('/invoices/create')
+async def create_invoice(
+    customer_id: str,
+    items: list,
+    auto_advance: bool = True
+):
+    """Create a new invoice for a customer
+    
+    Example items:
+    [
+        {"price": "price_xxx", "quantity": 1},
+        {"price": "price_yyy", "quantity": 2}
+    ]
+    """
+    try:
+        # Create invoice
+        invoice = stripe.Invoice.create(
+            customer=customer_id,
+            auto_advance=auto_advance
+        )
+        
+        # Add line items
+        for item in items:
+            stripe.InvoiceItem.create(
+                customer=customer_id,
+                invoice=invoice.id,
+                price=item['price'],
+                quantity=item.get('quantity', 1)
+            )
+        
+        # Finalize and send if auto_advance
+        if auto_advance:
+            invoice = stripe.Invoice.finalize_invoice(invoice.id)
+        
+        return {
+            'invoice_id': invoice.id,
+            'status': invoice.status,
+            'amount_due': invoice.amount_due / 100,
+            'currency': invoice.currency,
+            'hosted_invoice_url': invoice.hosted_invoice_url,
+            'invoice_pdf': invoice.invoice_pdf
+        }
+    
+    except stripe.error.StripeError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@stripe_router.get('/revenue/monthly')
+async def get_monthly_revenue(months: int = 12):
+    """Get monthly revenue report"""
+    try:
+        # Calculate date range
+        now = datetime.now(timezone.utc)
+        start_date = int((now.replace(day=1) - timedelta(days=months * 30)).timestamp())
+        
+        # Get all charges
+        charges = stripe.Charge.list(
+            created={'gte': start_date},
+            limit=100
+        )
+        
+        # Group by month
+        monthly_data = {}
+        for charge in charges.auto_paging_iter():
+            if charge.paid:
+                charge_date = datetime.fromtimestamp(charge.created, timezone.utc)
+                month_key = charge_date.strftime('%Y-%m')
+                
+                if month_key not in monthly_data:
+                    monthly_data[month_key] = {
+                        'revenue': 0,
+                        'transactions': 0,
+                        'refunds': 0
+                    }
+                
+                monthly_data[month_key]['revenue'] += charge.amount / 100
+                monthly_data[month_key]['transactions'] += 1
+                monthly_data[month_key]['refunds'] += charge.amount_refunded / 100
+        
+        # Convert to sorted list
+        revenue_data = [
+            {
+                'month': month,
+                'revenue': data['revenue'],
+                'transactions': data['transactions'],
+                'refunds': data['refunds'],
+                'net_revenue': data['revenue'] - data['refunds']
+            }
+            for month, data in sorted(monthly_data.items())
+        ]
+        
+        return {
+            'period': f'{months} months',
+            'data': revenue_data,
+            'total_revenue': sum(d['revenue'] for d in revenue_data),
+            'total_transactions': sum(d['transactions'] for d in revenue_data),
+            'total_refunds': sum(d['refunds'] for d in revenue_data)
+        }
+    
+    except stripe.error.StripeError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
