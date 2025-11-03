@@ -1,0 +1,40 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '13.0'
+
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+target 'OmniMobile' do
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :hermes_enabled => true,
+    :fabric_enabled => false,
+    :flipper_configuration => FlipperConfiguration.enabled,
+    :app_clip_enabled => false
+  )
+
+  # Pods for OmniMobile
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  
+  # Firebase
+  pod 'Firebase/Core'
+  pod 'Firebase/Messaging'
+  
+  # Biometrics
+  pod 'react-native-biometrics', :path => '../node_modules/react-native-biometrics'
+
+  target 'OmniMobileTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false
+    )
+  end
+end

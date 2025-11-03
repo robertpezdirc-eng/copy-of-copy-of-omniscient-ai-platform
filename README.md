@@ -25,6 +25,7 @@
 - ✅ Performance Monitoring
 - ✅ Security & Compliance
 - 🆕 **Dashboard Builder** (Ollama-powered, 20 dashboard types)
+- 🆕 **Mobile Platform** (iOS + Android React Native app)
 
 **API Documentation:** [https://omni-ultra-backend-prod-661612368188.europe-west1.run.app/api/docs](https://omni-ultra-backend-prod-661612368188.europe-west1.run.app/api/docs)
 
@@ -82,11 +83,47 @@ Generate 20 production-ready React TypeScript dashboards automatically:
 
 ---
 
+## 📱 Mobile Platform (NEW!)
+
+**iOS + Android Native Apps with React Native**
+
+Full-featured mobile applications with enterprise capabilities:
+
+### ✨ Features
+- ✅ **iOS + Android** - React Native with TypeScript
+- ✅ **Push Notifications** - Firebase Cloud Messaging & APNs
+- ✅ **Offline Mode** - Request queuing and automatic sync
+- ✅ **Biometric Auth** - Face ID, Touch ID, Fingerprint
+- ✅ **Native Performance** - Hermes engine, optimized bundles
+
+### Quick Start
+
+```bash
+cd mobile
+npm install
+
+# iOS (macOS only)
+cd ios && pod install && cd ..
+npm run ios
+
+# Android
+npm run android
+```
+
+### Documentation
+- **[Mobile Implementation Guide](MOBILE_IMPLEMENTATION.md)** - Complete mobile platform docs
+- **[Mobile README](mobile/README.md)** - Setup and configuration guide
+
+---
+
 ## 🏗️ Architecture
 
 ```
 ┌─────────────────┐
-│     Clients     │
+│  Mobile Apps    │  ← iOS + Android (NEW!) ✨
+│  (iOS/Android)  │     • Push Notifications
+│                 │     • Offline Mode
+│                 │     • Biometric Auth
 └────────┬────────┘
          │
          ▼
