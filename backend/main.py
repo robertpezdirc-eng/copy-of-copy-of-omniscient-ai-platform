@@ -242,6 +242,19 @@ def _register_routers(app: FastAPI) -> None:
     _try("routes.workflow_realtime_routes", "router", "/api/v1", ["Workflow Automation & Real-Time"])
     _try("routes.blockchain_marketplace_routes", "router", "/api/v1", ["Blockchain & API Marketplace"])
     
+    # Phase 4 enhancements
+    _try("routes.iot_edge_routes", "router", "/api/v1", ["IoT & Edge Computing"])
+    _try("routes.ml_platform_routes", "router", "/api/v1", ["ML Platform"])
+    _try("routes.video_streaming_routes", "router", "/api/v1", ["Video Streaming"])
+    _try("routes.white_label_routes", "router", "/api/v1", ["White-Label Customization"])
+    _try("routes.advanced_search_routes", "router", "/api/v1", ["Advanced Search & Knowledge Base"])
+    _try("routes.enterprise_sla_routes", "router", "/api/v1", ["Enterprise SLA Management"])
+    
+    # Phase 5 enhancements
+    _try("routes.data_governance_routes", "router", "/api/v1", ["Data Governance & Compliance"])
+    _try("routes.customer_success_routes", "router", "/api/v1", ["Customer Success & Engagement"])
+    _try("routes.developer_platform_routes", "router", "/api/v1", ["Developer Platform & API Management"])
+    
     _try("routes.crypto_routes", "crypto_router", "/api/v1/crypto", ["Cryptocurrency"])
     _try("routes.affiliate_routes", "affiliate_router", "/api/v1/affiliate", ["Affiliate System"])
     _try("routes.marketplace_routes", "marketplace_router", "/api/v1/marketplace", ["API Marketplace"])
