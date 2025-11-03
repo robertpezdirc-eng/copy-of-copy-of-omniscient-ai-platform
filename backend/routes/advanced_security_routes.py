@@ -7,7 +7,7 @@ from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel
 
-from backend.services.security_service import SecurityService, TwoFactorMethod, AuditEventType
+from services.security_service import SecurityService, TwoFactorMethod, AuditEventType
 
 router = APIRouter(prefix="/api/v1/security", tags=["Advanced Security"])
 security_service = SecurityService()
