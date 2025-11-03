@@ -62,3 +62,6 @@ node_modules/
 tmp/
 temp/
 /tmp/
+
+# Local tools and SDKs
+google-cloud-sdk/
