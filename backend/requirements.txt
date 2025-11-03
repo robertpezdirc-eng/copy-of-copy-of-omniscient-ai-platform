@@ -33,11 +33,11 @@ google-generativeai==0.8.3
 # Communications
 sendgrid==6.11.0
 twilio==8.10.0
-python-telegram-bot==20.7
+python-telegram-bot==22.5
 
 # Utilities
 requests==2.31.0
-# Align with python-telegram-bot 20.7 which requires httpx~=0.25.2
+# Updated python-telegram-bot to 22.5 which requires httpx>=0.27,<0.29
 httpx==0.27.2
 email-validator>=2.0.0
 pillow==10.1.0
