@@ -237,6 +237,11 @@ def _register_routers(app: FastAPI) -> None:
     _try("routes.advanced_ai_features_routes", "router", "/api/v1", ["Advanced AI Features"])
     _try("routes.optimization_routes", "router", "/api/v1", ["Performance Optimization"])
     
+    # Phase 3 enhancements
+    _try("routes.security_advanced_routes", "router", "/api/v1", ["Advanced Security & Threat Detection"])
+    _try("routes.workflow_realtime_routes", "router", "/api/v1", ["Workflow Automation & Real-Time"])
+    _try("routes.blockchain_marketplace_routes", "router", "/api/v1", ["Blockchain & API Marketplace"])
+    
     _try("routes.crypto_routes", "crypto_router", "/api/v1/crypto", ["Cryptocurrency"])
     _try("routes.affiliate_routes", "affiliate_router", "/api/v1/affiliate", ["Affiliate System"])
     _try("routes.marketplace_routes", "marketplace_router", "/api/v1/marketplace", ["API Marketplace"])
