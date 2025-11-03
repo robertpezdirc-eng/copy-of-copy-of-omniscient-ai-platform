@@ -77,6 +77,7 @@ from middleware.internal_prefix import InternalPrefixStripper
 
 _run_as_internal = _os.getenv("RUN_AS_INTERNAL", "0").lower() in ("1", "true", "yes")
 _slow_threshold = float(_os.getenv("PERF_SLOW_THRESHOLD_SEC", "1.0"))
+_enable_response_cache = _os.getenv("ENABLE_RESPONSE_CACHE", "1").lower() in ("1", "true", "yes")
 
 # If running behind gateway, first strip /internal prefix so routes match
 if _run_as_internal:
@@ -89,6 +90,26 @@ app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(MetricsMiddleware)
 
 app.add_middleware(PerformanceMonitor, slow_request_threshold=_slow_threshold)
+
+# Add response caching middleware if enabled
+if _enable_response_cache and not _run_as_internal:
+    try:
+        from middleware.response_cache import ResponseCacheMiddleware
+        # Get Redis client for caching (will be None if not available)
+        redis_cache = None
+        try:
+            from database import redis_client as _redis_cache
+            redis_cache = _redis_cache
+        except Exception:
+            pass
+        
+        if redis_cache:
+            app.add_middleware(ResponseCacheMiddleware, redis_client=redis_cache, default_ttl=60)
+            logger.info("Response cache middleware enabled (TTL: 60s)")
+        else:
+            logger.warning("Response cache disabled: Redis not available")
+    except Exception as e:
+        logger.warning(f"Failed to enable response cache middleware: {e}")
 
 if not _run_as_internal:
     # Track usage and then apply rate limiting
@@ -249,6 +270,11 @@ def _register_routers(app: FastAPI) -> None:
     _try("routes.capacity_routes", "router", "", ["Capacity Planning & Cost Optimization"])
     _try("routes.security_routes", "router", "/api/v1/security/audit", ["Security Audit"])
     _try("routes.advanced_ai_routes", "router", "/api/v1/advanced-ai", ["Advanced AI Platform"])
+    
+    # New SaaS features
+    _try("routes.observability_routes", "router", "/api/v1/observability", ["Observability & SLA"])
+    _try("routes.ai_assistant_routes", "router", "/api/v1/ai-assistant", ["AI Assistant"])
+    
     # Unified platform merges (best-effort)
     _try("routes.adapters_routes", "adapters_router", "/api/v1/adapters", ["External Adapters - Unified Platform"])
     _try("routes.learning_routes", "learning_router", "/api/v1/learning", ["Machine Learning & Training - Unified Platform"])
