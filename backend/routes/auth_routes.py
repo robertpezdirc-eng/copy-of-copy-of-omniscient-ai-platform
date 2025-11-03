@@ -1,5 +1,16 @@
 """
 Authentication Routes - Login, Registration, MFA
+
+⚠️  PRODUCTION NOTE: This implementation includes mock verification logic for 
+OTP codes and backup codes. Before deploying to production:
+
+1. Replace mock validation in verify_sms_code() with actual database lookup
+2. Replace mock validation in verify_email_code() with actual database lookup  
+3. Replace mock validation in verify_backup_code() with actual database lookup
+4. Store OTP codes with timestamps in Redis/database for verification
+5. Store hashed backup codes in database and mark as used after verification
+
+See MFA_IMPLEMENTATION.md for complete production deployment checklist.
 """
 
 from fastapi import APIRouter, HTTPException, Depends, status

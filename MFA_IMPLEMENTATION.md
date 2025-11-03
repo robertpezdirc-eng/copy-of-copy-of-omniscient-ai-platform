@@ -289,6 +289,12 @@ python /tmp/validate_mfa.py
 - [ ] Configure Twilio credentials for SMS
 - [ ] Configure SendGrid credentials for Email
 - [ ] Set up database schema for MFA data
+- [ ] **IMPORTANT**: Replace mock validation in routes with actual database lookups
+  - `verify_sms_code()` - Retrieve stored OTP from database/cache
+  - `verify_email_code()` - Retrieve stored OTP from database/cache
+  - `verify_backup_code()` - Retrieve hashed backup codes from database
+- [ ] Extract email template to separate file or constant for easier customization
+- [ ] Add input validation for code lengths before comparison
 - [ ] Implement rate limiting on MFA endpoints
 - [ ] Add audit logging for MFA operations
 - [ ] Configure OTP expiry times
