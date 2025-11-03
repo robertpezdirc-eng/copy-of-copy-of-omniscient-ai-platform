@@ -1,0 +1,131 @@
+version: '3.8'
+
+services:
+  # Prometheus - Metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: omni-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus-alerts.yml:/etc/prometheus/alerts/alerts.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - omni-network
+    restart: unless-stopped
+
+  # Grafana - Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: omni-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - prometheus
+    networks:
+      - omni-network
+    restart: unless-stopped
+
+  # Redis - Cache (if not already running)
+  redis:
+    image: redis:7-alpine
+    container_name: omni-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - omni-network
+    restart: unless-stopped
+
+  # Redis Exporter - Detailed Redis metrics
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: omni-redis-exporter
+    ports:
+      - "9121:9121"
+    environment:
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      - redis
+    networks:
+      - omni-network
+    restart: unless-stopped
+
+  # Alertmanager - Alert routing and notifications (optional)
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: omni-alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - alertmanager-data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    networks:
+      - omni-network
+    restart: unless-stopped
+
+  # Gateway - Your API Gateway service
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile  # Uses gateway/Dockerfile
+    container_name: omni-gateway
+    ports:
+      - "8081:8081"
+    environment:
+      - ENABLE_METRICS=true
+      - REDIS_URL=redis://redis:6379
+      - UPSTREAM_URL=http://backend:8080
+    depends_on:
+      - redis
+      - backend
+    networks:
+      - omni-network
+    restart: unless-stopped
+
+  # Backend - Your ML Backend service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend  # Uses backend/Dockerfile.backend
+    container_name: omni-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - RUN_AS_INTERNAL=1
+    networks:
+      - omni-network
+    restart: unless-stopped
+
+volumes:
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  redis-data:
+    driver: local
+  alertmanager-data:
+    driver: local
+
+networks:
+  omni-network:
+    driver: bridge

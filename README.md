@@ -33,6 +33,28 @@
 
 ---
 
+## 📦 Konsolidirana Platforma / Consolidated Platform
+
+**🇸🇮 Za celoten pregled platforme na enem mestu, obiščite:**
+
+**📂 [omni-enterprise-ultra-max/](omni-enterprise-ultra-max/)** - Celotna platforma konsolidirana v enem direktoriju
+
+Ta direktorij vsebuje:
+- ✅ Vsa slovenska dokumentacija (VPOGLED, HITRA REFERENCA, ARHITEKTURNI DIAGRAMI)
+- ✅ Vse ključne backend module in servise (main.py, routes/, services/ai/, middleware/)
+- ✅ Celoten gateway service (app/, Dockerfile, requirements.txt)
+- ✅ Vse deployment skripte (deploy-gateway.ps1, deploy-backend.ps1, build-dashboards.ps1)
+- ✅ Testne primere in CI/CD konfiguracije
+- ✅ Docker Compose in Kubernetes manifeste
+
+**Hitri Dostop:**
+- 📖 [Celovit Vpogled](omni-enterprise-ultra-max/OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md) - 1,600+ vrstic celotne dokumentacije
+- ⚡ [Hitra Referenca](omni-enterprise-ultra-max/OMNI_HITRA_REFERENCA.md) - Ukazi in API-ji
+- 🏗️ [Arhitekturni Diagrami](omni-enterprise-ultra-max/OMNI_ARHITEKTURNI_DIAGRAMI.md) - Vizualizacija arhitekture
+- 📚 [Konsolidirani README](omni-enterprise-ultra-max/README.md) - Vodič po konsolidirani strukturi
+
+---
+
 ## 📊 Grafana Monitoring (NEW!)
 
 **Comprehensive monitoring solution with Prometheus + Grafana**
