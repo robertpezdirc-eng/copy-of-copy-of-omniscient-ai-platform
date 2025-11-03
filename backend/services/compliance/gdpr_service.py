@@ -22,6 +22,12 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 from enum import Enum
 
+# Repository for persistence (Postgres/Mongo/InMemory)
+from services.compliance.gdpr_repository import (
+    get_best_available_repository,
+    GDPRRepository,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -61,21 +67,25 @@ class GDPRService:
     
     def __init__(
         self,
-        dpo_email: str = None,  # Data Protection Officer
+        dpo_email: Optional[str] = None,  # Data Protection Officer
         retention_period_days: int = 90,  # Default retention
-        breach_notification_hours: int = 72  # Art. 33
+        breach_notification_hours: int = 72,  # Art. 33
+        repository: Optional[GDPRRepository] = None,
     ):
         self.dpo_email = dpo_email or os.getenv("GDPR_DPO_EMAIL", "dpo@omni-platform.eu")
         self.retention_period = timedelta(days=retention_period_days)
         self.breach_notification_deadline = timedelta(hours=breach_notification_hours)
+
+        # Persistence repository (Postgres/Mongo/InMemory)
+        try:
+            self.repo: GDPRRepository = repository or get_best_available_repository()
+        except Exception as e:
+            logger.warning(f"Falling back to best-available GDPR repository: {e}")
+            self.repo = get_best_available_repository()
         
-        # Consent store (should use database in production)
+        # Local mirrors for quick status (non-authoritative)
         self.consent_records: Dict[str, Dict[str, Any]] = {}
-        
-        # Audit log
         self.audit_log: List[Dict[str, Any]] = []
-        
-        # Processing records (Art. 30)
         self.processing_activities: List[Dict[str, Any]] = []
         
         logger.info(f"GDPR Service initialized - DPO: {self.dpo_email}")
@@ -91,31 +101,12 @@ class GDPRService:
     ) -> Dict[str, Any]:
         """
         Record user consent (Art. 7)
-        
-        GDPR requires:
-        - Freely given
-        - Specific
-        - Informed
-        - Unambiguous indication
-        - Withdrawable
-        
-        Args:
-            user_id: User identifier
-            consent_type: Type of consent
-            granted: True if consent given
-            purpose: Purpose of data processing
-            ip_address: Optional IP for verification
-            metadata: Additional consent metadata
-        
-        Returns:
-            Consent record with ID
         """
-        consent_id = hashlib.sha256(
-            f"{user_id}_{consent_type}_{datetime.utcnow().isoformat()}".encode()
-        ).hexdigest()[:16]
-        
+        # Build record and persist via repository (upsert)
         record = {
-            "consent_id": consent_id,
+            "consent_id": hashlib.sha256(
+                f"{user_id}_{consent_type}_{datetime.utcnow().isoformat()}".encode()
+            ).hexdigest()[:16],
             "user_id": user_id,
             "consent_type": consent_type,
             "granted": granted,
@@ -123,28 +114,31 @@ class GDPRService:
             "timestamp": datetime.utcnow().isoformat(),
             "ip_address": ip_address,
             "metadata": metadata or {},
-            "withdrawn_at": None
+            "withdrawn_at": None,
         }
-        
-        # Store consent
+
+        try:
+            record = self.repo.save_consent(record)
+        except Exception as e:
+            logger.error(f"Failed to persist consent, falling back to memory: {e}")
+
+        # Maintain a local mirror (non-authoritative, for status)
         if user_id not in self.consent_records:
             self.consent_records[user_id] = {}
-        
         self.consent_records[user_id][consent_type] = record
-        
+
         # Audit log
         self._log_audit(
             action="consent_recorded",
             user_id=user_id,
             details={
-                "consent_id": consent_id,
-                "consent_type": consent_type,
-                "granted": granted
-            }
+                "consent_id": record.get("consent_id"),
+                "consent_type": str(consent_type),
+                "granted": granted,
+            },
         )
-        
+
         logger.info(f"Consent recorded: {user_id} - {consent_type} = {granted}")
-        
         return record
     
     def withdraw_consent(
@@ -154,27 +148,20 @@ class GDPRService:
     ) -> Dict[str, Any]:
         """
         Withdraw consent (Art. 7.3)
-        
-        User must be able to withdraw consent as easily as giving it.
         """
-        if user_id not in self.consent_records:
-            raise ValueError(f"No consent records for user {user_id}")
-        
-        if consent_type not in self.consent_records[user_id]:
-            raise ValueError(f"No {consent_type} consent for user {user_id}")
-        
-        record = self.consent_records[user_id][consent_type]
-        record["withdrawn_at"] = datetime.utcnow().isoformat()
-        record["granted"] = False
-        
+        record = self.repo.withdraw_consent(user_id=user_id, consent_type=str(consent_type))
+
+        # Update local mirror if present
+        if user_id in self.consent_records and consent_type in self.consent_records[user_id]:
+            self.consent_records[user_id][consent_type] = record
+
         self._log_audit(
             action="consent_withdrawn",
             user_id=user_id,
-            details={"consent_type": consent_type}
+            details={"consent_type": str(consent_type)},
         )
-        
+
         logger.info(f"Consent withdrawn: {user_id} - {consent_type}")
-        
         return record
     
     def check_consent(
@@ -184,19 +171,11 @@ class GDPRService:
     ) -> bool:
         """
         Check if user has given active consent
-        
-        Returns:
-            True if consent is active and not withdrawn
         """
-        if user_id not in self.consent_records:
+        record = self.repo.get_consent(user_id=user_id, consent_type=str(consent_type))
+        if not record:
             return False
-        
-        if consent_type not in self.consent_records[user_id]:
-            return False
-        
-        record = self.consent_records[user_id][consent_type]
-        
-        return record["granted"] and record["withdrawn_at"] is None
+        return bool(record.get("granted")) and record.get("withdrawn_at") is None
     
     async def exercise_right_to_access(
         self,
@@ -245,6 +224,13 @@ class GDPRService:
         
         if include_processing_info:
             response["processing_activities"] = self._get_user_processing_activities(user_id)
+
+        # Include persisted consents
+        try:
+            response["consents"] = self.repo.list_consents_for_user(user_id)
+        except Exception as e:
+            logger.warning(f"Failed to load persisted consents for {user_id}: {e}")
+            response["consents"] = self.consent_records.get(user_id, {})
         
         logger.info(f"Access request fulfilled for user {user_id}")
         
@@ -384,15 +370,8 @@ class GDPRService:
     ) -> str:
         """
         Record processing activity (Art. 30)
-        
-        Required for GDPR compliance documentation
         """
-        activity_id = hashlib.sha256(
-            f"{activity_name}_{datetime.utcnow().isoformat()}".encode()
-        ).hexdigest()[:16]
-        
         activity = {
-            "activity_id": activity_id,
             "name": activity_name,
             "purpose": purpose,
             "legal_basis": legal_basis,
@@ -400,13 +379,23 @@ class GDPRService:
             "recipients": recipients,
             "retention_period": retention_period,
             "security_measures": security_measures,
-            "created_at": datetime.utcnow().isoformat()
+            "created_at": datetime.utcnow().isoformat(),
         }
-        
+
+        # Persist and get authoritative ID
+        try:
+            activity_id = self.repo.record_processing_activity(activity)
+        except Exception as e:
+            logger.error(f"Failed to persist processing activity, generating temp id: {e}")
+            activity_id = hashlib.sha256(
+                f"{activity_name}_{datetime.utcnow().isoformat()}".encode()
+            ).hexdigest()[:16]
+        activity["activity_id"] = activity_id
+
+        # Keep local mirror for quick status/debug
         self.processing_activities.append(activity)
         
         logger.info(f"Processing activity recorded: {activity_name}")
-        
         return activity_id
     
     def record_data_breach(
@@ -467,12 +456,19 @@ class GDPRService:
         details: Dict[str, Any]
     ):
         """Log audit event for GDPR compliance"""
-        self.audit_log.append({
+        event = {
             "timestamp": datetime.utcnow().isoformat(),
             "action": action,
             "user_id": user_id,
-            "details": details
-        })
+            "details": details,
+        }
+        # Persist to repository (best-effort)
+        try:
+            self.repo.log_audit(action=action, user_id=user_id, details=details)
+        except Exception as e:
+            logger.warning(f"Audit persistence failed, keeping in-memory only: {e}")
+        # Always keep an in-memory mirror
+        self.audit_log.append(event)
     
     async def _collect_user_data(self, user_id: str) -> Dict[str, Any]:
         """Collect all user data from system"""
@@ -550,7 +546,7 @@ def get_gdpr_service() -> GDPRService:
         
         _gdpr_service = GDPRService(
             dpo_email=dpo_email,
-            retention_period_days=retention_days
+            retention_period_days=retention_days,
         )
     
     return _gdpr_service

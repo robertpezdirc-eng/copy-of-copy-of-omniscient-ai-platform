@@ -1,7 +1,7 @@
 # DISABLED on 2025-11-02: Cloud Build backend build/push disabled; kept for reference only.
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: 
+    args:
       - 'build'
       - '-t'
       - 'europe-west1-docker.pkg.dev/${_PROJECT_ID}/omni/omni-ultra-backend:${_TAG}'

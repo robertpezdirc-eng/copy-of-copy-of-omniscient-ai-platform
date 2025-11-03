@@ -18,7 +18,7 @@ steps:
   # Push latest tag
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/refined-graph-471712-n9/omni-frontend:latest']
-  
+
   # Push version tag
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/refined-graph-471712-n9/omni-frontend:v1.0.0']

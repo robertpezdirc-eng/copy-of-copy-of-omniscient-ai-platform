@@ -16,7 +16,7 @@ steps:
   # Push images
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/omni-frontend:$SHORT_SHA']
-  
+
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/omni-frontend:latest']
 
