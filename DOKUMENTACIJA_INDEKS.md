@@ -31,6 +31,8 @@ Potrebujete podrobnosti o implementaciji?
 | **[README.md](README.md)** | Glavni pregled projekta | EN | 5 min |
 | **[OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md](OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md)** | Celovit vpogled v platformo | **SL** | 30 min |
 | **[OMNI_HITRA_REFERENCA.md](OMNI_HITRA_REFERENCA.md)** | Hitra referenca | **SL** | 5 min |
+| **[OMNI_ZAPISNIKI_PREGLED.md](OMNI_ZAPISNIKI_PREGLED.md)** | ⭐ **Pregled vseh zapisnikov** | **SL** | 5 min |
+| **[OMNI_ZAPISNIK_KATALOG.md](OMNI_ZAPISNIK_KATALOG.md)** | Celovit katalog dokumentacije | **SL** | 15 min |
 
 ### Arhitektura
 | Dokument | Opis | Fokus |
