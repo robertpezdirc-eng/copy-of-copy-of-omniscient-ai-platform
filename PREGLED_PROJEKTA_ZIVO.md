@@ -1175,6 +1175,8 @@ ollama serve
 
 ### Časovna Razporeditev
 
+#### Osnovni 10-Fazni Učni Program
+
 | Faza | Tema | Ure (Min-Max) | Skupaj |
 |------|------|---------------|--------|
 | 1 | Temelji & Arhitektura | 4-6 | 5h |
@@ -1187,31 +1189,44 @@ ollama serve
 | 8 | Poslovna Logika & Plačila | 8-10 | 9h |
 | 9 | Varnost & Compliance | 6-8 | 7h |
 | 10 | Dashboards & CI/CD | 10-12 | 11h |
-| **SKUPAJ** | **Celoten program** | **60-83h** | **72h** |
+| **SUBTOTAL** | **Učni program** | **60-83h** | **72h** |
+
+#### Dodatni Implementation Issues
+
+| Issue | Tema | Ure (Min-Max) | Skupaj |
+|-------|------|---------------|--------|
+| 1 | Backend Code Organization | 4-6 | 5h |
+| 2 | Frontend Code Organization | 4-6 | 5h |
+| 3 | Complete Inventory | 3-4 | 3.5h |
+| 4 | 5-Minute Quick Start | 1-2 | 1.5h |
+| 5 | First API Call Testing | 2-3 | 2.5h |
+| 6 | Documentation Expansion | 5-7 | 6h |
+| 7 | Integration Test Suite | 6-8 | 7h |
+| 8 | Performance Baseline | 4-6 | 5h |
+| 9 | GCP Cost Analysis | 3-4 | 3.5h |
+| 10 | Security Pre-Production Audit | 4-5 | 4.5h |
+| **SUBTOTAL** | **Implementation issues** | **45-56h** | **50.5h** |
+
+#### 🎯 CELOTEN PROGRAM: **106-139 UR** (povprečje **122.5h**)
 
 ### Priporočeni Urnik
 
-**Opcija 1: Intenzivni Bootcamp (2 tedna)**
-- Dan 1-2: Faza 1-2 (15h)
-- Dan 3-4: Faza 3-4 (10h)
-- Dan 5: Faza 5 (4h)
-- Dan 6-7: Faza 6-7 (17h)
-- Dan 8-9: Faza 8 (9h)
-- Dan 10: Faza 9 (7h)
-- Dan 11-12: Faza 10 (11h)
+**Opcija 1: Intenzivni Bootcamp (3-4 tedne)**
+- Teden 1: Faza 1-4 (Temelji, Backend, Gateway, Dev) - 22-29h
+- Teden 2: Faza 5-7 (Cloud, Monitoring, AI/ML) - 17-24h
+- Teden 3: Faza 8-10 (Business, Security, CI/CD) - 24-32h
+- Teden 4: Issues 1-10 (Code quality, Testing, Production) - 45-56h
 
-**Opcija 2: Part-time (2 meseca)**
-- Teden 1-2: Faza 1-2
-- Teden 3-4: Faza 3-4
-- Teden 5: Faza 5-6
-- Teden 6-7: Faza 7
-- Teden 8: Faza 8-9
-- Teden 9: Faza 10
+**Opcija 2: Part-time (4-5 mesecev)**
+- Mesec 1-2: Faze 1-6 (Osnove in setup) - 27-39h
+- Mesec 3: Faze 7-10 (Advanced features) - 34-44h  
+- Mesec 4-5: Issues 1-10 (Production ready) - 45-56h
 
-**Opcija 3: Self-paced (3 meseca)**
-- Mesec 1: Faza 1-4
-- Mesec 2: Faza 5-7
-- Mesec 3: Faza 8-10
+**Opcija 3: Self-paced (6 mesecev)**
+- Mesec 1-2: Faza 1-4 (Learning foundations)
+- Mesec 3: Faza 5-7 (Cloud & AI/ML)
+- Mesec 4: Faza 8-10 (Business & Security)
+- Mesec 5-6: Issues 1-10 (Enterprise ready)
 
 ---
 
@@ -1277,13 +1292,76 @@ ollama serve
 - [ ] GitHub Actions
 - [ ] Cloud Build pipelines
 
+### Dodatni Implementation Issues ✅
+
+**Issue 1: Backend Organization ✅**
+- [ ] Route modules reviewed
+- [ ] Code duplications removed
+- [ ] Docstrings added
+- [ ] Pylint score > 9.0
+
+**Issue 2: Frontend Organization ✅**
+- [ ] TypeScript interfaces documented
+- [ ] 0 `any` types maintained
+- [ ] ESLint errors = 0
+- [ ] JSDoc comments added
+
+**Issue 3: Complete Inventory ✅**
+- [ ] API endpoints documented (181+)
+- [ ] Route modules listed (46)
+- [ ] Services inventory (47)
+- [ ] Dependency graph created
+
+**Issue 4: Quick Start ✅**
+- [ ] quick-start.sh created
+- [ ] quick-start.ps1 created
+- [ ] < 5 min installation achieved
+- [ ] Smoke test passed
+
+**Issue 5: API Testing ✅**
+- [ ] Postman collection (20 endpoints)
+- [ ] cURL examples created
+- [ ] Python test suite
+- [ ] Authentication documented
+
+**Issue 6: Documentation ✅**
+- [ ] API versioning guide
+- [ ] Migration guides
+- [ ] Deployment playbooks
+- [ ] Troubleshooting matrix
+
+**Issue 7: Integration Tests ✅**
+- [ ] E2E tests implemented
+- [ ] 80%+ code coverage
+- [ ] Performance tests
+- [ ] CI/CD integrated
+
+**Issue 8: Performance ✅**
+- [ ] Baseline metrics documented
+- [ ] Bottlenecks identified
+- [ ] 30%+ improvement achieved
+- [ ] Benchmarks automated
+
+**Issue 9: Cost Analysis ✅**
+- [ ] GCP costs analyzed
+- [ ] 20%+ cost reduction plan
+- [ ] Budget alerts configured
+- [ ] Cost calculator created
+
+**Issue 10: Security Audit ✅**
+- [ ] OWASP Top 10 compliant
+- [ ] 0 critical vulnerabilities
+- [ ] GDPR compliant
+- [ ] Secrets properly managed
+
 ---
 
-## 🎓 CERTIFIKAT
+## 🎓 CERTIFIKATI
 
-Po zaključku vseh 10 faz si zaslužiš:
+Po zaključku različnih stopenj programa si zaslužiš:
 
-**🏆 OMNI ENTERPRISE ULTRA MAX PLATFORM EXPERT**
+### 🏆 OMNI PLATFORM EXPERT (Po Fazi 10)
+Po zaključku vseh 10 faz osnovnega učnega programa (60-83h)
 
 **Veščine:**
 - ✅ Split Architecture mastery
@@ -1293,6 +1371,28 @@ Po zaključku vseh 10 faz si zaslužiš:
 - ✅ Monitoring & observability
 - ✅ Security & compliance
 - ✅ CI/CD automation
+
+### 🏆 OMNI PLATFORM ARCHITECT (Po Issue 10)
+Po zaključku vseh 10 faz + 10 implementation issues (106-139h)
+
+**Dodatne veščine:**
+- ✅ Code quality mastery
+- ✅ Comprehensive testing
+- ✅ Performance optimization
+- ✅ Cost optimization
+- ✅ Security hardening
+- ✅ Production readiness
+- ✅ Enterprise standards
+
+### 🏆 OMNI PLATFORM MASTER (Contributions)
+Po zaključku celotnega programa + prispevki k platformi
+
+**Master-level veščine:**
+- ✅ Vse Expert & Architect veščine
+- ✅ Platform contributions
+- ✅ Community leadership
+- ✅ Innovation in features
+- ✅ Mentorship capabilities
 
 ---
 
@@ -1354,6 +1454,579 @@ Po zaključku vseh 10 faz si zaslužiš:
 
 ---
 
+## 📋 DODATNA AKCIJSKA VPRAŠANJA - IMPLEMENTACIJSKI ISSUES (45-56 ur)
+
+Po zaključku 10-faznega učnega programa lahko nadaljujete z dodatnimi **implementacijskimi nalogami** za izboljšanje kvalitete kode, testiranja in produkcijske pripravljenosti.
+
+### Issue 1: Organizacija kode - Revizija zalednega modula (4-6 ur)
+
+**Cilj:** Pregledati in optimizirati strukturo backend kode
+
+**Naloge:**
+- [ ] Pregledati vse 46 route module za konsistentnost
+- [ ] Identificirati duplicirano kodo in jo refaktorirati
+- [ ] Preveriti naming conventions (PEP 8)
+- [ ] Organizirati service layer (47 service files)
+- [ ] Dodati missing docstrings
+- [ ] Pregledati import strukture
+
+**Kriteriji sprejemljivosti:**
+- ✅ Vsi route moduli sledijo enotnemu vzorcu
+- ✅ Duplicirana koda zmanjšana za 30%+
+- ✅ 100% funkcij ima docstrings
+- ✅ Pylint score > 9.0
+
+**Referenčni materiali:**
+- PEP 8: https://pep8.org
+- FastAPI Best Practices
+- `backend/routes/` analiza
+
+---
+
+### Issue 2: Organizacija kode - Revizija modulov frontenda (4-6 ur)
+
+**Cilj:** Pregledati in optimizirati strukturo frontend kode
+
+**Naloge:**
+- [ ] Pregledati TypeScript interfaces (60+ interfaces)
+- [ ] Preveriti konstante in konfiguracije (100+ configs)
+- [ ] Optimizirati utility funkcije (40+ functions)
+- [ ] Pregledati service layer (30+ metod)
+- [ ] Odstraniti `any` types (trenutno 0, obdržati)
+- [ ] Dodati JSDoc komentarje
+
+**Kriteriji sprejemljivosti:**
+- ✅ Vsi TypeScript interfaces dokumentirani
+- ✅ 0 `any` types
+- ✅ ESLint errors = 0
+- ✅ TypeScript strict mode enabled
+
+**Referenčni materiali:**
+- TypeScript Best Practices
+- React coding standards
+- PR #23 (Type-safe architecture)
+
+---
+
+### Issue 3: Celoten popis v imeniku (3-4 ure)
+
+**Cilj:** Ustvariti celovit popis vseh modulov, servisov in endpointov
+
+**Naloge:**
+- [ ] Generirati seznam vseh 181+ API endpoints
+- [ ] Dokumentirati vse 46 route module
+- [ ] Popisati vse 47 service datoteke
+- [ ] Ustvariti dependency graph
+- [ ] Dokumentirati environment variables
+- [ ] Ustvariti API endpoint reference
+
+**Deliverables:**
+```
+documentation/
+├── API_ENDPOINTS_COMPLETE.md      # Vsi 181+ endpoints
+├── ROUTE_MODULES_INVENTORY.md     # 46 route modulov
+├── SERVICES_INVENTORY.md          # 47 service datotek
+├── DEPENDENCY_GRAPH.md            # Visual dependency map
+└── ENVIRONMENT_VARIABLES.md       # Vse env vars
+```
+
+**Kriteriji sprejemljivosti:**
+- ✅ 100% endpoints dokumentirani
+- ✅ Dependency graph vizualiziran
+- ✅ Environment variables dokumentirani
+
+---
+
+### Issue 4: Hitri začetek - 5-minutna namestitev (1-2 uri)
+
+**Cilj:** Ustvariti super-hitro setup izkušnjo za nove uporabnike
+
+**Naloge:**
+- [ ] Napisati `quick-start.sh` script
+- [ ] Ustvariti `quick-start.ps1` za Windows
+- [ ] Dodati environment setup automation
+- [ ] Preveriti Docker images pulls
+- [ ] Testirati na čistem sistemu
+- [ ] Dodati troubleshooting sekcijo
+
+**Deliverables:**
+```bash
+# Linux/Mac
+./quick-start.sh
+
+# Windows
+.\quick-start.ps1
+
+# Rezultat: Platforma teče v < 5 minut
+```
+
+**Kriteriji sprejemljivosti:**
+- ✅ Fresh install → Running platform v < 5 min
+- ✅ Avtomatska detekcija missing dependencies
+- ✅ Clear error messages
+- ✅ Smoke test po instalaciji
+
+**Referenčni materiali:**
+- `docker-compose.yml`
+- `OMNI_HITRA_REFERENCA.md`
+
+---
+
+### Issue 5: Prvi klic API-ja - Testiranje (2-3 ure)
+
+**Cilj:** Ustvariti ready-to-use test suite za prve API klice
+
+**Naloge:**
+- [ ] Ustvariti Postman collection (20 osnovnih endpoints)
+- [ ] Napisati cURL examples za vsak endpoint
+- [ ] Ustvariti Python test script
+- [ ] Dodati authentication examples
+- [ ] Dokumentirati expected responses
+- [ ] Ustvariti error handling examples
+
+**Deliverables:**
+```
+tests/quick-start/
+├── postman_collection.json        # 20 endpoints
+├── curl_examples.sh               # cURL commands
+├── python_test_suite.py           # Python tests
+└── README_FIRST_API_CALL.md       # Guide
+```
+
+**Kriteriji sprejemljivosti:**
+- ✅ 20 osnovnih endpoints pokritih
+- ✅ Vsi testi delajo out-of-the-box
+- ✅ Authentication dokumentiran
+- ✅ Error handling examples
+
+---
+
+### Issue 6: Načrt dokumentacije (5-7 ur)
+
+**Cilj:** Razširiti in izboljšati obstoječo dokumentacijo
+
+**Naloge:**
+- [ ] Ustvariti API versioning guide
+- [ ] Dodati migration guides (v1 → v2)
+- [ ] Napisati deployment playbooks
+- [ ] Ustvariti troubleshooting matrix
+- [ ] Dodati performance tuning guide
+- [ ] Dokumentirati scaling strategies
+
+**Deliverables:**
+```
+documentation/
+├── API_VERSIONING_GUIDE.md
+├── MIGRATION_GUIDES/
+│   ├── v1_to_v2.md
+│   └── breaking_changes.md
+├── DEPLOYMENT_PLAYBOOKS/
+│   ├── cloud_run.md
+│   ├── gke.md
+│   └── docker_compose.md
+├── TROUBLESHOOTING_MATRIX.md
+├── PERFORMANCE_TUNING_GUIDE.md
+└── SCALING_STRATEGIES.md
+```
+
+**Kriteriji sprejemljivosti:**
+- ✅ 6 novih dokumentov ustvarjenih
+- ✅ Vsi deployment scenariji pokritie
+- ✅ Troubleshooting za top 20 issues
+
+---
+
+### Issue 7: Paket integracijskih testov (6-8 ur)
+
+**Cilj:** Ustvariti celovit integration test suite
+
+**Naloge:**
+- [ ] E2E testi za kritične flow-e (auth, payment, AI)
+- [ ] API integration testi (100+ endpoints)
+- [ ] Database integration testi
+- [ ] Redis cache testi
+- [ ] External API testi (OpenAI, Stripe)
+- [ ] Performance testi (load testing)
+
+**Test Coverage:**
+```python
+# Target coverage
+- Backend routes: 80%+
+- Service layer: 85%+
+- Middleware: 90%+
+- Critical paths: 95%+
+```
+
+**Deliverables:**
+```
+tests/integration/
+├── test_auth_flow.py              # Authentication E2E
+├── test_payment_flow.py           # Payment processing
+├── test_ai_endpoints.py           # AI/ML integration
+├── test_database_ops.py           # Database operations
+├── test_cache_layer.py            # Redis caching
+├── test_external_apis.py          # External integrations
+└── test_performance.py            # Load testing
+```
+
+**Kriteriji sprejemljivosti:**
+- ✅ 80%+ code coverage
+- ✅ Vsi kritični flow-i testirani
+- ✅ Performance benchmarks dokumentirani
+- ✅ CI/CD integration
+
+**Tools:**
+- pytest
+- pytest-cov
+- locust (load testing)
+
+---
+
+### Issue 8: Osnovna zmogljivost (4-6 ur)
+
+**Cilj:** Vzpostaviti baseline performance metrics in optimizirati
+
+**Naloge:**
+- [ ] Izmeriti trenutne response times (vse 181+ endpoints)
+- [ ] Identificirati top 10 najpočasnejših endpoints
+- [ ] Profilirati bottlenecks (cProfile, py-spy)
+- [ ] Optimizirati database queries (N+1 issues)
+- [ ] Implementirati caching strategijo
+- [ ] Dokumentirati performance benchmarks
+
+**Performance Targets:**
+```
+- P50 latency: < 100ms
+- P95 latency: < 500ms
+- P99 latency: < 1000ms
+- Throughput: > 1000 req/sec
+- Error rate: < 0.1%
+```
+
+**Deliverables:**
+```
+performance/
+├── baseline_metrics.json          # Current performance
+├── optimization_report.md         # Bottlenecks identified
+├── caching_strategy.md            # Cache implementation
+└── benchmarks/
+    ├── response_times.csv
+    ├── throughput_tests.csv
+    └── load_test_results.md
+```
+
+**Kriteriji sprejemljivosti:**
+- ✅ Baseline metrics dokumentirani
+- ✅ Top 10 bottlenecks identificirani
+- ✅ 30%+ performance improvement
+- ✅ Benchmarks avtomatizirani
+
+**Tools:**
+- locust
+- cProfile
+- py-spy
+- Grafana dashboards
+
+---
+
+### Issue 9: Analiza stroškov - GCP (3-4 ure)
+
+**Cilj:** Optimizirati GCP stroške in dokumentirati budget
+
+**Naloge:**
+- [ ] Analizirati trenutne GCP stroške
+- [ ] Identificirati cost optimization opportunities
+- [ ] Implementirati resource tagging
+- [ ] Setup cost alerts
+- [ ] Dokumentirati pricing models
+- [ ] Ustvariti cost calculator
+
+**Cost Analysis:**
+```
+Current Monthly Costs:
+- Cloud Run (Backend): $X
+- Cloud Run (Gateway): $Y
+- Cloud Storage: $Z
+- Monitoring (Logs, Metrics): $W
+- Networking: $V
+Total: $XXXX/month
+```
+
+**Optimization Opportunities:**
+```
+1. Right-sizing Cloud Run instances
+2. Implementing caching → reduce backend calls
+3. Log retention policies → reduce storage
+4. CDN for static assets → reduce bandwidth
+5. Reserved capacity for predictable workloads
+```
+
+**Deliverables:**
+```
+cost-analysis/
+├── CURRENT_COSTS.md               # Breakdown
+├── OPTIMIZATION_PLAN.md           # Savings opportunities
+├── COST_CALCULATOR.xlsx           # Interactive calculator
+└── BUDGET_ALERTS.md               # Alert setup
+```
+
+**Kriteriji sprejemljivosti:**
+- ✅ Cost breakdown dokumentiran
+- ✅ 20%+ cost reduction plan
+- ✅ Budget alerts nastavljeni
+- ✅ Cost calculator ustvarjen
+
+---
+
+### Issue 10: Varnostna predprodukcijska revizija (4-5 ur)
+
+**Cilj:** Izvesti celovit security audit pred produkcijo
+
+**Naloge:**
+- [ ] OWASP Top 10 audit
+- [ ] Dependency vulnerability scan (safety, npm audit)
+- [ ] Secrets scanning (prevent leaks)
+- [ ] SSL/TLS configuration review
+- [ ] CORS policies review
+- [ ] Rate limiting testing
+- [ ] Input validation audit
+- [ ] Authentication flow audit
+- [ ] Authorization (RBAC) testing
+- [ ] GDPR compliance checklist
+
+**Security Checklist:**
+```
+Authentication & Authorization:
+- [ ] JWT tokens properly validated
+- [ ] Password hashing (bcrypt/argon2)
+- [ ] MFA implementation tested
+- [ ] OAuth flows secure
+- [ ] RBAC properly enforced
+
+Input Validation:
+- [ ] All endpoints use Pydantic validation
+- [ ] SQL injection prevented
+- [ ] XSS protection enabled
+- [ ] CSRF tokens implemented
+
+Data Protection:
+- [ ] Encryption at rest (database)
+- [ ] Encryption in transit (TLS 1.3)
+- [ ] Secrets in Secret Manager (not .env)
+- [ ] PII data properly masked in logs
+- [ ] GDPR right to deletion working
+
+Infrastructure:
+- [ ] Security headers configured
+- [ ] Rate limiting enabled
+- [ ] DDoS protection
+- [ ] Firewall rules configured
+- [ ] VPC network isolation
+```
+
+**Tools:**
+```bash
+# Python security
+safety check
+bandit -r backend/
+
+# Node.js security
+npm audit
+npm audit fix
+
+# Secret scanning
+gitleaks detect
+
+# OWASP testing
+zap-cli quick-scan
+```
+
+**Deliverables:**
+```
+security/
+├── SECURITY_AUDIT_REPORT.md       # Findings
+├── VULNERABILITY_SCAN.json        # Scan results
+├── REMEDIATION_PLAN.md            # Fixes needed
+├── COMPLIANCE_CHECKLIST.md        # GDPR, SOC2
+└── PENETRATION_TEST_RESULTS.md    # Pen test report
+```
+
+**Kriteriji sprejemljivosti:**
+- ✅ 0 Critical vulnerabilities
+- ✅ 0 High vulnerabilities
+- ✅ < 5 Medium vulnerabilities
+- ✅ OWASP Top 10 compliant
+- ✅ GDPR compliant
+- ✅ Secrets properly managed
+
+---
+
+## 🏆 STRUKTURA CELOTNEGA DELA
+
+### Faze 1-3: Učenje & Razumevanje (18-26 ur)
+```
+Faza 1: Temelji & Arhitektura           (4-6h)
+Faza 2: Backend & AI/ML                 (8-12h)
+Faza 3: Gateway & API Security          (6-8h)
+────────────────────────────────────────────────
+SUBTOTAL:                               18-26 ur
+```
+
+### Faze 4-6: Setup & Monitoring (9-13 ur)
+```
+Faza 4: Lokalni Razvoj                  (2-3h)
+Faza 5: Cloud Run Produkcija            (3-4h)
+Faza 6: Monitoring & Grafana            (4-6h)
+────────────────────────────────────────────────
+SUBTOTAL:                               9-13 ur
+```
+
+### Faze 7-10: Production & Advanced (34-44 ur)
+```
+Faza 7: Napredna AI/ML                  (10-14h)
+Faza 8: Poslovna Logika & Plačila       (8-10h)
+Faza 9: Varnost & Compliance            (6-8h)
+Faza 10: Dashboards & CI/CD             (10-12h)
+────────────────────────────────────────────────
+SUBTOTAL:                               34-44 ur
+```
+
+### Dodatne Naloge: Code Quality & Production Ready (45-56 ur)
+```
+Issue 1: Backend Code Organization      (4-6h)
+Issue 2: Frontend Code Organization     (4-6h)
+Issue 3: Complete Inventory             (3-4h)
+Issue 4: 5-Minute Quick Start           (1-2h)
+Issue 5: First API Call Testing         (2-3h)
+Issue 6: Documentation Expansion        (5-7h)
+Issue 7: Integration Test Suite         (6-8h)
+Issue 8: Performance Baseline           (4-6h)
+Issue 9: GCP Cost Analysis              (3-4h)
+Issue 10: Security Pre-Production Audit (4-5h)
+────────────────────────────────────────────────
+SUBTOTAL:                               45-56 ur
+```
+
+### 📊 SKUPAJ: 106-139 UR KOMPLETNEGA PROGRAMA
+
+---
+
+## 🎓 KAJ DOBITE PO ZAKLJUČKU
+
+### ✅ Popolna Učna Pot
+- Od osnov do produkcije
+- Strukturiran pristop s kontrolnimi seznami
+- Jasni cilji za vsako fazo
+
+### ✅ Konkretne Checklist-e
+- Za vsako fazo učnega programa
+- Za vsak implementation issue
+- Kriteriji sprejemljivosti za zaključek
+
+### ✅ Referenčni Materiali
+- Povezave na dokumentacijo
+- Best practices guides
+- Code examples
+
+### ✅ Test Primere
+- Za vsak AI/ML endpoint
+- Integration test suite
+- Performance benchmarks
+
+### ✅ Skripte za Uvajanje
+- PowerShell scripts pripravljen
+- Bash scripts pripravljen
+- Docker Compose konfiguracije
+
+### ✅ Nastavitev Nadzora
+- Docker Compose + Grafana
+- Prometheus alerts
+- Custom dashboards
+
+### ✅ Varnostni Kontrolni Seznam-e
+- GDPR compliance
+- SOC2 checklist
+- OWASP Top 10 audit
+
+### ✅ Izhodišče Uspešnosti
+- Baseline metrics
+- Performance targets
+- Optimization plan
+
+### ✅ Analiza Stroškov
+- GCP budget planning
+- Cost optimization strategies
+- ROI calculator
+
+---
+
+## 💡 NASLEDNJI KORAKI
+
+Vsi issues so pripravljeni za kreiranje v GitHub repozitoriju. Ko ste pripravljeni:
+
+### 1. Odobriti Issues → Avtomatsko se bodo ustvarili v repu
+```bash
+# Create all 10 implementation issues
+gh issue create --title "Backend Code Organization" --body "See PREGLED_PROJEKTA_ZIVO.md Issue 1"
+gh issue create --title "Frontend Code Organization" --body "See PREGLED_PROJEKTA_ZIVO.md Issue 2"
+# ... etc for all 10 issues
+```
+
+### 2. Slediti Planiranju → Vsaka faza ima jasne korake
+- **Faze 1-3:** Učenje in razumevanje (3-4 tedne)
+- **Faze 4-6:** Setup in monitoring (1-2 tedna)
+- **Faze 7-10:** Production in advanced (4-6 tednov)
+- **Issues 1-10:** Code quality in optimization (6-8 tednov)
+
+### 3. Testirati Lokalno → Faze 1-4 za razvoj
+- Docker Compose environment
+- Local testing in debugging
+- Integration testi
+
+### 4. Deploying na Produkcijo → Faze 5-6 za Cloud
+- Cloud Run deployment
+- GKE deployment (optional)
+- Monitoring setup
+
+### 5. Nadgraditi na Napredno → Faze 7-10 za Mojstrstvo
+- Advanced AI/ML
+- Business logic
+- Security compliance
+- CI/CD automation
+
+### 6. Production Ready → Issues 1-10 za Enterprise
+- Code quality improvements
+- Comprehensive testing
+- Performance optimization
+- Security hardening
+- Cost optimization
+
+---
+
+## 🎯 KONČNI CERTIFIKATI
+
+Po zaključku celotnega programa (106-139 ur) ste upravičeni do:
+
+### 🏆 OMNI PLATFORM EXPERT
+- 10-fazni učni program zaključen (60-83h)
+- Vse kontrolne sezname zaključeni
+- Uspešno deployment na production
+
+### 🏆 OMNI PLATFORM ARCHITECT
+- Celoten program zaključen (106-139h)
+- Vse implementation issues zaključeni
+- Code quality improvements implementirani
+- Production ready deployment
+
+### 🏆 OMNI PLATFORM MASTER
+- Vse faze + issues zaključeni
+- Security audit passed
+- Performance targets doseženi
+- Cost optimization implementirana
+- Contributions back to platform
+
+---
+
 ## 📞 PODPORA & KONTAKT
 
 ### Za vprašanja o učnem programu:
@@ -1368,7 +2041,13 @@ Po zaključku vseh 10 faz si zaslužiš:
 
 ## 📝 ZAKLJUČEK
 
-**Omni Enterprise Ultra Max** je kompleksna, enterprise-ready platforma, ki **presega začetno specifikacijo** na večini področij. Ta 10-fazni učni program (60-83 ur) vas bo pripeljal od popolnega začetnika do strokovnjaka.
+**Omni Enterprise Ultra Max** je kompleksna, enterprise-ready platforma, ki **presega začetno specifikacijo** na večini področij. 
+
+### Celoten Program
+
+**Osnoven 10-fazni učni program:** 60-83 ur (od začetnika do strokovnjaka)  
+**Dodatne implementacijske naloge:** 45-56 ur (code quality & production ready)  
+**SKUPAJ:** **106-139 ur** (od začetnika do enterprise master)
 
 **Ključni Dosežki:**
 - ✅ 152% specifikacije dosežene
@@ -1379,17 +2058,24 @@ Po zaključku vseh 10 faz si zaslužiš:
 - ✅ Izjemna dokumentacija
 
 **Naslednji Koraki:**
-1. Začni s Fazo 1 (Temelji)
-2. Sledi priporočenemu urniku
+1. Začni s Fazo 1 (Temelji) - 10-fazni program
+2. Sledi priporočenemu urniku (60-83 ur)
 3. Označi kontrolne sezname
 4. Zaključi z Fazo 10 (CI/CD)
-5. Pridobi certifikat strokovnjaka!
+5. Nadaljuj z dodatnimi 10 implementation issues (45-56 ur)
+6. Pridobi certifikate: Expert → Architect → Master!
+
+### Certifikati
+
+🏆 **OMNI PLATFORM EXPERT** (60-83h)  
+🏆 **OMNI PLATFORM ARCHITECT** (106-139h)  
+🏆 **OMNI PLATFORM MASTER** (Vse faze + contributions)
 
 ---
 
 **Avtor:** GitHub Copilot  
 **Datum:** 3. november 2025  
-**Verzija dokumenta:** 1.0.0  
+**Verzija dokumenta:** 2.0.0 (Extended with 10 implementation issues)  
 **Licenca:** MIT
 
 ---
