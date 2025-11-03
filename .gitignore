@@ -21,13 +21,13 @@ wheels/
 *.egg
 MANIFEST
 
-# Virtual Environment
-venv/
-env/
-ENV/
+# Virtual environments
 .venv
+venv/
+ENV/
+env/
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
@@ -49,7 +49,16 @@ Thumbs.db
 *.log
 logs/
 
+# Environment variables
+.env
+.env.local
+
+# Node
+node_modules/
+
 # Temporary files
+*.tmp
+*.temp
 tmp/
 temp/
-*.tmp
+/tmp/

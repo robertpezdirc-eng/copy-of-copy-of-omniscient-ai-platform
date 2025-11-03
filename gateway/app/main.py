@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 from contextlib import asynccontextmanager
 
@@ -11,6 +12,7 @@ from .logging_utils import setup_json_logging
 from .metrics import MetricsMiddleware, metrics_asgi_app
 from .proxy import router as proxy_router
 from .rate_limiter import RedisRateLimiter, get_redis_client
+from .redis_metrics import start_redis_metrics_collection
 from .response_cache import ResponseCache
 from .secret_manager import load_secrets_from_manager
 from .sentry_integration import init_sentry, sentry_middleware
@@ -21,6 +23,9 @@ logger = logging.getLogger(__name__)
 
 # Global Redis client
 redis_client = None
+
+# Redis metrics collection task
+redis_metrics_task = None
 
 # Global HTTP clients for connection pooling
 upstream_client: httpx.AsyncClient | None = None
@@ -33,7 +38,7 @@ response_cache: ResponseCache | None = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup and shutdown events."""
-    global redis_client, upstream_client, openai_client, response_cache
+    global redis_client, upstream_client, openai_client, response_cache, redis_metrics_task
 
     # Startup
     logger.info(f"Starting {settings.service_name} in {settings.environment} mode")
@@ -43,6 +48,13 @@ async def lifespan(app: FastAPI):
 
     # Initialize Redis client for rate limiting
     redis_client = await get_redis_client()
+
+    # Start Redis metrics collection in background
+    if redis_client and settings.enable_metrics:
+        redis_metrics_task = asyncio.create_task(
+            start_redis_metrics_collection(redis_client, interval_seconds=30)
+        )
+        logger.info("Redis metrics collection started")
 
     # Initialize HTTP clients for connection pooling
     timeout = httpx.Timeout(
@@ -78,6 +90,15 @@ async def lifespan(app: FastAPI):
     yield
 
     # Shutdown
+    # Cancel Redis metrics collection task
+    if redis_metrics_task:
+        redis_metrics_task.cancel()
+        try:
+            await redis_metrics_task
+        except asyncio.CancelledError:
+            pass
+        logger.info("Redis metrics collection stopped")
+
     if upstream_client:
         await upstream_client.aclose()
         logger.info("Upstream HTTP client closed")
