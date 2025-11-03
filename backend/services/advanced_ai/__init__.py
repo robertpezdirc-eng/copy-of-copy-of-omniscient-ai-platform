@@ -6,11 +6,15 @@ from .model_registry import ModelRegistryService
 from .ab_testing import ABTestingService
 from .automl import AutoMLOrchestrator
 from .multimodal import MultiModalOrchestrator
+from .mlops_pipeline import MLOpsPipeline
+from .content_generation import ContentGenerationService
 
 _model_registry: ModelRegistryService | None = None
 _ab_testing: ABTestingService | None = None
 _automl: AutoMLOrchestrator | None = None
 _multimodal: MultiModalOrchestrator | None = None
+_mlops_pipeline: MLOpsPipeline | None = None
+_content_generation: ContentGenerationService | None = None
 
 
 def get_model_registry_service() -> ModelRegistryService:
@@ -43,3 +47,19 @@ def get_multimodal_service() -> MultiModalOrchestrator:
     if _multimodal is None:
         _multimodal = MultiModalOrchestrator()
     return _multimodal
+
+
+def get_mlops_pipeline_service() -> MLOpsPipeline:
+    """Return singleton instance of the MLOps pipeline."""
+    global _mlops_pipeline
+    if _mlops_pipeline is None:
+        _mlops_pipeline = MLOpsPipeline()
+    return _mlops_pipeline
+
+
+def get_content_generation_service() -> ContentGenerationService:
+    """Return singleton instance of the content generation service."""
+    global _content_generation
+    if _content_generation is None:
+        _content_generation = ContentGenerationService()
+    return _content_generation
