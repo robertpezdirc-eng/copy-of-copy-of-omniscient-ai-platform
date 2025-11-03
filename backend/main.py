@@ -272,6 +272,7 @@ def _register_routers(app: FastAPI) -> None:
     _try("routes.security_routes", "router", "/api/v1/security/audit", ["Security Audit"])
     _try("routes.advanced_ai_routes", "router", "/api/v1/advanced-ai", ["Advanced AI Platform"])
     _try("routes.enhanced_ai_routes", "router", "/api/v1/enhanced-ai", ["Enhanced AI - Recommendations & Insights"])
+    _try("routes.nextgen_ai_routes", "router", "/api/v1/nextgen-ai", ["Next-Gen AI - Co-Pilot, Brain Hub, Predictive Engine"])
     
     # New SaaS features
     _try("routes.observability_routes", "router", "/api/v1/observability", ["Observability & SLA"])
