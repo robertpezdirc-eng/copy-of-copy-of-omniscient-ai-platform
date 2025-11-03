@@ -30,6 +30,16 @@
 
 ---
 
+## 🇸🇮 Slovenska Dokumentacija / Slovenian Documentation
+
+**Celotna dokumentacija v slovenščini:**
+- 📚 **[DOKUMENTACIJA_INDEKS.md](DOKUMENTACIJA_INDEKS.md)** - Dokumentacijski indeks in navigacija
+- 📖 **[OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md](OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md)** - Celovit vpogled v platformo (1,600+ vrstic)
+- ⚡ **[OMNI_HITRA_REFERENCA.md](OMNI_HITRA_REFERENCA.md)** - Hitra referenca in ukazi
+- 🏗️ **[OMNI_ARHITEKTURNI_DIAGRAMI.md](OMNI_ARHITEKTURNI_DIAGRAMI.md)** - Arhitekturni diagrami
+
+---
+
 ## 🎨 Dashboard Builder (NEW!)
 
 **AI-Powered Dashboard Generation using Ollama**
