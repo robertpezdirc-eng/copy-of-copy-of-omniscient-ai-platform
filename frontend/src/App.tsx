@@ -27,6 +27,7 @@ import Reports from './pages/Reports'
 import Notifications from './pages/Notifications'
 import Settings from './pages/Settings'
 import Assistant from './pages/Assistant'
+import LiveNow from './pages/LiveNow'
 
 function App() {
   const [healthStatus, setHealthStatus] = useState<'ok' | 'fail' | 'loading'>('loading')
@@ -140,6 +141,7 @@ function App() {
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/assistant" element={<Assistant />} />
+          <Route path="/live" element={<LiveNow />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects2" element={<Projects />} />
           {/* Dynamic module preview */}

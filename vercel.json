@@ -4,7 +4,7 @@
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "frontend/dist" }
+      "config": { "distDir": "dist", "buildCommand": "npm run build" }
     },
     {
       "src": "backend/index.js",
@@ -13,11 +13,11 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/backend/index.js" },
-    { "src": "/(.*)", "dest": "/frontend/dist/$1" }
+    { "src": "/(.*)", "dest": "/" }
   ],
   "env": {
     "NODE_ENV": "production",
-    "VITE_DEMO_MODE": "true",
+    "VITE_DEMO_MODE": "false",
     "VITE_API_URL": "/api"
   }
 }
