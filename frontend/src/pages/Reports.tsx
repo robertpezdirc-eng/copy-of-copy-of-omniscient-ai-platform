@@ -8,6 +8,7 @@ const Reports: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [editItem, setEditItem] = useState<any | null>(null)
 
   useEffect(() => {
     let mounted = true
@@ -65,9 +66,38 @@ const Reports: React.FC = () => {
           </div>
           <ul>
             {items.map((it) => (
-              <li key={it.id}><strong>{it.title}</strong>: {it.content}</li>
+              <li key={it.id}>
+                <strong>{it.title}</strong>: {it.content}
+                <button style={{ marginLeft: 8 }} onClick={() => setEditItem({ ...it })}>Uredi</button>
+              </li>
             ))}
           </ul>
+          {editItem && (
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ background: '#fff', padding: '1rem', borderRadius: 8, minWidth: 320 }}>
+                <h3>Uredi poročilo</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <input value={editItem.title} onChange={(e) => setEditItem({ ...editItem, title: e.target.value })} />
+                  <input value={editItem.content} onChange={(e) => setEditItem({ ...editItem, content: e.target.value })} />
+                </div>
+                <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                  <button onClick={async () => {
+                    try {
+                      const { error } = await supabase
+                        .from('reports_items')
+                        .update({ title: editItem.title, content: editItem.content })
+                        .eq('id', editItem.id)
+                      if (error) throw error
+                      const { data } = await supabase.from('reports_items').select('*').order('id', { ascending: true })
+                      setItems(data || [])
+                      setEditItem(null)
+                    } catch (e: any) { setError(e.message) }
+                  }}>Shrani</button>
+                  <button onClick={() => setEditItem(null)}>Prekliči</button>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

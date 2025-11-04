@@ -6,6 +6,7 @@ const Projects: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [newName, setNewName] = useState('')
+  const [editItem, setEditItem] = useState<any | null>(null)
 
   useEffect(() => {
     let mounted = true
@@ -62,6 +63,25 @@ const Projects: React.FC = () => {
     }
   }
 
+  const saveEdit = async () => {
+    if (!editItem) return
+    try {
+      const { error } = await supabase
+        .from('projects_items')
+        .update({ name: editItem.name, status: editItem.status })
+        .eq('id', editItem.id)
+      if (error) throw error
+      const { data } = await supabase
+        .from('projects_items')
+        .select('*')
+        .order('id', { ascending: true })
+      setItems(data || [])
+      setEditItem(null)
+    } catch (err: any) {
+      setError(err?.message || 'Napaka pri shranjevanju urejanja')
+    }
+  }
+
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Projects Dashboard</h1>
@@ -86,9 +106,29 @@ const Projects: React.FC = () => {
               }}>
                 {it.status}
               </button>
+              <button onClick={() => setEditItem({ ...it })} style={{ marginLeft: 8 }}>Uredi</button>
             </li>
           ))}
         </ul>
+      )}
+
+      {editItem && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#fff', padding: '1rem', borderRadius: 8, minWidth: 320 }}>
+            <h3>Uredi projekt</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <input value={editItem.name} onChange={(e) => setEditItem({ ...editItem, name: e.target.value })} />
+              <select value={editItem.status} onChange={(e) => setEditItem({ ...editItem, status: e.target.value })}>
+                <option>In Progress</option>
+                <option>Done</option>
+              </select>
+            </div>
+            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+              <button onClick={saveEdit}>Shrani</button>
+              <button onClick={() => setEditItem(null)}>Prekliči</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

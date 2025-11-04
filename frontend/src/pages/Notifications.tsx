@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 const Notifications: React.FC = () => {
   const [items, setItems] = useState<any[]>([])
@@ -31,6 +32,15 @@ const Notifications: React.FC = () => {
     } catch (e: any) { setError(e.message) }
   }
 
+  const chartData = useMemo(() => {
+    const counts: Record<string, number> = { info: 0, warning: 0, error: 0 }
+    for (const it of items) {
+      const sev = String(it.severity || 'info')
+      counts[sev] = (counts[sev] || 0) + 1
+    }
+    return Object.entries(counts).map(([name, count]) => ({ name, count }))
+  }, [items])
+
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Notifications</h1>
@@ -45,11 +55,24 @@ const Notifications: React.FC = () => {
         <button type="submit">Dodaj obvestilo</button>
       </form>
       {loading ? <p>Nalaganje…</p> : error ? <p style={{ color: 'red' }}>{error}</p> : (
-        <ul>
-          {items.map((it) => (
-            <li key={it.id}>[{it.severity}] {it.message}</li>
-          ))}
-        </ul>
+        <>
+          <div style={{ height: 220, border: '1px solid #ddd', borderRadius: 8, padding: 12, marginBottom: 16 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Bar dataKey="count" fill="#ff9900" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <ul>
+            {items.map((it) => (
+              <li key={it.id}>[{it.severity}] {it.message}</li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   )

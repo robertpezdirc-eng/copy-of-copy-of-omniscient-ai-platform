@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 
 const Assistant: React.FC = () => {
   const [notes, setNotes] = useState<any[]>([])
@@ -30,6 +31,17 @@ const Assistant: React.FC = () => {
     } catch (e: any) { setError(e.message) }
   }
 
+  const graphData = useMemo(() => {
+    const sorted = [...notes].sort((a, b) => Number(a.id) - Number(b.id))
+    let cumulative = 0
+    return sorted.map((n, idx) => {
+      cumulative += 1
+      const created = n.created_at ? new Date(n.created_at) : null
+      const label = created ? created.toISOString().slice(0,10) : String(idx + 1)
+      return { x: label, count: cumulative }
+    })
+  }, [notes])
+
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Assistant</h1>
@@ -39,11 +51,24 @@ const Assistant: React.FC = () => {
         <button type="submit">Dodaj zapis</button>
       </form>
       {loading ? <p>Nalaganje…</p> : error ? <p style={{ color: 'red' }}>{error}</p> : (
-        <ul>
-          {notes.map((n) => (
-            <li key={n.id}>{n.note}</li>
-          ))}
-        </ul>
+        <>
+          <div style={{ height: 220, border: '1px solid #ddd', borderRadius: 8, padding: 12, marginBottom: 16 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={graphData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <CartesianGrid stroke="#eee" />
+                <XAxis dataKey="x" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Line type="monotone" dataKey="count" stroke="#8b5cf6" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <ul>
+            {notes.map((n) => (
+              <li key={n.id}>{n.note}</li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   )
