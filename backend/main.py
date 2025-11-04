@@ -264,12 +264,15 @@ def _register_routers(app: FastAPI) -> None:
     _try("routes.billing_routes", "router", "/api/v1/billing", ["Automated Billing & Invoicing"])
     _try("routes.feedback_routes", "router", "/api/v1/feedback", ["Continuous Feedback & Improvement"])
     _try("routes.iot_routes", "router", "/api/v1/iot", ["IoT & Telemetry"])
+    _try("routes.iiot_ollama_routes", "router", "/api/v1/iiot", ["IIoT with Ollama AI"])
     _try("routes.monetization_routes", "router", "/api/v1/monetization", ["Monetization & Plans"])
     _try("routes.analytics_usage_routes", "router", "/api/v1/analytics", ["Usage Analytics & Export"])
     _try("routes.websocket_routes", "router", "/api/v1/iot/ws", ["Real-time WebSocket Telemetry"])
     _try("routes.capacity_routes", "router", "", ["Capacity Planning & Cost Optimization"])
     _try("routes.security_routes", "router", "/api/v1/security/audit", ["Security Audit"])
     _try("routes.advanced_ai_routes", "router", "/api/v1/advanced-ai", ["Advanced AI Platform"])
+    _try("routes.enhanced_ai_routes", "router", "/api/v1/enhanced-ai", ["Enhanced AI - Recommendations & Insights"])
+    _try("routes.nextgen_ai_routes", "router", "/api/v1/nextgen-ai", ["Next-Gen AI - Co-Pilot, Brain Hub, Predictive Engine"])
     
     # New SaaS features
     _try("routes.observability_routes", "router", "/api/v1/observability", ["Observability & SLA"])
