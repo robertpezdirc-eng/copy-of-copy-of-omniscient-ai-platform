@@ -1,15 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { api } from '@/lib/api'
 import toast from 'react-hot-toast'
-
-interface User {
-  id: string
-  email: string
-  full_name: string
-  role: string
-  tenant_id?: string
-  is_verified: boolean
-}
+import type { User } from '@/types'
+import { API_ENDPOINTS, STORAGE_KEYS, SUCCESS_MESSAGES } from '@/constants'
+import { getErrorMessage } from '@/utils'
 
 interface AuthContextType {
   user: User | null
@@ -44,13 +38,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Check for existing session on mount
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('auth_token')
+      const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)
       if (token) {
         try {
-          const response = await api.get('/api/v1/auth/me')
+          const response = await api.get(API_ENDPOINTS.AUTH.ME)
           setUser(response.data)
         } catch (error) {
-          localStorage.removeItem('auth_token')
+          localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN)
         }
       }
       setIsLoading(false)
@@ -61,14 +55,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await api.post('/api/v1/auth/login', { email, password })
+      const response = await api.post(API_ENDPOINTS.AUTH.LOGIN, { email, password })
       const { token, user: userData } = response.data
       
-      localStorage.setItem('auth_token', token)
+      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token)
       setUser(userData)
       toast.success('Successfully logged in!')
     } catch (error: any) {
-      const message = error.response?.data?.detail || 'Login failed'
+      const message = getErrorMessage(error)
       toast.error(message)
       throw error
     }
@@ -76,29 +70,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (email: string, password: string, fullName: string) => {
     try {
-      await api.post('/api/v1/auth/register', {
+      await api.post(API_ENDPOINTS.AUTH.REGISTER, {
         email,
         password,
         full_name: fullName,
       })
       
-      toast.success('Registration successful! Please login.')
+      toast.success(SUCCESS_MESSAGES.CREATE)
     } catch (error: any) {
-      const message = error.response?.data?.detail || 'Registration failed'
+      const message = getErrorMessage(error)
       toast.error(message)
       throw error
     }
   }
 
   const logout = () => {
-    localStorage.removeItem('auth_token')
+    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN)
     setUser(null)
     toast.success('Logged out successfully')
   }
 
   const refreshUser = async () => {
     try {
-      const response = await api.get('/api/v1/auth/me')
+      const response = await api.get(API_ENDPOINTS.AUTH.ME)
       setUser(response.data)
     } catch (error) {
       console.error('Failed to refresh user:', error)
