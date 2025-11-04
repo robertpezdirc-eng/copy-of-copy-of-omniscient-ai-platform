@@ -12,6 +12,10 @@ Dobrodošli v dokumentaciji **Omni Enterprise Ultra Max** platforme! Ta dokument
 Želite razumeti celotno platformo?
 - **[OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md](OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md)** - Celotna dokumentacija s primeri
 
+### 🎓 Učni Program & Primerjava (2 ure)
+Želite strukturiran učni program in primerjavo s specifikacijo?
+- **[PREGLED_PROJEKTA_ZIVO.md](PREGLED_PROJEKTA_ZIVO.md)** ⭐ **NOVO!** - Živahen pregled projekta, primerjava repozitorija s specifikacijo platforme & 10-fazni učni program (60-83 ur)
+
 ### 🏗️ Arhitektura in Design (15 minut)
 Zanima vas tehnična arhitektura?
 - **[OMNI_ARHITEKTURNI_DIAGRAMI.md](OMNI_ARHITEKTURNI_DIAGRAMI.md)** - Diagrami in podatkovni tok
@@ -29,6 +33,7 @@ Potrebujete podrobnosti o implementaciji?
 | Dokument | Opis | Jezik | Čas branja |
 |----------|------|-------|------------|
 | **[README.md](README.md)** | Glavni pregled projekta | EN | 5 min |
+| **[PREGLED_PROJEKTA_ZIVO.md](PREGLED_PROJEKTA_ZIVO.md)** | ⭐ **NOVO!** Živahen pregled projekta & 10-fazni učni program | **SL** | 2 ure |
 | **[OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md](OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md)** | Celovit vpogled v platformo | **SL** | 30 min |
 | **[OMNI_HITRA_REFERENCA.md](OMNI_HITRA_REFERENCA.md)** | Hitra referenca | **SL** | 5 min |
 | **[OMNI_ZAPISNIKI_PREGLED.md](OMNI_ZAPISNIKI_PREGLED.md)** | ⭐ **Pregled vseh zapisnikov** | **SL** | 5 min |
@@ -100,6 +105,20 @@ Potrebujete podrobnosti o implementaciji?
 ---
 
 ## 🎯 Uporabniške Zgodbe (Use Cases)
+
+### Scenario 0: "Želim celovit učni program od začetka do strokovnjaka" ⭐ **NOVO!**
+
+**Pot:**
+1. Preberi **[PREGLED_PROJEKTA_ZIVO.md](PREGLED_PROJEKTA_ZIVO.md)** - Primerjava repozitorija s specifikacijo (30 min)
+2. Sledi **10-faznemu učnemu programu** (60-83 ur):
+   - Faza 1-4: Temelji, Backend, Gateway, Lokalni razvoj (22-29 ur)
+   - Faza 5-7: Cloud, Monitoring, Napredna AI/ML (17-24 ur)
+   - Faza 8-10: Poslovna logika, Varnost, CI/CD (24-32 ur)
+3. Končaj s certifikatom **OMNI Platform Expert**
+
+**Skupaj:** 60-83 ur do popolnega obvladovanja platforme
+
+---
 
 ### Scenario 1: "Sem nov uporabnik, kako začnem?"
 
@@ -191,6 +210,7 @@ Potrebujete podrobnosti o implementaciji?
 - ✅ ENTERPRISE_IMPLEMENTATION_SUMMARY.md
 
 ### Dolga (30+ min)
+- ✅ **PREGLED_PROJEKTA_ZIVO.md (1397 vrstic)** ⭐ **NOVO!** Živahen pregled & učni program
 - ✅ **OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md (1604 vrstic)** ⭐ Najpomembnejša
 - ✅ ENHANCEMENT_ROADMAP.md
 - ✅ IMPLEMENTATION_COMPLETE.md
@@ -200,6 +220,7 @@ Potrebujete podrobnosti o implementaciji?
 ## 🌍 Dokumentacija po Jezikih
 
 ### Slovenščina 🇸🇮
+- **PREGLED_PROJEKTA_ZIVO.md** ⭐⭐⭐⭐ **NOVO!** Celovit pregled & učni program
 - **OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md** ⭐⭐⭐
 - **OMNI_HITRA_REFERENCA.md** ⭐⭐⭐
 - **OMNI_ARHITEKTURNI_DIAGRAMI.md** ⭐⭐⭐
@@ -353,11 +374,12 @@ Prvi feature contribution (4 ure)
 ## 📈 Statistika Dokumentacije
 
 ```
-Skupaj dokumentov: 30+
-Skupaj vrstic:     15,000+
-Slovenskih dok.:   3 (2,863 vrstic)
+Skupaj dokumentov: 31+
+Skupaj vrstic:     16,400+
+Slovenskih dok.:   4 (4,260 vrstic)
 Angleških dok.:    27+
 Najdaljši dok.:    OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md (1,604 vrstic)
+Novi dodatek:      PREGLED_PROJEKTA_ZIVO.md (1,397 vrstic) ⭐
 ```
 
 ---
@@ -373,6 +395,7 @@ Najdaljši dok.:    OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md (1,604 vrstic)
 
 | Potrebujem... | Grem na... |
 |---------------|------------|
+| Učni program & Primerjava | ⭐ [PREGLED_PROJEKTA_ZIVO.md](PREGLED_PROJEKTA_ZIVO.md) **NOVO!** |
 | Hiter začetek | [OMNI_HITRA_REFERENCA.md](OMNI_HITRA_REFERENCA.md) |
 | Celoten pregled | [OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md](OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md) |
 | Arhitektura | [OMNI_ARHITEKTURNI_DIAGRAMI.md](OMNI_ARHITEKTURNI_DIAGRAMI.md) |

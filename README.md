@@ -93,6 +93,7 @@ docker-compose -f docker-compose.monitoring.yml up -d
 ## 🇸🇮 Slovenska Dokumentacija / Slovenian Documentation
 
 **Celotna dokumentacija v slovenščini:**
+- 🎓 **[PREGLED_PROJEKTA_ZIVO.md](PREGLED_PROJEKTA_ZIVO.md)** ⭐ **NOVO!** - Živahen pregled projekta, primerjava repozitorija s specifikacijo & 10-fazni učni program (60-83 ur, 1,400+ vrstic)
 - 📚 **[DOKUMENTACIJA_INDEKS.md](DOKUMENTACIJA_INDEKS.md)** - Dokumentacijski indeks in navigacija
 - 📖 **[OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md](OMNI_ENTERPRISE_ULTRA_MAX_VPOGLED.md)** - Celovit vpogled v platformo (1,600+ vrstic)
 - ⚡ **[OMNI_HITRA_REFERENCA.md](OMNI_HITRA_REFERENCA.md)** - Hitra referenca in ukazi
