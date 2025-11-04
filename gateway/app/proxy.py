@@ -42,20 +42,29 @@ async def _forward(req: Request, method: str, path: str, body: Optional[bytes] =
         try:
             upstream_resp = await client.request(method, url, content=body, headers=headers)
             
-            # Track business metrics
-            tenant_id = getattr(req.state, "tenant_id", "unknown")
-            business_metrics.api_calls_by_tenant.labels(
-                tenant_id=tenant_id,
-                endpoint=path,
-                method=method
-            ).inc()
+            # Track business metrics (best-effort)
+            try:
+                tenant_id = getattr(req.state, "tenant_id", "unknown")
+                if hasattr(business_metrics, "api_calls_by_tenant"):
+                    business_metrics.api_calls_by_tenant.labels(
+                        tenant_id=tenant_id,
+                        endpoint=path,
+                        method=method
+                    ).inc()
+            except Exception:
+                pass
             
             # Track data processed (estimate from content length)
             if body:
-                business_metrics.model_inference_requests.labels(model="gateway_proxy").inc()
-                business_metrics.model_inference_data_processed_bytes.labels(
-                    model="gateway_proxy"
-                ).observe(len(body))
+                try:
+                    if hasattr(business_metrics, "model_inference_requests"):
+                        business_metrics.model_inference_requests.labels(model="gateway_proxy").inc()
+                    if hasattr(business_metrics, "model_inference_data_processed_bytes"):
+                        business_metrics.model_inference_data_processed_bytes.labels(
+                            model="gateway_proxy"
+                        ).observe(len(body))
+                except Exception:
+                    pass
             
         except httpx.HTTPError as e:
             logger.exception("Upstream error: %s", e)

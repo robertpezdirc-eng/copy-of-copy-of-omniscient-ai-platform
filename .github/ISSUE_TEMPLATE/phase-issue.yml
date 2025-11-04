@@ -1,0 +1,47 @@
+name: "Phase Issue: Učni program"
+description: "Avtomatiziran Phase issue za OMNI platformo"
+title: "[Phase] <kratek naslov>"
+labels: ["dokumentacija", "phase"]
+body:
+  - type: dropdown
+    id: phase
+    attributes:
+      label: "Faza"
+      description: "Izberi fazo iz 10-faznega profesionalnega učnega programa."
+      options:
+        - "1: Foundations & Architecture (4-6h)"
+        - "2: Backend & AI/ML (8-12h)"
+        - "3: Gateway & API Security (6-8h)"
+        - "4: Local Development Setup (2-3h)"
+        - "5: Cloud Run Production (3-4h)"
+        - "6: Monitoring & Grafana (4-6h)"
+        - "7: Advanced AI/ML (10-14h)"
+        - "8: Business Logic & Payments (8-10h)"
+        - "9: Security & Compliance (6-8h)"
+        - "10: Dashboards & CI/CD (10-12h)"
+    validations:
+      required: true
+  - type: textarea
+    id: overview
+    attributes:
+      label: "Opis in cilji"
+      description: "Povzetek nalog in jasni cilji, kaj dosežemo v tej fazi."
+      placeholder: "Kratek opis, cilji, ključni izzivi, odvisnosti."
+  - type: textarea
+    id: tasks
+    attributes:
+      label: "Naloge"
+      description: "Razčlenjene naloge v obliki seznama."
+      value: "- [ ] Naloga 1\n- [ ] Naloga 2\n- [ ] Naloga 3"
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: "Kriteriji sprejema"
+      description: "Merljivi pogoji za sprejem (tests, build, dokumentacija)."
+      placeholder: "Npr.: Build uspešen, testi pretečejo, dokumentacija posodobljena."
+  - type: input
+    id: links
+    attributes:
+      label: "Povezave (Issue/PR/Docs)"
+      description: "Dodaj relevantne povezave (npr. #25, #26, PR-ji, dokumentacija)."
+      placeholder: "npr. #25, #26, PR #14, README, Grafana Guide"

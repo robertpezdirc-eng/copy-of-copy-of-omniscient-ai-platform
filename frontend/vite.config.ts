@@ -12,9 +12,12 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    host: '0.0.0.0',
+    allowedHosts: true,
     proxy: {
       '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:8080',
+        // Separate proxy target env var to avoid conflict with client baseURL
+        target: process.env.VITE_API_PROXY_TARGET || 'http://localhost:9000',
         changeOrigin: true,
       },
     },

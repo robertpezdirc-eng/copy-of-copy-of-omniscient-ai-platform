@@ -163,6 +163,15 @@ async def root():
     }
 
 
+@app.get("/healthz")
+async def healthz():
+    return {
+        "status": "ok",
+        "service": settings.service_name,
+        "version": "2.0.0"
+    }
+
+
 # Utility functions to get clients (for use in other modules)
 def get_upstream_client() -> httpx.AsyncClient | None:
     """Get the pooled upstream HTTP client."""

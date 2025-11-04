@@ -1,0 +1,58 @@
+name: Log Vercel Production URL
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  log_production_url:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Vercel production deployment URL
+        uses: actions/github-script@v7
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}
+        with:
+          script: |
+            const fetch = require('node-fetch');
+            const sha = context.sha;
+            const projectId = process.env.VERCEL_PROJECT_ID;
+            const teamId = process.env.VERCEL_TEAM_ID;
+            const token = process.env.VERCEL_TOKEN;
+            if (!token || !projectId) {
+              core.setFailed('VERCEL_TOKEN and VERCEL_PROJECT_ID secrets are required.');
+              return;
+            }
+            const baseUrl = 'https://api.vercel.com';
+            const params = new URLSearchParams({ projectId, target: 'production' });
+            if (teamId) params.append('teamId', teamId);
+            let deploymentUrl = null;
+            for (let i = 0; i < 30; i++) { // ~3 min polling
+              const res = await fetch(`${baseUrl}/v13/deployments?${params.toString()}`, {
+                headers: { Authorization: `Bearer ${token}` }
+              });
+              if (!res.ok) {
+                core.warning(`Vercel API status ${res.status}`);
+                await new Promise(r => setTimeout(r, 6000));
+                continue;
+              }
+              const data = await res.json();
+              const match = (data.deployments || []).find(d =>
+                d.target === 'production' &&
+                ((d.meta && (d.meta.githubCommitSha === sha || d.meta.commitSha === sha)) ||
+                 d.gitSource?.commitRef === sha ||
+                 d.gitSource?.sha === sha)
+              );
+              if (match) {
+                deploymentUrl = `https://${match.url}`;
+                break;
+              }
+              await new Promise(r => setTimeout(r, 6000));
+            }
+            const message = deploymentUrl
+              ? `Vercel Production is live: ${deploymentUrl}`
+              : 'Vercel Production deployment URL not found yet.';
+            core.notice(message);

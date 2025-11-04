@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { api } from '@/lib/api'
 import toast from 'react-hot-toast'
 
+const DEMO_MODE = (import.meta.env.VITE_DEMO_MODE || '').toString().toLowerCase() === 'true'
+
 interface User {
   id: string
   email: string
@@ -45,12 +47,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('auth_token')
-      if (token) {
-        try {
-          const response = await api.get('/api/v1/auth/me')
-          setUser(response.data)
-        } catch (error) {
-          localStorage.removeItem('auth_token')
+      if (DEMO_MODE) {
+        // Auto-login in demo mode or restore existing demo session
+        if (!token) {
+          localStorage.setItem('auth_token', 'demo-token')
+        }
+        setUser({
+          id: 'demo-user-id',
+          email: 'demo@example.com',
+          full_name: 'Demo User',
+          role: 'admin',
+          is_verified: true,
+          tenant_id: 'demo-tenant',
+        })
+      } else {
+        if (token) {
+          try {
+            const response = await api.get('/api/v1/auth/me')
+            setUser(response.data)
+          } catch (error) {
+            localStorage.removeItem('auth_token')
+          }
         }
       }
       setIsLoading(false)
@@ -60,12 +77,60 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [])
 
   const login = async (email: string, password: string) => {
+    if (DEMO_MODE) {
+      const ok = (email === 'demo' || email === 'demo@example.com') && password === 'demo123'
+      if (ok) {
+        localStorage.setItem('auth_token', 'demo-token')
+        setUser({
+          id: 'demo-user-id',
+          email: 'demo@example.com',
+          full_name: 'Demo User',
+          role: 'admin',
+          is_verified: true,
+          tenant_id: 'demo-tenant',
+        })
+        toast.success('Logged in as demo user')
+        return
+      } else {
+        toast.error('Invalid demo credentials')
+        throw new Error('Invalid demo credentials')
+      }
+    }
+
     try {
       const response = await api.post('/api/v1/auth/login', { email, password })
-      const { token, user: userData } = response.data
-      
+      // Support both token response shapes
+      const token: string = response.data?.token || response.data?.access_token
+
+      if (!token) {
+        throw new Error('Missing access token in response')
+      }
+
       localStorage.setItem('auth_token', token)
-      setUser(userData)
+
+      // Fetch current user profile from backend
+      try {
+        const me = await api.get('/api/v1/auth/me')
+        const meData = me.data
+        setUser({
+          id: meData.user_id || meData.id || 'unknown',
+          email: meData.email || 'unknown@example.com',
+          full_name: meData.full_name || meData.name || 'Unknown',
+          role: meData.role || 'user',
+          is_verified: meData.is_verified ?? true,
+          tenant_id: meData.tenant_id,
+        })
+      } catch (e) {
+        // If /me fails, fallback to minimal user
+        setUser({
+          id: 'unknown',
+          email,
+          full_name: email,
+          role: 'user',
+          is_verified: true,
+        })
+      }
+
       toast.success('Successfully logged in!')
     } catch (error: any) {
       const message = error.response?.data?.detail || 'Login failed'
@@ -75,6 +140,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   const register = async (email: string, password: string, fullName: string) => {
+    if (DEMO_MODE) {
+      toast('Registration is disabled in demo mode', { icon: 'ℹ️' })
+      return
+    }
     try {
       await api.post('/api/v1/auth/register', {
         email,
@@ -97,6 +166,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   const refreshUser = async () => {
+    if (DEMO_MODE) {
+      // No-op in demo mode
+      return
+    }
     try {
       const response = await api.get('/api/v1/auth/me')
       setUser(response.data)

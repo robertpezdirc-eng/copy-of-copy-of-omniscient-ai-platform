@@ -1,0 +1,23 @@
+{
+  "include": [
+    "backend",
+    "gateway"
+  ],
+  "exclude": [
+    "**/node_modules/**",
+    "**/__pycache__/**",
+    "**/.git/**",
+    "**/.venv/**",
+    "frontend/**",
+    "web-dashboard/**",
+    "dashboards/**",
+    "ai-worker/**",
+    "mobile/**",
+    "monitoring/**",
+    "infrastructure/**",
+    "quick-preview/**",
+    "customer-portal/**",
+    "backup-service/**",
+    "tests/**"
+  ]
+}

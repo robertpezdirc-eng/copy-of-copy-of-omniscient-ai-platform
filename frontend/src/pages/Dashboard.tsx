@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { api } from '@/lib/api'
+
+const DEMO_MODE = (import.meta.env.VITE_DEMO_MODE || '').toString().toLowerCase() === 'true'
 
 const Dashboard = () => {
   const { user } = useAuth()
@@ -11,13 +14,36 @@ const Dashboard = () => {
   })
 
   useEffect(() => {
-    // Mock data - replace with real API calls
-    setStats({
-      apiCalls: 45230,
-      revenue: 847293,
-      activeUsers: 12847,
-      uptime: 99.98,
-    })
+    const load = async () => {
+      if (DEMO_MODE) {
+        setStats({
+          apiCalls: 45230,
+          revenue: 847293,
+          activeUsers: 12847,
+          uptime: 99.98,
+        })
+        return
+      }
+      try {
+        const res = await api.get('/api/v1/omni/summary')
+        const s = res.data
+        setStats({
+          apiCalls: Number(s.api_calls_hour ?? 0),
+          revenue: Number(String(s.revenue_24h).replace(/[^0-9.]/g, '')) || 0,
+          activeUsers: Number(s.active_users ?? 0),
+          uptime: Number(String(s.uptime).replace(/[^0-9.]/g, '')) || 0,
+        })
+      } catch (e) {
+        // Fallback to mock data if API unavailable
+        setStats({
+          apiCalls: 45230,
+          revenue: 847293,
+          activeUsers: 12847,
+          uptime: 99.98,
+        })
+      }
+    }
+    load()
   }, [])
 
   return (

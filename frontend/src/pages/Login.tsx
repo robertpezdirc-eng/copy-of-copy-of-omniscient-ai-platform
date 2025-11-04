@@ -8,6 +8,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
+  const DEMO_MODE = (import.meta.env.VITE_DEMO_MODE || '').toString().toLowerCase() === 'true'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,17 +31,24 @@ const Login = () => {
           Welcome Back
         </h1>
         <p style={styles.subtitle}>Sign in to your Omni account</p>
+        {DEMO_MODE && (
+          <div style={styles.demoBox}>
+            <div style={{ fontWeight: 600 }}>Demo dostop</div>
+            <div>uporabnik: <code>demo</code></div>
+            <div>geslo: <code>demo123</code></div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.field}>
             <label style={styles.label}>Email</label>
             <input
-              type="email"
+              type={DEMO_MODE ? 'text' : 'email'}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               style={styles.input}
-              placeholder="your@email.com"
+              placeholder={DEMO_MODE ? 'demo' : 'your@email.com'}
             />
           </div>
 
@@ -99,6 +107,15 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: 'var(--text-secondary)',
     textAlign: 'center',
     marginBottom: '32px',
+  },
+  demoBox: {
+    background: 'rgba(0, 255, 136, 0.08)',
+    border: '1px solid rgba(0, 255, 136, 0.35)',
+    color: 'var(--text)',
+    borderRadius: '12px',
+    padding: '12px 14px',
+    marginBottom: '20px',
+    fontSize: '14px',
   },
   form: {
     display: 'flex',

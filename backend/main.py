@@ -124,10 +124,12 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:5173",
-        "https://*.run.app",
+        # Explicit domains
         "https://omni-ultra.com",
         "https://*.omni-ultra.com"
     ],
+    # Allow common wildcard subdomains via regex (Cloud Run, Vercel)
+    allow_origin_regex=r"https://.*\.run\.app|https://.*\.vercel\.app|https://.*\.loca\.lt",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

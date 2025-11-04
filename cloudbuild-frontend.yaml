@@ -9,6 +9,10 @@ steps:
       - 'gcr.io/$PROJECT_ID/omni-frontend:latest'
       - '-f'
       - 'frontend/Dockerfile'
+      - '--build-arg'
+      - 'VITE_API_URL=$_VITE_API_URL'
+      - '--build-arg'
+      - 'VITE_WS_URL=$_VITE_WS_URL'
       - './frontend'
     timeout: 1200s
 
@@ -28,3 +32,25 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 timeout: 1800s
+
+  # Optional: Deploy to Cloud Run (set substitutions below)
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - '$_FRONTEND_SERVICE'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/omni-frontend:latest'
+      - '--region'
+      - '$_REGION'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+
+substitutions:
+  _VITE_API_URL: ''
+  _VITE_WS_URL: ''
+  _FRONTEND_SERVICE: 'omni-frontend-prod'
+  _REGION: 'europe-west1'

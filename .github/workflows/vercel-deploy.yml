@@ -1,0 +1,48 @@
+name: Vercel Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Create frontend .env.production from secrets
+        shell: bash
+        run: |
+          mkdir -p frontend
+          cat > frontend/.env.production <<'EOF'
+          VITE_API_URL=${{ secrets.VITE_API_URL }}
+          VITE_WS_URL=${{ secrets.VITE_WS_URL }}
+          VITE_APP_NAME=Omni Enterprise Ultra Max
+          VITE_APP_VERSION=2.0.0
+          VITE_DEMO_MODE=false
+          EOF
+
+      - name: Deploy to Vercel (frontend)
+        id: vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: frontend
+          prod: true
+          vercel-args: "--prod"
+
+      - name: Output deployment URL
+        run: |
+          echo "Live URL: ${{ steps.vercel.outputs.live-url }}"
+          echo "Preview URL: ${{ steps.vercel.outputs.preview-url }}"
+          echo "Deployment URL: ${{ steps.vercel.outputs.deployment-url }}"
+          echo "If live URL is empty, check Vercel dashboard Deployments."
