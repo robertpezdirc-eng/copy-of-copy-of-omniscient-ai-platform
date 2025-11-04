@@ -14,7 +14,6 @@ import AdminPanel from './pages/AdminPanel'
 import Health from './pages/Health'
 import { BIDashboard } from './pages/BIDashboard'
 import PrivateRoute from './components/PrivateRoute'
-import MainDashboard from './pages/MainDashboard'
 import MainDashboardSimple from './pages/MainDashboardSimple'
 import Finance from './pages/Finance'
 import Analytics from './pages/Analytics'
@@ -23,6 +22,11 @@ import Module from './pages/Module'
 import Sales from './pages/Sales'
 import Marketing from './pages/Marketing'
 import Operations from './pages/Operations'
+import CRM from './pages/CRM'
+import Reports from './pages/Reports'
+import Notifications from './pages/Notifications'
+import Settings from './pages/Settings'
+import Assistant from './pages/Assistant'
 
 function App() {
   const [healthStatus, setHealthStatus] = useState<'ok' | 'fail' | 'loading'>('loading')
@@ -131,6 +135,11 @@ function App() {
           <Route path="/sales" element={<Sales />} />
           <Route path="/marketing" element={<Marketing />} />
           <Route path="/operations" element={<Operations />} />
+          <Route path="/crm" element={<CRM />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/assistant" element={<Assistant />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects2" element={<Projects />} />
           {/* Dynamic module preview */}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { api } from '../lib/api'
+import { supabase } from '../lib/supabase'
 
 const Projects: React.FC = () => {
   const [items, setItems] = useState<any[]>([])
@@ -9,21 +9,35 @@ const Projects: React.FC = () => {
 
   useEffect(() => {
     let mounted = true
-    api.get('/projects/list')
-      .then((res) => { if (mounted) { setItems(res.data?.projects || []); setError(null) } })
-      .catch((e) => { if (mounted) setError(e?.message || 'Napaka pri pridobivanju projektov') })
-      .finally(() => { if (mounted) setLoading(false) })
-    return () => { mounted = false }
+    const load = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('projects_items')
+          .select('*')
+          .order('id', { ascending: true })
+        if (error) throw error
+        if (mounted) { setItems(data || []); setError(null) }
+      } catch (e: any) {
+        if (mounted) setError(e?.message || 'Napaka pri pridobivanju projektov')
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+    load(); return () => { mounted = false }
   }, [])
 
   const toggleStatus = async (id: number) => {
     const current = items.find((it) => it.id === id)
     if (!current) return
     const nextStatus = current.status === 'Done' ? 'In Progress' : 'Done'
-    // Optimistic update
     setItems(items.map(it => it.id === id ? { ...it, status: nextStatus } : it))
-    try { await api.post('/projects/toggle', { id, status: nextStatus }) } catch {
-      // Revert on error
+    try {
+      const { error } = await supabase
+        .from('projects_items')
+        .update({ status: nextStatus })
+        .eq('id', id)
+      if (error) throw error
+    } catch {
       setItems(items.map(it => it.id === id ? { ...it, status: current.status } : it))
     }
   }
@@ -32,8 +46,15 @@ const Projects: React.FC = () => {
     e.preventDefault()
     if (!newName.trim()) return
     try {
-      const res = await api.post('/projects/add', { name: newName.trim() })
-      setItems(res.data?.projects || [])
+      const { error } = await supabase
+        .from('projects_items')
+        .insert([{ name: newName.trim(), status: 'In Progress' }])
+      if (error) throw error
+      const { data } = await supabase
+        .from('projects_items')
+        .select('*')
+        .order('id', { ascending: true })
+      setItems(data || [])
       setNewName('')
       setError(null)
     } catch (err: any) {

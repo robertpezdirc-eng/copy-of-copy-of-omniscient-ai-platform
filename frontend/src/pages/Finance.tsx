@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { api } from '../lib/api'
+import { supabase } from '../lib/supabase'
 
 const Finance: React.FC = () => {
   const [scale, setScale] = useState<'linear' | 'log'>('linear')
@@ -12,19 +12,36 @@ const Finance: React.FC = () => {
 
   useEffect(() => {
     let mounted = true
-    api.get('/finance/data')
-      .then((res) => { if (mounted) { setData(res.data?.data || []); setError(null) } })
-      .catch((e) => { if (mounted) setError(e?.message || 'Napaka pri pridobivanju podatkov') })
-      .finally(() => { if (mounted) setLoading(false) })
+    const load = async () => {
+      try {
+        const { data: rows, error: err } = await supabase
+          .from('finance_metrics')
+          .select('*')
+          .order('month', { ascending: true })
+        if (err) throw err
+        if (mounted) { setData(rows || []); setError(null) }
+      } catch (e: any) {
+        if (mounted) setError(e?.message || 'Napaka pri pridobivanju podatkov')
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+    load()
     return () => { mounted = false }
   }, [])
 
   const addEntry = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await api.post('/metrics/upsert', { module: 'finance', entry: { month, revenue: Number(revenue) } })
-      const res = await api.get('/finance/data')
-      setData(res.data?.data || [])
+      const { error: err } = await supabase
+        .from('finance_metrics')
+        .insert([{ month, revenue: Number(revenue) }])
+      if (err) throw err
+      const { data: rows } = await supabase
+        .from('finance_metrics')
+        .select('*')
+        .order('month', { ascending: true })
+      setData(rows || [])
       setError(null)
     } catch (err: any) {
       setError(err?.message || 'Napaka pri shranjevanju podatkov')

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { api } from '../lib/api'
+import { supabase } from '../lib/supabase'
 
 const Analytics: React.FC = () => {
   const [threshold, setThreshold] = useState<number>(0)
@@ -12,19 +12,36 @@ const Analytics: React.FC = () => {
 
   useEffect(() => {
     let mounted = true
-    api.get('/analytics/data')
-      .then((res) => { if (mounted) { setData(res.data?.data || []); setError(null) } })
-      .catch((e) => { if (mounted) setError(e?.message || 'Napaka pri pridobivanju podatkov') })
-      .finally(() => { if (mounted) setLoading(false) })
+    const load = async () => {
+      try {
+        const { data: rows, error: err } = await supabase
+          .from('analytics_segments')
+          .select('*')
+          .order('segment', { ascending: true })
+        if (err) throw err
+        if (mounted) { setData(rows || []); setError(null) }
+      } catch (e: any) {
+        if (mounted) setError(e?.message || 'Napaka pri pridobivanju podatkov')
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+    load()
     return () => { mounted = false }
   }, [])
 
   const addEntry = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await api.post('/metrics/upsert', { module: 'analytics', entry: { segment, value: Number(value) } })
-      const res = await api.get('/analytics/data')
-      setData(res.data?.data || [])
+      const { error: err } = await supabase
+        .from('analytics_segments')
+        .insert([{ segment, value: Number(value) }])
+      if (err) throw err
+      const { data: rows } = await supabase
+        .from('analytics_segments')
+        .select('*')
+        .order('segment', { ascending: true })
+      setData(rows || [])
       setError(null)
     } catch (err: any) {
       setError(err?.message || 'Napaka pri shranjevanju podatkov')

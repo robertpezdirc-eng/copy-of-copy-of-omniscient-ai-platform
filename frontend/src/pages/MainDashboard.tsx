@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DragDropContext, Droppable, Draggable, type DropResult } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd'
 import { api } from '../lib/api'
 
 interface DashboardItem {
@@ -22,17 +22,28 @@ const initialCategories: DashboardCategory[] = [
     dashboards: [
       { id: 'core-health', name: 'System Health', url: '/health' },
       { id: 'core-pricing', name: 'Pricing & Plans', url: '/pricing' },
-      { id: 'core-profile', name: 'User Profile', url: '/profile' },
-      { id: 'core-admin', name: 'Admin Panel', url: '/admin' },
+      { id: 'core-profile', name: 'Profile', url: '/profile' },
+      { id: 'core-admin', name: 'Admin', url: '/admin' },
       { id: 'core-affiliate', name: 'Affiliate', url: '/affiliate' },
       { id: 'core-bi', name: 'BI Dashboard', url: '/bi-dashboard' },
+    ],
+  },
+  {
+    id: 'workspace',
+    name: 'Workspace',
+    dashboards: [
+      { id: 'ws-crm', name: 'CRM', url: '/crm' },
+      { id: 'ws-reports', name: 'Reports', url: '/reports' },
+      { id: 'ws-notifications', name: 'Notifications', url: '/notifications' },
+      { id: 'ws-settings', name: 'Settings', url: '/settings' },
+      { id: 'ws-assistant', name: 'Assistant', url: '/assistant' },
     ],
   },
   {
     id: 'finance',
     name: 'Finance',
     dashboards: [
-      { id: 'fin-1', name: 'Finance Overview', url: '/finance' },
+      { id: 'fin-1', name: 'Finance', url: '/finance' },
       { id: 'fin-2', name: 'Revenue Trends', url: '/module/revenue-trends' },
       { id: 'fin-3', name: 'Cost Analysis', url: '/module/cost-analysis' },
       { id: 'fin-4', name: 'Profit & Loss', url: '/module/profit-loss' },
@@ -44,7 +55,7 @@ const initialCategories: DashboardCategory[] = [
     id: 'analytics',
     name: 'Analytics',
     dashboards: [
-      { id: 'ana-1', name: 'Analytics Overview', url: '/analytics' },
+      { id: 'ana-1', name: 'Analytics', url: '/analytics' },
       { id: 'ana-2', name: 'Segmentation', url: '/module/segmentation' },
       { id: 'ana-3', name: 'Cohorts', url: '/module/cohorts' },
       { id: 'ana-4', name: 'Attribution', url: '/module/attribution' },
@@ -68,12 +79,9 @@ const initialCategories: DashboardCategory[] = [
     id: 'ops',
     name: 'Operations',
     dashboards: [
-      { id: 'ops-1', name: 'Logistics', url: '/module/logistics' },
-      { id: 'ops-2', name: 'Inventory', url: '/module/inventory' },
-      { id: 'ops-3', name: 'Procurement', url: '/module/procurement' },
-      { id: 'ops-4', name: 'Quality', url: '/module/quality' },
-      { id: 'ops-5', name: 'Compliance', url: '/module/compliance' },
-      { id: 'ops-6', name: 'Support', url: '/module/support' },
+      { id: 'ops-1', name: 'Sales', url: '/sales' },
+      { id: 'ops-2', name: 'Marketing', url: '/marketing' },
+      { id: 'ops-3', name: 'Operations', url: '/operations' },
     ],
   },
 ]
