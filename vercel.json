@@ -19,14 +19,5 @@
     { "src": "^/$", "status": 308, "headers": { "Location": "/crm" } },
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)", "dest": "frontend/dist/index.html" }
-  ],
-  "env": {
-    "VITE_SUPABASE_URL": "@VITE_SUPABASE_URL",
-    "VITE_SUPABASE_ANON_KEY": "@VITE_SUPABASE_ANON_KEY",
-    "OPENAI_API_KEY": "@OPENAI_API_KEY",
-    "OPENAI_MODEL": "@OPENAI_MODEL",
-    "STRIPE_SECRET_KEY": "@STRIPE_SECRET_KEY",
-    "STRIPE_WEBHOOK_SECRET": "@STRIPE_WEBHOOK_SECRET",
-    "GATEWAY_URL": "@GATEWAY_URL"
-  }
+  ]
 }
