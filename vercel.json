@@ -4,16 +4,11 @@
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "outputDirectory": "frontend/dist", "buildCommand": "npm run build" }
-    },
-    {
-      "src": "quick-preview/index.html",
-      "use": "@vercel/static"
+      "config": { "outputDirectory": "dist", "buildCommand": "npm run build" }
     }
   ],
   "routes": [
-    { "src": "/api/health", "dest": "/api/health.js" },
-    { "src": "/(.*)", "dest": "/quick-preview/index.html" }
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
   
   "env": {
