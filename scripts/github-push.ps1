@@ -1,7 +1,7 @@
 #requires -version 5.1
 Param(
   [Parameter(Mandatory=$true)] [string]$RepoUrl,
-  [Parameter(Mandatory=$false)] [string]$Branch = "main",
+  [Parameter(Mandatory=$false)] [string]$Branch = "master",
   [Parameter(Mandatory=$false)] [string]$CommitMessage = "chore: vercel-ready deploy automation + upgrades"
 )
 

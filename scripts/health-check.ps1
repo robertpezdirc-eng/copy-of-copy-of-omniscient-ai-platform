@@ -18,22 +18,29 @@
 
 param(
   [Parameter(Mandatory=$true)] [string]$Url,
-  [Parameter(Mandatory=$false)] [bool]$SeedDemo = $false
+  [Parameter(Mandatory=$false)] [bool]$SeedDemo = $false,
+  [Parameter(Mandatory=$false)] [string]$BypassToken
 )
 
-function Write-Ok($msg) { Write-Host "✅ $msg" -ForegroundColor Green }
-function Write-Fail($msg) { Write-Host "❌ $msg" -ForegroundColor Red }
-function Write-Info($msg) { Write-Host "ℹ️  $msg" -ForegroundColor Cyan }
+function Write-Ok($msg) { Write-Host "[OK] $msg" -ForegroundColor Green }
+function Write-Fail($msg) { Write-Host "[FAIL] $msg" -ForegroundColor Red }
+function Write-Info($msg) { Write-Host "[INFO] $msg" -ForegroundColor Cyan }
 
 Write-Info "Checking $Url"
 
+# Common headers (optional protection bypass)
+$headers = @{ "accept" = "application/json" }
+if ($null -ne $BypassToken -and $BypassToken.Trim().Length -gt 0) {
+  $headers["x-vercel-protection-bypass"] = $BypassToken
+}
+
 try {
-  $h = Invoke-WebRequest -Uri "$Url/api/health" -UseBasicParsing -TimeoutSec 20
+  $h = Invoke-WebRequest -Uri "$Url/api/health" -Headers $headers -UseBasicParsing -TimeoutSec 20 -ErrorAction Stop
   if ($h.StatusCode -eq 200) { Write-Ok "/api/health OK" } else { Write-Fail "/api/health status $($h.StatusCode)" }
 } catch { Write-Fail "/api/health error: $($_.Exception.Message)" }
 
 try {
-  $live = Invoke-WebRequest -Uri "$Url/live" -UseBasicParsing -TimeoutSec 20
+  $live = Invoke-WebRequest -Uri "$Url/live" -Headers $headers -UseBasicParsing -TimeoutSec 20 -ErrorAction Stop
   if ($live.StatusCode -eq 200) { Write-Ok "/live page OK" } else { Write-Fail "/live status $($live.StatusCode)" }
 } catch { Write-Fail "/live error: $($_.Exception.Message)" }
 
@@ -46,7 +53,7 @@ if ($SeedDemo) {
   foreach ($p in $payloads) {
     try {
       $json = ($p | ConvertTo-Json -Depth 4)
-      $res = Invoke-WebRequest -Uri "$Url/api/metrics/upsert" -Method Post -ContentType "application/json" -Body $json -UseBasicParsing
+      $res = Invoke-WebRequest -Uri "$Url/api/metrics/upsert" -Method Post -ContentType "application/json" -Body $json -Headers $headers -UseBasicParsing -ErrorAction Stop
       if ($res.StatusCode -eq 200) { Write-Ok "Seeded $($p.module)" } else { Write-Fail "Seed $($p.module) status $($res.StatusCode)" }
     } catch { Write-Fail "Seed $($p.module) error: $($_.Exception.Message)" }
   }
