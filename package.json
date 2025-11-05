@@ -6,5 +6,8 @@
     "build:api": "cd frontend && npm install && npm run build",
     "build:dashboard": "cd web-dashboard && npm install && npm run build",
     "build": "npm run build:api && npm run build:dashboard"
+  },
+  "dependencies": {
+    "stripe": "^14.0.0"
   }
 }
