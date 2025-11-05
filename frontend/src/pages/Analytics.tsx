@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { supabase } from '../lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 const Analytics: React.FC = () => {
   const [threshold, setThreshold] = useState<number>(0)

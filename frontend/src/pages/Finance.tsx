@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { supabase } from '../lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 const Finance: React.FC = () => {
   const [scale, setScale] = useState<'linear' | 'log'>('linear')

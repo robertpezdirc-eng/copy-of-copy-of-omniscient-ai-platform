@@ -1,12 +1,7 @@
-name: Deploy Gateway (Cloud Run)
+name: Deploy Gateway (Cloud Run - Manual Only)
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ master ]
-    paths:
-      - 'gateway/**'
-      - '.github/workflows/deploy-gateway.yml'
 
 jobs:
   build-and-deploy:

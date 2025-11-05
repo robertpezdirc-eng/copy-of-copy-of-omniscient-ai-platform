@@ -18,7 +18,6 @@ jobs:
           VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}
         with:
           script: |
-            const fetch = require('node-fetch');
             const sha = context.sha;
             const projectId = process.env.VERCEL_PROJECT_ID;
             const teamId = process.env.VERCEL_TEAM_ID;
