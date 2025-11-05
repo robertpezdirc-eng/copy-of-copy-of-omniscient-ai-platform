@@ -30,14 +30,14 @@ jobs:
           VITE_DEMO_MODE=false
           EOF
 
-      - name: Deploy to Vercel (frontend)
+      - name: Deploy to Vercel (root, uses vercel.json builds)
         id: vercel
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: frontend
+          working-directory: .
           prod: true
           vercel-args: "--prod"
 
