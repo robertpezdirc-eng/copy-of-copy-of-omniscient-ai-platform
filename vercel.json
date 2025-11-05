@@ -5,6 +5,10 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": { "outputDirectory": "dist", "buildCommand": "npm run build" }
+    },
+    {
+      "src": "api/*.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
