@@ -4,7 +4,11 @@
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "outputDirectory": "dist", "buildCommand": "npm run build" }
+      "config": { "distDir": "dist" }
+    },
+    {
+      "src": "api/**/*.ts",
+      "use": "@vercel/node"
     },
     {
       "src": "api/*.js",
@@ -12,13 +16,10 @@
     }
   ],
   "routes": [
+    { "src": "^/$", "status": 308, "headers": { "Location": "/crm" } },
+    { "src": "^/dashboard$", "status": 308, "headers": { "Location": "/crm" } },
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/(.*)", "dest": "frontend/dist/index.html" }
   ],
   
-  "env": {
-    "NODE_ENV": "production",
-    "VITE_DEMO_MODE": "false",
-    "VITE_API_URL": "/api"
-  }
 }

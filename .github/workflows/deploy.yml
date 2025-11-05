@@ -1,15 +1,6 @@
-name: Deploy to Google Cloud Run
+name: Deploy to Google Cloud Run (Manual Only)
 
 on:
-  push:
-    branches:
-      - main
-      - master
-      - develop
-  pull_request:
-    branches:
-      - main
-      - master
   workflow_dispatch:
 
 env:

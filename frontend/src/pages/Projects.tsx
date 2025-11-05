@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 const Projects: React.FC = () => {
   const [items, setItems] = useState<any[]>([])
