@@ -1,4 +1,13 @@
-import { kv as kvClient } from '@vercel/kv'
+let kvClient = null
+const ensureKV = async () => {
+  if (kvClient !== null) return
+  try {
+    const mod = await import('@vercel/kv')
+    kvClient = mod.kv
+  } catch {
+    kvClient = null
+  }
+}
 
 const mem = {}
 
@@ -33,6 +42,7 @@ const setKV = async (key, value) => {
 }
 
 export default async function handler(req, res) {
+  await ensureKV()
   const origin = req.headers.origin || '*'
   res.setHeader('Access-Control-Allow-Origin', origin)
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
