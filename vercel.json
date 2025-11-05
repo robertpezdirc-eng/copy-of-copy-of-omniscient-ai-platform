@@ -2,9 +2,13 @@
   "version": 2,
   "builds": [
     {
+      "src": "web-dashboard/**/*",
+      "use": "@vercel/static"
+    },
+    {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "outputDirectory": "dist", "buildCommand": "npm run build" }
+      "config": { "distDir": "frontend/dist" }
     },
     {
       "src": "api/*.js",
@@ -12,8 +16,16 @@
     }
   ],
   "routes": [
+    { "src": "^/app2$", "dest": "app2/index.html" },
+    { "src": "/app2/(.*)", "dest": "app2/$1" },
+    { "src": "^/app$", "dest": "frontend/dist/index.html" },
+    { "src": "/app/(.*)", "dest": "frontend/dist/$1" },
+    { "src": "^/preview$", "dest": "quick-preview/index.html" },
+    { "src": "/preview/(.*)", "dest": "quick-preview/$1" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "^/live$", "dest": "web-dashboard/live.html" },
+    { "src": "^/live.html$", "dest": "web-dashboard/live.html" },
+    { "src": "/(.*)", "dest": "web-dashboard/index.html" }
   ],
   
   "env": {

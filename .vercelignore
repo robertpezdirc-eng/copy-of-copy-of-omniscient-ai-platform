@@ -4,6 +4,6 @@ google-cloud-sdk/
 node_modules/
 frontend/node_modules/
 backend/node_modules/
-/dist/
+# /dist/ should not be ignored; Vercel needs frontend/dist for static build
 *.log
 **/.DS_Store

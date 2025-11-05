@@ -1,0 +1,10 @@
+{
+  "name": "omniscient-platform",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:api": "cd frontend && npm install && npm run build",
+    "build:dashboard": "cd web-dashboard && npm install && npm run build",
+    "build": "npm run build:api && npm run build:dashboard"
+  }
+}

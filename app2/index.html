@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>App2 · Ollama Demo</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 2rem; }
+      textarea { width: 100%; height: 120px; }
+      .output { white-space: pre-wrap; background: #f7f7f7; padding: 1rem; border-radius: 8px; }
+      button { padding: 0.5rem 1rem; }
+    </style>
+  </head>
+  <body>
+    <h1>App2 · Ollama Generate</h1>
+    <p>Pošlji prompt modelu Ollama (privzeto <code>llama3</code>).</p>
+    <label>Model: <input id="model" value="llama3" /></label>
+    <br /><br />
+    <textarea id="prompt">Napiši kratek pozdrav slovensko.</textarea>
+    <br />
+    <button id="send">Pošlji</button>
+    <h3>Odgovor</h3>
+    <div id="out" class="output">—</div>
+    <script>
+      const sendBtn = document.getElementById('send');
+      const out = document.getElementById('out');
+      sendBtn.addEventListener('click', async () => {
+        out.textContent = 'Pošiljam ...';
+        try {
+          const model = document.getElementById('model').value.trim();
+          const prompt = document.getElementById('prompt').value;
+          const res = await fetch('/api/ollama-generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model, prompt })
+          });
+          const json = await res.json();
+          if (!json.ok) throw new Error(json.error || 'Napaka');
+          out.textContent = json.result?.response || JSON.stringify(json.result, null, 2);
+        } catch (e) {
+          out.textContent = 'Napaka: ' + (e?.message || String(e));
+        }
+      });
+    </script>
+  </body>
+</html>
