@@ -66,3 +66,8 @@ temp/
 # Local tools and SDKs
 google-cloud-sdk/
 .vercel
+
+# --- Frontend exceptions ---
+# Allow tracking of Supabase client under frontend/src/lib
+!frontend/src/lib/
+!frontend/src/lib/**
