@@ -11,9 +11,7 @@
     { "src": "/api/health", "dest": "/api/health.js" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],
-  "functions": {
-    "api/**/*.js": { "runtime": "nodejs18.x" }
-  },
+  
   "env": {
     "NODE_ENV": "production",
     "VITE_DEMO_MODE": "false",
