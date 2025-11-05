@@ -1,14 +1,11 @@
 {
   "version": 2,
+  "name": "omni-enterprise-ultra-max",
   "builds": [
-    {
-      "src": "web-dashboard/**/*",
-      "use": "@vercel/static"
-    },
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "frontend/dist" }
+      "config": { "distDir": "dist" }
     },
     {
       "src": "api/**/*.ts",
@@ -20,21 +17,16 @@
     }
   ],
   "routes": [
-    { "src": "^/app2$", "dest": "app2/index.html" },
-    { "src": "/app2/(.*)", "dest": "app2/$1" },
-    { "src": "^/app$", "dest": "frontend/dist/index.html" },
-    { "src": "/app/(.*)", "dest": "frontend/dist/$1" },
-    { "src": "^/preview$", "dest": "quick-preview/index.html" },
-    { "src": "/preview/(.*)", "dest": "quick-preview/$1" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "^/live$", "dest": "web-dashboard/live.html" },
-    { "src": "^/live.html$", "dest": "web-dashboard/live.html" },
     { "src": "/(.*)", "dest": "frontend/dist/index.html" }
   ],
-  
   "env": {
-    "NODE_ENV": "production",
-    "VITE_DEMO_MODE": "false",
-    "VITE_API_URL": "/api"
+    "VITE_SUPABASE_URL": "@VITE_SUPABASE_URL",
+    "VITE_SUPABASE_ANON_KEY": "@VITE_SUPABASE_ANON_KEY",
+    "OPENAI_API_KEY": "@OPENAI_API_KEY",
+    "OPENAI_MODEL": "@OPENAI_MODEL",
+    "STRIPE_SECRET_KEY": "@STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET": "@STRIPE_WEBHOOK_SECRET",
+    "GATEWAY_URL": "@GATEWAY_URL"
   }
 }
