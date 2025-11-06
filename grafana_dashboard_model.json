@@ -1,0 +1,131 @@
+
+{
+  "__inputs": [],
+  "__requires": [],
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "panels": [],
+      "title": "API Zdravje (Real-time)",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 1 },
+      "id": 2,
+      "targets": [
+        { "expr": "histogram_quantile(0.99, sum(rate(api_latency_seconds_bucket[5m])) by (le))", "legendFormat": "p99 Latency" },
+        { "expr": "histogram_quantile(0.95, sum(rate(api_latency_seconds_bucket[5m])) by (le))", "legendFormat": "p95 Latency" },
+        { "expr": "avg(rate(api_latency_seconds_sum[5m])) / avg(rate(api_latency_seconds_count[5m]))", "legendFormat": "Avg Latency" }
+      ],
+      "title": "Odzivni čas (Latency)",
+      "type": "graph"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 1 },
+      "id": 3,
+      "targets": [
+        { "expr": "sum(rate(api_requests_total{status=~'5..'}[5m])) / sum(rate(api_requests_total[5m])) * 100", "legendFormat": "5xx Error Rate (%)" },
+        { "expr": "sum(rate(api_requests_total{status=~'4..'}[5m])) / sum(rate(api_requests_total[5m])) * 100", "legendFormat": "4xx Error Rate (%)" }
+      ],
+      "title": "Stopnja Napak (%)",
+      "type": "graph"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 1 },
+      "id": 4,
+      "targets": [
+        { "expr": "sum(rate(api_requests_total[1m])) * 60", "legendFormat": "RPM (Requests Per Minute)" }
+      ],
+      "title": "Promet (Throughput)",
+      "type": "graph"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 9 },
+      "id": 5,
+      "panels": [],
+      "title": "Vpliv na Poslovne KPI-je",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 10 },
+      "id": 6,
+      "targets": [
+        { "expr": "avg(rate(api_latency_seconds_sum{path='/api/payment'}[5m])) / avg(rate(api_latency_seconds_count{path='/api/payment'}[5m]))", "legendFormat": "Payment API Latency" },
+        { "expr": "sum(rate(business_revenue_total[5m]))", "legendFormat": "Revenue (€)", "yaxis": 2 }
+      ],
+      "title": "Odzivni čas plačilnega API-ja vs. Prihodki",
+      "type": "graph",
+      "yaxes": [ { "format": "s" }, { "format": "currencyEUR" } ]
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 10 },
+      "id": 7,
+      "targets": [
+        { "expr": "sum(rate(api_requests_total{path='/api/register', status=~'5..'}[5m]))", "legendFormat": "Registration API Errors" },
+        { "expr": "sum(rate(user_registration_count[5m]))", "legendFormat": "New Registrations", "yaxis": 2 }
+      ],
+      "title": "Napake na registracijskem API-ju vs. Nove Registracije",
+      "type": "graph"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 18 },
+      "id": 8,
+      "panels": [],
+      "title": "Poraba Resursov",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 19 },
+      "id": 9,
+      "targets": [
+        { "expr": "avg(rate(process_cpu_seconds_total{job='api-service'}[5m])) * 100", "legendFormat": "CPU Usage (%)" }
+      ],
+      "title": "CPU Uporaba",
+      "type": "graph"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 19 },
+      "id": 10,
+      "targets": [
+        { "expr": "sum(process_resident_memory_bytes{job='api-service'})", "legendFormat": "Memory Usage" }
+      ],
+      "title": "Poraba Pomnilnika",
+      "type": "graph",
+      "yaxes": [ { "format": "bytes" } ]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": ["api", "kpi", "business-impact"],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "API Zdravje & KPI Vpliv",
+  "version": 1
+}

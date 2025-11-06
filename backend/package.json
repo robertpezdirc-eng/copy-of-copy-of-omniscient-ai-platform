@@ -1,9 +1,9 @@
 {
-  "name": "omni-backend",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
+  "main": "index.js",
   "dependencies": {
-    "@vercel/kv": "^1.0.1"
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": "18"
   }
 }
