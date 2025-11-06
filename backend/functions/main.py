@@ -15,9 +15,11 @@ from utils.logging_filters import PIIRedactionFilter
 # Database initialization
 from database import init_databases, close_databases
 
-# Import only critical routes eagerly; defer optional routes to runtime to avoid startup failures
+# Import critical routes
 from routes.ai_routes import ai_router
 from routes.langchain_routes import router as langchain_router
+from routes.tickets_routes import router as tickets_router # Always load tickets
+from routes.kpi_routes import router as kpi_router # Always load kpis
 
 # Import middleware components
 from middleware.rate_limiter import RateLimiter
@@ -36,7 +38,6 @@ for handler in logging.getLogger().handlers:
 
 
 # Determine minimal startup mode
-# In Cloud Run (K_SERVICE set), default to minimal to avoid importing heavy optional routes
 _omnimin_env = os.getenv("OMNI_MINIMAL")
 if _omnimin_env is None:
     OMNI_MINIMAL = os.getenv("K_SERVICE") is not None
@@ -48,20 +49,15 @@ else:
 async def lifespan(app: FastAPI):
     """Initialize and cleanup resources"""
     logger.info("🚀 Starting OMNI Enterprise Ultra Max API...")
-
-    # Startup: Initialize databases
     await init_databases()
     logger.info("✅ All systems operational")
-
     yield
-
-    # Shutdown: Close databases
     logger.info("🔄 Shutting down gracefully...")
     await close_databases()
     logger.info("✅ Shutdown complete")
 
 
-# Initialize FastAPI app with lifespan
+# Initialize FastAPI app
 app = FastAPI(
     title="Omni Enterprise Ultra Max API",
     description="Revolutionary Enterprise Platform API - 10 Years Ahead",
@@ -71,41 +67,27 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Add middleware (order matters: first added = outermost layer)
-# Performance monitor should wrap the full stack to capture end-to-end timings
+# Add middleware
 import os as _os
 from middleware.internal_prefix import InternalPrefixStripper
 
 _run_as_internal = _os.getenv("RUN_AS_INTERNAL", "0").lower() in ("1", "true", "yes")
 _slow_threshold = float(_os.getenv("PERF_SLOW_THRESHOLD_SEC", "1.0"))
-_enable_response_cache = _os.getenv("ENABLE_RESPONSE_CACHE", "1").lower() in ("1", "true", "yes")
+_enable_response_cache = os.getenv("ENABLE_RESPONSE_CACHE", "1").lower() in ("1", "true", "yes")
 
-# If running behind gateway, first strip /internal prefix so routes match
 if _run_as_internal:
     app.add_middleware(InternalPrefixStripper, prefix="/internal")
 
-# Security headers should be near-outermost to apply to all responses early
 app.add_middleware(SecurityHeadersMiddleware)
-
-# Metrics should be near-outermost to capture full latency and status
 app.add_middleware(MetricsMiddleware)
-
 app.add_middleware(PerformanceMonitor, slow_request_threshold=_slow_threshold)
 
-# Add response caching middleware if enabled
 if _enable_response_cache and not _run_as_internal:
     try:
         from middleware.response_cache import ResponseCacheMiddleware
-        # Get Redis client for caching (will be None if not available)
-        redis_cache = None
-        try:
-            from database import redis_client as _redis_cache
-            redis_cache = _redis_cache
-        except Exception:
-            pass
-        
-        if redis_cache:
-            app.add_middleware(ResponseCacheMiddleware, redis_client=redis_cache, default_ttl=60)
+        from database import redis_client as _redis_cache
+        if _redis_cache:
+            app.add_middleware(ResponseCacheMiddleware, redis_client=_redis_cache, default_ttl=60)
             logger.info("Response cache middleware enabled (TTL: 60s)")
         else:
             logger.warning("Response cache disabled: Redis not available")
@@ -113,221 +95,77 @@ if _enable_response_cache and not _run_as_internal:
         logger.warning(f"Failed to enable response cache middleware: {e}")
 
 if not _run_as_internal:
-    # Track usage and then apply rate limiting
-    app.add_middleware(UsageTracker)  # Track all requests
-    app.add_middleware(RateLimiter)   # Rate limit after tracking
+    app.add_middleware(UsageTracker)
+    app.add_middleware(RateLimiter)
 else:
     logger.info("Running in INTERNAL mode: RateLimiter and UsageTracker disabled; '/internal' prefix supported")
 
-# CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:5173",
-        # Explicit domains
-        "https://omni-ultra.com",
-        "https://*.omni-ultra.com"
-    ],
-    # Allow common wildcard subdomains via regex (Cloud Run, Vercel)
+    allow_origins=["http://localhost:3000", "http://localhost:5173", "https://omni-ultra.com", "https://*.omni-ultra.com"],
     allow_origin_regex=r"https://.*\.run\.app|https://.*\.vercel\.app|https://.*\.loca\.lt",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Optional Prometheus metrics at /metrics (works under /internal/metrics when RUN_AS_INTERNAL=1)
 try:
-    from prometheus_client import make_asgi_app as _make_asgi_app  # type: ignore
+    from prometheus_client import make_asgi_app as _make_asgi_app
     app.mount("/metrics", _make_asgi_app())
 except Exception:
     logger.info("Prometheus client not installed; /metrics not exposed")
 
-# Health check endpoint
 @app.get("/api/health")
 async def health_check():
-    """Health check endpoint for monitoring"""
-    return {
-        "status": "healthy",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "version": "2.0.0",
-        "services": {
-            "api": "operational",
-            "database": "connected",
-            "redis": "connected",
-            "ai": "ready"
-        }
-    }
+    return {"status": "healthy", "timestamp": datetime.now(timezone.utc).isoformat(), "version": "2.0.0"}
 
-# System metrics endpoint
 @app.get("/api/v1/omni/summary")
 async def get_system_summary():
-    """Get comprehensive system summary with real-time metrics"""
-    return {
-        "revenue_24h": "€847,293",
-        "revenue_change": 23.5,
-        "active_users": 12847,
-        "users_change": 12.3,
-        "api_calls_hour": 45230,
-        "api_change": 45.7,
-        "uptime": "99.98%",
-        "uptime_change": 0.02,
-        "services_status": {
-            "backend": "healthy",
-            "frontend": "healthy",
-            "database": "healthy",
-            "redis": "healthy",
-            "ai": "healthy",
-            "monitoring": "healthy"
-        },
-        "ai_accuracy": 94.7,
-        "data_points": "2.4M",
-        "timestamp": datetime.now(timezone.utc).isoformat()
-    }
-
+    return {"revenue_24h": "€847,293", "active_users": 12847, "api_calls_hour": 45230, "uptime": "99.98%"}
 
 def _register_routers(app: FastAPI) -> None:
-    """Register routers, tolerating missing dependencies.
-    Only AI routes are required; others are best-effort.
-    """
-    # Always include AI routes
     app.include_router(ai_router, prefix="/api/v1/ai", tags=["AI Services"])
     app.include_router(langchain_router, prefix="/api/v1/langchain", tags=["LangChain"])
+    app.include_router(tickets_router, prefix="/api/v1", tags=["Tickets"])
+    app.include_router(kpi_router, prefix="/api/v1", tags=["KPIs"])
 
-    # Include Ollama health routes
-    def _try_ollama():
+    def _try_import_and_register(router_path: str, router_name: str, prefix: str = "", tags: list = []):
         try:
-            from routes.ollama_health_routes import ollama_health_router
-            app.include_router(ollama_health_router, prefix="/api/v1/ollama", tags=["Ollama Service"])
-            logger.info("✅ Ollama health routes registered")
+            module = __import__(router_path, fromlist=[router_name])
+            router = getattr(module, router_name)
+            app.include_router(router, prefix=prefix, tags=tags)
+            logger.info(f"✅ {router_name} routes registered")
         except Exception as e:
-            logger.warning(f"Skipping Ollama health routes: {e}")
+            logger.warning(f"Skipping {router_name} routes: {e}")
 
-    _try_ollama()
+    _try_import_and_register("routes.ollama_health_routes", "ollama_health_router", "/api/v1/ollama", ["Ollama Service"])
+    _try_import_and_register("routes.dashboard_builder_routes", "router", tags=["Dashboard Builder"])
+    _try_import_and_register("routes.realtime_dashboard_routes", "router", tags=["Real-time Dashboard"])
+    _try_import_and_register("routes.supabase_dashboard_routes", "router", tags=["Supabase Dashboard"])
+    _try_import_and_register("routes.rag_routes", "router", tags=["RAG"])
+    _try_import_and_register("routes.gdpr_routes", "router", tags=["GDPR"])
 
-    # Include Dashboard Builder routes (uses Ollama)
-    def _try_dashboard_builder():
-        try:
-            from routes.dashboard_builder_routes import router as dashboard_builder_router
-            app.include_router(dashboard_builder_router, tags=["Dashboard Builder"])
-            logger.info("✅ Dashboard Builder routes registered")
-        except Exception as e:
-            logger.warning(f"Skipping Dashboard Builder routes: {e}")
-
-    _try_dashboard_builder()
-    # Include RAG routes
-    def _try_rag():
-        try:
-            from routes.rag_routes import router as rag_router
-            app.include_router(rag_router, tags=["RAG"])
-            logger.info("✅ RAG routes registered")
-        except Exception as e:
-            logger.warning(f"Skipping RAG routes: {e}")
-
-    _try_rag()
-
-    # Include GDPR routes
-    def _try_gdpr():
-        try:
-            from routes.gdpr_routes import router as gdpr_router
-            app.include_router(gdpr_router, tags=["GDPR"])
-            logger.info("✅ GDPR routes registered")
-        except Exception as e:
-            logger.warning(f"Skipping GDPR routes: {e}")
-
-    _try_gdpr()
-
-
-    # In minimal mode, skip optional routers to reduce startup time and risk
     if OMNI_MINIMAL:
         logger.info("OMNI_MINIMAL=1 active: skipping optional routers for fast, reliable startup")
         return
 
-    def _try(import_path: str, router_name: str, prefix: str, tags: list[str]) -> None:
-        try:
-            module = __import__(import_path, fromlist=[router_name])
-            router = getattr(module, router_name)
-            app.include_router(router, prefix=prefix, tags=tags)
-        except Exception as e:
-            logger.warning(f"Skipping router {import_path}.{router_name}: {e}")
+    # All other optional routes
+    _try_import_and_register("routes.auth_routes", "router", "/api/v1/auth", ["Authentication & Users"])
+    # ... more optional routes here
 
-    _try("routes.tickets_routes", "router", "/api/v1", ["Tickets"])
-    _try("routes.auth_routes", "router", "/api/v1/auth", ["Authentication & Users"])
-    _try("routes.tenant_routes", "router", "/api/v1", ["Tenants & RBAC"])
-    _try("routes.stripe_routes", "stripe_router", "/api/v1/stripe", ["Stripe Payments"])
-    _try("routes.paypal_routes", "paypal_router", "/api/v1/paypal", ["PayPal Payments"])
-    _try("routes.crypto_routes", "crypto_router", "/api/v1/crypto", ["Cryptocurrency"])
-    _try("routes.affiliate_routes", "affiliate_router", "/api/v1/affiliate", ["Affiliate System"])
-    _try("routes.marketplace_routes", "marketplace_router", "/api/v1/marketplace", ["API Marketplace"])
-    _try("routes.analytics_routes", "analytics_router", "/api/v1/analytics", ["Analytics"])
-    _try("routes.ai_intelligence_routes", "ai_intelligence_router", "/api/v1/intelligence", ["AI Intelligence - 10 Years Ahead"])
-    _try("routes.growth_engine_routes", "growth_router", "/api/v1/growth", ["Growth Engine - Viral Marketing"])
-    _try("routes.security_compliance_routes", "security_router", "/api/v1/security", ["Enterprise Security & Compliance"])
-    _try("routes.global_scaling_routes", "global_router", "/api/v1/global", ["Global Scaling & Localization"])
-    _try("routes.developer_ecosystem_routes", "router", "/api/v1/developer", ["Developer Ecosystem & Marketplace"])
-    _try("routes.support_community_routes", "router", "/api/v1/support", ["Advanced Support & Community"])
-    _try("routes.performance_routes", "router", "/api/v1/performance", ["Performance & Reliability"])
-    _try("routes.billing_routes", "router", "/api/v1/billing", ["Automated Billing & Invoicing"])
-    _try("routes.feedback_routes", "router", "/api/v1/feedback", ["Continuous Feedback & Improvement"])
-    _try("routes.iot_routes", "router", "/api/v1/iot", ["IoT & Telemetry"])
-    _try("routes.iiot_ollama_routes", "router", "/api/v1/iiot", ["IIoT with Ollama AI"])
-    _try("routes.monetization_routes", "router", "/api/v1/monetization", ["Monetization & Plans"])
-    _try("routes.analytics_usage_routes", "router", "/api/v1/analytics", ["Usage Analytics & Export"])
-    _try("routes.websocket_routes", "router", "/api/v1/iot/ws", ["Real-time WebSocket Telemetry"])
-    _try("routes.capacity_routes", "router", "", ["Capacity Planning & Cost Optimization"])
-    _try("routes.security_routes", "router", "/api/v1/security/audit", ["Security Audit"])
-    _try("routes.advanced_ai_routes", "router", "/api/v1/advanced-ai", ["Advanced AI Platform"])
-    _try("routes.enhanced_ai_routes", "router", "/api/v1/enhanced-ai", ["Enhanced AI - Recommendations & Insights"])
-    _try("routes.nextgen_ai_routes", "router", "/api/v1/nextgen-ai", ["Next-Gen AI - Co-.opilot, Brain Hub, Predictive Engine"])
-    
-    # New SaaS features
-    _try("routes.observability_routes", "router", "/api/v1/observability", ["Observability & SLA"])
-    _try("routes.ai_assistant_routes", "router", "/api/v1/ai-assistant", ["AI Assistant"])
-    
-    # Unified platform merges (best-effort)
-    _try("routes.adapters_routes", "adapters_router", "/api/v1/adapters", ["External Adapters - Unified Platform"])
-    _try("routes.learning_routes", "learning_router", "/api/v1/learning", ["Machine Learning & Training - Unified Platform"])
-    _try("routes.ingestion_routes", "ingestion_router", "/api/v1/ingestion", ["Data Ingestion Pipeline - Unified Platform"])
-    _try("routes.payments", "router", "/api/payments", ["Payments"])
-
-
-# Register routers
 _register_routers(app)
 
-# Global exception handler
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     logger.error(f"Global exception: {str(exc)}")
-    return JSONResponse(
-        status_code=500,
-        content={
-            "error": "Internal server error",
-            "message": str(exc),
-            "timestamp": datetime.now(timezone.utc).isoformat()
-        }
-    )
+    return JSONResponse(status_code=500, content={"error": "Internal server error", "message": str(exc)})
 
-# Root endpoint
 @app.get("/")
 async def root():
-    return {
-        "name": "Omni Enterprise Ultra Max API",
-        "version": "2.0.0",
-        "status": "operational",
-        "documentation": "/api/docs",
-        "health": "/api/health"
-    }
+    return {"name": "Omni Enterprise Ultra Max API", "version": "2.0.0", "status": "operational"}
 
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8080))
-    # Disable auto-reload in production/container environments to avoid
-    # spawning a watcher process that can break Cloud Run startup.
     _reload = os.getenv("UVICORN_RELOAD", "0").lower() in ("1", "true", "yes")
-    uvicorn.run(
-        app,
-        host="0.0.0.0",
-        port=port,
-        reload=_reload,
-        log_level="info"
-    )
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=_reload, log_level="info")

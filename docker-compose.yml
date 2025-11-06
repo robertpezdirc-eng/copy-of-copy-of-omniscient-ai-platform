@@ -1,5 +1,15 @@
+celery-worker-1  | [2023-10-27 10:00:00,000: INFO/MainProcess] Task tasks.send_email_task[<task_id>] received
+celery-worker-1  | [2023-10-27 10:00:00,000: INFO/ForkPoolWorker-1] Sending email to: test@example.com with subject: 'Celery Test'
+celery-worker-1  | [2023-10-27 10:00:05,000: INFO/ForkPoolWorker-1] Email sent successfully to test@example.com.
+celery-worker-1  | [2023-10-27 10:00:05,000: INFO/ForkPoolWorker-1] Task tasks.send_email_task[<task_id>] succeeded in 5.000s: {'status': 'success', 'recipient': 'test@example.com', 'subject': 'Celery Test'}
 version: "3.9"
+
 services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
   backend:
     build:
       context: .
@@ -7,8 +17,27 @@ services:
     environment:
       - RUN_AS_INTERNAL=1
       - PORT=8080
+      - REDIS_URL=redis://redis:6379/0
+      # Add other necessary backend environment variables here
+      # e.g., DATABASE_URL
     ports:
       - "8080:8080"
+    depends_on:
+      - redis
+
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    command: celery -A backend.functions.celery_app.celery_app worker -l info
+    environment:
+      - RUN_AS_INTERNAL=1
+      - REDIS_URL=redis://redis:6379/0
+      # Add other necessary backend environment variables here
+      # e.g., DATABASE_URL
+    depends_on:
+      - backend
+      - redis
 
   gateway:
     build:
@@ -17,7 +46,9 @@ services:
     environment:
       - UPSTREAM_URL=http://backend:8080
       - API_KEYS=dev-key-123
+      - REDIS_URL=redis://redis:6379/0
     ports:
       - "8081:8080"
     depends_on:
       - backend
+      - redis

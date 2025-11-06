@@ -28,6 +28,8 @@ import Notifications from './pages/Notifications'
 import Settings from './pages/Settings'
 import Assistant from './pages/Assistant'
 import LiveNow from './pages/LiveNow'
+import RealtimeDashboard from './pages/RealtimeDashboard'
+import SupabaseDashboard from './pages/SupabaseDashboard'
 
 function App() {
   const [healthStatus, setHealthStatus] = useState<'ok' | 'fail' | 'loading'>('loading')
@@ -151,6 +153,8 @@ function App() {
           <Route element={<PrivateRoute><Layout /></PrivateRoute>}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/bi-dashboard" element={<BIDashboard />} />
+            <Route path="/realtime-dashboard" element={<RealtimeDashboard />} />
+            <Route path="/supabase-dashboard" element={<SupabaseDashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/affiliate" element={<AffiliateDashboard />} />
             <Route path="/admin" element={<AdminPanel />} />

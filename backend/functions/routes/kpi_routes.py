@@ -1,24 +1,16 @@
+"""
+KPI Routes - Provides endpoints for accessing Key Performance Indicators.
+"""
+from fastapi import APIRouter, Depends
+from typing import Any, Dict
 
-import json
-import os
-from fastapi import APIRouter, HTTPException
-from typing import Any
+from backend.services.kpi_service import get_kpi_service, KPIService
 
 router = APIRouter()
 
-KPI_FILE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "business_kpis.json")
-
-@router.get("/kpis", response_model=dict[str, Any])
-async def get_kpis():
+@router.get("/kpis", response_model=Dict[str, Any])
+async def get_kpis(kpi_service: KPIService = Depends(get_kpi_service)):
     """
-    Retrieves the latest business KPIs.
+    Retrieves the latest business KPIs, generated dynamically and powered by AI insights.
     """
-    if not os.path.exists(KPI_FILE_PATH):
-        raise HTTPException(status_code=404, detail="KPI data not found. Please run the ingestion script.")
-    
-    try:
-        with open(KPI_FILE_PATH, "r", encoding="utf-8") as f:
-            kpis = json.load(f)
-        return kpis
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error reading KPI data: {str(e)}")
+    return await kpi_service.get_kpis()
