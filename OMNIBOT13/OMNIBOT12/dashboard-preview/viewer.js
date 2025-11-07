@@ -98,7 +98,6 @@
       setStatus(`Naloženih ${manifest.dashboards.length} plošč.`);
     } catch (err) {
       console.error("Primarni manifest ni uspel:", err);
-      // Fallback: poskusi 'main' vejo, če je prvotni URL iz funkcionalne veje
       try {
         const fallback = "https://raw.githubusercontent.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform/main/dashboards/manifest.json";
         setStatus("Primarni URL ni uspel, poskušam fallback na main...");
@@ -124,13 +123,15 @@
   });
 
   // Privzeti manifest URL (GitHub Raw) in samodejno nalaganje
+  // Opomba: če je repozitorij privaten, nastavite dostop ali uporabite lokalni strežnik.
   try {
     const primary = "https://raw.githubusercontent.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform/feat/20-dashboards/dashboards/manifest.json";
     manifestInput.value = primary;
+    // Samodejno naloži manifest, če je polje izpolnjeno
     if (manifestInput.value) {
       loadManifest(manifestInput.value);
     }
   } catch (e) {
-    // tiho nadaljuj
+    // Tiho nadaljuj, če pride do napake pri inicializaciji
   }
 })();

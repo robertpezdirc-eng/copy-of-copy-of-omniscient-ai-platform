@@ -7,9 +7,9 @@ Manifest‑driven oglednik nadzornih plošč, ki iz `manifest.json` nariše inte
 - Javno: stran v mapi `docs/` je pripravljena za GitHub Pages (Deploy from a branch → branch: `omni-clean` ali `main`, folder: `/docs`).
 
 ## GitHub Pages demo
-- Po vklopu Pages bo demo dostopen na: `https://<username>.github.io/copy-of-copy-of-omniscient-ai-platform/`
-- Privzeti manifest se samodejno naloži: `dashboards/manifest.json` iz GitHub Raw URL.
-- Dodajte UTM: `?utm_source=thereisanaforthat&utm_medium=directory&utm_campaign=listing` za spremljanje prometa.
+- Demo URL: `https://robertpezdirc-eng.github.io/copy-of-copy-of-omniscient-ai-platform/`
+- Privzeti manifest se samodejno naloži iz GitHub Raw URL.
+- UTM parametri: dodaj `?utm_source=thereisanaforthat&utm_medium=directory&utm_campaign=listing` na demo URL.
 
 ## Uporaba
 - V polje “Manifest JSON URL (Raw)” prilepite vaš `dashboards/manifest.json` (public Raw URL) in kliknite “Naloži manifest”.
