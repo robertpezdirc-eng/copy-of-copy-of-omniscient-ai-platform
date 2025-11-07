@@ -1,11 +1,17 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { api } from '@/lib/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+interface GrowthData {
+  date: string;
+  count: number;
+}
+
 const UserGrowthChart = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<GrowthData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -82,7 +88,7 @@ const Dashboard = () => {
   }, []);
 
   // Handlers for Quick Actions
-  const handleNavigate = (path) => () => navigate(path);
+  const handleNavigate = (path: string) => () => navigate(path);
 
   return (
     <div style={styles.container}>

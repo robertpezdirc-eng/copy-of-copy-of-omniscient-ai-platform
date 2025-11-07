@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+
+import { useState, useEffect } from 'react';
 
 const SupabaseDashboard = () => {
-    const [data, setData] = useState(null);
-    const [error, setError] = useState(null);
+    const [data, setData] = useState<any[] | null>(null);
+    const [error, setError] = useState<string | null>(null);
     const [tableName, setTableName] = useState('example_table'); // <-- IMPORTANT: Change this to your table name
 
     useEffect(() => {
@@ -18,7 +19,7 @@ const SupabaseDashboard = () => {
                 const result = await response.json();
                 setData(result);
                 setError(null);
-            } catch (e) {
+            } catch (e: any) {
                 setError(e.message);
                 setData(null);
             }
@@ -53,7 +54,7 @@ const SupabaseDashboard = () => {
                         <table className="min-w-full divide-y divide-gray-700">
                             <thead className="bg-gray-700">
                                 <tr>
-                                    {Object.keys(data[0] || {}).map((key) => (
+                                    {data.length > 0 && Object.keys(data[0]).map((key) => (
                                         <th key={key} scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             {key}
                                         </th>
@@ -63,7 +64,7 @@ const SupabaseDashboard = () => {
                             <tbody className="bg-gray-800 divide-y divide-gray-700">
                                 {data.map((row, rowIndex) => (
                                     <tr key={rowIndex}>
-                                        {Object.values(row).map((value, colIndex) => (
+                                        {Object.values(row).map((value: any, colIndex) => (
                                             <td key={colIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                                                 {typeof value === 'object' ? JSON.stringify(value) : String(value)}
                                             </td>

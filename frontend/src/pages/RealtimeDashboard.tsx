@@ -1,8 +1,20 @@
-import React, { useState, useEffect } from 'react';
+
+import { useState, useEffect } from 'react';
+
+interface Metric {
+    __name__: string;
+    job: string;
+    instance: string;
+    value: number;
+}
+
+interface RealtimeMetrics {
+    requests_total: Metric[];
+}
 
 const RealtimeDashboard = () => {
-    const [metrics, setMetrics] = useState(null);
-    const [error, setError] = useState(null);
+    const [metrics, setMetrics] = useState<RealtimeMetrics | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchMetrics = async () => {
@@ -13,7 +25,7 @@ const RealtimeDashboard = () => {
                 }
                 const data = await response.json();
                 setMetrics(data);
-            } catch (e) {
+            } catch (e: any) {
                 setError(e.message);
             }
         };
