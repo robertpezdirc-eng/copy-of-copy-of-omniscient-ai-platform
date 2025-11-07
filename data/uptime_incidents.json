@@ -1,0 +1,7 @@
+[
+  { "incident_id": "INC-001", "service": "gateway", "severity": "major", "duration_min": 35, "date": "2025-10-03" },
+  { "incident_id": "INC-002", "service": "api", "severity": "minor", "duration_min": 12, "date": "2025-10-04" },
+  { "incident_id": "INC-003", "service": "frontend", "severity": "minor", "duration_min": 8, "date": "2025-10-05" },
+  { "incident_id": "INC-004", "service": "db", "severity": "major", "duration_min": 42, "date": "2025-10-06" },
+  { "incident_id": "INC-005", "service": "auth", "severity": "minor", "duration_min": 5, "date": "2025-10-07" }
+]

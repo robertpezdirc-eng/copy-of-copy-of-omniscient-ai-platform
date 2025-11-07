@@ -1,0 +1,7 @@
+[
+  { "date": "2025-10-01", "visits": 1200, "unique": 980, "bounce": 0.42 },
+  { "date": "2025-10-02", "visits": 1350, "unique": 1050, "bounce": 0.40 },
+  { "date": "2025-10-03", "visits": 1100, "unique": 900, "bounce": 0.45 },
+  { "date": "2025-10-04", "visits": 1500, "unique": 1200, "bounce": 0.38 },
+  { "date": "2025-10-05", "visits": 1420, "unique": 1150, "bounce": 0.39 }
+]

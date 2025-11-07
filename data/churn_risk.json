@@ -1,0 +1,7 @@
+[
+  { "customer": "Stranka A", "usage_days": 22, "tickets": 3, "risk": 0.12 },
+  { "customer": "Stranka B", "usage_days": 11, "tickets": 5, "risk": 0.35 },
+  { "customer": "Stranka C", "usage_days": 5, "tickets": 2, "risk": 0.55 },
+  { "customer": "Stranka D", "usage_days": 29, "tickets": 1, "risk": 0.08 },
+  { "customer": "Stranka E", "usage_days": 16, "tickets": 2, "risk": 0.20 }
+]

@@ -1,0 +1,7 @@
+[
+  { "invoice_id": "INV-1001", "customer": "Stranka A", "amount": 250.75, "due": "2025-10-10", "status": "paid" },
+  { "invoice_id": "INV-1002", "customer": "Stranka B", "amount": 980.00, "due": "2025-10-12", "status": "overdue" },
+  { "invoice_id": "INV-1003", "customer": "Stranka C", "amount": 1750.20, "due": "2025-10-15", "status": "pending" },
+  { "invoice_id": "INV-1004", "customer": "Stranka D", "amount": 120.00, "due": "2025-10-18", "status": "paid" },
+  { "invoice_id": "INV-1005", "customer": "Stranka E", "amount": 450.00, "due": "2025-10-20", "status": "pending" }
+]

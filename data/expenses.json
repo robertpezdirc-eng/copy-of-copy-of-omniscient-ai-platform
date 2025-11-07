@@ -1,0 +1,7 @@
+[
+  { "category": "Infra", "amount": 1200.00, "month": "2025-10" },
+  { "category": "Marketing", "amount": 2200.00, "month": "2025-10" },
+  { "category": "Salaries", "amount": 9800.00, "month": "2025-10" },
+  { "category": "Office", "amount": 450.50, "month": "2025-10" },
+  { "category": "Travel", "amount": 300.00, "month": "2025-10" }
+]

@@ -1,0 +1,7 @@
+[
+  { "payment_id": "PAY-7001", "method": "card", "amount": 250.75, "date": "2025-10-07", "status": "success" },
+  { "payment_id": "PAY-7002", "method": "bank", "amount": 980.00, "date": "2025-10-09", "status": "failed" },
+  { "payment_id": "PAY-7003", "method": "card", "amount": 1750.20, "date": "2025-10-10", "status": "success" },
+  { "payment_id": "PAY-7004", "method": "paypal", "amount": 120.00, "date": "2025-10-11", "status": "success" },
+  { "payment_id": "PAY-7005", "method": "card", "amount": 450.00, "date": "2025-10-12", "status": "pending" }
+]

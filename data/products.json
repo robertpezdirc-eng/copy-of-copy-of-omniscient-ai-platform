@@ -1,0 +1,7 @@
+[
+  { "sku": "X-100", "name": "Izdelek X", "category": "Elektronika", "price": 49.9 },
+  { "sku": "Y-200", "name": "Izdelek Y", "category": "Elektronika", "price": 199.0 },
+  { "sku": "Z-300", "name": "Izdelek Z", "category": "Dodatki", "price": 99.5 },
+  { "sku": "A-400", "name": "Izdelek A", "category": "Dodatki", "price": 25.0 },
+  { "sku": "B-500", "name": "Izdelek B", "category": "Elektronika", "price": 299.0 }
+]

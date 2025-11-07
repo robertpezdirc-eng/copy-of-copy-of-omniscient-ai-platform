@@ -1,0 +1,7 @@
+[
+  { "ticket_id": 501, "priority": "high", "status": "open", "created": "2025-10-03", "product": "Izdelek X" },
+  { "ticket_id": 502, "priority": "low", "status": "closed", "created": "2025-10-03", "product": "Izdelek Y" },
+  { "ticket_id": 503, "priority": "medium", "status": "open", "created": "2025-10-04", "product": "Izdelek Z" },
+  { "ticket_id": 504, "priority": "high", "status": "in_progress", "created": "2025-10-04", "product": "Izdelek X" },
+  { "ticket_id": 505, "priority": "medium", "status": "closed", "created": "2025-10-05", "product": "Izdelek Y" }
+]

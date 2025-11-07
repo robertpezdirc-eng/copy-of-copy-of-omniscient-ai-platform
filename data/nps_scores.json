@@ -1,0 +1,7 @@
+[
+  { "date": "2025-09", "promoters": 55, "passives": 25, "detractors": 20 },
+  { "date": "2025-10", "promoters": 60, "passives": 22, "detractors": 18 },
+  { "date": "2025-11", "promoters": 58, "passives": 24, "detractors": 18 },
+  { "date": "2025-12", "promoters": 62, "passives": 20, "detractors": 18 },
+  { "date": "2026-01", "promoters": 63, "passives": 21, "detractors": 16 }
+]

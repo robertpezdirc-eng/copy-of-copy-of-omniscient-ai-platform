@@ -1,0 +1,7 @@
+[
+  { "bug_id": 9001, "severity": "high", "status": "open", "component": "checkout", "created": "2025-10-03" },
+  { "bug_id": 9002, "severity": "medium", "status": "closed", "component": "dashboard", "created": "2025-10-03" },
+  { "bug_id": 9003, "severity": "low", "status": "open", "component": "auth", "created": "2025-10-04" },
+  { "bug_id": 9004, "severity": "high", "status": "in_progress", "component": "api", "created": "2025-10-04" },
+  { "bug_id": 9005, "severity": "medium", "status": "closed", "component": "reports", "created": "2025-10-05" }
+]

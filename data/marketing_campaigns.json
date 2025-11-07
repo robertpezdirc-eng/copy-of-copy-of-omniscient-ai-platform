@@ -1,0 +1,7 @@
+[
+  { "campaign": "Q4 Launch", "channel": "Email", "spend": 1500, "clicks": 420, "signups": 80 },
+  { "campaign": "Autumn Promo", "channel": "Social", "spend": 2200, "clicks": 780, "signups": 110 },
+  { "campaign": "Remarketing", "channel": "Ads", "spend": 1800, "clicks": 500, "signups": 75 },
+  { "campaign": "Partners", "channel": "Affiliate", "spend": 900, "clicks": 210, "signups": 45 },
+  { "campaign": "Content", "channel": "Organic", "spend": 0, "clicks": 600, "signups": 95 }
+]

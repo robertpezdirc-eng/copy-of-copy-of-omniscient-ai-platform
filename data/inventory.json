@@ -1,0 +1,7 @@
+[
+  { "sku": "X-100", "warehouse": "LJ", "stock": 120 },
+  { "sku": "Y-200", "warehouse": "MB", "stock": 35 },
+  { "sku": "Z-300", "warehouse": "CE", "stock": 78 },
+  { "sku": "A-400", "warehouse": "LJ", "stock": 210 },
+  { "sku": "B-500", "warehouse": "MB", "stock": 12 }
+]

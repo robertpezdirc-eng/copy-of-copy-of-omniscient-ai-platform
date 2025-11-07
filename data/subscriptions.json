@@ -1,0 +1,7 @@
+[
+  { "plan": "Basic", "customers": 120, "mrr": 2400.0 },
+  { "plan": "Pro", "customers": 80, "mrr": 5600.0 },
+  { "plan": "Enterprise", "customers": 12, "mrr": 7200.0 },
+  { "plan": "Trial", "customers": 300, "mrr": 0.0 },
+  { "plan": "Legacy", "customers": 25, "mrr": 1250.0 }
+]

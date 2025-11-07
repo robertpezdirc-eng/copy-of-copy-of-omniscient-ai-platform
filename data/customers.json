@@ -1,0 +1,7 @@
+[
+  { "id": 1, "name": "Stranka A", "segment": "Retail", "country": "SI", "joined": "2024-03-11" },
+  { "id": 2, "name": "Stranka B", "segment": "SaaS", "country": "DE", "joined": "2024-05-22" },
+  { "id": 3, "name": "Stranka C", "segment": "Retail", "country": "AT", "joined": "2024-08-02" },
+  { "id": 4, "name": "Stranka D", "segment": "Enterprise", "country": "SI", "joined": "2025-01-19" },
+  { "id": 5, "name": "Stranka E", "segment": "SaaS", "country": "IT", "joined": "2025-04-07" }
+]

@@ -1,0 +1,7 @@
+[
+  { "id": 201, "name": "Dobavitelj A", "category": "Elektronika", "rating": 4.5 },
+  { "id": 202, "name": "Dobavitelj B", "category": "Dodatki", "rating": 4.0 },
+  { "id": 203, "name": "Dobavitelj C", "category": "Logistika", "rating": 3.8 },
+  { "id": 204, "name": "Dobavitelj D", "category": "Elektronika", "rating": 4.7 },
+  { "id": 205, "name": "Dobavitelj E", "category": "Dodatki", "rating": 3.9 }
+]

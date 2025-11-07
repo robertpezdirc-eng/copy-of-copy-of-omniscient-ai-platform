@@ -1,0 +1,7 @@
+[
+  { "feature": "dashboards", "daily_active": 120, "weekly_active": 540 },
+  { "feature": "exports", "daily_active": 80, "weekly_active": 320 },
+  { "feature": "alerts", "daily_active": 45, "weekly_active": 200 },
+  { "feature": "api", "daily_active": 95, "weekly_active": 410 },
+  { "feature": "embed", "daily_active": 30, "weekly_active": 150 }
+]
