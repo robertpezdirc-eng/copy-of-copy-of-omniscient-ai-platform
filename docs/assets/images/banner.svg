@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="400" viewBox="0 0 1600 400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="400" fill="#0b1220"/>
+  <rect x="0" y="0" width="1600" height="400" fill="url(#bg)" opacity="0.18"/>
+  <g transform="translate(80,80)">
+    <text x="0" y="0" font-size="64" fill="#cfe7ff" font-family="Inter, Segoe UI, Arial">Omniscient AI Platform</text>
+    <text x="0" y="90" font-size="28" fill="#9fb0c1" font-family="Inter, Segoe UI, Arial">Unified dashboards • MGX embeds • Fast viewer</text>
+  </g>
+  <g transform="translate(80,220)">
+    <rect x="0" y="0" rx="12" width="320" height="64" fill="#0ea5e9"/>
+    <text x="160" y="42" text-anchor="middle" font-size="28" fill="#0b1220" font-family="Inter, Segoe UI, Arial">Open Demo</text>
+  </g>
+</svg>

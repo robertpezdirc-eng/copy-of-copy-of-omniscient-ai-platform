@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0b1220"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#bg)" opacity="0.22"/>
+  <text x="72" y="140" font-size="56" fill="#cfe7ff" font-family="Inter, Segoe UI, Arial">Omniscient AI Platform</text>
+  <text x="72" y="210" font-size="28" fill="#9fb0c1" font-family="Inter, Segoe UI, Arial">20 Dashboards • Charts + MGX Embeds • Github Pages Demo</text>
+  <rect x="72" y="260" rx="12" width="440" height="64" fill="#0ea5e9"/>
+  <text x="292" y="302" text-anchor="middle" font-size="28" fill="#0b1220" font-family="Inter, Segoe UI, Arial">View Manifest</text>
+  <rect x="532" y="260" rx="12" width="280" height="64" fill="#6366f1"/>
+  <text x="672" y="302" text-anchor="middle" font-size="28" fill="#0b1220" font-family="Inter, Segoe UI, Arial">Open Demo</text>
+  <text x="72" y="400" font-size="24" fill="#9fb0c1" font-family="Inter, Segoe UI, Arial">Repo: github.com/.../copy-of-copy-of-omniscient-ai-platform</text>
+</svg>
