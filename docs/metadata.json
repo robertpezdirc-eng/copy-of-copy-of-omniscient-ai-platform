@@ -1,0 +1,14 @@
+{
+  "name": "Omniscient Dashboard Viewer",
+  "tagline": "Manifest-driven dashboards with instant Chart.js visualization.",
+  "description": "A lightweight viewer that loads dashboard definitions from a JSON manifest and renders interactive charts (bar, line, pie). Paste a raw GitHub URL to your manifest.json and click to explore dashboards.",
+  "categories": ["Data Visualization", "Analytics", "Developer Tools"],
+  "keywords": ["dashboards", "chart.js", "manifest", "analytics", "github raw", "retool"],
+  "links": {
+    "demo": "https://<username>.github.io/copy-of-copy-of-omniscient-ai-platform/?utm_source=thereisanaforthat&utm_medium=directory&utm_campaign=listing",
+    "github": "https://github.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform",
+    "video": "https://youtu.be/ADD-YOUR-DEMO-VIDEO"
+  },
+  "contact": "team@yourdomain.com",
+  "pricing": "Free, open-source"
+}
