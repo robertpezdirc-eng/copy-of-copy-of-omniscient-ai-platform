@@ -1,9 +1,0 @@
-{
-  "title": "AI Overview",
-  "panels": [
-    {"type": "stat", "title": "Churn Risk (avg)", "targets": [{"expr": "avg(churn_probability)"}]},
-    {"type": "stat", "title": "Predicted MRR (30d)", "targets": [{"expr": "sum(predicted_mrr_30d)"}]},
-    {"type": "graph", "title": "Revenue Forecast", "targets": [{"expr": "forecast_revenue"}]},
-    {"type": "table", "title": "Top Recommendations", "targets": [{"expr": "recommendations"}]}
-  ]
-}

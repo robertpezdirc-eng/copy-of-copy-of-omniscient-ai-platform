@@ -1,9 +1,0 @@
-{
-  "tenant_id": "demo-tenant",
-  "items": [
-    {"id": "q1", "text": "How do I reset my password?"},
-    {"id": "q2", "text": "Where can I find my billing information?"},
-    {"id": "q3", "text": "How to upgrade my subscription plan?"},
-    {"id": "q4", "text": "Contact support for technical issues"}
-  ]
-}

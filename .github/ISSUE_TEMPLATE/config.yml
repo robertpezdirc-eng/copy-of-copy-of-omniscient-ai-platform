@@ -1,8 +1,0 @@
-blank_issues_enabled: false
-contact_links:
-  - name: Pregled projekta v živo (#25)
-    url: https://github.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform/issues/25
-    about: Ključni referenčni issue za primerjavo repozitorija s specifikacijo platforme.
-  - name: Profesionalna revizija: Repo vs. Specifikacija platforme (#26)
-    url: https://github.com/robertpezdirc-eng/copy-of-copy-of-omniscient-ai-platform/issues/26
-    about: Strokovni pregled repozitorija v primerjavi s specifikacijo platforme.
