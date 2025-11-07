@@ -7,6 +7,24 @@ Ta mapa vsebuje javni demo oglednika nadzornih plošč. Odpri `index.html` na Gi
 - Kliknite “Naloži manifest”.
 - Iz levega seznama izberite ploščo; desno se nariše graf (Chart.js).
 
+### Vgradnja zunanjih nadzornih plošč (iframe)
+- Viewer podpira vgradnjo zunanjih dashboardov prek `viz_type: "iframe"`.
+- Primer (MGX deljeni dashboard):
+
+```json
+{
+  "dashboards": [
+    {
+      "title": "MGX Main Dashboard (embed)",
+      "viz_type": "iframe",
+      "embed_url": "https://mgx.dev/share/3ce36d1c3b0c4703b4478de320dedd99/v5"
+    }
+  ]
+}
+```
+
+- Če zunanji vir blokira vgradnjo (`X-Frame-Options`), uporabite gumb “Odpri demo” ali “Repo” zgoraj.
+
 ## Demo URL
 - `https://robertpezdirc-eng.github.io/copy-of-copy-of-omniscient-ai-platform/?utm_source=thereisanaforthat&utm_medium=directory&utm_campaign=listing`
 

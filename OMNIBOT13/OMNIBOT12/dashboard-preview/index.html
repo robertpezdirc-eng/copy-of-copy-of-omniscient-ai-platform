@@ -70,7 +70,10 @@
             <h3 id="chartTitle" style="margin:4px 0 8px">Ni izbrane plošče</h3>
             <div class="meta" id="chartMeta"></div>
           </div>
-          <canvas id="chart" height="120"></canvas>
+          <div class="viz-wrap" style="height:100%">
+            <canvas id="chart" height="120"></canvas>
+            <div id="embedContainer" style="display:none; height:100%"></div>
+          </div>
         </div>
         <footer>
           Namig: kliknite element na levi, da narišete graf. Podprto: <code>bar</code>, <code>line</code>, <code>pie</code>.

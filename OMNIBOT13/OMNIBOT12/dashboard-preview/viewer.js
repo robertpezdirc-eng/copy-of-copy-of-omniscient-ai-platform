@@ -5,6 +5,7 @@
   const chartTitleEl = $("chartTitle");
   const chartMetaEl = $("chartMeta");
   const chartCanvas = $("chart");
+  const embedContainer = $("embedContainer");
   const loadBtn = $("loadBtn");
   const manifestInput = $("manifestUrl");
 
@@ -40,6 +41,34 @@
       chartTitleEl.textContent = d.title || "Nadzorna plošča";
       chartMetaEl.innerHTML = "";
 
+      // Če je viz tip iframe, vgradi zunanji dashboard
+      if (d.viz_type === "iframe" && (d.embed_url || d.external_url)) {
+        const meta = [
+          { k: "Vizualizacija", v: "iframe" },
+          { k: "Vir", v: (d.embed_url || d.external_url) },
+        ];
+        meta.forEach(m => {
+          const md = document.createElement("div");
+          md.innerHTML = `<div style="color:#9fb0c1;font-size:12px">${m.k}</div><div style="font-weight:600">${m.v || "-"}</div>`;
+          chartMetaEl.appendChild(md);
+        });
+
+        if (chart) { chart.destroy(); chart = null; }
+        chartCanvas.style.display = "none";
+        embedContainer.style.display = "block";
+        embedContainer.innerHTML = "";
+        const frame = document.createElement("iframe");
+        frame.src = d.embed_url || d.external_url;
+        frame.setAttribute("title", d.title || "Vgrajeni dashboard");
+        frame.style.width = "100%";
+        frame.style.height = "100%";
+        frame.style.border = "0";
+        embedContainer.appendChild(frame);
+        setStatus("Vgrajeno (iframe).");
+        return;
+      }
+
+      // Sicer nariši Chart.js iz podatkovnega vira
       const meta = [
         { k: "Vizualizacija", v: d.viz_type },
         { k: "X os", v: d.x_field },
@@ -80,6 +109,8 @@
         },
       };
 
+      embedContainer.style.display = "none";
+      chartCanvas.style.display = "block";
       if (chart) chart.destroy();
       chart = new Chart(chartCanvas, config);
       setStatus("Narisano.");

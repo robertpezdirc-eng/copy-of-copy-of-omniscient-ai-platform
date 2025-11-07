@@ -1,0 +1,10 @@
+{
+  "dashboards": [
+    {
+      "title": "MGX Main Dashboard (embed)",
+      "description": "Deljeno preko mgx.dev; vgrajeno kot iframe.",
+      "viz_type": "iframe",
+      "embed_url": "https://mgx.dev/share/3ce36d1c3b0c4703b4478de320dedd99/v5"
+    }
+  ]
+}
