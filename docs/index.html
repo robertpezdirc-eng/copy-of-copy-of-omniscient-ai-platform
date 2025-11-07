@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="sl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ogled nadzornih plošč</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+      :root { --bg:#0b0f14; --panel:#121821; --muted:#9fb0c1; --text:#e8eef5; --accent:#4fb3ff; }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body { margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
+      header { padding: 16px; border-bottom: 1px solid #1f2633; background: var(--panel); position: sticky; top:0; z-index:10; }
+      .row { display: flex; gap: 16px; padding: 16px; height: calc(100vh - 72px); }
+      .left { width: 360px; min-width: 320px; background: var(--panel); border: 1px solid #1f2633; border-radius: 12px; padding: 12px; overflow: auto; }
+      .right { flex: 1; background: var(--panel); border: 1px solid #1f2633; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; }
+      label { display:block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+      input[type=url] { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #293040; background: #0e141d; color: var(--text); }
+      button { padding: 10px 12px; border-radius: 8px; border: 1px solid #293040; background: #0e141d; color: var(--text); cursor: pointer; }
+      button.primary { background: var(--accent); color: #07223a; border-color: #3aa2f2; font-weight: 600; }
+      .toolbar { display: flex; gap: 8px; align-items: center; }
+      .list { margin-top: 10px; }
+      .item { padding: 10px; border: 1px solid #1f2633; border-radius: 8px; margin-bottom: 8px; cursor: pointer; }
+      .item:hover { border-color: var(--accent); }
+      .item small { display:block; color: var(--muted); margin-top: 4px; }
+      .meta { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 8px; }
+      .meta div { background:#0e141d; border:1px solid #1f2633; border-radius:8px; padding:8px; }
+      .canvas-wrap { flex: 1; display: grid; grid-template-rows: auto 1fr; gap: 8px; }
+      .status { color: var(--muted); font-size: 13px; }
+      .error { color: #ff6b6b; }
+      footer { font-size: 12px; color: var(--muted); padding: 0 12px; }
+      code { background:#0e141d; border:1px solid #1f2633; border-radius:6px; padding:2px 4px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="toolbar">
+        <div style="flex:1">
+          <label for="manifestUrl">Manifest JSON URL (Raw)</label>
+          <input id="manifestUrl" type="url" placeholder="Prilepite Raw URL do dashboards/manifest.json" />
+        </div>
+        <div>
+          <button id="loadBtn" class="primary">Naloži manifest</button>
+        </div>
+      </div>
+      <div class="status" id="status">Pripravljen. Prilepite manifest URL ali uporabite lokalno datoteko.</div>
+    </header>
+    <div class="row">
+      <aside class="left">
+        <h3 style="margin:4px 0 8px">Nadzorne plošče</h3>
+        <div class="list" id="dashList"></div>
+      </aside>
+      <main class="right">
+        <div class="canvas-wrap">
+          <div>
+            <h3 id="chartTitle" style="margin:4px 0 8px">Ni izbrane plošče</h3>
+            <div class="meta" id="chartMeta"></div>
+          </div>
+          <canvas id="chart" height="120"></canvas>
+        </div>
+        <footer>
+          Namig: kliknite element na levi, da narišete graf. Podprto: <code>bar</code>, <code>line</code>, <code>pie</code>.
+        </footer>
+      </main>
+    </div>
+
+    <script src="./viewer.js"></script>
+  </body>
+</html>
